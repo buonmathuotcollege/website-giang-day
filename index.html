@@ -1,178 +1,211 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cổng Ôn Tập Kỹ Năng Mạng Máy Tính | Hệ Trung Cấp</title>
+  <title>Mạng Máy Tính PRO — Huấn Luyện Kỹ Năng Nghề Thực Chiến</title>
   
-  <!-- Font chữ tiếng Việt hiện đại -->
+  <!-- Font chữ Inter chuẩn công nghệ quốc tế -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Thư viện giao diện Tailwind CSS (Tự động làm đẹp, siêu nhẹ) -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
-          colors: { brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' } }
+          fontFamily: { 
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] 
+          },
+          colors: {
+            brand: { 500: '#2563eb', 600: '#1d4ed8' },
+            dark: '#0f172a'
+          }
         }
       }
     }
   </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .card-transition { transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased font-sans">
+<body class="bg-[#fafafa] text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
 
-  <!-- 1. THANH ĐIỀU HƯỚNG TRÊN CÙNG -->
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl">🌐</span>
-        <span class="font-extrabold text-lg tracking-tight text-slate-900">MẠNG MÁY TÍNH <span class="text-brand-600">PRO</span></span>
-      </div>
-      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-        <a href="#ky-nang" class="hover:text-brand-600 transition">Kỹ năng nghề</a>
-        <a href="#du-an" class="hover:text-brand-600 transition">Dự án thực tế</a>
-        <a href="#danh-gia" class="hover:text-brand-600 transition">Đề thi đánh giá</a>
-        <a href="#faq" class="hover:text-brand-600 transition">Hỏi đáp (FAQ)</a>
+  <!-- 1. HEADER TỐI GIẢN CHUẨN TECH -->
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2.5 group">
+        <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-base shadow-sm group-hover:bg-blue-600 transition">
+          ⚡
+        </div>
+        <span class="font-bold text-slate-900 text-base tracking-tight">Mạng Máy Tính <span class="text-blue-600">PRO</span></span>
+      </a>
+      
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
+        <a href="#ky-nang" class="hover:text-slate-900 transition">8 Kỹ năng nghề</a>
+        <a href="#giang-vien" class="hover:text-slate-900 transition">Giảng viên</a>
+        <a href="#faq" class="hover:text-slate-900 transition">Hỏi đáp FAQ</a>
       </nav>
-      <a href="#ky-nang" class="bg-brand-600 hover:bg-brand-700 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-xl shadow-md shadow-brand-500/20 transition">
-        Bắt đầu học 🚀
+
+      <a href="#ky-nang" class="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold rounded-lg text-white bg-slate-900 hover:bg-slate-800 transition shadow-sm">
+        Vào luyện tập →
       </a>
     </div>
   </header>
 
-  <!-- 2. PHẦN BANNER GIỚI THIỆU (HERO SECTION) -->
-  <section class="max-w-5xl mx-auto px-4 pt-12 pb-16 text-center">
-    <div class="inline-flex items-center gap-2 bg-blue-100 text-brand-700 text-xs font-bold px-3 py-1.5 rounded-full mb-6">
-      <span>✨</span> CHƯƠNG TRÌNH HUẤN LUYỆN TAY NGHỀ 100% THỰC HÀNH
+  <!-- 2. HERO BANNER CHUẨN PHONG CÁCH DŨNG LẠI LẬP TRÌNH -->
+  <section class="max-w-5xl mx-auto px-4 sm:px-6 pt-16 pb-16 text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-700/10 mb-6">
+      <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+      Chương trình Bồi dưỡng & Đánh giá Năng lực Nghề
     </div>
-    <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">
-      Làm Chủ Kỹ Năng Nghề <br class="hidden sm:block"/>
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Mạng Máy Tính & Hạ Tầng</span>
+    
+    <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight max-w-3xl mx-auto mb-5">
+      Thực Hành Mạng Máy Tính <br class="hidden sm:inline" />
+      <span class="text-slate-900">Từ Số 0 Đến Chuẩn Doanh Nghiệp.</span>
     </h1>
-    <p class="text-base md:text-lg text-slate-600 max-w-2xl mx-auto mb-8 leading-relaxed">
-      Hệ thống học liệu trực quan dành riêng cho học sinh hệ Trung cấp. Từng bước thực hành chi tiết từ bấm cáp, cấu hình Router, phân quyền Windows đến thi công trọn gói mạng văn phòng.
+    
+    <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+      Nền tảng học liệu tinh gọn, trực quan dành riêng cho học sinh hệ Trung cấp. Tập trung 100% vào thao tác thực hành tay nghề: bấm cáp, cấu hình Router, phân quyền Windows và thi công hệ thống.
     </p>
 
-    <!-- Các đặc điểm nổi bật dạng tick xanh giống dunglailaptrinh.com -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto mb-10 text-left text-xs md:text-sm font-medium text-slate-700">
-      <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-        <span class="text-emerald-500 font-bold">✓</span> Quy trình từng bước rõ ràng
+    <!-- 4 Khối cam kết dạng Tick xanh như dunglailaptrinh.com -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto text-left text-xs sm:text-sm font-medium text-slate-700 mb-10">
+      <div class="flex items-center gap-2 bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs">
+        <span class="text-emerald-500 text-base">✓</span> Quy trình 1-2-3 cầm tay chỉ việc
       </div>
-      <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-        <span class="text-emerald-500 font-bold">✓</span> Có video demo thao tác mẫu
+      <div class="flex items-center gap-2 bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs">
+        <span class="text-emerald-500 text-base">✓</span> Video demo thao tác mẫu
       </div>
-      <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-        <span class="text-emerald-500 font-bold">✓</span> Chỉ rõ các lỗi thường bị trừ điểm
+      <div class="flex items-center gap-2 bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs">
+        <span class="text-emerald-500 text-base">✓</span> Bắt bệnh các lỗi thường gặp
       </div>
-      <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
-        <span class="text-emerald-500 font-bold">✓</span> Đề thi bám sát chuẩn doanh nghiệp
+      <div class="flex items-center gap-2 bg-white p-3.5 rounded-xl border border-slate-200/80 shadow-xs">
+        <span class="text-emerald-500 text-base">✓</span> Đề thi đánh giá độc lập
       </div>
     </div>
   </section>
 
-  <!-- 3. DANH SÁCH CÁC THẺ KỸ NĂNG NGHỀ (COURSE CARDS) -->
-  <section id="ky-nang" class="max-w-5xl mx-auto px-4 py-8">
-    <div class="flex items-center justify-between mb-8">
+  <!-- 3. DANH SÁCH CÁC THẺ KỸ NĂNG NGHỀ (CARD STYLE GIỐNG DUNGLAILAPTRINH) -->
+  <section id="ky-nang" class="max-w-4xl mx-auto px-4 sm:px-6 py-6 pb-20">
+    <div class="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
       <div>
-        <h2 class="text-2xl font-bold text-slate-900">Danh Mục Kỹ Năng Nghề Cốt Lõi</h2>
-        <p class="text-sm text-slate-500 mt-1">Học sinh hoàn thành từng kỹ năng để đủ điều kiện thi Đánh giá năng lực</p>
+        <h2 class="text-2xl font-bold text-slate-900 tracking-tight">8 Kỹ Năng Nghề Trọng Tâm</h2>
+        <p class="text-sm text-slate-500 mt-1">Học sinh hoàn thành lần lượt để nắm trọn năng lực thực hành nghề</p>
       </div>
+      <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md">100% Thực hành</span>
     </div>
 
-    <div class="space-y-6">
+    <div class="space-y-5">
 
-      <!-- THẺ KỸ NĂNG 1: BẤM CÁP MẠNG (CÓ TÍNH NĂNG BẤM XỔ RA CHI TIẾT) -->
-      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+      <!-- KỸ NĂNG 1: BẤM CÁP -->
+      <div class="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-xs hover:shadow-md card-transition">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div class="flex items-center gap-2 mb-2">
-              <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Kỹ năng 01</span>
-              <span class="text-xs text-slate-400 font-medium">Hạ tầng vật lý</span>
+              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">Kỹ năng 1 / 8</span>
+              <span class="text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Cơ bản</span>
             </div>
-            <h3 class="text-xl font-bold text-slate-900">Kỹ Thuật Bấm Cáp Mạng RJ45 & Nhân Âm Tường</h3>
-            <p class="text-sm text-slate-600 mt-1">Bấm thành thạo cáp thẳng, cáp chéo theo chuẩn T568A/B; đấu nối ổ cắm âm tường và đo kiểm 8 đèn bằng máy test.</p>
+            <h3 class="text-xl font-bold text-slate-900 tracking-tight">Kỹ Thuật Bấm Cáp Mạng RJ45 & Nhân Âm Tường</h3>
+            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+              Thực hành 5 bước bấm cáp thẳng & cáp chéo chuẩn T568A/B; kỹ thuật bấm nhân mạng âm tường và sử dụng hộp test thông mạch 8 đèn.
+            </p>
           </div>
-          <button onclick="toggleCard('kn1')" class="self-start md:self-center px-4 py-2 text-sm font-bold text-brand-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition">
-            Xem nội dung chi tiết ▾
+          <button onclick="toggleCard('detail1', this)" class="inline-flex items-center justify-center shrink-0 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-4 py-2.5 rounded-xl transition gap-1.5">
+            <span>Xem nội dung kỹ năng</span>
+            <span class="arrow transition-transform duration-200">▾</span>
           </button>
         </div>
 
-        <!-- Khối nội dung ẩn bên trong, bấm vào là xổ ra -->
-        <div id="kn1" class="hidden pt-6 space-y-4">
-          <div class="bg-slate-50 p-4 rounded-xl text-sm leading-relaxed space-y-2">
-            <h4 class="font-bold text-slate-900">📋 Các bước thao tác chuẩn:</h4>
-            <ol class="list-decimal list-inside space-y-1 text-slate-700">
-              <li><strong>Bước 1:</strong> Tuốt vỏ ngoài cáp mạng 2.5 - 3 cm bằng kìm chuyên dụng.</li>
-              <li><strong>Bước 2:</strong> Tách và vuốt thật thẳng 8 lõi dây đồng.</li>
-              <li><strong>Bước 3:</strong> Sắp xếp chuẩn màu T568B: <em>Trắng Cam - Cam - Trắng Xanh lá - Xanh dương - Trắng Xanh dương - Xanh lá - Trắng Nâu - Nâu</em>.</li>
-              <li><strong>Bước 4:</strong> Cắt phẳng đầu dây còn 1.3 cm và tra sâu vào hạt mạng RJ45 (vỏ bọc lọt qua ngàm kẹp).</li>
-              <li><strong>Bước 5:</strong> Đưa vào kìm bóp chặt, cắm vào hộp test kiểm tra 8 đèn LED sáng tuần tự.</li>
-            </ol>
+        <!-- Khung xổ ra chi tiết -->
+        <div id="detail1" class="hidden mt-6 pt-6 border-t border-slate-100 space-y-4 text-sm">
+          <div class="grid sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <div>
+              <h4 class="font-bold text-slate-900 mb-2">📋 Quy trình thực hiện chuẩn:</h4>
+              <ul class="space-y-1.5 text-slate-700 text-xs sm:text-sm">
+                <li>• <strong>Bước 1:</strong> Tuốt vỏ ngoài 2.5 - 3 cm bằng kìm.</li>
+                <li>• <strong>Bước 2:</strong> Tách 4 cặp và vuốt thật thẳng 8 sợi dây.</li>
+                <li>• <strong>Bước 3:</strong> Xếp đúng thứ tự chuẩn T568B.</li>
+                <li>• <strong>Bước 4:</strong> Cắt bằng đầu dây 1.3 cm và tra sâu vào hạt RJ45.</li>
+                <li>• <strong>Bước 5:</strong> Bóp dứt khoát kìm bấm và đo kiểm 8 đèn.</li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 mb-2">⚠️ Lỗi dễ bị trừ điểm khi thi:</h4>
+              <ul class="space-y-1.5 text-rose-600 text-xs sm:text-sm">
+                <li>✕ Vỏ cáp bị tụt khỏi ngàm giữ của hạt RJ45.</li>
+                <li>✕ Xếp lộn chân số 4 (Xanh dương) và chân 6 (Xanh lá).</li>
+                <li>✕ Chân đồng không ghim tới đáy hạt mạng gây đứt ngầm.</li>
+              </ul>
+            </div>
           </div>
-          <div class="flex gap-3">
-            <a href="https://youtube.com" target="_blank" class="text-xs font-bold bg-slate-900 text-white px-3 py-2 rounded-lg hover:bg-slate-800 transition">
-              ▶ Xem Video Demo Kỹ Thuật Bấm Cáp
-            </a>
+          <div class="pt-2 flex gap-3">
+            <span class="text-xs text-slate-500 flex items-center">💡 Mẹo: Chân 3 và 6 là cặp xanh lá ôm lấy xanh dương.</span>
           </div>
         </div>
       </div>
 
-      <!-- THẺ KỸ NĂNG 2: CẤU HÌNH IP & SUBNET -->
-      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+      <!-- KỸ NĂNG 2: ĐỊA CHỈ IP -->
+      <div class="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-xs hover:shadow-md card-transition">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div class="flex items-center gap-2 mb-2">
-              <span class="bg-blue-100 text-brand-700 text-xs font-bold px-2.5 py-0.5 rounded-full">Kỹ năng 02</span>
-              <span class="text-xs text-slate-400 font-medium">Địa chỉ mạng</span>
+              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">Kỹ năng 2 / 8</span>
+              <span class="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md">Thiết yếu</span>
             </div>
-            <h3 class="text-xl font-bold text-slate-900">Quy Hoạch Địa Chỉ IP & Cấu Hình Máy Trạm</h3>
-            <p class="text-sm text-slate-600 mt-1">Phân biệt IP Private/Public, thiết lập IP tĩnh trên Windows, chia mạng con Subnetting cơ bản và kiểm tra lệnh Ping.</p>
+            <h3 class="text-xl font-bold text-slate-900 tracking-tight">Quy Hoạch Địa Chỉ IP & Cấu Hình Máy Trạm</h3>
+            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+              Phân biệt lớp IP A/B/C và dải IP Private; cấu hình IP tĩnh trên Windows 10/11; mẹo tính nhanh mạng con Subnetting cho các phòng ban.
+            </p>
           </div>
-          <button onclick="toggleCard('kn2')" class="self-start md:self-center px-4 py-2 text-sm font-bold text-brand-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition">
-            Xem nội dung chi tiết ▾
+          <button onclick="toggleCard('detail2', this)" class="inline-flex items-center justify-center shrink-0 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-4 py-2.5 rounded-xl transition gap-1.5">
+            <span>Xem nội dung kỹ năng</span>
+            <span class="arrow transition-transform duration-200">▾</span>
           </button>
         </div>
 
-        <div id="kn2" class="hidden pt-6 space-y-4">
-          <div class="bg-slate-50 p-4 rounded-xl text-sm leading-relaxed space-y-2">
-            <h4 class="font-bold text-slate-900">📋 Kỹ năng trọng tâm:</h4>
-            <ul class="list-disc list-inside space-y-1 text-slate-700">
-              <li>Đặt IP tĩnh: <code>ncpa.cpl</code> > IPv4 > Gán IP, Subnet Mask, Default Gateway và DNS Server.</li>
-              <li>Kiểm tra thông mạch mạng nội bộ bằng lệnh <code>ping</code> và <code>ipconfig /all</code> trên CMD.</li>
-              <li>Mẹo tính nhanh bước nhảy chia mạng con phòng ban (Kế toán, Kinh doanh, Kỹ thuật).</li>
+        <div id="detail2" class="hidden mt-6 pt-6 border-t border-slate-100 space-y-4 text-sm">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <h4 class="font-bold text-slate-900 mb-2">📋 Thao tác cốt lõi:</h4>
+            <ul class="space-y-1 text-slate-700 text-xs sm:text-sm">
+              <li>• Mở cấu hình mạng nhanh bằng lệnh: <code>ncpa.cpl</code>.</li>
+              <li>• Điền IP, Subnet Mask, Default Gateway và DNS Server (8.8.8.8 / 1.1.1.1).</li>
+              <li>• Kiểm tra thông mạch và tìm lỗi mạng bằng lệnh <code>ping</code> và <code>ipconfig /all</code> trên CMD.</li>
             </ul>
           </div>
         </div>
       </div>
 
-      <!-- THẺ KỸ NĂNG 3: PHÂN QUYỀN WINDOWS & SHARE -->
-      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+      <!-- KỸ NĂNG 3: QUẢN TRỊ FILE & PHÂN QUYỀN NTFS -->
+      <div class="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-7 shadow-xs hover:shadow-md card-transition">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div class="flex items-center gap-2 mb-2">
-              <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Kỹ năng 03</span>
-              <span class="text-xs text-slate-400 font-medium">Quản trị hệ thống</span>
+              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">Kỹ năng 3 / 8</span>
+              <span class="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-md">Bảo mật</span>
             </div>
-            <h3 class="text-xl font-bold text-slate-900">Quản Trị User/Group, Phân Quyền NTFS & Share File</h3>
-            <p class="text-sm text-slate-600 mt-1">Tạo tài khoản người dùng, thiết lập thư mục chia sẻ nâng cao và phân quyền bảo mật file chặt chẽ cho từng phòng ban.</p>
+            <h3 class="text-xl font-bold text-slate-900 tracking-tight">Quản Trị User/Group, Phân Quyền NTFS & Share File</h3>
+            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+              Tạo tài khoản và nhóm cục bộ; cấu hình chia sẻ nâng cao; phân quyền bảo mật cấp file NTFS và chia sẻ máy in trong mạng nội bộ.
+            </p>
           </div>
-          <button onclick="toggleCard('kn3')" class="self-start md:self-center px-4 py-2 text-sm font-bold text-brand-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition">
-            Xem nội dung chi tiết ▾
+          <button onclick="toggleCard('detail3', this)" class="inline-flex items-center justify-center shrink-0 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-4 py-2.5 rounded-xl transition gap-1.5">
+            <span>Xem nội dung kỹ năng</span>
+            <span class="arrow transition-transform duration-200">▾</span>
           </button>
         </div>
 
-        <div id="kn3" class="hidden pt-6 space-y-4">
-          <div class="bg-slate-50 p-4 rounded-xl text-sm leading-relaxed space-y-2">
-            <h4 class="font-bold text-slate-900">📋 Kỹ năng trọng tâm:</h4>
-            <ul class="list-disc list-inside space-y-1 text-slate-700">
-              <li>Tạo User và Group bằng công cụ <code>lusrmgr.msc</code>.</li>
-              <li>Cấu hình Advanced Sharing (tạo tên share ẩn bằng dấu <code>$</code>).</li>
-              <li>Tắt kế thừa (Disable Inheritance) và gán quyền NTFS: Read, Write, Modify, Full Control.</li>
-              <li>Chia sẻ máy in qua mạng LAN và kết nối từ máy trạm khác.</li>
+        <div id="detail3" class="hidden mt-6 pt-6 border-t border-slate-100 space-y-4 text-sm">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <h4 class="font-bold text-slate-900 mb-2">📋 Kỹ năng phân quyền:</h4>
+            <ul class="space-y-1 text-slate-700 text-xs sm:text-sm">
+              <li>• Quản lý tài khoản cục bộ: <code>lusrmgr.msc</code>.</li>
+              <li>• Thiết lập Advanced Sharing (tạo tên share ẩn bằng dấu <code>$</code>).</li>
+              <li>• Phân quyền NTFS: Read, Write, Modify, Full Control (ngắt kế thừa quyền cha).</li>
+              <li>• Kết nối máy in từ xa qua đường dẫn <code>\\IP_May_Chu\Ten_May_In</code>.</li>
             </ul>
           </div>
         </div>
@@ -181,56 +214,66 @@
     </div>
   </section>
 
-  <!-- 4. KHỐI THÔNG TIN GIẢNG VIÊN -->
-  <section class="max-w-5xl mx-auto px-4 py-12">
-    <div class="bg-white rounded-3xl border border-slate-200 p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm">
-      <div class="w-28 h-28 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-4xl font-bold shrink-0 shadow-lg">
+  <!-- 4. KHỐI GIẢNG VIÊN PROFILE SANG TRỌNG -->
+  <section id="giang-vien" class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <div class="bg-white rounded-3xl border border-slate-200 p-8 sm:p-10 flex flex-col sm:flex-row items-center sm:items-start gap-8 shadow-xs">
+      <div class="w-24 h-24 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-4xl shrink-0 font-bold shadow-md">
         👨‍🏫
       </div>
-      <div>
-        <div class="text-xs font-bold text-brand-600 uppercase tracking-wider mb-1">Giảng viên hướng dẫn</div>
-        <h3 class="text-2xl font-bold text-slate-900 mb-2">Thầy Phạm Tiến Đông</h3>
-        <p class="text-sm text-slate-600 leading-relaxed mb-4">
-          Khoa Công nghệ Thông tin — Trường Cao đẳng Buôn Ma Thuột. Hướng dẫn và bồi dưỡng kỹ năng nghề thực chiến chuyên ngành Quản trị Mạng máy tính cho học sinh hệ Trung cấp và Cao đẳng.
+      <div class="text-center sm:text-left">
+        <div class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-md mb-2">
+          <span>✓</span> Giảng viên phụ trách
+        </div>
+        <h3 class="text-2xl font-extrabold text-slate-900 tracking-tight">Thầy Phạm Tiến Đông</h3>
+        <p class="text-sm text-slate-500 font-medium mb-3">Khoa Công nghệ Thông tin · Trường Cao đẳng Buôn Ma Thuột</p>
+        <p class="text-sm text-slate-600 leading-relaxed max-w-xl mb-6 font-normal">
+          Phụ trách đào tạo và huấn luyện tay nghề mạng máy tính cho học sinh - sinh viên. Phương pháp giảng dạy tập trung vào thực tế doanh nghiệp, rèn luyện kỹ năng xử lý sự cố độc lập trên thiết bị thật.
         </p>
-        <div class="flex flex-wrap gap-4 text-xs font-semibold text-slate-600">
-          <span>📧 Email: contact@phamtiendong.name.vn</span>
-          <span>📍 Địa điểm: Phòng Thực hành Mạng</span>
+        <div class="flex flex-wrap justify-center sm:justify-start gap-3 text-xs font-semibold text-slate-700">
+          <span class="bg-slate-100 px-3 py-1.5 rounded-lg">📍 Ea Drang - Đắk Lắk</span>
+          <span class="bg-slate-100 px-3 py-1.5 rounded-lg">📧 contact@phamtiendong.name.vn</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 5. PHẦN CÂU HỎI THƯỜNG GẶP (FAQ) GIỐNG DUNGLAILAPTRINH.COM -->
-  <section id="faq" class="max-w-5xl mx-auto px-4 py-12">
-    <h2 class="text-2xl font-bold text-slate-900 mb-6 text-center">Câu Hỏi Thường Gặp Của Học Sinh</h2>
-    <div class="space-y-4 max-w-3xl mx-auto text-sm">
-      <div class="bg-white p-5 rounded-2xl border border-slate-200">
-        <h4 class="font-bold text-slate-900 mb-2">❓ Học sinh chưa biết gì có thể làm theo các bài thực hành được không?</h4>
-        <p class="text-slate-600">Hoàn toàn được. Các bài học được thiết kế theo hình thức "cầm tay chỉ việc", chỉ rõ từng bước từ cách cầm kìm, cách đặt dao cắt đến cách bấm máy, học sinh chỉ cần làm đúng theo thứ tự là thành công.</p>
+  <!-- 5. HỎI ĐÁP FAQ SẠCH SẼ -->
+  <section id="faq" class="max-w-4xl mx-auto px-4 sm:px-6 py-10 pb-20">
+    <h2 class="text-2xl font-bold text-slate-900 tracking-tight text-center mb-8">Câu Hỏi Thường Gặp</h2>
+    <div class="space-y-3 max-w-2xl mx-auto">
+      <div class="bg-white p-5 rounded-xl border border-slate-200/90 shadow-xs">
+        <h4 class="font-bold text-slate-900 text-sm mb-1.5">Kỳ thi Đánh giá năng lực nghề chấm điểm như thế nào?</h4>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          Bài thi được chấm độc lập từng học sinh trên thiết bị thật (Router, Switch, PC, Dây cáp). Điểm số đánh giá trên 3 phần: Độ chuẩn xác kỹ thuật, tính thẩm mỹ của mối nối và khả năng thông mạng thực tế.
+        </p>
       </div>
-      <div class="bg-white p-5 rounded-2xl border border-slate-200">
-        <h4 class="font-bold text-slate-900 mb-2">❓ Khi thi thực hành, lỗi nào bị trừ điểm nặng nhất?</h4>
-        <p class="text-slate-600">Lỗi tụt vỏ cáp (vỏ ngoài không lọt vào ngàm kẹp hạt RJ45) và lỗi bấm sai thứ tự màu dây khiến đèn test nhảy lộn xộn là 2 lỗi phổ biến nhất khiến bài thi bị trừ 50% điểm số kỹ thuật cáp.</p>
+      <div class="bg-white p-5 rounded-xl border border-slate-200/90 shadow-xs">
+        <h4 class="font-bold text-slate-900 text-sm mb-1.5">Học sinh chưa có máy tính riêng có tự học được không?</h4>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          Được. Trang web tối ưu hoàn hảo trên điện thoại. Các em xem trước quy trình các bước ở nhà, khi lên phòng thực hành chỉ cần bắt tay vào thao tác trên thiết bị thật.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- 6. CHÂN TRANG FOOTER -->
-  <footer class="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500">
-    <div class="max-w-6xl mx-auto px-4">
-      <p>© 2026 Cổng Học Tập Kỹ Năng Mạng Máy Tính. Xây dựng và vận hành trên GitHub & Cloudflare.</p>
+  <!-- 6. FOOTER -->
+  <footer class="border-t border-slate-200/80 bg-white py-8 text-center text-xs text-slate-500 font-medium">
+    <div class="max-w-5xl mx-auto px-4">
+      <p>© 2026 Mạng Máy Tính PRO · Trường Cao đẳng Buôn Ma Thuột. Vận hành trên Cloudflare & GitHub.</p>
     </div>
   </footer>
 
-  <!-- SCRIPT BẬT/TẮT NỘI DUNG THẺ CARD -->
+  <!-- SCRIPT BẬT XỔ THẺ VÀ XOAY MŨI TÊN NHƯ DUNGLAILAPTRINH -->
   <script>
-    function toggleCard(id) {
+    function toggleCard(id, btn) {
       const el = document.getElementById(id);
+      const arrow = btn.querySelector('.arrow');
       if (el.classList.contains('hidden')) {
         el.classList.remove('hidden');
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
       } else {
         el.classList.add('hidden');
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
       }
     }
   </script>
