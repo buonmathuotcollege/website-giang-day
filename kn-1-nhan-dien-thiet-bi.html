@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kỹ Năng 1: Nhận Diện Thiết Bị & Phần Cứng Mạng Căn Bản</title>
+  
+  <!-- Font chữ Inter chuẩn công nghệ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-[#fafafa] text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+
+  <!-- 1. THANH ĐIỀU HƯỚNG TRÊN CÙNG -->
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200/80">
+    <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="index.html" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition">
+        <span>←</span> Quay lại Cổng kỹ năng
+      </a>
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700">Kỹ năng 1 / 8</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 2. NỘI DUNG BÀI HỌC CHI TIẾT -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+
+    <!-- TIÊU ĐỀ BÀI HỌC -->
+    <div class="mb-10 pb-6 border-b border-slate-200">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20 mb-3">
+        ✓ Hạ tầng mạng căn bản · 100% Thực hành
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
+        Kỹ Năng 01: Nhận Diện Thiết Bị & Phần Cứng Mạng
+      </h1>
+      <p class="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
+        Trang bị nền tảng nhận diện các linh kiện trong thùng máy PC, hiểu rõ cơ chế hoạt động của Card mạng (NIC), đọc trạng thái đèn tín hiệu và phân biệt chính xác vai trò thực tế của Switch, Router và Access Point.
+      </p>
+    </div>
+
+    <!-- MỤC TIÊU ĐẠT ĐƯỢC -->
+    <div class="bg-blue-50/70 border border-blue-200/80 rounded-2xl p-5 mb-10 text-xs sm:text-sm text-blue-900 space-y-2">
+      <h3 class="font-bold text-blue-900 flex items-center gap-1.5 text-sm uppercase tracking-wide">
+        🎯 Chuẩn năng lực đầu ra (Học xong làm được gì?):
+      </h3>
+      <ul class="space-y-1 pl-4 list-disc">
+        <li>Chỉ đúng tên và vị trí 6 linh kiện chính bên trong thùng máy tính PC.</li>
+        <li>Quan sát 2 đèn LED tại cổng mạng RJ45 để chuẩn đoán chính xác tốc độ và trạng thái kết nối.</li>
+        <li>Phân biệt được Switch, Router và Access Point chỉ qua hình dáng bên ngoài và màu sắc các cổng cắm.</li>
+        <li>Thao tác cắm nối cáp mạng chuẩn xác, không làm gãy lẫy nhựa hạt mạng.</li>
+      </ul>
+    </div>
+
+    <!-- PHẦN 1: BỘ MÁY TÍNH PC VÀ CARD MẠNG NIC -->
+    <section class="mb-12">
+      <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight mb-4 flex items-center gap-2">
+        <span>1.</span> Nhận Diện Phần Cứng Bộ Máy Tính PC
+      </h2>
+      <p class="text-sm text-slate-600 leading-relaxed mb-6">
+        Một kỹ thuật viên mạng giỏi trước hết phải làm chủ được thiết bị đầu cuối (Client/Server). Dưới đây là 6 thành phần bắt buộc phải nhận diện khi tháo nắp thùng máy PC:
+      </p>
+
+      <div class="grid sm:grid-cols-2 gap-4 mb-6">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+          <div class="text-lg">🔲 <strong>Bo mạch chủ (Mainboard):</strong></div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">Là bảng mạch xương sống kết nối mọi linh kiện. Cổng mạng RJ45 thường được hàn tích hợp trực tiếp trên cụm cổng phía sau Mainboard.</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+          <div class="text-lg">🧠 <strong>Bộ vi xử lý (CPU) & Quạt tản nhiệt:</strong></div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">Bộ não xử lý dữ liệu của máy. Khi tháo lắp cần cẩn thận chân socket, tra keo tản nhiệt định kỳ để máy không bị quá nhiệt ngắt mạng.</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+          <div class="text-lg">⚡ <strong>Bộ nguồn (PSU - Power Supply):</strong></div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">Cung cấp điện áp 12V, 5V, 3.3V cho toàn bộ hệ thống. Luôn rút dây nguồn khỏi ổ điện trước khi chạm tay vào linh kiện máy tính.</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-2">
+          <div class="text-lg">💾 <strong>RAM & Ổ cứng (SSD / HDD):</strong></div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">RAM lưu dữ liệu tạm thời khi chạy chương trình. Ổ SSD lưu trữ hệ điều hành Windows và các phần mềm mô phỏng mạng (Packet Tracer).</p>
+        </div>
+      </div>
+
+      <!-- VỊ TRÍ ẢNH CHỤP PC THỰC TẾ -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200 mb-6">
+        <div class="border border-dashed border-slate-300 rounded-xl p-8 text-center bg-slate-50 text-slate-400 text-xs sm:text-sm">
+          📷 [Vị trí ảnh chụp: Thùng máy PC mở nắp chỉ rõ vị trí Mainboard, CPU, RAM, Nguồn và Card mạng]
+        </div>
+        <p class="text-xs text-slate-500 text-center mt-2 italic">Hình 1.1: Bố cục linh kiện bên trong thùng máy tính PC thực hành</p>
+      </div>
+
+      <!-- SOI CHI TIẾT CỔNG MẠNG VÀ ĐÈN LED -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
+        <h3 class="font-bold text-slate-900 text-base">🔍 Kỹ năng quan sát: Cổng Mạng RJ45 & Ý Nghĩa 2 Đèn LED</h3>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          Phía sau cổng mạng luôn có 2 bóng đèn LED nhỏ. Khi đi kiểm tra sự cố mạng cho khách hàng, kỹ thuật viên chỉ cần nhìn 2 đèn này là biết ngay mạng có chạy hay không:
+        </p>
+        
+        <div class="grid sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+          <div class="p-4 rounded-xl bg-amber-50/60 border border-amber-200/80">
+            <span class="font-bold text-amber-900 block mb-1">🟡 Đèn bên trái: Speed LED (Báo tốc độ)</span>
+            <ul class="space-y-1 text-slate-700">
+              <li>• <strong>Sáng màu Cam/Vàng:</strong> Tốc độ truyền đạt chuẩn Gigabit (1000 Mbps).</li>
+              <li>• <strong>Sáng màu Xanh lá (hoặc tắt):</strong> Tốc độ đạt mức 100 Mbps hoặc 10 Mbps.</li>
+            </ul>
+          </div>
+          <div class="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200/80">
+            <span class="font-bold text-emerald-900 block mb-1">🟢 Đèn bên phải: Link / Activity LED (Báo kết nối)</span>
+            <ul class="space-y-1 text-slate-700">
+              <li>• <strong>Sáng đứng yên:</strong> Đã cắm thông cáp vật lý tới Switch/Router.</li>
+              <li>• <strong>Nhấp nháy liên tục:</strong> Đang có gói tin truyền nhận qua lại.</li>
+              <li>• <strong>Tắt ngấm:</strong> Đứt dây, tuột đầu cáp hoặc đầu kia chưa bật nguồn.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHẦN 2: PHÂN BIỆT SWITCH, ROUTER VÀ ACCESS POINT -->
+    <section class="mb-12">
+      <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight mb-4 flex items-center gap-2">
+        <span>2.</span> Phân Biệt Switch, Router Và Access Point
+      </h2>
+      <p class="text-sm text-slate-600 leading-relaxed mb-6">
+        Học sinh mới bắt đầu học mạng rất hay nhầm lẫn giữa 3 thiết bị này. Dưới đây là bảng phân biệt chuẩn xác theo góc nhìn của người làm nghề:
+      </p>
+
+      <div class="overflow-x-auto bg-white rounded-2xl border border-slate-200 shadow-xs mb-6">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead class="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
+            <tr>
+              <th class="p-3.5 sm:p-4">Tiêu chí</th>
+              <th class="p-3.5 sm:p-4">Switch (Bộ chuyển mạch)</th>
+              <th class="p-3.5 sm:p-4">Router (Bộ định tuyến)</th>
+              <th class="p-3.5 sm:p-4">Access Point (Điểm truy cập Wi-Fi)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-600">
+            <tr>
+              <td class="p-3.5 sm:p-4 font-bold text-slate-900">Dấu hiệu nhận biết bên ngoài</td>
+              <td class="p-3.5 sm:p-4">Có rất nhiều cổng cắm giống hệt nhau (8, 16, 24, 48 cổng LAN), thân kim loại chữ nhật.</td>
+              <td class="p-3.5 sm:p-4">Có ít cổng hơn, đặc biệt luôn có <strong>01 cổng WAN màu khác biệt</strong> (xanh dương hoặc vàng).</td>
+              <td class="p-3.5 sm:p-4">Hình đĩa tròn ốp trần hoặc có râu ăng-ten, thường chỉ có 1 hoặc 2 cổng mạng (hỗ trợ PoE).</td>
+            </tr>
+            <tr>
+              <td class="p-3.5 sm:p-4 font-bold text-slate-900">Vai trò chính</td>
+              <td class="p-3.5 sm:p-4">Chia cổng mạng, nối tất cả máy tính trong phòng lại với nhau (tạo mạng LAN).</td>
+              <td class="p-3.5 sm:p-4">Cấp IP tự động (DHCP), bảo vệ tường lửa và chuyển gói tin ra Internet.</td>
+              <td class="p-3.5 sm:p-4">Chuyển tín hiệu mạng có dây thành sóng Wi-Fi không dây cho điện thoại, laptop.</td>
+            </tr>
+            <tr>
+              <td class="p-3.5 sm:p-4 font-bold text-slate-900">Địa chỉ hoạt động</td>
+              <td class="p-3.5 sm:p-4">Hoạt động theo <strong>Địa chỉ MAC</strong> (Địa chỉ vật lý - Layer 2).</td>
+              <td class="p-3.5 sm:p-4">Hoạt động theo <strong>Địa chỉ IP</strong> (Định tuyến logic - Layer 3).</td>
+              <td class="p-3.5 sm:p-4">Cầu nối không dây trong suốt (Layer 2).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- VỊ TRÍ ẢNH CHỤP 3 THIẾT BỊ -->
+      <div class="bg-white p-4 rounded-2xl border border-slate-200">
+        <div class="border border-dashed border-slate-300 rounded-xl p-8 text-center bg-slate-50 text-slate-400 text-xs sm:text-sm">
+          📷 [Vị trí ảnh chụp: Đặt 3 thiết bị Switch, Router và Access Point cạnh nhau, chỉ rõ cổng WAN và các cổng LAN]
+        </div>
+        <p class="text-xs text-slate-500 text-center mt-2 italic">Hình 1.2: So sánh cổng kết nối thực tế trên Switch, Router và Access Point</p>
+      </div>
+    </section>
+
+    <!-- PHẦN 3: QUY TRÌNH 4 BƯỚC ĐẤU NỐI VẬT LÝ AN TOÀN -->
+    <section class="mb-12">
+      <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight mb-4 flex items-center gap-2">
+        <span>3.</span> Quy Trình 4 Bước Đấu Nối Vật Lý Chuẩn An Toàn
+      </h2>
+
+      <div class="space-y-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex gap-4">
+          <div class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-sm flex items-center justify-center shrink-0">1</div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm sm:text-base">Kiểm tra an toàn nguồn điện & Tiếp địa</h4>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+              Trước khi cắm thiết bị, kiểm tra ổ cắm điện 220V không lỏng lẻo. Với thùng máy PC kim loại, xả tĩnh điện trên người bằng cách chạm tay vào khung sắt bàn trước khi thao tác vào bo mạch.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex gap-4">
+          <div class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-sm flex items-center justify-center shrink-0">2</div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm sm:text-base">Định tuyến đường dây mạng (Cáp Patch cord)</h4>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+              Đi dây gọn gàng phía sau thùng máy tính hoặc nẹp bàn, không để dây cáp bị gập góc 90 độ hoặc bị bánh xe ghế kẹp đè lên làm dập lõi đồng bên trong.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex gap-4">
+          <div class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-sm flex items-center justify-center shrink-0">3</div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm sm:text-base">Thao tác cắm giắc RJ45 vào cổng</h4>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+              Hướng lẫy nhựa đàn hồi của đầu hạt mạng đúng rãnh khuyết của cổng RJ45. Đẩy nhẹ và đều tay cho đến khi nghe tiếng <strong>"Tách"</strong> dứt khoát. Dùng tay kéo nhẹ dây ra phía sau để đảm bảo ngàm khóa đã gài chặt.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex gap-4">
+          <div class="w-8 h-8 rounded-xl bg-slate-900 text-white font-bold text-sm flex items-center justify-center shrink-0">4</div>
+          <div>
+            <h4 class="font-bold text-slate-900 text-sm sm:text-base">Kiểm tra đèn LED xác nhận thông mạch</h4>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+              Bật nguồn máy tính. Quan sát đèn xanh lá tại cổng mạng máy tính và đèn cổng tương ứng trên Switch/Router phải sáng lên trong vòng 3–5 giây.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHẦN 4: VIDEO THAO TÁC MẪU -->
+    <section class="mb-12">
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <h3 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+          <span>🎬</span> Video Hướng Dẫn Tháo Lắp PC & Nhận Diện Thiết Bị
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 mb-4">
+          Học sinh xem kỹ góc quay hướng dẫn cách tháo nắp thùng máy, vị trí cắm card mạng và cách nhận biết cổng WAN/LAN:
+        </p>
+        <div class="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-900">
+          <!-- Thay MÃ_VIDEO_YOUTUBE bằng video thực tế của bạn -->
+          <iframe class="w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHẦN 5: BẢNG LỖI BỊ TRỪ ĐIỂM KHI THI NGHỀ -->
+    <section class="mb-12">
+      <div class="bg-white rounded-2xl border border-rose-200 p-6 shadow-xs space-y-4">
+        <h3 class="font-bold text-rose-900 text-base flex items-center gap-2">
+          <span>⚠️</span> Các Lỗi Học Sinh Thường Bị Trừ Điểm Khi Chấm Thi
+        </h3>
+        <div class="grid sm:grid-cols-2 gap-3 text-xs sm:text-sm text-slate-700">
+          <div class="p-3.5 bg-rose-50/50 rounded-xl border border-rose-100">
+            <strong class="text-rose-800 block mb-1">1. Cắm nhầm cổng WAN và LAN:</strong>
+            Cắm dây mạng từ Switch vào cổng WAN của Router phụ làm các máy tính khác không nhận diện được máy in hoặc máy chủ nội bộ.
+          </div>
+          <div class="p-3.5 bg-rose-50/50 rounded-xl border border-rose-100">
+            <strong class="text-rose-800 block mb-1">2. Bẻ gãy lẫy nhựa hạt mạng:</strong>
+            Dùng lực bẻ gập mạnh khiến lẫy nhựa hạt RJ45 bị gãy, cắm vào cổng bị lỏng chập chờn (lỗi này bị trừ 50% điểm thao tác).
+          </div>
+          <div class="p-3.5 bg-rose-50/50 rounded-xl border border-rose-100">
+            <strong class="text-rose-800 block mb-1">3. Quên đóng nắp thùng máy:</strong>
+            Sau khi kiểm tra phần cứng không siết ốc hoặc để hở nắp case gây mất an toàn điện trong phòng thi.
+          </div>
+          <div class="p-3.5 bg-rose-50/50 rounded-xl border border-rose-100">
+            <strong class="text-rose-800 block mb-1">4. Không quan sát đèn tín hiệu:</strong>
+            Cắm dây xong nhưng không nhìn đèn LED, khi máy tính báo mất mạng không biết là do đứt cáp hay do chưa bật Switch.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PHẦN 6: BỘ CÂU HỎI TRẮC NGHIỆM TỰ KIỂM TRA -->
+    <section class="mb-14">
+      <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight mb-4">
+        ❓ Câu Hỏi Trắc Nghiệm Tự Đánh Giá
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-600 mb-6">Học sinh tự chọn đáp án, sau đó bấm vào nút để xem đáp án đúng và lời giải chi tiết:</p>
+
+      <div class="space-y-4">
+        <!-- CÂU 1 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs text-xs sm:text-sm">
+          <p class="font-bold text-slate-900 mb-3">Câu 1: Khi cắm dây mạng vào cổng RJ45 phía sau máy tính, nếu thấy đèn xanh lá sáng đứng yên (không nháy) thì có ý nghĩa gì?</p>
+          <div class="space-y-1.5 text-slate-700 mb-3">
+            <div>A. Máy tính đang tải tài liệu dung lượng lớn từ Internet.</div>
+            <div>B. Đã thông mạch kết nối vật lý tới Switch/Router, nhưng hiện chưa có dữ liệu truyền qua lại.</div>
+            <div>C. Dây cáp mạng bị đứt ngầm bên trong.</div>
+            <div>D. Cổng mạng bị chập điện.</div>
+          </div>
+          <details class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <summary class="font-semibold text-blue-600 cursor-pointer">👉 Bấm xem đáp án</summary>
+            <p class="mt-2 text-slate-800 font-medium"><strong>Đáp án đúng: B</strong></p>
+            <p class="text-slate-600 mt-1">Đèn sáng đứng yên báo hiệu đường dây vật lý đã thông suốt. Khi nào đèn nhấp nháy liên tục mới thể hiện dữ liệu đang truyền nhận.</p>
+          </details>
+        </div>
+
+        <!-- CÂU 2 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs text-xs sm:text-sm">
+          <p class="font-bold text-slate-900 mb-3">Câu 2: Dấu hiệu trực quan dễ nhận biết nhất để phân biệt một chiếc Switch 24 cổng và một chiếc Router thông thường là gì?</p>
+          <div class="space-y-1.5 text-slate-700 mb-3">
+            <div>A. Router có kích thước to gấp 5 lần chiếc Switch.</div>
+            <div>B. Switch có rất nhiều cổng cắm giống hệt nhau, trong khi Router thường có ít cổng hơn và có 01 cổng WAN màu sắc khác biệt.</div>
+            <div>C. Switch luôn có râu phát Wi-Fi bên ngoài.</div>
+            <div>D. Router chỉ hoạt động khi cắm vào máy tính.</div>
+          </div>
+          <details class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <summary class="font-semibold text-blue-600 cursor-pointer">👉 Bấm xem đáp án</summary>
+            <p class="mt-2 text-slate-800 font-medium"><strong>Đáp án đúng: B</strong></p>
+            <p class="text-slate-600 mt-1">Switch văn phòng tập trung chia mạng LAN nên có nhiều cổng giống nhau. Router có cổng WAN (thường màu xanh dương) để nối ra Internet và cổng LAN để cấp phát IP.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. THANH ĐIỀU HƯỚNG CHUYỂN BÀI -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200 text-xs sm:text-sm font-semibold">
+      <a href="index.html" class="w-full sm:w-auto text-center px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition">
+        ← Quay lại Cổng kỹ năng
+      </a>
+      <a href="kn-2-bam-cap-mang.html" class="w-full sm:w-auto text-center px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white transition shadow-sm">
+        Kỹ năng tiếp theo: Bấm Cáp Mạng RJ45 →
+      </a>
+    </div>
+
+  </main>
+
+  <!-- 4. FOOTER -->
+  <footer class="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500 font-medium mt-16">
+    <div class="max-w-4xl mx-auto px-4">
+      <p>© 2026 Mạng Máy Tính PRO · Khoa CNTT - Trường Cao đẳng Buôn Ma Thuột.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
