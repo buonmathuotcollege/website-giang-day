@@ -2,145 +2,237 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Cổng Kỹ Năng Mạng Máy Tính</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cổng Ôn Tập Kỹ Năng Mạng Máy Tính | Hệ Trung Cấp</title>
   
+  <!-- Font chữ tiếng Việt hiện đại -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
-
-  <style>
-    :root {
-      --theme-color: #2563eb;
-      --text-color: #1e293b;
-      --bg-color: #f8fafc;
-    }
-    body {
-      font-family: 'Be Vietnam Pro', -apple-system, sans-serif !important;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      font-size: 15px;
-      line-height: 1.7;
-    }
-    
-    /* === LÀM ĐẸP THANH MENU BÊN TRÁI === */
-    .sidebar {
-      width: 290px !important;
-      background-color: #ffffff !important;
-      border-right: 1px solid #e2e8f0;
-      padding-top: 15px;
-    }
-    .content {
-      left: 290px !important;
-    }
-    .sidebar .app-name-link {
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #0f172a !important;
-      padding: 10px 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    /* Tiêu đề nhóm in hoa, chữ nhỏ, màu nhạt sang trọng */
-    .sidebar p, .sidebar strong {
-      font-size: 0.72rem !important;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: #94a3b8 !important;
-      font-weight: 700 !important;
-      margin: 18px 16px 6px 16px !important;
-      display: block;
-    }
-    /* Các mục bài học: cho phép xuống hàng mềm mại, không bao giờ bị cắt ba chấm */
-    .sidebar ul li a {
-      border-radius: 6px !important;
-      margin: 2px 10px !important;
-      padding: 7px 12px !important;
-      font-size: 0.88rem !important;
-      color: #475569 !important;
-      font-weight: 500 !important;
-      white-space: normal !important; /* Không cắt cụt chữ */
-      line-height: 1.4 !important;
-      border-left: 3px solid transparent;
-      transition: all 0.15s ease;
-    }
-    .sidebar ul li a:hover {
-      background-color: #f1f5f9 !important;
-      color: #2563eb !important;
-    }
-    /* Mục đang chọn: Tinh tế với nền xanh nhạt + viền xanh mảnh bên trái */
-    .sidebar ul li.active > a {
-      background-color: #eff6ff !important;
-      color: #1d4ed8 !important;
-      font-weight: 600 !important;
-      border-left: 3px solid #2563eb !important;
-      border-radius: 0 6px 6px 0 !important;
-    }
-
-    /* Thẻ Card bên phải */
-    .grid-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      margin: 20px 0;
-    }
-    .card-item {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s ease;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .card-item:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 18px -3px rgba(37, 99, 235, 0.12);
-      border-color: #93c5fd;
-    }
-    .badge {
-      display: inline-block;
-      padding: 3px 9px;
-      border-radius: 9999px;
-      font-size: 0.72rem;
-      font-weight: 600;
-      background: #dbeafe;
-      color: #1d4ed8;
-      width: fit-content;
-      margin-bottom: 8px;
-    }
-    
-    /* Trang bìa */
-    section.cover {
-      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #0284c7 100%) !important;
-    }
-    section.cover .cover-main { color: #ffffff !important; }
-    section.cover p { color: #e0f2fe !important; }
-  </style>
-</head>
-<body>
-  <div id="app">Đang tải...</div>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Thư viện giao diện Tailwind CSS (Tự động làm đẹp, siêu nhẹ) -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    window.$docsify = {
-      name: '🌐 KỸ NĂNG MẠNG',
-      loadSidebar: true,
-      subMaxLevel: 2,
-      coverpage: true,
-      auto2top: true,
-      search: {
-        placeholder: '🔍 Tìm nhanh kỹ năng...',
-        noData: 'Không có kết quả'
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+          colors: { brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' } }
+        }
       }
     }
   </script>
-  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased font-sans">
+
+  <!-- 1. THANH ĐIỀU HƯỚNG TRÊN CÙNG -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🌐</span>
+        <span class="font-extrabold text-lg tracking-tight text-slate-900">MẠNG MÁY TÍNH <span class="text-brand-600">PRO</span></span>
+      </div>
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+        <a href="#ky-nang" class="hover:text-brand-600 transition">Kỹ năng nghề</a>
+        <a href="#du-an" class="hover:text-brand-600 transition">Dự án thực tế</a>
+        <a href="#danh-gia" class="hover:text-brand-600 transition">Đề thi đánh giá</a>
+        <a href="#faq" class="hover:text-brand-600 transition">Hỏi đáp (FAQ)</a>
+      </nav>
+      <a href="#ky-nang" class="bg-brand-600 hover:bg-brand-700 text-white text-xs md:text-sm font-bold px-4 py-2 rounded-xl shadow-md shadow-brand-500/20 transition">
+        Bắt đầu học 🚀
+      </a>
+    </div>
+  </header>
+
+  <!-- 2. PHẦN BANNER GIỚI THIỆU (HERO SECTION) -->
+  <section class="max-w-5xl mx-auto px-4 pt-12 pb-16 text-center">
+    <div class="inline-flex items-center gap-2 bg-blue-100 text-brand-700 text-xs font-bold px-3 py-1.5 rounded-full mb-6">
+      <span>✨</span> CHƯƠNG TRÌNH HUẤN LUYỆN TAY NGHỀ 100% THỰC HÀNH
+    </div>
+    <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">
+      Làm Chủ Kỹ Năng Nghề <br class="hidden sm:block"/>
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Mạng Máy Tính & Hạ Tầng</span>
+    </h1>
+    <p class="text-base md:text-lg text-slate-600 max-w-2xl mx-auto mb-8 leading-relaxed">
+      Hệ thống học liệu trực quan dành riêng cho học sinh hệ Trung cấp. Từng bước thực hành chi tiết từ bấm cáp, cấu hình Router, phân quyền Windows đến thi công trọn gói mạng văn phòng.
+    </p>
+
+    <!-- Các đặc điểm nổi bật dạng tick xanh giống dunglailaptrinh.com -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-3xl mx-auto mb-10 text-left text-xs md:text-sm font-medium text-slate-700">
+      <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+        <span class="text-emerald-500 font-bold">✓</span> Quy trình từng bước rõ ràng
+      </div>
+      <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+        <span class="text-emerald-500 font-bold">✓</span> Có video demo thao tác mẫu
+      </div>
+      <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+        <span class="text-emerald-500 font-bold">✓</span> Chỉ rõ các lỗi thường bị trừ điểm
+      </div>
+      <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+        <span class="text-emerald-500 font-bold">✓</span> Đề thi bám sát chuẩn doanh nghiệp
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. DANH SÁCH CÁC THẺ KỸ NĂNG NGHỀ (COURSE CARDS) -->
+  <section id="ky-nang" class="max-w-5xl mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h2 class="text-2xl font-bold text-slate-900">Danh Mục Kỹ Năng Nghề Cốt Lõi</h2>
+        <p class="text-sm text-slate-500 mt-1">Học sinh hoàn thành từng kỹ năng để đủ điều kiện thi Đánh giá năng lực</p>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+
+      <!-- THẺ KỸ NĂNG 1: BẤM CÁP MẠNG (CÓ TÍNH NĂNG BẤM XỔ RA CHI TIẾT) -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="bg-amber-100 text-amber-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Kỹ năng 01</span>
+              <span class="text-xs text-slate-400 font-medium">Hạ tầng vật lý</span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900">Kỹ Thuật Bấm Cáp Mạng RJ45 & Nhân Âm Tường</h3>
+            <p class="text-sm text-slate-600 mt-1">Bấm thành thạo cáp thẳng, cáp chéo theo chuẩn T568A/B; đấu nối ổ cắm âm tường và đo kiểm 8 đèn bằng máy test.</p>
+          </div>
+          <button onclick="toggleCard('kn1')" class="self-start md:self-center px-4 py-2 text-sm font-bold text-brand-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition">
+            Xem nội dung chi tiết ▾
+          </button>
+        </div>
+
+        <!-- Khối nội dung ẩn bên trong, bấm vào là xổ ra -->
+        <div id="kn1" class="hidden pt-6 space-y-4">
+          <div class="bg-slate-50 p-4 rounded-xl text-sm leading-relaxed space-y-2">
+            <h4 class="font-bold text-slate-900">📋 Các bước thao tác chuẩn:</h4>
+            <ol class="list-decimal list-inside space-y-1 text-slate-700">
+              <li><strong>Bước 1:</strong> Tuốt vỏ ngoài cáp mạng 2.5 - 3 cm bằng kìm chuyên dụng.</li>
+              <li><strong>Bước 2:</strong> Tách và vuốt thật thẳng 8 lõi dây đồng.</li>
+              <li><strong>Bước 3:</strong> Sắp xếp chuẩn màu T568B: <em>Trắng Cam - Cam - Trắng Xanh lá - Xanh dương - Trắng Xanh dương - Xanh lá - Trắng Nâu - Nâu</em>.</li>
+              <li><strong>Bước 4:</strong> Cắt phẳng đầu dây còn 1.3 cm và tra sâu vào hạt mạng RJ45 (vỏ bọc lọt qua ngàm kẹp).</li>
+              <li><strong>Bước 5:</strong> Đưa vào kìm bóp chặt, cắm vào hộp test kiểm tra 8 đèn LED sáng tuần tự.</li>
+            </ol>
+          </div>
+          <div class="flex gap-3">
+            <a href="https://youtube.com" target="_blank" class="text-xs font-bold bg-slate-900 text-white px-3 py-2 rounded-lg hover:bg-slate-800 transition">
+              ▶ Xem Video Demo Kỹ Thuật Bấm Cáp
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- THẺ KỸ NĂNG 2: CẤU HÌNH IP & SUBNET -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="bg-blue-100 text-brand-700 text-xs font-bold px-2.5 py-0.5 rounded-full">Kỹ năng 02</span>
+              <span class="text-xs text-slate-400 font-medium">Địa chỉ mạng</span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900">Quy Hoạch Địa Chỉ IP & Cấu Hình Máy Trạm</h3>
+            <p class="text-sm text-slate-600 mt-1">Phân biệt IP Private/Public, thiết lập IP tĩnh trên Windows, chia mạng con Subnetting cơ bản và kiểm tra lệnh Ping.</p>
+          </div>
+          <button onclick="toggleCard('kn2')" class="self-start md:self-center px-4 py-2 text-sm font-bold text-brand-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition">
+            Xem nội dung chi tiết ▾
+          </button>
+        </div>
+
+        <div id="kn2" class="hidden pt-6 space-y-4">
+          <div class="bg-slate-50 p-4 rounded-xl text-sm leading-relaxed space-y-2">
+            <h4 class="font-bold text-slate-900">📋 Kỹ năng trọng tâm:</h4>
+            <ul class="list-disc list-inside space-y-1 text-slate-700">
+              <li>Đặt IP tĩnh: <code>ncpa.cpl</code> > IPv4 > Gán IP, Subnet Mask, Default Gateway và DNS Server.</li>
+              <li>Kiểm tra thông mạch mạng nội bộ bằng lệnh <code>ping</code> và <code>ipconfig /all</code> trên CMD.</li>
+              <li>Mẹo tính nhanh bước nhảy chia mạng con phòng ban (Kế toán, Kinh doanh, Kỹ thuật).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- THẺ KỸ NĂNG 3: PHÂN QUYỀN WINDOWS & SHARE -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Kỹ năng 03</span>
+              <span class="text-xs text-slate-400 font-medium">Quản trị hệ thống</span>
+            </div>
+            <h3 class="text-xl font-bold text-slate-900">Quản Trị User/Group, Phân Quyền NTFS & Share File</h3>
+            <p class="text-sm text-slate-600 mt-1">Tạo tài khoản người dùng, thiết lập thư mục chia sẻ nâng cao và phân quyền bảo mật file chặt chẽ cho từng phòng ban.</p>
+          </div>
+          <button onclick="toggleCard('kn3')" class="self-start md:self-center px-4 py-2 text-sm font-bold text-brand-600 bg-blue-50 hover:bg-blue-100 rounded-xl transition">
+            Xem nội dung chi tiết ▾
+          </button>
+        </div>
+
+        <div id="kn3" class="hidden pt-6 space-y-4">
+          <div class="bg-slate-50 p-4 rounded-xl text-sm leading-relaxed space-y-2">
+            <h4 class="font-bold text-slate-900">📋 Kỹ năng trọng tâm:</h4>
+            <ul class="list-disc list-inside space-y-1 text-slate-700">
+              <li>Tạo User và Group bằng công cụ <code>lusrmgr.msc</code>.</li>
+              <li>Cấu hình Advanced Sharing (tạo tên share ẩn bằng dấu <code>$</code>).</li>
+              <li>Tắt kế thừa (Disable Inheritance) và gán quyền NTFS: Read, Write, Modify, Full Control.</li>
+              <li>Chia sẻ máy in qua mạng LAN và kết nối từ máy trạm khác.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. KHỐI THÔNG TIN GIẢNG VIÊN -->
+  <section class="max-w-5xl mx-auto px-4 py-12">
+    <div class="bg-white rounded-3xl border border-slate-200 p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm">
+      <div class="w-28 h-28 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white text-4xl font-bold shrink-0 shadow-lg">
+        👨‍🏫
+      </div>
+      <div>
+        <div class="text-xs font-bold text-brand-600 uppercase tracking-wider mb-1">Giảng viên hướng dẫn</div>
+        <h3 class="text-2xl font-bold text-slate-900 mb-2">Thầy Phạm Tiến Đông</h3>
+        <p class="text-sm text-slate-600 leading-relaxed mb-4">
+          Khoa Công nghệ Thông tin — Trường Cao đẳng Buôn Ma Thuột. Hướng dẫn và bồi dưỡng kỹ năng nghề thực chiến chuyên ngành Quản trị Mạng máy tính cho học sinh hệ Trung cấp và Cao đẳng.
+        </p>
+        <div class="flex flex-wrap gap-4 text-xs font-semibold text-slate-600">
+          <span>📧 Email: contact@phamtiendong.name.vn</span>
+          <span>📍 Địa điểm: Phòng Thực hành Mạng</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. PHẦN CÂU HỎI THƯỜNG GẶP (FAQ) GIỐNG DUNGLAILAPTRINH.COM -->
+  <section id="faq" class="max-w-5xl mx-auto px-4 py-12">
+    <h2 class="text-2xl font-bold text-slate-900 mb-6 text-center">Câu Hỏi Thường Gặp Của Học Sinh</h2>
+    <div class="space-y-4 max-w-3xl mx-auto text-sm">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200">
+        <h4 class="font-bold text-slate-900 mb-2">❓ Học sinh chưa biết gì có thể làm theo các bài thực hành được không?</h4>
+        <p class="text-slate-600">Hoàn toàn được. Các bài học được thiết kế theo hình thức "cầm tay chỉ việc", chỉ rõ từng bước từ cách cầm kìm, cách đặt dao cắt đến cách bấm máy, học sinh chỉ cần làm đúng theo thứ tự là thành công.</p>
+      </div>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200">
+        <h4 class="font-bold text-slate-900 mb-2">❓ Khi thi thực hành, lỗi nào bị trừ điểm nặng nhất?</h4>
+        <p class="text-slate-600">Lỗi tụt vỏ cáp (vỏ ngoài không lọt vào ngàm kẹp hạt RJ45) và lỗi bấm sai thứ tự màu dây khiến đèn test nhảy lộn xộn là 2 lỗi phổ biến nhất khiến bài thi bị trừ 50% điểm số kỹ thuật cáp.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. CHÂN TRANG FOOTER -->
+  <footer class="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto px-4">
+      <p>© 2026 Cổng Học Tập Kỹ Năng Mạng Máy Tính. Xây dựng và vận hành trên GitHub & Cloudflare.</p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT BẬT/TẮT NỘI DUNG THẺ CARD -->
+  <script>
+    function toggleCard(id) {
+      const el = document.getElementById(id);
+      if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    }
+  </script>
 </body>
 </html>
