@@ -2,22 +2,18 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Cổng Kỹ Năng Mạng Máy Tính | Dành Cho Học Sinh Trung Cấp</title>
+  <title>Cổng Kỹ Năng Mạng Máy Tính</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
-  <!-- Font chữ tiếng Việt hiện đại Be Vietnam Pro -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Theme Docsify nền tảng -->
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
 
   <style>
-    /* Tuỳ biến giao diện hiện đại, thân thiện học sinh */
     :root {
-      --theme-color: #2563eb; /* Xanh dương công nghệ năng động */
+      --theme-color: #2563eb;
       --text-color: #1e293b;
       --bg-color: #f8fafc;
     }
@@ -29,41 +25,67 @@
       line-height: 1.7;
     }
     
-    /* Thanh menu bên trái */
+    /* === LÀM ĐẸP THANH MENU BÊN TRÁI === */
     .sidebar {
+      width: 290px !important;
       background-color: #ffffff !important;
       border-right: 1px solid #e2e8f0;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.03);
+      padding-top: 15px;
+    }
+    .content {
+      left: 290px !important;
     }
     .sidebar .app-name-link {
       font-weight: 700;
-      font-size: 1.15rem;
-      color: #2563eb !important;
+      font-size: 1.1rem;
+      color: #0f172a !important;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
+    /* Tiêu đề nhóm in hoa, chữ nhỏ, màu nhạt sang trọng */
+    .sidebar p, .sidebar strong {
+      font-size: 0.72rem !important;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #94a3b8 !important;
+      font-weight: 700 !important;
+      margin: 18px 16px 6px 16px !important;
+      display: block;
+    }
+    /* Các mục bài học: cho phép xuống hàng mềm mại, không bao giờ bị cắt ba chấm */
     .sidebar ul li a {
-      border-radius: 8px;
-      margin: 2px 8px;
-      padding: 8px 12px;
-      transition: all 0.2s ease;
-      font-weight: 500;
+      border-radius: 6px !important;
+      margin: 2px 10px !important;
+      padding: 7px 12px !important;
+      font-size: 0.88rem !important;
+      color: #475569 !important;
+      font-weight: 500 !important;
+      white-space: normal !important; /* Không cắt cụt chữ */
+      line-height: 1.4 !important;
+      border-left: 3px solid transparent;
+      transition: all 0.15s ease;
     }
     .sidebar ul li a:hover {
-      background-color: #eff6ff;
+      background-color: #f1f5f9 !important;
       color: #2563eb !important;
-      transform: translateX(4px);
     }
+    /* Mục đang chọn: Tinh tế với nền xanh nhạt + viền xanh mảnh bên trái */
     .sidebar ul li.active > a {
-      background-color: #2563eb !important;
-      color: #ffffff !important;
-      font-weight: 600;
+      background-color: #eff6ff !important;
+      color: #1d4ed8 !important;
+      font-weight: 600 !important;
+      border-left: 3px solid #2563eb !important;
+      border-radius: 0 6px 6px 0 !important;
     }
 
-    /* Thiết kế thẻ Card bài học ở trang chủ */
+    /* Thẻ Card bên phải */
     .grid-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 16px;
-      margin: 24px 0;
+      margin: 20px 0;
     }
     .card-item {
       background: #ffffff;
@@ -71,87 +93,48 @@
       border-radius: 12px;
       padding: 20px;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-      transition: all 0.25s ease;
-      text-decoration: none !important;
-      color: inherit !important;
+      transition: all 0.2s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
     .card-item:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 20px -3px rgba(37, 99, 235, 0.12);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 18px -3px rgba(37, 99, 235, 0.12);
       border-color: #93c5fd;
-    }
-    .card-item h3 {
-      margin-top: 0;
-      color: #0f172a;
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-    .card-item p {
-      color: #64748b;
-      font-size: 0.9rem;
-      margin-bottom: 12px;
     }
     .badge {
       display: inline-block;
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: 9999px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       font-weight: 600;
       background: #dbeafe;
       color: #1d4ed8;
       width: fit-content;
+      margin-bottom: 8px;
     }
-
-    /* Khung ghi chú (Callout) mềm mại */
-    .tip-box {
-      background: #f0fdf4;
-      border-left: 4px solid #22c55e;
-      padding: 14px 18px;
-      border-radius: 0 10px 10px 0;
-      margin: 18px 0;
-    }
-    .alert-box {
-      background: #fffbeb;
-      border-left: 4px solid #f59e0b;
-      padding: 14px 18px;
-      border-radius: 0 10px 10px 0;
-      margin: 18px 0;
-    }
-
-    /* Trang bìa chào mừng (Coverpage) phong cách Gradient */
+    
+    /* Trang bìa */
     section.cover {
-      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%) !important;
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #0284c7 100%) !important;
     }
-    section.cover .cover-main {
-      color: #ffffff !important;
-    }
-    section.cover a.anchor span {
-      color: #ffffff;
-    }
-    section.cover p {
-      color: #e0f2fe !important;
-    }
+    section.cover .cover-main { color: #ffffff !important; }
+    section.cover p { color: #e0f2fe !important; }
   </style>
 </head>
 <body>
-  <div id="app">Đang chuẩn bị học liệu...</div>
+  <div id="app">Đang tải...</div>
   <script>
     window.$docsify = {
-      name: '⚡ KỸ NĂNG MẠNG',
+      name: '🌐 KỸ NĂNG MẠNG',
       loadSidebar: true,
       subMaxLevel: 2,
       coverpage: true,
       auto2top: true,
       search: {
-        placeholder: '🔍 Tìm nhanh kỹ năng, bài học...',
-        noData: 'Không tìm thấy nội dung!'
-      },
-      copyCode: {
-        buttonText: 'Sao chép',
-        successText: 'Đã sao chép'
+        placeholder: '🔍 Tìm nhanh kỹ năng...',
+        noData: 'Không có kết quả'
       }
     }
   </script>
