@@ -2,46 +2,159 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Cổng Học Tập & Bài Giảng Trực Tuyến</title>
+  <title>Cổng Kỹ Năng Mạng Máy Tính | Dành Cho Học Sinh Trung Cấp</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   
-  <!-- Font chữ tiếng Việt hiện đại & Theme tinh tế -->
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <!-- Font chữ tiếng Việt hiện đại Be Vietnam Pro -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
   
+  <!-- Theme Docsify nền tảng -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+
   <style>
+    /* Tuỳ biến giao diện hiện đại, thân thiện học sinh */
     :root {
-      --base-font-family: 'Be Vietnam Pro', sans-serif;
-      --theme-color: #0284c7; /* Xanh dương giáo dục hiện đại */
-      --sidebar-width: 280px;
-      --content-max-width: 900px;
+      --theme-color: #2563eb; /* Xanh dương công nghệ năng động */
+      --text-color: #1e293b;
+      --bg-color: #f8fafc;
     }
-    .cover-main h1 { font-weight: 700; color: #0f172a; }
-    .cover-main p { font-size: 1.15rem; color: #475569; }
+    body {
+      font-family: 'Be Vietnam Pro', -apple-system, sans-serif !important;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    
+    /* Thanh menu bên trái */
+    .sidebar {
+      background-color: #ffffff !important;
+      border-right: 1px solid #e2e8f0;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.03);
+    }
+    .sidebar .app-name-link {
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: #2563eb !important;
+    }
+    .sidebar ul li a {
+      border-radius: 8px;
+      margin: 2px 8px;
+      padding: 8px 12px;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+    .sidebar ul li a:hover {
+      background-color: #eff6ff;
+      color: #2563eb !important;
+      transform: translateX(4px);
+    }
+    .sidebar ul li.active > a {
+      background-color: #2563eb !important;
+      color: #ffffff !important;
+      font-weight: 600;
+    }
+
+    /* Thiết kế thẻ Card bài học ở trang chủ */
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+    .card-item {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      transition: all 0.25s ease;
+      text-decoration: none !important;
+      color: inherit !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px -3px rgba(37, 99, 235, 0.12);
+      border-color: #93c5fd;
+    }
+    .card-item h3 {
+      margin-top: 0;
+      color: #0f172a;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    .card-item p {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: #dbeafe;
+      color: #1d4ed8;
+      width: fit-content;
+    }
+
+    /* Khung ghi chú (Callout) mềm mại */
+    .tip-box {
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 18px 0;
+    }
+    .alert-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin: 18px 0;
+    }
+
+    /* Trang bìa chào mừng (Coverpage) phong cách Gradient */
+    section.cover {
+      background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%) !important;
+    }
+    section.cover .cover-main {
+      color: #ffffff !important;
+    }
+    section.cover a.anchor span {
+      color: #ffffff;
+    }
+    section.cover p {
+      color: #e0f2fe !important;
+    }
   </style>
 </head>
 <body>
-  <div id="app">Đang tải học liệu...</div>
+  <div id="app">Đang chuẩn bị học liệu...</div>
   <script>
     window.$docsify = {
-      name: '📚 Cổng Học Tập',
+      name: '⚡ KỸ NĂNG MẠNG',
       loadSidebar: true,
       subMaxLevel: 2,
-      coverpage: true,       /* Bật trang bìa chào mừng */
+      coverpage: true,
+      auto2top: true,
       search: {
-        placeholder: 'Tìm kiếm bài giảng, tài liệu...',
-        noData: 'Không tìm thấy kết quả!'
+        placeholder: '🔍 Tìm nhanh kỹ năng, bài học...',
+        noData: 'Không tìm thấy nội dung!'
       },
       copyCode: {
         buttonText: 'Sao chép',
-        successText: 'Đã chép'
+        successText: 'Đã sao chép'
       }
     }
   </script>
-  <!-- Các thư viện bổ trợ hiển thị -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>

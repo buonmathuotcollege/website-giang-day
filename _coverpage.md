@@ -1,10 +1,10 @@
-# 🎓 HỆ THỐNG BÀI GIẢNG & TÀI LIỆU HỌC TẬP
+# 🚀 HỆ THỐNG HUẤN LUYỆN KỸ NĂNG NGHỀ
+## QUẢN TRỊ MẠNG MÁY TÍNH
 
-> Nền tảng chia sẻ học liệu, bài tập và đề cương môn học trực tuyến.
+> Nền tảng học tập & ôn thi đánh giá năng lực nghề nghiệp dành cho học sinh Trung cấp.
 
-- 📖 Tổng hợp đầy đủ slide và giáo trình
-- 📝 Hướng dẫn bài tập & kiểm tra định kỳ
-- 💡 Học tập mọi lúc, mọi nơi trên máy tính & điện thoại
+- 🛠️ **100% Thực hành thực tế:** Bấm cáp, cấu hình Router, phân quyền Windows
+- 📱 **Học mọi lúc mọi nơi:** Tối ưu mượt mà trên điện thoại và máy tính
+- 💡 **Dễ hiểu & Trực quan:** Hướng dẫn chi tiết từng bước có ảnh và video mẫu
 
-[Bắt đầu học ngay](README.md)
-[Nhóm Zalo / Hỗ trợ](https://zalo.me)
+[Khám phá các kỹ năng ngay](README.md)
