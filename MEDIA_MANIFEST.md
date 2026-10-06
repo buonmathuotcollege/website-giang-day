@@ -13,7 +13,7 @@ Quản lý tập trung mọi tài sản hình ảnh/video dùng trong website đ
 ## Mẫu bản ghi
 | ID | File/URL | Loại | Kỹ năng | Nguồn/Tác giả | Giấy phép | Chỉnh sửa | Trạng thái | Ghi chú |
 |---|---|---|---|---|---|---|---|---|
-| MEDIA-001 | ... | image/video | KN03 | ... | ... | ... | review | ... |
+| MEDIA-XXX | ... | image/video | KNXX | ... | ... | ... | review | ... |
 
 ## Quy tắc đặt tên
 Ưu tiên: knXX-step-YY-mo-ta.ext
