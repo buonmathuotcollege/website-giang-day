@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KN03 — Bấm/đấu ổ cắm mạng âm tường</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{--brand:#1d4ed8;--brand-soft:#eff6ff;--ok:#047857;--ok-soft:#ecfdf5;--warn:#b45309;--warn-soft:#fffbeb;--danger:#be123c;--danger-soft:#fff1f2;--ink:#0f172a;--muted:#475569;--line:#e2e8f0}
+body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;color:var(--ink)}
+.skill-wrap{max-width:1050px;margin:auto;padding:24px 16px 56px}.skill-hero{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border-radius:24px;padding:28px;margin-bottom:18px}.skill-kicker{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bfdbfe}.skill-hero h1{font-size:clamp(28px,5vw,46px);line-height:1.08;margin:8px 0}.skill-hero p{max-width:780px;color:#dbeafe;line-height:1.7}.skill-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.meta-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:12px}.meta-box small{display:block;color:#bfdbfe;font-size:11px}.meta-box strong{display:block;margin-top:3px}
+.skill-nav{position:sticky;top:56px;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:16px;padding:8px;margin:12px 0 22px;overflow-x:auto;white-space:nowrap}.skill-nav a{display:inline-block;padding:8px 10px;border-radius:10px;font-size:12px;font-weight:700;color:#334155}.skill-nav a:hover{background:var(--brand-soft);color:var(--brand)}
+.section{margin:28px 0}.section-title{font-size:24px;font-weight:900;margin-bottom:12px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}.step-card{scroll-margin-top:120px;margin:14px 0;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}.step-card>div{padding:18px}.action{border-left:4px solid var(--brand);background:var(--brand-soft);padding:12px 14px;border-radius:0 12px 12px 0}.result{border-left:4px solid var(--ok);background:var(--ok-soft);padding:12px 14px;border-radius:0 12px 12px 0}.wrong{border-left:4px solid var(--danger);background:var(--danger-soft);padding:12px 14px;border-radius:0 12px 12px 0}.warning{border-left:4px solid var(--warn);background:var(--warn-soft);padding:12px 14px;border-radius:0 12px 12px 0}.media{background:#f1f5f9;border:1px dashed #cbd5e1;border-radius:14px;padding:14px}
+@media(max-width:700px){.skill-wrap{padding:16px 12px 40px}.skill-hero{padding:22px 18px;border-radius:18px}.skill-meta{grid-template-columns:1fr}.skill-nav{top:52px}.section-title{font-size:21px}}
+</style>
+</head>
+<body class="antialiased">
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200"><div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between"><a href="index.html" class="text-sm font-semibold text-slate-600">← Cổng kỹ năng</a><span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-700">KN03 / Ổ cắm mạng âm tường</span></div></header>
+<main class="skill-wrap">
+<section class="skill-hero">
+<div class="skill-kicker">KỸ NĂNG 03 · THỰC HÀNH</div>
+<h1>Bấm/đấu ổ cắm mạng âm tường</h1>
+<p>Em nhận diện module ổ cắm RJ45, đọc sơ đồ màu trên module, đấu dây mạng vào khe IDC, lắp module vào mặt ổ cắm và kiểm tra đường truyền. Mục tiêu là tạo được một điểm mạng cố định, chắc chắn và kiểm tra được kết quả.</p>
+<div class="skill-meta"><div class="meta-box"><small>Hình thức</small><strong>Nhìn mẫu → Làm theo → Tự làm</strong></div><div class="meta-box"><small>Vật tư</small><strong>Cáp UTP + module Keystone</strong></div><div class="meta-box"><small>Dụng cụ</small><strong>Dụng cụ tuốt + punch-down</strong></div></div>
+</section>
+<nav class="skill-nav" aria-label="Điều hướng"><a href="#muc-tieu">Mục tiêu</a><a href="#chuan-bi">Chuẩn bị</a><a href="#kien-thuc-toi-thieu">Kiến thức</a><a href="#nhin-mau">Nhìn mẫu</a><a href="#cac-buoc">Các bước</a><a href="#kiem-tra">Kiểm tra</a><a href="#loi">Lỗi</a><a href="#thuc-hanh">Thực hành</a><a href="#checklist">Checklist</a><a href="#danh-gia">Đánh giá</a></nav>
+
+<section id="muc-tieu" class="card section"><h2 class="section-title">🎯 Em sẽ làm được gì?</h2>
+<ul class="list-disc pl-5 space-y-2 text-sm">
+<li>Nhận diện đúng mặt trước, mặt sau và sơ đồ màu của module RJ45 âm tường.</li>
+<li>Tuốt vỏ cáp và đưa từng lõi vào đúng khe màu theo chuẩn được yêu cầu.</li>
+<li>Dùng dụng cụ punch-down đúng cách để cố định lõi vào khe IDC.</li>
+<li>Lắp module vào mặt ổ cắm và giữ dây chắc chắn.</li>
+<li>Kiểm tra đường truyền và phát hiện lỗi đấu dây cơ bản.</li>
+</ul></section>
+
+<section id="chuan-bi" class="card section"><h2 class="section-title">🧰 Chuẩn bị</h2>
+<div class="grid sm:grid-cols-2 gap-3 text-sm">
+<div>☐ Cáp mạng UTP Cat5e/Cat6</div><div>☐ Module/Keystone RJ45</div><div>☐ Mặt ổ cắm mạng âm tường</div><div>☐ Dụng cụ tuốt vỏ cáp</div><div>☐ Dụng cụ punch-down phù hợp</div><div>☐ Thiết bị kiểm tra cáp/đường truyền</div><div>☐ Hộp âm tường hoặc bộ gá thực hành</div><div>☐ Module dự phòng</div>
+</div>
+<div class="warning mt-4"><strong>⚠️ An toàn:</strong> Thực hành trên bộ mô hình hoặc hệ thống đã được giáo viên chuẩn bị. Không tự thao tác với ổ điện 220V. Khi dùng dụng cụ cắt/tuốt, hướng lưỡi ra xa người và dùng đúng chức năng.</div></section>
+
+<section id="kien-thuc-toi-thieu" class="card section"><h2 class="section-title">📘 Kiến thức tối thiểu</h2>
+<ul class="list-disc pl-5 space-y-1 text-sm">
+<li>Ổ cắm mạng âm tường thường dùng module/Keystone RJ45 để kết nối cáp mạng cố định với thiết bị đầu cuối.</li>
+<li>Mặt sau module có các khe IDC và sơ đồ màu T568A/T568B. <strong>Phải đọc nhãn trên chính module trước khi đấu.</strong></li>
+<li>Trong bài này, nếu giáo viên yêu cầu T568B thì xếp lõi theo T568B; nếu module/bài thực hành yêu cầu chuẩn khác thì theo đúng sơ đồ đã được giao.</li>
+<li>Đấu dây đúng phải giữ được tiếp xúc cơ học chắc chắn và kiểm tra được đường truyền sau khi lắp.</li>
+</ul>
+</section>
+
+<section id="nhin-mau" class="section"><h2 class="section-title">👀 Nhìn mẫu trước khi làm</h2>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="card"><img src="images/kn03-overview-keystone.svg" alt="Tổng quan module Keystone RJ45 âm tường" class="w-full rounded-xl" loading="lazy"><p class="text-xs text-slate-500 mt-2">Hình tự tạo. Khi có ảnh thật, ưu tiên ảnh cận mặt trước và mặt sau module đang dùng tại phòng thực hành.</p></div>
+<div class="card"><img src="images/kn03-step-01-identify.svg" alt="Nhận diện mặt đấu dây và sơ đồ màu trên module" class="w-full rounded-xl" loading="lazy"><p class="text-xs text-slate-500 mt-2">Điểm cần nhìn: vị trí khe IDC và nhãn T568A/T568B.</p></div>
+</div>
+<div class="warning mt-4"><strong>⚠️ Cần giáo viên duyệt:</strong> kiểu module, dụng cụ punch-down và cách kiểm tra có thể khác theo thiết bị phòng thực hành. Trang này dùng nguyên tắc chung và không thay thế hướng dẫn của module cụ thể.</div>
+</section>
+
+<section id="cac-buoc" class="section"><h2 class="section-title">🔧 Các bước thực hiện</h2>
+
+<article class="step-card" id="step-1"><div>
+<div class="mb-4 media"><img src="images/kn03-step-01-identify.svg" alt="Minh họa Bước 1: Xác định module và sơ đồ đấu dây" class="w-full rounded-xl" loading="lazy"><p class="text-xs text-slate-500 mt-2">📷 Gợi ý ảnh thật: chụp cận tay, module, vị trí dây và trạng thái đúng của bước này.</p></div>
+<div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">1</div><div class="flex-1"><h3 class="text-lg font-extrabold">BƯỚC 1 — Xác định module và sơ đồ đấu dây</h3>
+<div class="action mt-3"><strong>Em làm:</strong> Nhìn mặt sau module. Xác định các khe IDC và đọc nhãn T568A/T568B được in trên module.</div>
+<div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Đã xác định đúng mặt đấu dây và chuẩn màu cần dùng.</div>
+<div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Nếu không thấy sơ đồ hoặc sơ đồ khác với hình: dừng thao tác và hỏi giáo viên; không tự đoán thứ tự màu.</div>
+</div></div></div></article><article class="step-card" id="step-2"><div>
+<div class="mb-4 media"><img src="images/kn03-step-02-strip.svg" alt="Minh họa Bước 2: Tuốt vỏ ngoài cáp" class="w-full rounded-xl" loading="lazy"><p class="text-xs text-slate-500 mt-2">📷 Gợi ý ảnh thật: chụp cận tay, module, vị trí dây và trạng thái đúng của bước này.</p></div>
+<div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">2</div><div class="flex-1"><h3 class="text-lg font-extrabold">BƯỚC 2 — Tuốt vỏ ngoài cáp</h3>
+<div class="action mt-3"><strong>Em làm:</strong> Tuốt một đoạn vỏ ngoài vừa đủ để đưa các lõi vào module. Giữ nguyên lớp cách điện của từng lõi.</div>
+<div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Vỏ ngoài được bóc sạch ở đoạn cần đấu; các lõi bên trong không bị đứt hoặc cứa sâu.</div>
+<div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Nếu lõi bị hỏng: cắt bỏ đoạn lỗi và tuốt lại bằng dụng cụ đúng cách.</div>
+</div></div></div></article><article class="step-card" id="step-3"><div>
+<div class="mb-4 media"><img src="images/kn03-step-03-order.svg" alt="Minh họa Bước 3: Xếp lõi theo sơ đồ trên module" class="w-full rounded-xl" loading="lazy"><p class="text-xs text-slate-500 mt-2">📷 Gợi ý ảnh thật: chụp cận tay, module, vị trí dây và trạng thái đúng của bước này.</p></div>
+<div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">3</div><div class="flex-1"><h3 class="text-lg font-extrabold">BƯỚC 3 — Xếp lõi theo sơ đồ trên module</h3>
+<div class="action mt-3"><strong>Em làm:</strong> Đặt từng lõi vào đúng khe màu theo chuẩn được ghi trên module. Nếu bài yêu cầu T568B, đối chiếu từng màu với nhãn T568B.</div>
+<div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Đủ 8 lõi vào đúng vị trí, không nhầm cặp và không bỏ sót khe.</div>
+<div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Nếu sai: tháo lõi sai khỏi khe, đối chiếu lại nhãn rồi xếp lại trước khi punch-down.</div>
+</div></div></div></article><article class="step-card" id="step-4"><div>
+<div class="mb-4 media"><img src="images/kn03-step-04-punchdown.svg" alt="Minh họa Bước 4: Ép lõi vào khe IDC" class="w-full rounded-xl" loading="lazy"><p class="text-xs text-slate-500 mt-2">📷 Gợi ý ảnh thật: chụp cận tay, module, vị trí dây và trạng thái đúng của bước này.</p></div>
+<div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">4</div><div class="flex-1"><h3 class="text-lg font-extrabold">BƯỚC 4 — Ép lõi vào khe IDC</h3>
+<div class="action mt-3"><strong>Em làm:</strong> Dùng dụng cụ punch-down phù hợp để ép từng lõi vào khe IDC theo hướng dẫn của dụng cụ.</div>
+<div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Lõi nằm gọn trong khe IDC và được giữ chắc; phần dây thừa được xử lý theo loại module.</div>
+<div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Nếu lõi chưa nằm trong khe: kiểm tra đúng vị trí và ép lại bằng dụng cụ; không dùng lực mạnh bất thường.</div>
+</div></div></div></article><article class="step-card" id="step-5"><div>
+<div class="mb-4 media"><img src="images/kn03-step-05-trim.svg" alt="Minh họa Bước 5: Cắt phần dây thừa" class="w-full rounded-xl" loading="lazy"><p class="text-xs text-slate-500 mt-2">📷 Gợi ý ảnh thật: chụp cận tay, module, vị trí dây và trạng thái đúng của bước này.</p></div>
+<div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">5</div><div class="flex-1"><h3 class="text-lg font-extrabold">BƯỚC 5 — Cắt phần dây thừa</h3>
+<div class="action mt-3"><strong>Em làm:</strong> Cắt phần lõi thừa theo cách phù hợp với module, giữ cho các lõi đã đấu không bị kéo tuột.</div>
+<div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Các đầu dây thừa không gây vướng khi đóng module và các lõi vẫn nằm chắc trong khe.</div>
+<div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Nếu cắt làm tuột lõi: đấu lại lõi đó và kiểm tra lại toàn bộ vị trí gần đó.</div>
+</div></div></div></article><article class="step-card" id="step-6"><div>
+<div class="mb-4 media"><img src="images/kn03-step-06-install.svg" alt="Minh họa Bước 6: Lắp module vào mặt ổ cắm" class="w-full rounded-xl" loading="lazy"><p class="text-xs text-slate-500 mt-2">📷 Gợi ý ảnh thật: chụp cận tay, module, vị trí dây và trạng thái đúng của bước này.</p></div>
+<div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">6</div><div class="flex-1"><h3 class="text-lg font-extrabold">BƯỚC 6 — Lắp module vào mặt ổ cắm</h3>
+<div class="action mt-3"><strong>Em làm:</strong> Đặt module vào mặt ổ cắm/hộp gá theo đúng chiều rồi cố định theo loại bộ gá đang dùng.</div>
+<div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Module nằm chắc, đúng chiều, không bị kênh hoặc ép mạnh vào dây.</div>
+<div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Nếu module kênh: tháo ra, kiểm tra dây phía sau và sắp xếp lại; không cố ép.</div>
+</div></div></div></article><article class="step-card" id="step-7"><div>
+<div class="mb-4 media"><img src="images/kn03-step-07-test.svg" alt="Minh họa Bước 7: Kiểm tra đường truyền" class="w-full rounded-xl" loading="lazy"><p class="text-xs text-slate-500 mt-2">📷 Gợi ý ảnh thật: chụp cận tay, module, vị trí dây và trạng thái đúng của bước này.</p></div>
+<div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">7</div><div class="flex-1"><h3 class="text-lg font-extrabold">BƯỚC 7 — Kiểm tra đường truyền</h3>
+<div class="action mt-3"><strong>Em làm:</strong> Dùng bộ kiểm tra được giáo viên chuẩn bị để kiểm tra từ điểm ổ cắm đến đầu dây tương ứng.</div>
+<div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Kết quả kiểm tra phù hợp với sơ đồ đấu dây và yêu cầu bài thực hành.</div>
+<div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Nếu kết quả sai: ghi nhận chân/lõi bất thường, kiểm tra lại từ module rồi sửa và kiểm tra lại.</div>
+</div></div></div></article>
+</section>
+
+<section id="kiem-tra" class="card section"><h2 class="section-title">🔎 Kiểm tra kết quả</h2>
+<ol class="list-decimal pl-5 space-y-2 text-sm">
+<li>Kiểm tra module có đúng chiều và được cố định chắc chắn.</li>
+<li>Đối chiếu lại thứ tự 8 lõi với sơ đồ trên module.</li>
+<li>Dùng thiết bị kiểm tra theo phương án của phòng thực hành.</li>
+<li>Nếu có lỗi, ghi nhận vị trí/chân lỗi trước khi sửa.</li>
+<li>Sau khi sửa, kiểm tra lại toàn bộ đường truyền.</li>
+</ol>
+<div class="warning mt-4"><strong>⚠️ Cần giáo viên duyệt:</strong> chỉ số/kết quả cụ thể của tester phụ thuộc loại bộ test và mô hình đấu nối thực tế.</div>
+</section>
+
+<section id="loi" class="section"><h2 class="section-title">⚠️ Lỗi thường gặp và cách sửa</h2>
+<div class="overflow-x-auto"><table class="min-w-full bg-white border text-sm"><thead><tr><th class="p-3 border text-left">Lỗi</th><th class="p-3 border text-left">Dấu hiệu</th><th class="p-3 border text-left">Nguyên nhân có thể</th><th class="p-3 border text-left">Cách sửa</th></tr></thead><tbody>
+<tr><td class="p-3 border">Đấu sai màu</td><td class="p-3 border">Kết quả kiểm tra sai thứ tự</td><td class="p-3 border">Nhầm T568A/T568B hoặc đọc sai nhãn</td><td class="p-3 border">Đối chiếu từng lõi với nhãn module, đấu lại và kiểm tra</td></tr>
+<tr><td class="p-3 border">Lõi chưa vào khe IDC</td><td class="p-3 border">Tiếp xúc chập chờn hoặc không có kết nối</td><td class="p-3 border">Ép chưa đủ hoặc đặt lệch khe</td><td class="p-3 border">Đặt lại lõi và punch-down đúng dụng cụ</td></tr>
+<tr><td class="p-3 border">Lõi bị đứt/hỏng</td><td class="p-3 border">Một chân không thông</td><td class="p-3 border">Tuốt/cắt sai thao tác</td><td class="p-3 border">Cắt bỏ đoạn hỏng và đấu lại</td></tr>
+<tr><td class="p-3 border">Module bị kênh</td><td class="p-3 border">Mặt ổ cắm không phẳng</td><td class="p-3 border">Dây phía sau xếp quá dày hoặc vướng</td><td class="p-3 border">Tháo module, sắp xếp lại dây rồi lắp lại</td></tr>
+</tbody></table></div></section>
+
+<section id="thuc-hanh" class="section"><h2 class="section-title">🧑‍🔧 Thực hành</h2>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="card"><h3 class="font-bold mb-2">Mức 1 — Có hướng dẫn</h3><p class="text-sm">Đấu 01 module theo sơ đồ được giáo viên giao. Được xem lại từng bước và bảng màu.</p></div>
+<div class="card"><h3 class="font-bold mb-2">Mức 2 — Độc lập</h3><p class="text-sm">Nhận một module và đoạn cáp mới. Tự xác định sơ đồ, đấu dây, lắp module và kiểm tra.</p></div>
+<div class="card md:col-span-2"><h3 class="font-bold mb-2">Mức 3 — Xử lý lỗi</h3><p class="text-sm">Giáo viên tạo một lỗi đấu dây cơ bản. Em phải quan sát kết quả kiểm tra, khoanh vùng vị trí lỗi, sửa và kiểm tra lại.</p></div>
+</div></section>
+
+<section id="checklist" class="card section"><h2 class="section-title">✅ Checklist tự kiểm tra</h2>
+<ul class="space-y-2 text-sm">
+<li>☐ Xác định đúng mặt đấu dây và đọc được sơ đồ trên module.</li>
+<li>☐ Tuốt vỏ không làm hỏng lõi.</li>
+<li>☐ Đủ 8 lõi vào đúng vị trí.</li>
+<li>☐ Các lõi được cố định chắc trong khe IDC.</li>
+<li>☐ Module lắp đúng chiều và không bị kênh.</li>
+<li>☐ Đã kiểm tra đường truyền.</li>
+<li>☐ Nếu có lỗi, đã sửa và kiểm tra lại.</li>
+</ul></section>
+
+<section id="danh-gia" class="card section"><h2 class="section-title">🏆 Đánh giá năng lực KN03</h2>
+<div class="overflow-x-auto"><table class="min-w-full text-sm border"><thead><tr><th class="p-3 border text-left">Mức</th><th class="p-3 border text-left">Biểu hiện đạt</th></tr></thead><tbody>
+<tr><td class="p-3 border font-bold">Làm theo</td><td class="p-3 border">Đấu được module khi có hướng dẫn từng bước.</td></tr>
+<tr><td class="p-3 border font-bold">Tự làm</td><td class="p-3 border">Tự xác định sơ đồ, đấu dây, lắp và kiểm tra đúng.</td></tr>
+<tr><td class="p-3 border font-bold">Xử lý lỗi</td><td class="p-3 border">Phát hiện, khoanh vùng và sửa được lỗi đấu dây cơ bản rồi kiểm tra lại.</td></tr>
+</tbody></table></div>
+<p class="warning mt-4"><strong>⚠️ CẦN GIÁO VIÊN DUYỆT:</strong> thời lượng, thang điểm và ngưỡng đạt chính thức chưa được tự đặt trong phiên bản này. Loại module và phương án kiểm tra cũng cần đối chiếu thiết bị thực tế.</p>
+</section>
+
+<section class="card section"><h2 class="section-title">📷 Hồ sơ hình ảnh KN03</h2><p class="text-sm">Các SVG trong bài là hình minh họa tự tạo. Ảnh thật của module, tay thao tác, punch-down và kết quả kiểm tra nên được bổ sung từ phòng thực hành theo <code>MEDIA_SOURCES_KN03.md</code>.</p></section>
+<section class="card section"><h2 class="section-title">📚 Nguồn và trạng thái</h2><p class="text-sm">Nội dung thao tác được biên soạn theo phạm vi kỹ năng KN03 của chương trình hiện hành. Chi tiết phụ thuộc loại module cần được giáo viên đối chiếu và duyệt trước khi coi là chuẩn thiết bị cụ thể.</p></section>
+</main></body></html>
