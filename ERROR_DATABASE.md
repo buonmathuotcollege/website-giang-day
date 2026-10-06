@@ -47,3 +47,25 @@ Các mã lỗi cũ gắn với cấu trúc 8 KN phải được chuyển sang m�
 6. Sơ đồ/cấu hình.
 7. Kiểm tra kết nối.
 8. An toàn thao tác.
+
+
+## KN03 — Lỗi khởi tạo
+### ERR-KN03-001 — Đấu sai sơ đồ màu
+- Kỹ năng: KN03
+- Mức độ: Cơ bản
+- Dấu hiệu: Kết quả kiểm tra đường dây không đúng yêu cầu.
+- Nguyên nhân có thể: Nhầm T568A/T568B hoặc đọc sai nhãn module.
+- Kiểm tra: Đối chiếu từng lõi với sơ đồ in trên module.
+- Cách sửa: Đấu lại lõi sai theo đúng sơ đồ được giao.
+- Kiểm tra lại: Thực hiện lại phép kiểm tra đường truyền.
+- Ảnh lỗi: TBD.
+
+### ERR-KN03-002 — Lõi chưa được cố định trong khe IDC
+- Kỹ năng: KN03
+- Mức độ: Cơ bản
+- Dấu hiệu: Tiếp xúc chập chờn hoặc không có kết nối.
+- Nguyên nhân có thể: Lõi đặt lệch hoặc punch-down chưa đúng.
+- Kiểm tra: Quan sát khe IDC và kiểm tra lại điểm tiếp xúc.
+- Cách sửa: Đặt lại lõi và dùng đúng dụng cụ punch-down.
+- Kiểm tra lại: Kiểm tra lại toàn bộ đường truyền.
+- Ảnh lỗi: TBD.
