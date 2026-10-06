@@ -1,516 +1,116 @@
 <!DOCTYPE html>
 <html lang="vi" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kỹ Năng 2: Thực Hành Bấm Cáp Mạng RJ45 — iFixit Interactive Guide</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-    .wire-stripe-orange { background: repeating-linear-gradient(45deg, #f97316, #f97316 4px, #ffffff 4px, #ffffff 8px); }
-    .wire-stripe-green { background: repeating-linear-gradient(45deg, #16a34a, #16a34a 4px, #ffffff 4px, #ffffff 8px); }
-    .wire-stripe-blue { background: repeating-linear-gradient(45deg, #2563eb, #2563eb 4px, #ffffff 4px, #ffffff 8px); }
-    .wire-stripe-brown { background: repeating-linear-gradient(45deg, #854d0e, #854d0e 4px, #ffffff 4px, #ffffff 8px); }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KN02 — Bấm cáp mạng RJ45</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{--brand:#1d4ed8;--brand-soft:#eff6ff;--ok:#047857;--ok-soft:#ecfdf5;--warn:#b45309;--warn-soft:#fffbeb;--danger:#be123c;--danger-soft:#fff1f2;--ink:#0f172a;--muted:#475569;--line:#e2e8f0}
+body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;color:var(--ink)}
+.skill-wrap{max-width:1050px;margin:auto;padding:24px 16px 56px}.skill-hero{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border-radius:24px;padding:28px;margin-bottom:18px}.skill-kicker{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bfdbfe}.skill-hero h1{font-size:clamp(28px,5vw,46px);line-height:1.08;margin:8px 0}.skill-hero p{max-width:780px;color:#dbeafe;line-height:1.7}.skill-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.meta-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:12px}.meta-box small{display:block;color:#bfdbfe;font-size:11px}.meta-box strong{display:block;margin-top:3px}
+.skill-nav{position:sticky;top:56px;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:16px;padding:8px;margin:12px 0 22px;overflow-x:auto;white-space:nowrap}.skill-nav a{display:inline-block;padding:8px 10px;border-radius:10px;font-size:12px;font-weight:700;color:#334155}.skill-nav a:hover{background:var(--brand-soft);color:var(--brand)}
+.section{margin:28px 0}.section-title{font-size:24px;font-weight:900;margin-bottom:12px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}.step-card{scroll-margin-top:120px;margin:14px 0;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}.step-card>div{padding:18px}.action{border-left:4px solid var(--brand);background:var(--brand-soft);padding:12px 14px;border-radius:0 12px 12px 0}.result{border-left:4px solid var(--ok);background:var(--ok-soft);padding:12px 14px;border-radius:0 12px 12px 0}.wrong{border-left:4px solid var(--danger);background:var(--danger-soft);padding:12px 14px;border-radius:0 12px 12px 0}.warning{border-left:4px solid var(--warn);background:var(--warn-soft);padding:12px 14px;border-radius:0 12px 12px 0}.media{background:#f1f5f9;border:1px dashed #cbd5e1;border-radius:14px;padding:14px}.pin{font-weight:900;color:#1e3a8a}.wire{height:28px;border-radius:8px;border:1px solid #cbd5e1}.wo{background:repeating-linear-gradient(135deg,#fff 0 7px,#f97316 7px 12px)}.o{background:#f97316}.wg{background:repeating-linear-gradient(135deg,#fff 0 7px,#22c55e 7px 12px)}.g{background:#22c55e}.wb{background:repeating-linear-gradient(135deg,#fff 0 7px,#3b82f6 7px 12px)}.b{background:#3b82f6}.wn{background:repeating-linear-gradient(135deg,#fff 0 7px,#92400e 7px 12px)}.n{background:#92400e}
+@media(max-width:700px){.skill-wrap{padding:16px 12px 40px}.skill-hero{padding:22px 18px;border-radius:18px}.skill-meta{grid-template-columns:1fr}.skill-nav{top:52px}.section-title{font-size:21px}}
+</style>
 </head>
-<body class="bg-[#fafafa] text-slate-800 antialiased selection:bg-blue-100 selection:text-blue-900">
+<body class="antialiased">
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200"><div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between"><a href="index.html" class="text-sm font-semibold text-slate-600">← Cổng kỹ năng</a><span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-700">KN02 / Bấm cáp RJ45</span></div></header>
+<main class="skill-wrap">
 
-  <!-- 1. HEADER ĐIỀU HƯỚNG -->
-  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
-    <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-      <a href="index.html" class="text-xs font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 transition">
-        <span>←</span> Quay lại Cổng kỹ năng
-      </a>
-      <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Kỹ năng 02 / 08</span>
-    </div>
-  </header>
+<section class="skill-hero">
+<div class="skill-kicker">KỸ NĂNG 02 · THỰC HÀNH</div>
+<h1>Bấm cáp mạng RJ45</h1>
+<p>Em tự chuẩn bị dây mạng, sắp xếp đúng thứ tự màu T568B, đưa dây vào hạt RJ45, bấm đầu cáp và kiểm tra bằng máy test. Mục tiêu là tạo được một sợi cáp đạt yêu cầu và tự tìm lỗi khi cáp không đạt.</p>
+<div class="skill-meta"><div class="meta-box"><small>Hình thức</small><strong>Nhìn mẫu → Làm theo → Tự làm</strong></div><div class="meta-box"><small>Vật tư</small><strong>UTP Cat5e/Cat6 + RJ45</strong></div><div class="meta-box"><small>Thiết bị</small><strong>Kìm bấm + máy test cáp</strong></div></div>
+</section>
 
-  <!-- 2. NỘI DUNG CHÍNH -->
-  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+<nav class="skill-nav" aria-label="Điều hướng"><a href="#muc-tieu">Mục tiêu</a><a href="#chuan-bi">Chuẩn bị</a><a href="#nhin-mau">Nhìn mẫu</a><a href="#cac-buoc">Các bước</a><a href="#kiem-tra">Kiểm tra</a><a href="#loi">Lỗi</a><a href="#thuc-hanh">Thực hành</a><a href="#checklist">Checklist</a><a href="#danh-gia">Đánh giá</a></nav>
 
-    <!-- TIÊU ĐỀ & THÔNG SỐ ĐẦU BÀI (QUICK META CHUẨN IFIXIT) -->
-    <div class="mb-8 pb-6 border-b border-slate-200">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-700/10 mb-3">
-        🛠️ Hướng dẫn kỹ thuật đa hình ảnh chuẩn iFixit
-      </div>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-        Kỹ Thuật Bấm Cáp Mạng RJ45 (Chuẩn T568B)
-      </h1>
-      <p class="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">
-        Tự gia công cáp mạng theo độ dài tùy ý, thay thế đầu cắm RJ45 bị gãy lẫy hoặc khắc phục dây mạng chập chờn với quy trình minh họa đa công đoạn trực quan.
-      </p>
+<section id="muc-tieu" class="card section">
+<h2 class="section-title">🎯 Em sẽ làm được gì?</h2>
+<ul class="list-disc pl-5 space-y-2 text-sm"><li>Nhận biết 8 lõi dây và xếp đúng thứ tự T568B.</li><li>Tuốt vỏ, tháo xoắn, vuốt thẳng và cắt đầu dây.</li><li>Đưa đủ 8 lõi vào hạt RJ45 đúng thứ tự và để vỏ cáp nằm trong phần giữ của đầu nối.</li><li>Dùng kìm bấm đúng thao tác.</li><li>Kiểm tra dây bằng máy test và biết cách xử lý khi kết quả không đúng.</li></ul>
+</section>
 
-      <!-- THANH THÔNG SỐ NHANH -->
-      <div class="flex flex-wrap items-center gap-6 mt-5 pt-4 border-t border-slate-100 text-xs sm:text-sm font-medium text-slate-600">
-        <div class="flex items-center gap-1.5"><span>⏱️</span> <strong>Thời gian:</strong> 10 – 15 phút</div>
-        <div class="flex items-center gap-1.5"><span>📊</span> <strong>Độ khó:</strong> Cơ bản</div>
-        <div class="flex items-center gap-1.5"><span>🎯</span> <strong>Chuẩn áp dụng:</strong> T568B (Cáp thẳng)</div>
-        <div class="flex items-center gap-1.5"><span>👨‍🏫</span> <strong>Giảng viên:</strong> Thầy Phạm Tiến Đông</div>
-      </div>
-    </div>
+<section id="chuan-bi" class="card section">
+<h2 class="section-title">🧰 Chuẩn bị</h2>
+<div class="grid sm:grid-cols-2 gap-3 text-sm">
+<div>☐ Cáp mạng UTP Cat5e hoặc Cat6</div><div>☐ Hạt RJ45 loại phù hợp với cáp</div><div>☐ Kìm bấm mạng RJ45</div><div>☐ Dao/khe tuốt vỏ cáp</div><div>☐ Máy test cáp mạng</div><div>☐ Hạt RJ45 dự phòng</div>
+</div>
+<div class="warning mt-4"><strong>⚠️ An toàn:</strong> Cắt/tuốt hướng ra xa người; dùng kìm đúng chức năng; không đưa tay vào lưỡi cắt. Thực hành theo hướng dẫn của giáo viên.</div>
+</section>
 
-    <!-- KHỐI DỤNG CỤ & VẬT TƯ (WHAT YOU NEED) -->
-    <section class="bg-white rounded-2xl border border-slate-200 p-6 mb-10 shadow-xs">
-      <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
-        <span>🧰</span> Dụng Cụ & Vật Tư Cần Chuẩn Bị (What you need)
-      </h3>
-      
-      <div class="grid sm:grid-cols-2 gap-4 text-xs sm:text-sm">
-        <!-- VẬT TƯ -->
-        <div class="space-y-2.5">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Vật tư tiêu hao (Parts):</span>
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
-            <span class="text-xl">🧵</span>
-            <div>
-              <p class="font-bold text-slate-900">Cáp mạng UTP Cat5e hoặc Cat6</p>
-              <p class="text-xs text-slate-500">Đoạn dây dài 1.5m – 2m lõi đồng nguyên chất.</p>
-            </div>
-          </div>
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
-            <span class="text-xl">🔌</span>
-            <div>
-              <p class="font-bold text-slate-900">Hạt mạng RJ45 (Đầu bấm)</p>
-              <p class="text-xs text-slate-500">Chuẩn 8 chân đồng (chuẩn bị 4 hạt để dự phòng lỗi).</p>
-            </div>
-          </div>
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
-            <span class="text-xl">🛡️</span>
-            <div>
-              <p class="font-bold text-slate-900">Đầu chụp cao su (Strain Relief Boot)</p>
-              <p class="text-xs text-slate-500">Bảo vệ lẫy nhựa không bị gãy khi kéo dây qua khe bàn.</p>
-            </div>
-          </div>
-        </div>
+<section id="nhin-mau" class="section">
+<h2 class="section-title">👀 Nhìn mẫu trước khi làm</h2>
+<div class="grid md:grid-cols-2 gap-4">
+<div class="card"><h3 class="font-bold mb-3">T568B — nhìn từ trái sang phải</h3><div class="space-y-2">
+<div class="grid grid-cols-[32px_1fr_90px] gap-2 items-center"><span class="pin">1</span><span class="text-sm font-semibold">Trắng Cam</span><span class="wire wo"></span></div><div class="grid grid-cols-[32px_1fr_90px] gap-2 items-center"><span class="pin">2</span><span class="text-sm font-semibold">Cam</span><span class="wire o"></span></div><div class="grid grid-cols-[32px_1fr_90px] gap-2 items-center"><span class="pin">3</span><span class="text-sm font-semibold">Trắng Xanh lá</span><span class="wire wg"></span></div><div class="grid grid-cols-[32px_1fr_90px] gap-2 items-center"><span class="pin">4</span><span class="text-sm font-semibold">Xanh dương</span><span class="wire b"></span></div><div class="grid grid-cols-[32px_1fr_90px] gap-2 items-center"><span class="pin">5</span><span class="text-sm font-semibold">Trắng Xanh dương</span><span class="wire wb"></span></div><div class="grid grid-cols-[32px_1fr_90px] gap-2 items-center"><span class="pin">6</span><span class="text-sm font-semibold">Xanh lá</span><span class="wire g"></span></div><div class="grid grid-cols-[32px_1fr_90px] gap-2 items-center"><span class="pin">7</span><span class="text-sm font-semibold">Trắng Nâu</span><span class="wire wn"></span></div><div class="grid grid-cols-[32px_1fr_90px] gap-2 items-center"><span class="pin">8</span><span class="text-sm font-semibold">Nâu</span><span class="wire n"></span></div>
+</div></div>
+<div class="card"><h3 class="font-bold mb-3">Mẹo kiểm tra nhanh</h3><ol class="list-decimal pl-5 text-sm space-y-2"><li>Chân 1–2: cặp Cam.</li><li>Chân 3 và 6: cặp Xanh lá.</li><li>Chân 4–5: cặp Xanh dương.</li><li>Chân 7–8: cặp Nâu.</li><li>Trước khi bấm, đọc lại đủ 8 chân một lần.</li></ol><div class="action mt-4"><strong>Nhớ:</strong> Không bấm khi chưa kiểm tra thứ tự màu.</div></div>
+</div>
+<div class="warning mt-4"><strong>Về cáp thẳng/cáp chéo:</strong> tài liệu nguồn của môn học yêu cầu B–B cho cáp thẳng và A–B cho cáp chéo. Khi thực hành, làm đúng loại cáp mà bài/giáo viên yêu cầu; thiết bị mạng hiện đại có thể hỗ trợ Auto MDI-X nên không nên suy ra khả năng kết nối chỉ từ “loại cáp”.</div>
+</section>
 
-        <!-- DỤNG CỤ -->
-        <div class="space-y-2.5">
-          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Dụng cụ thao tác (Tools):</span>
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
-            <span class="text-xl">✂️</span>
-            <div>
-              <p class="font-bold text-slate-900">Kìm bấm cáp mạng chuyên dụng RJ45</p>
-              <p class="text-xs text-slate-500">Tích hợp khe bấm 8P, lưỡi cắt và rãnh tuốt vỏ cáp.</p>
-            </div>
-          </div>
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
-            <span class="text-xl">🔪</span>
-            <div>
-              <p class="font-bold text-slate-900">Dao tuốt vỏ cáp mạng</p>
-              <p class="text-xs text-slate-500">Giúp xoay cắt vỏ nhựa ngoài ngọt và không cứa vào lõi.</p>
-            </div>
-          </div>
-          <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-3">
-            <span class="text-xl">📟</span>
-            <div>
-              <p class="font-bold text-slate-900">Máy test cáp mạng (Network Cable Tester)</p>
-              <p class="text-xs text-slate-500">Có pin 9V và dải đèn LED từ 1 đến 8 để kiểm tra thông mạch.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+<section id="cac-buoc" class="section">
+<h2 class="section-title">🔧 Quy trình bấm cáp — từng bước</h2>
 
-    <!-- QUY TRÌNH THỰC HÀNH CÁC BƯỚC ĐA HÌNH ẢNH (IFIXIT GALLERY STYLE) -->
-    <div class="space-y-8 mb-14">
-      <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-        Quy Trình Thực Hành Từng Bước (Lia chuột vào ảnh nhỏ để phóng to)
-      </h2>
+<article class="step-card" id="step-1"><div><div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">1</div><div><h3 class="text-lg font-extrabold">Tuốt vỏ ngoài</h3><div class="action mt-3"><strong>Em làm:</strong> Đặt dây vào phần tuốt của kìm/dao theo hướng dẫn của dụng cụ. Tạo đoạn dây hở đủ để thao tác, tránh cứa vào các lõi bên trong.</div><div class="action mt-3">👀 Quan sát: chỉ bóc lớp vỏ ngoài; các lõi bên trong vẫn nguyên vẹn.</div><div class="result mt-3">✓ Vỏ ngoài được bóc sạch, 8 lõi không bị đứt hoặc trầy đáng kể.</div><div class="wrong mt-3">🔧 Nếu sai: cắt bỏ đoạn lỗi và làm lại; không cố sử dụng lõi đã bị cứa.</div></div></div></div></article><article class="step-card" id="step-2"><div><div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">2</div><div><h3 class="text-lg font-extrabold">Tách 4 cặp và vuốt thẳng</h3><div class="action mt-3"><strong>Em làm:</strong> Tháo xoắn 4 cặp thành 8 sợi riêng. Dùng ngón tay vuốt từng sợi cho thẳng.</div><div class="action mt-3">👀 Quan sát: 8 sợi nằm riêng, không xoắn vào nhau.</div><div class="result mt-3">✓ Có 8 sợi riêng, đủ 4 cặp màu.</div><div class="wrong mt-3">🔧 Nếu sai: tách lại từng cặp, không kéo giật mạnh.</div></div></div></div></article><article class="step-card" id="step-3"><div><div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">3</div><div><h3 class="text-lg font-extrabold">Xếp 8 sợi theo T568B</h3><div class="action mt-3"><strong>Em làm:</strong> Xếp từ trái sang phải: Trắng Cam – Cam – Trắng Xanh lá – Xanh dương – Trắng Xanh dương – Xanh lá – Trắng Nâu – Nâu.</div><div class="action mt-3">👀 Nhìn trực tiếp 8 sợi và đọc số 1→8 trước khi cắt.</div><div class="result mt-3">✓ Thứ tự 1→8 trùng bảng T568B.</div><div class="wrong mt-3">🔧 Nếu sai: chưa cắt và chưa đưa vào hạt; tháo ra, xếp lại.</div></div></div></div></article><article class="step-card" id="step-4"><div><div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">4</div><div><h3 class="text-lg font-extrabold">Cắt phẳng đầu dây</h3><div class="action mt-3"><strong>Em làm:</strong> Giữ chặt bó 8 sợi rồi cắt ngang để các đầu bằng nhau. Độ dài phần lõi hở cần phù hợp với hạt RJ45 đang dùng.</div><div class="action mt-3">👀 Nhìn mặt cắt: 8 đầu nằm cùng một đường.</div><div class="result mt-3">✓ Các đầu bằng nhau, không có sợi dài/ngắn lệch rõ.</div><div class="wrong mt-3">🔧 Nếu sai: giữ lại thứ tự màu, cắt lại một lần cho phẳng.</div></div></div></div></article><article class="step-card" id="step-5"><div><div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">5</div><div><h3 class="text-lg font-extrabold">Đưa dây vào hạt RJ45</h3><div class="action mt-3"><strong>Em làm:</strong> Giữ nguyên thứ tự, đẩy thẳng 8 sợi vào hạt. Kiểm tra đầu dây đã đi tới vị trí tiếp xúc và vỏ cáp nằm trong phần giữ của đầu nối.</div><div class="action mt-3">👀 Nhìn qua nhựa trong: 8 lõi vẫn đúng thứ tự; nhìn bên hông: vỏ cáp được giữ.</div><div class="result mt-3">✓ Đủ 8 lõi vào đúng rãnh và vỏ cáp được giữ chắc.</div><div class="wrong mt-3">🔧 Nếu sai: rút ra, xếp lại; không bấm khi dây chưa đúng.</div></div></div></div></article><article class="step-card" id="step-6"><div><div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">6</div><div><h3 class="text-lg font-extrabold">Bấm hạt RJ45</h3><div class="action mt-3"><strong>Em làm:</strong> Đặt hạt vào đúng khe bấm của kìm, giữ thẳng rồi bóp kìm theo hướng dẫn của dụng cụ.</div><div class="action mt-3">👀 Kiểm tra hạt nằm đúng vị trí trước khi bóp.</div><div class="result mt-3">✓ Hạt được bấm chắc; lẫy còn nguyên; vỏ cáp không bị tuột khỏi phần giữ.</div><div class="wrong mt-3">🔧 Nếu sai: không bấm lại vô hạn trên cùng một đầu; thay hạt và làm lại nếu đầu nối bị hỏng.</div></div></div></div></article><article class="step-card" id="step-7"><div><div class="flex gap-3 items-start"><div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">7</div><div><h3 class="text-lg font-extrabold">Làm đầu còn lại</h3><div class="action mt-3"><strong>Em làm:</strong> Lặp lại quy trình cho đầu còn lại. Nếu bài yêu cầu cáp thẳng, dùng cùng chuẩn; nếu yêu cầu cáp chéo, dùng A ở một đầu và B ở đầu kia.</div><div class="action mt-3">👀 So sánh hai đầu cạnh nhau trước khi test.</div><div class="result mt-3">✓ Hai đầu đúng loại cáp mà bài thực hành yêu cầu.</div><div class="wrong mt-3">🔧 Nếu sai: đối chiếu từng chân 1→8 của cả hai đầu trước khi test.</div></div></div></div></article>
+</section>
 
-      <!-- BƯỚC 1: TUỐT VỎ NGOÀI CÁP MẠNG -->
-      <div class="step-container bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-4">
-        <div class="flex items-center gap-3">
-          <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-900 text-white tracking-wide">BƯỚC 1</span>
-          <h3 class="font-bold text-slate-900 text-base sm:text-lg">Tuốt Lớp Vỏ Bảo Vệ Ngoài Cáp (3 cm)</h3>
-        </div>
+<section id="kiem-tra" class="section">
+<h2 class="section-title">🔎 Kiểm tra bằng máy test cáp</h2>
+<div class="card">
+<ol class="list-decimal pl-5 text-sm space-y-2"><li>Cắm một đầu dây vào bộ Master và đầu còn lại vào Remote của máy test.</li><li>Bật máy test.</li><li>Quan sát thứ tự hiển thị ở hai phía.</li><li>Đối chiếu với loại cáp mà em đang làm.</li></ol>
+<div class="grid md:grid-cols-3 gap-3 mt-5">
+<div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50"><strong>✓ Đúng</strong><p class="text-sm mt-2">Với cáp thẳng B–B, thứ tự hai đầu tương ứng 1→8. Với cáp chéo A–B, các chân được đảo theo chuẩn A/B.</p></div>
+<div class="p-4 rounded-xl border border-amber-200 bg-amber-50"><strong>⚠ Cần kiểm tra</strong><p class="text-sm mt-2">Nếu máy test hiển thị khác dự kiến, chưa kết luận ngay. Đối chiếu lại hai đầu dây và cách máy test hiển thị.</p></div>
+<div class="p-4 rounded-xl border border-rose-200 bg-rose-50"><strong>✕ Không đạt</strong><p class="text-sm mt-2">Có chân không thông hoặc thứ tự sai: tìm lỗi từ đầu RJ45, thứ tự màu và tiếp xúc lõi.</p></div>
+</div>
+</div>
+</section>
 
-        <div class="grid md:grid-cols-2 gap-6 items-start">
-          <div class="space-y-2">
-            <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-900 text-white border border-slate-200 shadow-inner flex flex-col items-center justify-center p-6">
-              <span class="text-4xl mb-2">✂️</span>
-              <p class="text-xs font-bold text-center text-blue-300">Đo đúng khoảng cách 3.0 cm từ mép dây</p>
-              <div class="w-48 h-6 bg-blue-600 rounded-l mt-3 flex items-center justify-center text-[10px] text-white font-bold">Vỏ cáp</div>
-            </div>
-            <p id="caption-step1" class="text-xs text-slate-500 italic text-center font-medium">Đang xem: 1. Đặt cáp vào rãnh dao tuốt 3cm</p>
-          </div>
+<section id="loi" class="section">
+<h2 class="section-title">⚠️ Lỗi thường gặp và cách sửa</h2>
+<div class="grid md:grid-cols-2 gap-3">
+<div class="card"><strong>ERR-01 — Sai thứ tự màu</strong><p class="text-sm text-slate-600 mt-2">Dấu hiệu: hai đầu không đúng loại cáp yêu cầu. Cách sửa: kiểm tra từng chân 1→8 trước khi bấm.</p></div>
+<div class="card"><strong>ERR-02 — Một sợi không chạm tới cuối hạt</strong><p class="text-sm text-slate-600 mt-2">Dấu hiệu: một chân không tiếp xúc. Cách sửa: xếp lại bó dây, cắt phẳng và đưa đủ 8 lõi vào hạt.</p></div>
+<div class="card"><strong>ERR-03 — Vỏ cáp không được giữ</strong><p class="text-sm text-slate-600 mt-2">Dấu hiệu: kéo nhẹ thấy lõi chịu lực hoặc vỏ cáp tuột. Cách sửa: đưa vỏ cáp vào đúng phần giữ của đầu nối trước khi bấm.</p></div>
+<div class="card"><strong>ERR-04 — Dây bị chéo khi đưa vào hạt</strong><p class="text-sm text-slate-600 mt-2">Dấu hiệu: thứ tự màu thay đổi khi nhìn qua hạt. Cách sửa: rút ra, vuốt thẳng và giữ chặt bó dây.</p></div>
+<div class="card"><strong>ERR-05 — Hạt RJ45 bị bấm hỏng</strong><p class="text-sm text-slate-600 mt-2">Dấu hiệu: lẫy hoặc thân hạt nứt/gãy. Cách sửa: thay hạt mới; không cố dùng đầu nối đã hỏng.</p></div>
+<div class="card"><strong>ERR-06 — Máy test cho kết quả bất thường</strong><p class="text-sm text-slate-600 mt-2">Dấu hiệu: thứ tự không đúng yêu cầu hoặc có chân không thông. Cách sửa: kiểm tra từng đầu, từng chân, rồi bấm lại đầu lỗi.</p></div>
+</div>
+</section>
 
-          <div class="space-y-4">
-            <div class="grid grid-cols-2 gap-2.5">
-              <div onmouseenter="showStepVisual('step1', 'tool', '1. Đặt cáp vào rãnh dao tuốt 3cm', this, 'red')"
-                   class="thumb-box cursor-pointer rounded-xl overflow-hidden border-2 border-red-500 ring-2 ring-red-200 p-3 bg-slate-50 text-center transition">
-                <span class="text-lg">🔪</span>
-                <p class="text-[11px] font-bold text-slate-700 mt-1">1. Đặt dao kìm</p>
-              </div>
-              <div onmouseenter="showStepVisual('step1', 'jacket', '2. Rút vỏ nhựa ngoài để lộ 4 cặp dây', this, 'blue')"
-                   class="thumb-box cursor-pointer rounded-xl overflow-hidden border-2 border-slate-200 hover:border-blue-400 p-3 bg-slate-50 text-center transition">
-                <span class="text-lg">🧵</span>
-                <p class="text-[11px] font-bold text-slate-700 mt-1">2. Rút vỏ cáp</p>
-              </div>
-            </div>
+<section id="thuc-hanh" class="section">
+<h2 class="section-title">🧑‍🔧 Thực hành có hướng dẫn</h2>
+<div class="card"><ol class="list-decimal pl-5 text-sm space-y-2"><li>Giáo viên phát dây, hạt RJ45 và dụng cụ.</li><li>Em làm một đầu theo 7 bước.</li><li>Giáo viên kiểm tra trực quan trước khi em bấm.</li><li>Em bấm đầu thứ nhất rồi làm đầu thứ hai.</li><li>Test dây và ghi lại kết quả.</li><li>Nếu không đạt, xác định lỗi và sửa.</li></ol></div>
+<h2 class="section-title mt-8">🧑‍🔧 Thực hành độc lập</h2>
+<div class="card"><p class="text-sm"><strong>Tình huống:</strong> Không nhìn bảng hướng dẫn, em phải tạo một sợi cáp theo yêu cầu giáo viên trong thời gian quy định của buổi thực hành.</p><div class="action mt-4"><strong>Yêu cầu:</strong> Tự chọn đúng dụng cụ → xếp màu → bấm hai đầu → test → tự giải thích kết quả.</div></div>
+</section>
 
-            <div class="space-y-2.5 text-xs sm:text-sm text-slate-700">
-              <div class="flex items-start gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0 mt-1.5"></span>
-                <p>Đưa đầu cáp vào khe tuốt của kìm, cách mép dây khoảng <strong>3.0 – 4.0 cm</strong>. Xoay kìm nhẹ 1 vòng 360° quanh thân cáp.</p>
-              </div>
-              <div class="flex items-start gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0 mt-1.5"></span>
-                <p>Bẻ gập nhẹ đầu cáp theo vết khía rồi rút lớp vỏ nhựa ra ngoài để lộ 4 cặp dây xoắn.</p>
-              </div>
-            </div>
+<section id="checklist" class="section">
+<h2 class="section-title">✅ Checklist tự kiểm tra</h2>
+<div class="card space-y-2 text-sm">
+<label class="block"><input type="checkbox" class="mr-2">Tôi chuẩn bị đúng dây, hạt và dụng cụ.</label><label class="block"><input type="checkbox" class="mr-2">Tôi biết thứ tự T568B 1→8.</label><label class="block"><input type="checkbox" class="mr-2">Tôi đã kiểm tra màu trước khi bấm.</label><label class="block"><input type="checkbox" class="mr-2">8 lõi đi đúng rãnh trong hạt RJ45.</label><label class="block"><input type="checkbox" class="mr-2">Vỏ cáp được giữ trong đầu nối.</label><label class="block"><input type="checkbox" class="mr-2">Hai đầu được bấm chắc, lẫy không hỏng.</label><label class="block"><input type="checkbox" class="mr-2">Tôi đã test dây sau khi bấm.</label><label class="block"><input type="checkbox" class="mr-2">Tôi biết tìm lỗi khi test không đạt.</label>
+</div>
+</section>
 
-            <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-xs">
-              <strong>⚠️ Lưu ý (Caution):</strong> Nếu dùng đầu chụp cao su (Boot), <strong>hãy lồng vào dây ngay lúc này</strong>. Khi đã bấm hạt mạng thì không thể luồn vào được nữa!
-            </div>
-          </div>
-        </div>
-      </div>
+<section id="danh-gia" class="section">
+<h2 class="section-title">🏆 Đánh giá năng lực KN02</h2>
+<div class="card overflow-x-auto"><table class="w-full text-sm"><thead class="bg-slate-100"><tr><th class="p-3 text-left">Tiêu chí</th><th class="p-3 text-left">Quan sát</th><th class="p-3 text-left">Đạt khi</th></tr></thead><tbody class="divide-y">
+<tr><td class="p-3 font-bold">A. Chuẩn bị</td><td class="p-3">Dụng cụ/vật tư</td><td class="p-3">Chọn đúng và thao tác an toàn</td></tr>
+<tr><td class="p-3 font-bold">B. Thao tác</td><td class="p-3">Tuốt, tách, xếp, cắt, tra hạt, bấm</td><td class="p-3">Đúng trình tự, không bỏ bước quan trọng</td></tr>
+<tr><td class="p-3 font-bold">C. Sản phẩm</td><td class="p-3">Hai đầu RJ45</td><td class="p-3">Đúng chuẩn yêu cầu, chắc và nguyên vẹn</td></tr>
+<tr><td class="p-3 font-bold">D. Kiểm tra</td><td class="p-3">Máy test</td><td class="p-3">Test đúng và đọc được kết quả</td></tr>
+<tr><td class="p-3 font-bold">E. Xử lý lỗi</td><td class="p-3">Tình huống lỗi</td><td class="p-3">Tìm được nguyên nhân hợp lý, sửa và test lại</td></tr>
+</tbody></table></div>
+<div class="grid md:grid-cols-3 gap-3 mt-4"><div class="card"><b class="text-blue-700">MỨC 1 — Làm theo</b><p class="text-sm mt-2 text-slate-600">Làm được khi có bảng màu và giáo viên hướng dẫn.</p></div><div class="card"><b class="text-emerald-700">MỨC 2 — Tự làm</b><p class="text-sm mt-2 text-slate-600">Tự bấm và test được dây mới.</p></div><div class="card"><b class="text-rose-700">MỨC 3 — Xử lý lỗi</b><p class="text-sm mt-2 text-slate-600">Tìm và sửa được lỗi sai màu, không tiếp xúc hoặc vỏ không được giữ.</p></div></div>
+<p class="mt-4 text-xs text-amber-700">⚠️ CẦN GIÁO VIÊN DUYỆT: thời gian, điểm số, chiều dài sản phẩm và ngưỡng đạt chính thức trước khi dùng cho kiểm tra có tính điểm.</p>
+</section>
 
-      <!-- BƯỚC 2: THÁO XOẮN, VUỐT THẲNG & CẮT CHỈ (3 ẢNH GIỐNG IFIXIT) -->
-      <div class="step-container bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-4">
-        <div class="flex items-center gap-3">
-          <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-900 text-white tracking-wide">BƯỚC 2</span>
-          <h3 class="font-bold text-slate-900 text-base sm:text-lg">Tháo Xoắn, Vuốt Thẳng & Cắt Chỉ Cáp</h3>
-        </div>
+<section class="bg-slate-900 text-white rounded-2xl p-5"><h2 class="font-bold">📚 Ghi chú nguồn nội dung</h2><p class="text-sm text-slate-300 mt-2">Trình tự thực hành và bảng màu T568A/T568B được xây dựng theo nội dung ôn tập hiện có của môn học. Các thông số thao tác cụ thể cần được giáo viên đối chiếu với loại cáp, hạt RJ45 và dụng cụ thực tế của phòng thực hành.</p></section>
 
-        <div class="grid md:grid-cols-2 gap-6 items-start">
-          <!-- CỘT TRÁI: KHUNG LỚN TỰ ĐỔI HÌNH -->
-          <div class="space-y-2">
-            <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-slate-900 text-white border border-slate-200 shadow-inner flex flex-col items-center justify-center p-6">
-              <div id="visual-step2-content" class="w-full flex flex-col items-center justify-center space-y-3">
-                <div class="flex items-center gap-2">
-                  <div class="w-2 h-16 bg-orange-500 rounded-full"></div>
-                  <div class="w-2 h-16 bg-green-500 rounded-full"></div>
-                  <div class="w-2 h-16 bg-blue-500 rounded-full"></div>
-                  <div class="w-2 h-16 bg-amber-800 rounded-full"></div>
-                </div>
-                <p class="text-xs text-slate-300 font-medium text-center">4 cặp dây xoắn đôi riêng biệt: Cam, Xanh lá, Xanh dương, Nâu</p>
-              </div>
-            </div>
-            <p id="caption-step2" class="text-xs text-slate-500 italic text-center font-medium">Đang xem: 1. Tách rời 4 cặp dây xoắn đôi</p>
-          </div>
-
-          <!-- CỘT PHẢI: 3 THUMBNAIL LIA CHUỘT VÀO LÀ ĐỔI HÌNH -->
-          <div class="space-y-4">
-            <div class="grid grid-cols-3 gap-2">
-              <div onmouseenter="showStepVisual('step2', 'untwist', '1. Tách rời 4 cặp dây xoắn đôi', this, 'red')"
-                   class="thumb-box cursor-pointer rounded-xl overflow-hidden border-2 border-red-500 ring-2 ring-red-200 p-2.5 bg-slate-50 text-center transition">
-                <span class="text-base">🧬</span>
-                <p class="text-[10px] font-bold text-slate-700 mt-1">1. Tách 4 cặp</p>
-              </div>
-              <div onmouseenter="showStepVisual('step2', 'straight', '2. Vuốt thẳng 8 sợi dây song song', this, 'blue')"
-                   class="thumb-box cursor-pointer rounded-xl overflow-hidden border-2 border-slate-200 hover:border-blue-400 p-2.5 bg-slate-50 text-center transition">
-                <span class="text-base">📏</span>
-                <p class="text-[10px] font-bold text-slate-700 mt-1">2. Vuốt thẳng</p>
-              </div>
-              <div onmouseenter="showStepVisual('step2', 'ripcord', '3. Cắt chỉ trắng rip cord sát gốc', this, 'green')"
-                   class="thumb-box cursor-pointer rounded-xl overflow-hidden border-2 border-slate-200 hover:border-emerald-400 p-2.5 bg-slate-50 text-center transition">
-                <span class="text-base">✂️</span>
-                <p class="text-[10px] font-bold text-slate-700 mt-1">3. Cắt chỉ rip</p>
-              </div>
-            </div>
-
-            <!-- 3 CHỈ DẪN CÓ CHẤM MÀU ĐỒNG BỘ -->
-            <div class="space-y-2.5 text-xs sm:text-sm text-slate-700">
-              <div class="flex items-start gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0 mt-1.5 ring-2 ring-red-100"></span>
-                <p><strong class="text-slate-900">Tách các cặp dây:</strong> Tháo xoắn hoàn toàn 4 cặp dây đôi thành 8 sợi riêng biệt.</p>
-              </div>
-              <div class="flex items-start gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0 mt-1.5 ring-2 ring-blue-100"></span>
-                <p><strong class="text-slate-900">Vuốt thật thẳng:</strong> Dùng ngón tay hoặc cạnh thân kìm miết mạnh từng sợi cho thật thẳng và phẳng phiu.</p>
-              </div>
-              <div class="flex items-start gap-2.5">
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 mt-1.5 ring-2 ring-emerald-100"></span>
-                <p><strong class="text-slate-900">Cắt chỉ rip cord:</strong> Dùng kìm cắt sát gốc sợi chỉ trắng chống đứt và lõi nhựa chữ thập để không cấn đầu hạt mạng.</p>
-              </div>
-            </div>
-
-            <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-900 text-xs">
-              <strong>💡 Mẹo nghề (Tip):</strong> Dây càng được vuốt thẳng thì khi đút vào hạt RJ45 sẽ không bao giờ bị nhảy chân hoặc chéo đè lên nhau.
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- BƯỚC 3: SẮP XẾP CHUẨN MÀU T568B -->
-      <div class="step-container bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-4">
-        <div class="flex items-center gap-3">
-          <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-900 text-white tracking-wide">BƯỚC 3</span>
-          <h3 class="font-bold text-slate-900 text-base sm:text-lg">Sắp Xếp 8 Sợi Theo Đúng Thứ Tự Chuẩn T568B</h3>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-6 items-start">
-          <div class="rounded-xl border border-blue-200 bg-blue-50/50 p-4 space-y-1 font-mono text-xs font-semibold">
-            <p class="text-[11px] font-bold text-blue-900 text-center uppercase tracking-wider mb-2">Thứ tự từ Trái sang Phải (1 ➜ 8):</p>
-            <div class="flex items-center gap-2 bg-white p-1 rounded border border-slate-200"><span class="w-4 text-center font-bold text-slate-400">1</span><div class="w-7 h-3 rounded wire-stripe-orange border border-slate-300"></div><span>Trắng Cam</span></div>
-            <div class="flex items-center gap-2 bg-white p-1 rounded border border-slate-200"><span class="w-4 text-center font-bold text-slate-400">2</span><div class="w-7 h-3 rounded bg-orange-600"></div><span>Cam</span></div>
-            <div class="flex items-center gap-2 bg-white p-1 rounded border border-slate-200"><span class="w-4 text-center font-bold text-slate-400">3</span><div class="w-7 h-3 rounded wire-stripe-green border border-slate-300"></div><span>Trắng Xanh lá</span></div>
-            <div class="flex items-center gap-2 bg-white p-1 rounded border border-slate-200"><span class="w-4 text-center font-bold text-slate-400">4</span><div class="w-7 h-3 rounded bg-blue-600"></div><span>Xanh dương</span></div>
-            <div class="flex items-center gap-2 bg-white p-1 rounded border border-slate-200"><span class="w-4 text-center font-bold text-slate-400">5</span><div class="w-7 h-3 rounded wire-stripe-blue border border-slate-300"></div><span>Trắng Xanh dương</span></div>
-            <div class="flex items-center gap-2 bg-white p-1 rounded border border-slate-200"><span class="w-4 text-center font-bold text-slate-400">6</span><div class="w-7 h-3 rounded bg-green-600"></div><span>Xanh lá</span></div>
-            <div class="flex items-center gap-2 bg-white p-1 rounded border border-slate-200"><span class="w-4 text-center font-bold text-slate-400">7</span><div class="w-7 h-3 rounded wire-stripe-brown border border-slate-300"></div><span>Trắng Nâu</span></div>
-            <div class="flex items-center gap-2 bg-white p-1 rounded border border-slate-200"><span class="w-4 text-center font-bold text-slate-400">8</span><div class="w-7 h-3 rounded bg-amber-900"></div><span>Nâu</span></div>
-          </div>
-
-          <div class="space-y-3 text-xs sm:text-sm text-slate-700">
-            <ul class="space-y-2 list-disc list-inside">
-              <li>Xếp 8 sợi dây nằm khít cạnh nhau trên cùng một mặt phẳng.</li>
-              <li>Dùng ngón cái và ngón trỏ kẹp thật chặt dải dây để giữ nguyên thứ tự.</li>
-              <li>Kiểm tra lại lần nữa: <strong>Chân 4 luôn là Xanh dương, chân 6 luôn là Xanh lá!</strong></li>
-            </ul>
-
-            <div class="p-3.5 bg-blue-50 rounded-xl border border-blue-200 text-blue-900 text-xs">
-              <strong>💡 Mẹo ghi nhớ:</strong> "Cam - Xanh lá - Xanh dương - Nâu". Cặp Xanh lá bị cặp Xanh dương ôm vào giữa (Chân 3 Trắng Xanh lá, Chân 6 Xanh lá).
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- BƯỚC 4: CẮT PHẲNG ĐẦU DÂY (1.3 CM) -->
-      <div class="step-container bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-4">
-        <div class="flex items-center gap-3">
-          <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-900 text-white tracking-wide">BƯỚC 4</span>
-          <h3 class="font-bold text-slate-900 text-base sm:text-lg">Cắt Phẳng Đầu Dây (Để lại 1.2 – 1.4 cm)</h3>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-6 items-start">
-          <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 flex flex-col items-center justify-center min-h-[170px]">
-            <div class="relative w-48 h-8 flex items-center">
-              <div class="w-32 h-6 bg-blue-600 rounded-l flex items-center justify-center text-[10px] text-white font-bold">Vỏ cáp</div>
-              <div class="w-16 h-5 bg-amber-400 rounded-r border-r-2 border-rose-500 flex items-center justify-center text-[10px] text-slate-900 font-bold">1.3 cm</div>
-            </div>
-            <div class="mt-3 px-3 py-1 bg-white rounded-md border border-slate-200 text-xs font-bold text-rose-600">
-              Cắt ngang bằng 90° (khoảng nửa đốt ngón tay)
-            </div>
-          </div>
-
-          <div class="space-y-3 text-xs sm:text-sm text-slate-700">
-            <ul class="space-y-2 list-disc list-inside">
-              <li>Giữ chặt dải dây giữa hai ngón tay để dây không bị xô lệch vị trí màu.</li>
-              <li>Dùng lưỡi cắt của kìm bấm mạng cắt một đường <strong>thật thẳng và vuông góc 90 độ</strong>.</li>
-              <li>Độ dài của phần lõi dây hở ra chỉ còn <strong>khoảng 1.2 cm đến 1.4 cm</strong>.</li>
-            </ul>
-
-            <div class="p-3.5 bg-rose-50 rounded-xl border border-rose-200 text-rose-900 text-xs">
-              <strong class="font-bold block">🔴 Yếu tố sống còn (Critical):</strong>
-              Cắt <strong>quá dài</strong> (>1.5cm) khiến ngàm nhựa hạt RJ45 không kẹp được vào vỏ cáp, dây sẽ bị tuột và đứt ngầm sau vài ngày sử dụng. Cắt <strong>quá ngắn</strong> (<1cm) khiến 8 sợi đồng không thể đẩy chạm vào các lá đồng dẫn điện!
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- BƯỚC 5: ĐÚT DÂY VÀO HẠT RJ45 -->
-      <div class="step-container bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-4">
-        <div class="flex items-center gap-3">
-          <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-900 text-white tracking-wide">BƯỚC 5</span>
-          <h3 class="font-bold text-slate-900 text-base sm:text-lg">Tra Dây Vào Hạt Mạng RJ45</h3>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-6 items-start">
-          <div class="rounded-xl border border-slate-200 bg-slate-50 p-5 flex flex-col justify-center text-xs space-y-3">
-            <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs space-y-1">
-              <p class="font-bold text-slate-900">🧭 Hướng cầm hạt RJ45:</p>
-              <p class="text-blue-600 font-semibold">• Mặt các lá đồng màu vàng: Quay lên phía trên mắt nhìn.</p>
-              <p class="text-slate-500">• Lẫy nhựa đàn hồi: Hướng úp xuống phía dưới.</p>
-            </div>
-            <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-xs space-y-1">
-              <p class="font-bold text-slate-900">👀 2 Điểm kiểm tra trước khi bấm:</p>
-              <p class="text-emerald-600 font-semibold">1. Nhìn đỉnh đầu hạt: 8 chấm vàng kim loại chạm khít đáy.</p>
-              <p class="text-emerald-600 font-semibold">2. Nhìn bên hông: Vỏ cáp đã chui qua ngàm kẹp nhựa.</p>
-            </div>
-          </div>
-
-          <div class="space-y-3 text-xs sm:text-sm text-slate-700">
-            <ul class="space-y-2 list-disc list-inside">
-              <li>Cầm hạt mạng RJ45 đúng hướng (mặt lẫy gạt úp xuống dưới).</li>
-              <li>Nhẹ nhàng đẩy thẳng bó dây vào các rãnh bên trong hạt RJ45.</li>
-              <li>Dùng lực ấn dứt khoát cho đến khi 8 đầu sợi đồng chạm sát đáy hạt nhựa trong suốt.</li>
-              <li>Kiểm tra mặt trên: sợi <strong>Trắng Cam phải nằm ở vị trí số 1 ngoài cùng bên trái</strong>.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- BƯỚC 6: BÓP KÌM CỐ ĐỊNH -->
-      <div class="step-container bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-4">
-        <div class="flex items-center gap-3">
-          <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-900 text-white tracking-wide">BƯỚC 6</span>
-          <h3 class="font-bold text-slate-900 text-base sm:text-lg">Bóp Kìm Cố Định (Crimp Connector)</h3>
-        </div>
-
-        <div class="grid md:grid-cols-2 gap-6 items-start">
-          <div class="rounded-xl border border-slate-200 bg-slate-50 p-6 flex flex-col items-center justify-center min-h-[170px]">
-            <span class="text-4xl mb-2">🔧</span>
-            <div class="px-4 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold">
-              Đút ngập sâu vào khe cắm 8P
-            </div>
-            <span class="text-[11px] text-slate-400 mt-2 italic text-center">Bóp dứt khoát hết cỡ một lực duy nhất</span>
-          </div>
-
-          <div class="space-y-3 text-xs sm:text-sm text-slate-700">
-            <ul class="space-y-2 list-disc list-inside">
-              <li>Đưa hạt mạng RJ45 ngập sâu vào khe cắm <strong>8P</strong> trên kìm bấm mạng.</li>
-              <li>Dùng hai tay bóp chặt cán kìm một lực dứt khoát hết cỡ.</li>
-              <li>Răng đồng của kìm sẽ ép chặt 8 chân đồng ghim sâu vào 8 lõi dây, đồng thời mấu nhựa sẽ kẹp nghiến chặt phần vỏ ngoài của cáp.</li>
-              <li>Lặp lại toàn bộ các bước cho đầu dây còn lại.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- BƯỚC 7: ĐO KIỂM MÁY TEST (3 TRƯỜNG HỢP) -->
-      <div class="step-container bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs space-y-4">
-        <div class="flex items-center gap-3">
-          <span class="text-xs font-bold px-2.5 py-1 rounded-md bg-slate-900 text-white tracking-wide">BƯỚC 7</span>
-          <h3 class="font-bold text-slate-900 text-base sm:text-lg">Kiểm Tra & Đo Thông Mạch Bằng Máy Test</h3>
-        </div>
-
-        <div class="space-y-4">
-          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Cắm 2 đầu cáp vào hộp Master và Remote của máy test cáp mạng. Bật công tắc nguồn sang <strong>ON</strong> và quan sát dải đèn LED:
-          </p>
-
-          <div class="grid sm:grid-cols-3 gap-4 text-xs sm:text-sm">
-            <!-- ĐẠT THẲNG -->
-            <div class="p-4 rounded-xl bg-white border-2 border-emerald-500 shadow-xs space-y-2">
-              <span class="text-[11px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Đạt chuẩn 100%</span>
-              <p class="font-bold text-slate-900">Cáp Thẳng (Chuẩn B - B)</p>
-              <div class="bg-slate-900 text-emerald-400 p-2.5 rounded-lg font-mono text-center text-xs">
-                M: 1 2 3 4 5 6 7 8<br/>
-                R: 1 2 3 4 5 6 7 8
-              </div>
-              <p class="text-slate-500 text-[11px]">8 đèn chạy đều tuần tự từ 1 đến 8 ở cả 2 thân máy.</p>
-            </div>
-
-            <!-- ĐẠT CHÉO -->
-            <div class="p-4 rounded-xl bg-white border border-indigo-300 shadow-xs space-y-2">
-              <span class="text-[11px] font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full">Đạt cáp chéo</span>
-              <p class="font-bold text-slate-900">Cáp Chéo (Chuẩn A - B)</p>
-              <div class="bg-slate-900 text-indigo-400 p-2.5 rounded-lg font-mono text-center text-xs">
-                M: 1 2 3 4 5 6 7 8<br/>
-                R: 3 6 1 4 5 2 7 8
-              </div>
-              <p class="text-slate-500 text-[11px]">Đèn nhảy đảo cặp 1 đổi 3, 2 đổi 6 chuẩn xác.</p>
-            </div>
-
-            <!-- LỖI -->
-            <div class="p-4 rounded-xl bg-white border border-rose-300 shadow-xs space-y-2">
-              <span class="text-[11px] font-bold bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full">Bị trừ điểm</span>
-              <p class="font-bold text-slate-900">Cáp lỗi (Đứt / Lộn màu)</p>
-              <div class="bg-slate-900 text-rose-400 p-2.5 rounded-lg font-mono text-center text-xs">
-                M: 1 2 [X] 4 5 6 7 8<br/>
-                R: 1 2 [ ] 4 5 6 7 8
-              </div>
-              <p class="text-rose-600 text-[11px]">Đèn số 3 tắt = đứt ngầm sợi 3; đèn nhảy loạn = sai màu.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- KHUNG YÊU CẦU SẢN PHẨM NGHIỆM THU NỘP BÀI (GOCHOCIT STYLE) -->
-    <section class="bg-white rounded-2xl border border-slate-200 p-6 mb-12 shadow-xs">
-      <h3 class="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
-        <span>📦</span> Yêu Cầu Sản Phẩm Thực Hành Nộp Lại Cho Giảng Viên
-      </h3>
-      <p class="text-xs sm:text-sm text-slate-600 mb-4">
-        Mỗi học sinh sau buổi thực hành phải nộp lại <strong>02 thành phẩm</strong> để chấm điểm tay nghề độc lập:
-      </p>
-      <div class="space-y-2.5 text-xs sm:text-sm text-slate-700">
-        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 flex items-start gap-2.5">
-          <span class="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">1</span>
-          <div><strong>01 Dây cáp thẳng (Chuẩn B - B) dài 1.5 mét:</strong> Đo máy test đủ 8 đèn sáng tuần tự, vỏ ngoài ngậm sâu vào ngàm kẹp hạt RJ45, lẫy nhựa nguyên vẹn không bị gãy.</div>
-        </div>
-        <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-100 flex items-start gap-2.5">
-          <span class="w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">2</span>
-          <div><strong>01 Dây cáp chéo (Chuẩn A - B) dài 1.5 mét:</strong> Đo máy test đảo cặp 1-3 và 2-6 chuẩn xác.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ĐIỀU HƯỚNG BÀI HỌC -->
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-200 text-xs sm:text-sm font-semibold">
-      <a href="kn-1-nhan-dien-thiet-bi.html" class="w-full sm:w-auto text-center px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 transition">
-        ← Bài trước: Nhận diện thiết bị mạng
-      </a>
-      <a href="kn-3-nhan-am-tuong-test-cap.html" class="w-full sm:w-auto text-center px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white transition shadow-sm">
-        Kỹ năng tiếp theo: Bấm Nhân Âm Tường →
-      </a>
-    </div>
-
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500 font-medium mt-16">
-    <div class="max-w-4xl mx-auto px-4">
-      <p>© 2026 Mạng Máy Tính PRO · Khoa CNTT - Trường Cao đẳng Buôn Ma Thuột.</p>
-    </div>
-  </footer>
-
-  <!-- SCRIPT ĐỔI HÌNH ẢNH TRỰC QUAN KHI LIA CHUỘT / CHẠM TAY (IFIXIT VIEWER) -->
-  <script>
-    function showStepVisual(stepId, mode, captionText, thumbElement, color) {
-      const caption = document.getElementById('caption-' + stepId);
-      if (caption) caption.innerText = 'Đang xem: ' + captionText;
-
-      const container = thumbElement.closest('.step-container');
-      if (container) {
-        container.querySelectorAll('.thumb-box').forEach(box => {
-          box.className = 'thumb-box cursor-pointer rounded-xl overflow-hidden border-2 border-slate-200 p-2.5 bg-slate-50 text-center transition';
-        });
-
-        let borderClass = 'border-red-500 ring-2 ring-red-200';
-        if (color === 'blue') borderClass = 'border-blue-500 ring-2 ring-blue-200';
-        if (color === 'green') borderClass = 'border-emerald-500 ring-2 ring-emerald-200';
-
-        thumbElement.className = 'thumb-box cursor-pointer rounded-xl overflow-hidden border-2 ' + borderClass + ' p-2.5 bg-slate-50 text-center transition';
-      }
-
-      if (stepId === 'step2') {
-        const visualContent = document.getElementById('visual-step2-content');
-        if (visualContent) {
-          if (mode === 'untwist') {
-            visualContent.innerHTML = `
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-16 bg-orange-500 rounded-full"></div>
-                <div class="w-2 h-16 bg-green-500 rounded-full"></div>
-                <div class="w-2 h-16 bg-blue-500 rounded-full"></div>
-                <div class="w-2 h-16 bg-amber-800 rounded-full"></div>
-              </div>
-              <p class="text-xs text-slate-300 font-medium text-center">Tách rời 4 cặp dây xoắn đôi thành các sợi độc lập</p>
-            `;
-          } else if (mode === 'straight') {
-            visualContent.innerHTML = `
-              <div class="flex items-center gap-1.5">
-                <div class="w-1.5 h-16 bg-orange-400 rounded-full"></div>
-                <div class="w-1.5 h-16 bg-orange-600 rounded-full"></div>
-                <div class="w-1.5 h-16 bg-green-400 rounded-full"></div>
-                <div class="w-1.5 h-16 bg-blue-600 rounded-full"></div>
-                <div class="w-1.5 h-16 bg-blue-400 rounded-full"></div>
-                <div class="w-1.5 h-16 bg-green-600 rounded-full"></div>
-                <div class="w-1.5 h-16 bg-amber-700 rounded-full"></div>
-                <div class="w-1.5 h-16 bg-amber-900 rounded-full"></div>
-              </div>
-              <p class="text-xs text-emerald-400 font-medium text-center">8 sợi dây được miết thật thẳng, nằm phẳng song song</p>
-            `;
-          } else if (mode === 'ripcord') {
-            visualContent.innerHTML = `
-              <div class="flex items-center justify-center gap-3">
-                <span class="text-3xl">✂️</span>
-                <div class="w-1 h-12 bg-white/40 border-dashed border"></div>
-                <span class="text-xs bg-rose-900/60 text-rose-300 px-3 py-1.5 rounded-lg border border-rose-700">Đã cắt bỏ chỉ rip cord & lõi nhựa</span>
-              </div>
-              <p class="text-xs text-slate-300 font-medium text-center">Cắt bỏ sợi chỉ rip cord sát mép vỏ ngoài để không cộm hạt RJ45</p>
-            `;
-          }
-        }
-      }
-    }
-  </script>
+<footer class="text-center text-xs text-slate-500 py-6 border-t mt-8">KN02 · Bấm cáp mạng RJ45 · Website Giảng dạy Mạng máy tính</footer>
+</main>
 </body>
 </html>
