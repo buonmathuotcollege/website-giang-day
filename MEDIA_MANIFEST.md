@@ -17,7 +17,7 @@ Quản lý tập trung mọi tài sản hình ảnh/video dùng trong website đ
 
 ## Quy tắc đặt tên
 Ưu tiên: knXX-step-YY-mo-ta.ext
-Ví dụ: kn03-step-03-t568b-order.jpg
+Ví dụ: kn02-step-03-t568b-order.svg
 
 ## Tài sản tự tạo
 Ghi ID, ngày tạo, mục đích, kỹ năng sử dụng, người/AI tạo và nguồn tham khảo nếu có.
@@ -39,6 +39,19 @@ Ghi ID, ngày tạo, mục đích, kỹ năng sử dụng, người/AI tạo và
 | KN01-IMG-003 | `images/kn01-step-07-switch-router-ap-comparison.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
 | KN01-IMG-004 | `images/kn01-step-08-insert-rj45.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
 | KN01-IMG-005 | `images/kn01-step-09-remove-rj45.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+
+## KN02 — Media hiện tại
+
+| ID | File local | Loại | Nguồn | Quyền | Trạng thái |
+|---|---|---|---|---|---|
+| KN02-IMG-001 | `images/kn02-t568a-t568b.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN02-IMG-002 | `images/kn02-step-01-strip.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN02-IMG-003 | `images/kn02-step-02-untwist.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN02-IMG-004 | `images/kn02-step-03-order.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN02-IMG-005 | `images/kn02-step-04-cut.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN02-IMG-006 | `images/kn02-step-05-rj45.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN02-IMG-007 | `images/kn02-step-06-crimp.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN02-IMG-008 | `images/kn02-step-07-test.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
 
 ### Ảnh tham khảo bên ngoài đã kiểm tra
 
