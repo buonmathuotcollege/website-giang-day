@@ -47,3 +47,8 @@ Wikimedia Commons có các ảnh RJ45, switch và motherboard với giấy phép
 ### Quyết định KN01
 
 Giai đoạn đầu sử dụng **SVG tự tạo** để website không phụ thuộc máy chủ ảnh bên ngoài và không phát sinh rủi ro bản quyền. Khi có ảnh chụp thiết bị thật tại phòng thực hành, có thể thay từng SVG bằng ảnh thực tế của trường mà không thay đổi cấu trúc bài học.
+
+| KN01-IMG-006 | external source reference | image | KN01 | Wikimedia Commons — Computer-motherboard.jpg | CC BY-SA 4.0 | chưa tải local | review | Nguồn đối chiếu; giáo viên duyệt trước khi đưa ảnh nhị phân vào repo |
+| KN01-IMG-007 | external source reference | image | KN01 | Wikimedia Commons — Motherboard_in_the_System_Unit.jpg | CC BY 4.0 | chưa tải local | review | Nguồn đối chiếu |
+| KN01-IMG-008 | external source reference | image | KN01 | Wikimedia Commons — Atx_computer_motherboard_with_cpu_and_fan.jpg | Public Domain | chưa tải local | review | Nguồn đối chiếu |
+| KN01-IMG-009 | external source reference | image | KN01 | Wikimedia Commons — Ethernet Switch (Front View).jpg | CC BY-SA 4.0 | chưa tải local | review | Nguồn đối chiếu |
