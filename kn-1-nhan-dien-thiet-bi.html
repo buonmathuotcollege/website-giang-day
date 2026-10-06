@@ -97,14 +97,13 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
         <div class="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold shrink-0">1</div>
         <div class="flex-1">
           <h3 class="font-extrabold text-lg">BƯỚC 1 — Nhìn tổng thể bên trong thùng PC</h3>
-          <p class="mt-2 text-sm"><strong>Em làm:</strong> Đứng ở vị trí quan sát, chưa chạm vào linh kiện. Tìm các bộ phận lớn trước.</p>
+          <div class="action mt-3"><strong>Em làm:</strong> Đứng ở vị trí quan sát, chưa chạm vào linh kiện. Tìm các bộ phận lớn trước.</div>
+          <div class="action mt-3"><strong>👀 Nhìn vào đây:</strong> Tìm Mainboard, cụm CPU/tản nhiệt, RAM, ổ lưu trữ và PSU theo ảnh tổng quan.</div>
           <div class="my-4 aspect-video rounded-xl bg-slate-100 border border-dashed flex items-center justify-center text-center text-sm text-slate-500 p-4">
             <img src="images/kn01-overview-pc-components.svg" alt="Tổng quan các bộ phận PC" class="w-full h-auto rounded-xl" loading="lazy">
           </div>
-          <div class="grid sm:grid-cols-2 gap-3 text-sm">
-            <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200"><strong>✓ Kết quả đúng:</strong> Em chỉ được ít nhất Mainboard, CPU/tản nhiệt, RAM, ổ lưu trữ và PSU.</div>
-            <div class="p-3 rounded-xl bg-rose-50 border border-rose-200"><strong>⚠ Nếu sai:</strong> Quay lại ảnh tổng quan và chỉ từng bộ phận theo nhãn.</div>
-          </div>
+          <div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Em chỉ được ít nhất Mainboard, CPU/tản nhiệt, RAM, ổ lưu trữ và PSU.</div>
+          <div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Quay lại ảnh tổng quan và chỉ từng bộ phận theo nhãn.</div>
         </div>
       </div>
     </article>
@@ -183,6 +182,8 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
             Hãy đọc ký hiệu cạnh LED và tài liệu của đúng thiết bị.
           </div>
           <div class="mt-3 text-sm text-slate-600">Thông thường: đèn Link cho biết trạng thái liên kết; đèn Activity nhấp nháy thường cho biết đang có dữ liệu truyền/nhận. Đây là quy tắc quan sát chung, không thay thế bảng LED của từng model.</div>
+          <div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Em mô tả được trạng thái LED và biết phải đối chiếu đúng model khi cần xác định ý nghĩa màu.</div>
+          <div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Không kết luận theo màu. Tìm ký hiệu LED hoặc tài liệu của đúng thiết bị.</div>
         </div>
       </div>
     </article>
@@ -191,27 +192,20 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
   <section id="thuc-hanh" class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-5">🔌 PHẦN C — Phân biệt Switch, Router và Access Point</h2>
 
-    <div class="overflow-x-auto bg-white border rounded-2xl mb-5">
-      <table class="w-full text-sm">
-        <thead class="bg-slate-100">
-          <tr><th class="p-3 text-left">Thiết bị</th><th class="p-3 text-left">Em nhớ đơn giản</th><th class="p-3 text-left">Dấu hiệu cần quan sát</th></tr>
-        </thead>
-        <tbody class="divide-y">
-          <tr><td class="p-3 font-bold">Switch</td><td class="p-3">Nối nhiều thiết bị trong mạng LAN.</td><td class="p-3">Thường có nhiều cổng Ethernet; thiết bị doanh nghiệp có thể có nhiều loại cổng khác nhau.</td></tr>
-          <tr><td class="p-3 font-bold">Router</td><td class="p-3">Kết nối/định tuyến giữa các mạng.</td><td class="p-3">Có thể có cổng WAN và LAN trên router gia đình; cách bố trí cổng tùy model.</td></tr>
-          <tr><td class="p-3 font-bold">Access Point</td><td class="p-3">Cho thiết bị không dây kết nối vào mạng.</td><td class="p-3">Thường có anten hoặc dạng AP gắn trần/tường; có thể chỉ có một cổng Ethernet và có thể hỗ trợ PoE tùy model.</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="bg-white border rounded-2xl p-5">
-      <div class="aspect-video rounded-xl bg-slate-100 border border-dashed flex items-center justify-center text-center text-sm text-slate-500 p-4"><img src="images/kn01-step-07-switch-router-ap-comparison.svg" alt="So sánh Switch Router và Access Point" class="w-full h-auto rounded-xl" loading="lazy"></div>
-      <p class="text-xs text-slate-500 mt-2">Ảnh cần ghi chú trực tiếp: cổng Ethernet, WAN/LAN nếu có, anten/vỏ AP và đặc điểm nhận diện.</p>
-    </div>
-
-    <div class="mt-4 p-4 rounded-xl bg-blue-50 border border-blue-200 text-sm">
-      <strong>💡 Biết thêm:</strong> Không nên dùng “có cổng WAN màu xanh” làm quy tắc tuyệt đối. Màu cổng và số lượng cổng thay đổi theo hãng/model. Với người mới, hãy ưu tiên <strong>vai trò + nhãn cổng + bố trí thực tế</strong>.
-    </div>
+    <article id="step-c1" class="step-card">
+      <div class="flex gap-4">
+        <div class="w-9 h-9 rounded-xl bg-blue-700 text-white flex items-center justify-center font-bold shrink-0">7</div>
+        <div class="flex-1">
+          <h3 class="font-extrabold text-lg">BƯỚC 7 — Phân biệt Switch, Router và Access Point</h3>
+          <div class="action mt-3"><strong>Em làm:</strong> Quan sát từng thiết bị. Đọc nhãn/cổng và xác định thiết bị dùng để nối các thiết bị trong LAN, định tuyến giữa các mạng hoặc cung cấp kết nối không dây.</div>
+          <div class="action mt-3"><strong>👀 Nhìn vào đây:</strong> Switch thường có nhiều cổng Ethernet; Router gia đình có thể có WAN/LAN; Access Point thường phục vụ kết nối Wi‑Fi và có thể có anten hoặc dạng gắn trần/tường. Bố trí cổng thay đổi theo model.</div>
+          <div class="my-4 media"><img src="images/kn01-step-07-switch-router-ap-comparison.svg" alt="So sánh Switch Router và Access Point" class="w-full h-auto rounded-xl" loading="lazy"></div>
+          <div class="result"><strong>✓ Kết quả đúng:</strong> Em gọi đúng tên cả 3 thiết bị và nói được ít nhất một dấu hiệu quan sát được của mỗi thiết bị.</div>
+          <div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Không đoán theo màu vỏ/cổng. Quay lại vai trò + nhãn cổng + bố trí thực tế rồi phân loại lại.</div>
+          <div class="mt-4 p-4 rounded-xl bg-blue-50 border border-blue-200 text-sm"><strong>💡 Biết thêm:</strong> Không dùng “cổng WAN màu xanh” làm quy tắc tuyệt đối. Màu cổng và số lượng cổng thay đổi theo hãng/model.</div>
+        </div>
+      </div>
+    </article>
   </section>
 
   <section class="section">
@@ -339,7 +333,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
     </div>
   </section>
 
-  <section class="mb-12">
+  <section id="checklist" class="mb-12">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-4">✅ Checklist tự kiểm tra</h2>
     <div class="bg-white border rounded-2xl p-5 space-y-2 text-sm">
       <label class="block"><input type="checkbox" class="mr-2"> Tôi chỉ đúng Mainboard.</label>
