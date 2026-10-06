@@ -19,14 +19,17 @@ Biết xử lý lỗi là một phần của năng lực nghề.
 - Bài liên quan: Link kỹ năng/bài thực hành.
 
 ## Ví dụ khung
-### ERR-KN03-001 — Sai thứ tự dây RJ45
-- Kỹ năng: KN03
+### ERR-KN02-001 — Sai thứ tự dây RJ45
+- Kỹ năng: KN02
 - Dấu hiệu: Tester báo sai thứ tự.
 - Nguyên nhân có thể: Xếp sai màu hoặc dây bị đảo.
 - Kiểm tra: Đối chiếu 8 sợi với hình chuẩn.
 - Cách sửa: Cắt bỏ đầu sai và bấm lại theo chuẩn đang sử dụng.
 - Kiểm tra lại: Tester cho kết quả đúng.
 - Ảnh lỗi: TBD.
+
+## Quy tắc chuyển mã
+Các mã lỗi cũ gắn với cấu trúc 8 KN phải được chuyển sang mã kỹ năng hiện hành. Không tạo lỗi mới theo mapping cũ.
 
 ## Quy tắc
 - Ưu tiên lỗi học sinh thật sự dễ gặp.
