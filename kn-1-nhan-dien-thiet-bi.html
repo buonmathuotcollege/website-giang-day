@@ -6,9 +6,20 @@
   <title>KN01 — Nhận diện PC và thiết bị mạng</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
-    .step-card { scroll-margin-top: 80px; }
-  </style>
+:root{--brand:#1d4ed8;--brand-soft:#eff6ff;--ok:#047857;--ok-soft:#ecfdf5;--warn:#b45309;--warn-soft:#fffbeb;--danger:#be123c;--danger-soft:#fff1f2;--ink:#0f172a;--muted:#475569;--line:#e2e8f0}
+body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;color:var(--ink)}
+.skill-wrap{max-width:1050px;margin:auto;padding:24px 16px 56px}
+.skill-hero{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border-radius:24px;padding:28px;margin-bottom:18px}
+.skill-hero h1{font-size:clamp(28px,5vw,46px);line-height:1.08;margin:8px 0}.skill-hero p{max-width:760px;color:#dbeafe;line-height:1.7}
+.skill-kicker{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#bfdbfe}
+.skill-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.meta-box{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:12px}.meta-box small{display:block;color:#bfdbfe;font-size:11px}.meta-box strong{display:block;margin-top:3px}
+.skill-nav{position:sticky;top:56px;z-index:40;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:16px;padding:8px;margin:12px 0 22px;overflow-x:auto;white-space:nowrap}.skill-nav a{display:inline-block;padding:8px 10px;border-radius:10px;font-size:12px;font-weight:700;color:#334155}.skill-nav a:hover{background:var(--brand-soft);color:var(--brand)}
+.section{margin:28px 0}.section-title{font-size:24px;font-weight:900;margin-bottom:12px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}
+.step-card{scroll-margin-top:120px;margin:12px 0;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}.step-card>div{padding:16px 18px}.step-card .w-9{flex:none}
+.action{border-left:4px solid var(--brand);background:var(--brand-soft);padding:12px 14px;border-radius:0 12px 12px 0}.result{border-left:4px solid var(--ok);background:var(--ok-soft);padding:12px 14px;border-radius:0 12px 12px 0}.wrong{border-left:4px solid var(--danger);background:var(--danger-soft);padding:12px 14px;border-radius:0 12px 12px 0}.warning{border-left:4px solid var(--warn);background:var(--warn-soft);padding:12px 14px;border-radius:0 12px 12px 0}
+.media{background:#f1f5f9;border:1px dashed #cbd5e1;border-radius:14px;padding:10px}.media img{display:block;width:100%;height:auto;border-radius:10px}
+@media(max-width:700px){.skill-wrap{padding:16px 12px 40px}.skill-hero{padding:22px 18px;border-radius:18px}.skill-meta{grid-template-columns:1fr}.skill-nav{top:52px}.section-title{font-size:21px}}
+</style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased">
 
@@ -19,10 +30,10 @@
   </div>
 </header>
 
-<main class="max-w-5xl mx-auto px-4 py-8 sm:py-12">
+<main class="skill-wrap">
 
-  <section class="mb-8">
-    <div class="inline-flex px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mb-3">MỨC 1 — LÀM THEO</div>
+  <section class="skill-hero">
+    <div class="skill-kicker">KỸ NĂNG 01 · MỨC ĐẦU VÀO</div>
     <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">Nhận diện PC và thiết bị mạng</h1>
     <p class="mt-3 max-w-3xl text-slate-600 leading-relaxed">
       Sau bài này, em có thể nhìn thiết bị thật và gọi đúng tên, chỉ đúng bộ phận/cổng quan trọng,
@@ -30,13 +41,13 @@
     </p>
   </section>
 
-  <section class="grid sm:grid-cols-3 gap-3 mb-10">
+  <section class="skill-meta">
     <div class="bg-white border rounded-2xl p-4"><div class="text-xs text-slate-500">Thời lượng tham khảo</div><strong>60–90 phút</strong></div>
     <div class="bg-white border rounded-2xl p-4"><div class="text-xs text-slate-500">Hình thức</div><strong>Nhìn mẫu → Làm theo</strong></div>
     <div class="bg-white border rounded-2xl p-4"><div class="text-xs text-slate-500">Thiết bị</div><strong>PC, Switch, Router, AP</strong></div>
   </section>
 
-  <section class="bg-blue-50 border border-blue-200 rounded-2xl p-5 mb-10">
+  <section id="muc-tieu" class="card section">
     <h2 class="font-extrabold text-blue-900 mb-3">🎯 Em sẽ làm được gì?</h2>
     <ul class="list-disc pl-5 space-y-1 text-sm text-blue-950">
       <li>Chỉ đúng các bộ phận PC cơ bản: Mainboard, CPU, RAM, SSD/HDD, PSU và card mạng nếu có.</li>
@@ -46,7 +57,7 @@
     </ul>
   </section>
 
-  <section class="bg-white border rounded-2xl p-5 mb-10">
+  <section id="chuan-bi" class="card section">
     <h2 class="font-bold text-slate-900 mb-3">🧰 Chuẩn bị</h2>
     <div class="grid sm:grid-cols-2 gap-2 text-sm">
       <div>☐ 01 PC có thể quan sát bên trong</div>
@@ -62,7 +73,7 @@
     </div>
   </section>
 
-  <section class="mb-10">
+  <nav class="skill-nav" aria-label="Điều hướng kỹ năng"><a href="#muc-tieu">Mục tiêu</a><a href="#chuan-bi">Chuẩn bị</a><a href="#nhin-mau">Nhìn mẫu</a><a href="#cac-buoc">Các bước</a><a href="#thuc-hanh">Thực hành</a><a href="#loi">Lỗi</a><a href="#checklist">Checklist</a><a href="#danh-gia">Đánh giá</a></nav><section id="nhin-mau" class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-4">👀 Nhìn mẫu trước khi làm</h2>
     <div class="grid sm:grid-cols-2 gap-4">
       <div class="bg-white border rounded-2xl p-4">
@@ -78,7 +89,7 @@
     </div>
   </section>
 
-  <section class="mb-12">
+  <section id="cac-buoc" class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-5">🔧 PHẦN A — Nhận diện các bộ phận PC</h2>
 
     <article id="step-a1" class="step-card bg-white border rounded-2xl p-5 mb-4">
@@ -135,7 +146,7 @@
     </article>
   </section>
 
-  <section class="mb-12">
+  <section class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-5">🌐 PHẦN B — Nhận diện cổng mạng và đèn tín hiệu</h2>
 
     <article id="step-b1" class="step-card bg-white border rounded-2xl p-5 mb-4">
@@ -168,7 +179,7 @@
     </article>
   </section>
 
-  <section class="mb-12">
+  <section id="thuc-hanh" class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-5">🔌 PHẦN C — Phân biệt Switch, Router và Access Point</h2>
 
     <div class="overflow-x-auto bg-white border rounded-2xl mb-5">
@@ -194,7 +205,7 @@
     </div>
   </section>
 
-  <section class="mb-12">
+  <section class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-5">🔗 PHẦN D — Cắm và tháo cáp RJ45 an toàn</h2>
 
     <article class="step-card bg-white border rounded-2xl p-5 mb-4">
@@ -222,7 +233,7 @@
     </article>
   </section>
 
-  <section class="mb-12">
+  <section id="loi" class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-4">🧪 Thực hành có hướng dẫn</h2>
     <div class="bg-white border rounded-2xl p-5">
       <ol class="list-decimal pl-5 space-y-2 text-sm">
@@ -237,7 +248,7 @@
     </div>
   </section>
 
-  <section class="mb-12">
+  <section id="checklist" class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-4">🧑‍🔧 Thực hành độc lập — không nhìn hướng dẫn</h2>
     <div class="bg-white border rounded-2xl p-5">
       <p class="text-sm mb-4"><strong>Tình huống:</strong> Giáo viên đưa một bộ thiết bị khác với ảnh mẫu. Em có 7 phút để nhận diện và thao tác. Không được hỏi giáo viên từng bước.</p>
@@ -254,7 +265,7 @@
     </div>
   </section>
 
-  <section class="mb-12">
+  <section id="danh-gia" class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-4">🧩 Thử thách Mức 3 — Xử lý lỗi</h2>
     <div class="grid md:grid-cols-3 gap-3">
       <div class="bg-white border rounded-2xl p-4">
