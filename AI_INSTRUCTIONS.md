@@ -233,3 +233,157 @@ Khi cập nhật nội dung:
 - Không xóa nội dung đào tạo đã duyệt nếu chưa có thay thế.
 - Ưu tiên sửa một kỹ năng độc lập rồi kiểm tra.
 - Khi nguồn bên ngoài thay đổi hoặc không còn phù hợp, cập nhật metadata nguồn và thay thế tài sản nếu cần.
+
+
+## 26. QUẢN LÝ NGUỒN ẢNH THỰC TẾ — MEDIA SOURCES
+
+Mỗi kỹ năng có hình ảnh thực tế phải có một file nguồn riêng theo mẫu:
+
+`MEDIA_SOURCES_KN01.md`, `MEDIA_SOURCES_KN02.md`, ...
+
+File này dành cho giáo viên/AI quản lý nguồn, không phải nội dung bắt buộc học sinh đọc.
+
+### 26.1. Mục đích
+
+AI phải giúp giáo viên có thể:
+- Mở trang nguồn.
+- Kiểm tra tác giả và giấy phép.
+- Tải ảnh gốc.
+- Biết ảnh dùng cho bước nào.
+- Biết tên file cần đặt trong repo.
+- Biết ảnh đã được cắt/chỉnh sửa hay chưa.
+- Theo dõi ảnh nào đã được duyệt và ảnh nào còn cần kiểm tra.
+
+### 26.2. Mỗi nguồn ảnh phải ghi
+
+Tối thiểu:
+- ID media.
+- Kỹ năng.
+- Bước sử dụng.
+- Nội dung ảnh.
+- Trang nguồn.
+- Tác giả.
+- Giấy phép.
+- Tên file đề xuất.
+- Trạng thái.
+- Ghi chú chỉnh sửa nếu có.
+
+Ví dụ trạng thái:
+- `review` — đang kiểm tra.
+- `approved` — đã được giáo viên chấp nhận.
+- `reference-only` — chỉ dùng làm tài liệu tham khảo, chưa được phép đưa vào repo.
+- `generated` — ảnh do dự án tự tạo.
+- `replaced` — đã thay bằng ảnh khác.
+
+### 26.3. Quy trình bắt buộc
+
+Khi cần ảnh thực tế:
+
+> TÌM → KIỂM TRA NỘI DUNG → KIỂM TRA GIẤY PHÉP → KIỂM TRA TÁC GIẢ → TẢI ẢNH GỐC → ĐỔI TÊN → GHI MEDIA_MANIFEST → ĐƯA VÀO TRANG → KIỂM TRA HIỂN THỊ
+
+Không được:
+- Lấy ảnh từ Google Images rồi coi đó là nguồn.
+- Xóa thông tin tác giả/giấy phép.
+- Khẳng định ảnh được phép sử dụng khi chưa kiểm tra.
+- Đưa ảnh có quyền sử dụng không rõ vào repo như ảnh chính thức.
+- Dùng một ảnh minh họa chung nếu ảnh đó không giúp học sinh nhận biết đúng thiết bị/thao tác.
+
+### 26.4. Ưu tiên nguồn
+
+Ưu tiên theo thứ tự:
+1. Ảnh giáo viên tự chụp tại phòng thực hành.
+2. Ảnh do dự án tự tạo.
+3. Ảnh có giấy phép rõ ràng cho phép sử dụng phù hợp.
+4. Nguồn kỹ thuật chính thống để tham khảo hình ảnh/thông tin.
+5. Nguồn khác chỉ dùng khi quyền sử dụng đã được xác minh.
+
+Khi dùng nguồn bên ngoài, ưu tiên trang nguồn gốc thay vì trang tổng hợp.
+
+### 26.5. Link nguồn trong tài liệu
+
+Trong các file Markdown của repo, có thể dùng link tương đối để liên kết giữa các tài liệu nội bộ, giúp repo vẫn dễ di chuyển/clone. GitHub hỗ trợ các relative links và image paths trong Markdown. 
+
+AI phải ưu tiên:
+- Link nội bộ tương đối cho tài liệu trong repo.
+- Link trang nguồn gốc cho tài sản bên ngoài.
+- Không tạo link tới file chưa tồn tại.
+
+### 26.6. Khi tìm nguồn cho một kỹ năng mới
+
+AI phải chủ động tạo:
+`MEDIA_SOURCES_KNxx.md`
+
+và tìm đủ các nhóm hình cần thiết:
+- Ảnh tổng quan thiết bị.
+- Ảnh cận vị trí thao tác.
+- Ảnh tay đang thao tác nếu cần.
+- Ảnh kết quả đúng.
+- Ảnh lỗi thường gặp.
+- Diagram nếu ảnh thật không đủ để giải thích.
+
+Không nhất thiết phải có đủ tất cả ngay từ phiên bản đầu. Nếu chưa tìm được nguồn phù hợp, ghi rõ `TBD` hoặc `Cần giáo viên duyệt`.
+
+### 26.7. Đồng bộ với MEDIA_MANIFEST.md
+
+`MEDIA_SOURCES_KNxx.md` là nơi **tìm và đánh giá nguồn**.
+
+`MEDIA_MANIFEST.md` là nơi **quản lý tài sản đã được chọn/đưa vào dự án**.
+
+Không thay thế hai file cho nhau.
+
+Sau khi giáo viên chọn một ảnh:
+1. Cập nhật trạng thái nguồn.
+2. Tải/đưa ảnh vào đúng thư mục.
+3. Ghi media ID và metadata vào `MEDIA_MANIFEST.md`.
+4. Cập nhật đường dẫn trong trang kỹ năng.
+5. Kiểm tra ảnh không bị lỗi.
+6. Chạy lại QUALITY_CHECKLIST.md.
+
+### 26.8. Ưu tiên ảnh thực tế cho học sinh 9+3
+
+Ảnh phải giúp học sinh trả lời ngay:
+- Đây là thiết bị gì?
+- Nhìn vào vị trí nào?
+- Cầm/đặt dây ở đâu?
+- Thao tác thế nào?
+- Làm đúng thì trông ra sao?
+
+Nếu một ảnh đẹp nhưng không giúp trả lời các câu hỏi trên, không ưu tiên ảnh đó.
+
+### 26.9. Không để nguồn làm rối giao diện học sinh
+
+Nguồn ảnh phục vụ quản trị nội dung. Không đưa hàng loạt thông tin giấy phép vào giữa quy trình thao tác của học sinh.
+
+Trang học sinh chỉ cần:
+- ảnh/diagram;
+- chú thích ngắn;
+- cảnh báo cần thiết;
+- nguồn/credit ngắn khi bắt buộc.
+
+Chi tiết nguồn nằm trong `MEDIA_SOURCES_KNxx.md` và `MEDIA_MANIFEST.md`.
+
+### 26.10. Khi AI được yêu cầu "thêm link ảnh thực tế"
+
+Không chỉ trả lời bằng danh sách link trong chat.
+
+AI phải:
+1. Tìm nguồn phù hợp.
+2. Kiểm tra giấy phép nếu có thể.
+3. Tạo/cập nhật `MEDIA_SOURCES_KNxx.md`.
+4. Gắn mỗi ảnh với đúng bước kỹ năng.
+5. Đề xuất tên file.
+6. Ghi rõ nguồn nào đã xác minh và nguồn nào cần giáo viên duyệt.
+7. Nếu phù hợp, cập nhật `MEDIA_MANIFEST.md`.
+8. Không tự tải/đưa tài sản có quyền sử dụng không rõ vào repo.
+
+### 26.11. Tiêu chuẩn hoàn thành media
+
+Một nhóm media của kỹ năng được coi là đạt khi:
+- Có ảnh/diagram cho các thao tác quan trọng.
+- Mỗi ảnh có mục đích rõ ràng.
+- Nguồn và giấy phép được theo dõi.
+- Tên file nhất quán.
+- Không có ảnh không rõ quyền sử dụng được đưa vào repo.
+- Không có link hỏng.
+- Ảnh hiển thị đúng trên desktop và mobile.
+- Giáo viên có thể truy ngược từ ảnh trong trang → media ID → nguồn gốc.
