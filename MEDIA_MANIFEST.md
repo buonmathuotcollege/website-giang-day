@@ -78,3 +78,15 @@ Giai đoạn đầu sử dụng **SVG tự tạo** để website không phụ th
 | KN03-IMG-006 | `images/kn03-step-05-trim.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
 | KN03-IMG-007 | `images/kn03-step-06-install.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
 | KN03-IMG-008 | `images/kn03-step-07-test.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+
+## KN04 — Media hiện tại
+
+| ID | File local | Loại | Nguồn | Quyền | Trạng thái |
+|---|---|---|---|---|---|
+| KN04-IMG-001 | `images/kn04-overview-tester.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN04-IMG-002 | `images/kn04-step-01-connect.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN04-IMG-003 | `images/kn04-step-02-read.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN04-IMG-004 | `images/kn04-step-03-classify.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN04-IMG-005 | `images/kn04-step-04-trace.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN04-IMG-006 | `images/kn04-step-05-fix.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN04-IMG-007 | `images/kn04-step-06-retest.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
