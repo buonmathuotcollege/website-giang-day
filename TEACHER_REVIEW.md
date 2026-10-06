@@ -53,6 +53,8 @@ Kèm:
 AI được phép đề xuất phương án, nhưng không được biến đề xuất thành chuẩn chính thức khi chưa được duyệt.
 
 ## Nhật ký duyệt
+| 2026-10-06 | Chuyển cấu trúc website từ 8 KN sang 12 KN | Toàn hệ thống | Đồng bộ mã KN, giữ nội dung chuyên môn và tái phân bổ nội dung cũ | ⚠️ CẦN GIÁO VIÊN DUYỆT | review |
+
 | Ngày | Nội dung | Kỹ năng | AI đề xuất | Quyết định giáo viên | Trạng thái |
 |---|---|---|---|---|---|
 | ... | ... | ... | ... | ... | review |
