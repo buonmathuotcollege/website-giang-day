@@ -90,3 +90,15 @@ Giai đoạn đầu sử dụng **SVG tự tạo** để website không phụ th
 | KN04-IMG-005 | `images/kn04-step-04-trace.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
 | KN04-IMG-006 | `images/kn04-step-05-fix.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
 | KN04-IMG-007 | `images/kn04-step-06-retest.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+
+## KN05 — Media hiện tại
+
+| ID | File local | Loại | Nguồn | Quyền | Trạng thái |
+|---|---|---|---|---|---|
+| KN05-IMG-001 | `images/kn05-overview-ipv4.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN05-IMG-002 | `images/kn05-step-01-open.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN05-IMG-003 | `images/kn05-step-02-ip.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN05-IMG-004 | `images/kn05-step-03-dns.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN05-IMG-005 | `images/kn05-step-04-check.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN05-IMG-006 | `images/kn05-step-05-ping.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+| KN05-IMG-007 | `images/kn05-step-06-troubleshoot.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
