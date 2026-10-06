@@ -5,7 +5,7 @@
   * [KN01 — Nhận diện PC và thiết bị mạng](kn-1-nhan-dien-thiet-bi.html)
   * [KN02 — Bấm cáp mạng RJ45](kn-2-bam-cap-mang.html)
   * [KN03 — Bấm/đấu ổ cắm mạng âm tường](kn-3-o-cam-mang-am-tuong.html)
-  * KN04 — Đo kiểm và xử lý sự cố cáp mạng *(đang xây dựng)*
+  * [KN04 — Đo kiểm và xử lý sự cố cáp mạng](kn-4-do-kiem-xu-ly-cap.html)
 
 * **2. ĐỊA CHỈ IP & THIẾT KẾ**
   * KN05 — Cấu hình IP máy trạm *(đang xây dựng)*
