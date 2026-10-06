@@ -73,7 +73,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
     </div>
   </section>
 
-  <nav class="skill-nav" aria-label="Điều hướng kỹ năng"><a href="#muc-tieu">Mục tiêu</a><a href="#chuan-bi">Chuẩn bị</a><a href="#nhin-mau">Nhìn mẫu</a><a href="#cac-buoc">Các bước</a><a href="#thuc-hanh">Thực hành</a><a href="#loi">Lỗi</a><a href="#checklist">Checklist</a><a href="#danh-gia">Đánh giá</a></nav><section id="nhin-mau" class="section">
+  <nav class="skill-nav" aria-label="Điều hướng kỹ năng"><a href="#muc-tieu">Mục tiêu</a><a href="#chuan-bi">Chuẩn bị</a><a href="#nhin-mau">Nhìn mẫu</a><a href="#cac-buoc">Các bước</a><a href="#kiem-tra-ket-qua">Kiểm tra</a><a href="#loi">Lỗi</a><a href="#thuc-hanh">Có hướng dẫn</a><a href="#thuc-hanh-doc-lap">Tự làm</a><a href="#checklist">Checklist</a><a href="#danh-gia">Đánh giá</a></nav><section id="nhin-mau" class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-4">👀 Nhìn mẫu trước khi làm</h2>
     <div class="grid sm:grid-cols-2 gap-4">
       <div class="bg-white border rounded-2xl p-4">
@@ -115,8 +115,10 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
         <div class="flex-1">
           <h3 class="font-extrabold text-lg">BƯỚC 2 — Tìm Mainboard</h3>
           <p class="mt-2 text-sm"><strong>Em làm:</strong> Tìm bảng mạch lớn nhất, nơi nhiều linh kiện và khe cắm được kết nối với nhau.</p>
+          <div class="action mt-3"><strong>👀 Nhìn vào đây:</strong> Quan sát diện tích bảng mạch, khe cắm và các đầu nối. Không cần tháo linh kiện.</div>
           <div class="my-4 aspect-video rounded-xl bg-slate-100 border border-dashed flex items-center justify-center text-center text-sm text-slate-500 p-4"><img src="images/kn01-overview-pc-components.svg" alt="Vị trí Mainboard trong PC" class="w-full h-auto rounded-xl" loading="lazy"></div>
-          <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-sm"><strong>✓ Kết quả đúng:</strong> Em chỉ đúng Mainboard mà không nhầm với PSU hoặc card mở rộng.</div>
+          <div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Em chỉ đúng Mainboard mà không nhầm với PSU hoặc card mở rộng.</div>
+          <div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Quay lại ảnh tổng quan, tìm bảng mạch có nhiều khe cắm/đầu nối nhất rồi chỉ lại.</div>
         </div>
       </div>
     </article>
@@ -127,8 +129,10 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
         <div class="flex-1">
           <h3 class="font-extrabold text-lg">BƯỚC 3 — Tìm CPU và RAM</h3>
           <p class="mt-2 text-sm"><strong>Em làm:</strong> Tìm cụm tản nhiệt CPU. Sau đó tìm các thanh RAM cắm vào khe RAM gần CPU.</p>
+          <div class="action mt-3"><strong>👀 Nhìn vào đây:</strong> CPU thường nằm dưới cụm tản nhiệt; RAM là các thanh dài cắm vào khe RAM trên Mainboard.</div>
           <div class="my-4 aspect-video rounded-xl bg-slate-100 border border-dashed flex items-center justify-center text-center text-sm text-slate-500 p-4"><img src="images/kn01-overview-pc-components.svg" alt="Vị trí CPU và RAM" class="w-full h-auto rounded-xl" loading="lazy"></div>
-          <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-sm"><strong>✓ Kết quả đúng:</strong> Em chỉ được vị trí CPU/tản nhiệt và thanh RAM; không cần tháo chúng.</div>
+          <div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Em chỉ được vị trí CPU/tản nhiệt và thanh RAM; không cần tháo chúng.</div>
+          <div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Không tháo linh kiện. Nhìn lại ảnh mẫu và xác định thanh RAM trước, sau đó tìm cụm tản nhiệt CPU.</div>
         </div>
       </div>
     </article>
@@ -139,8 +143,10 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
         <div class="flex-1">
           <h3 class="font-extrabold text-lg">BƯỚC 4 — Tìm SSD/HDD và PSU</h3>
           <p class="mt-2 text-sm"><strong>Em làm:</strong> Tìm thiết bị lưu trữ SSD/HDD. Sau đó tìm hộp PSU nơi dây nguồn điện đi vào máy.</p>
+          <div class="action mt-3"><strong>👀 Nhìn vào đây:</strong> SSD/HDD là nơi lưu dữ liệu; PSU là bộ phận nhận dây nguồn điện và cấp nguồn cho máy.</div>
           <div class="my-4 aspect-video rounded-xl bg-slate-100 border border-dashed flex items-center justify-center text-center text-sm text-slate-500 p-4"><img src="images/kn01-overview-pc-components.svg" alt="Vị trí SSD/HDD và PSU" class="w-full h-auto rounded-xl" loading="lazy"></div>
-          <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-sm"><strong>✓ Kết quả đúng:</strong> Em phân biệt được thiết bị lưu trữ với bộ nguồn.</div>
+          <div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Em phân biệt được thiết bị lưu trữ với bộ nguồn.</div>
+          <div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Tìm vị trí có dây nguồn điện đi vào để nhận diện PSU; không mở hoặc tháo PSU.</div>
         </div>
       </div>
     </article>
@@ -155,8 +161,10 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
         <div class="flex-1">
           <h3 class="font-extrabold text-lg">BƯỚC 5 — Tìm cổng Ethernet/RJ45</h3>
           <p class="mt-2 text-sm"><strong>Em làm:</strong> Tìm cổng mạng hình chữ nhật có khe khóa cho đầu RJ45. Cổng có thể nằm trên Mainboard hoặc trên card mạng rời.</p>
+          <div class="action mt-3"><strong>👀 Nhìn vào đây:</strong> So sánh cổng với ảnh cận cảnh. Tập trung vào hình dạng cổng và vị trí khe khóa.</div>
           <div class="my-4 aspect-video rounded-xl bg-slate-100 border border-dashed flex items-center justify-center text-center text-sm text-slate-500 p-4"><img src="images/kn01-step-05-rj45-port-closeup.svg" alt="Cận cảnh cổng Ethernet RJ45" class="w-full h-auto rounded-xl" loading="lazy"></div>
-          <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-sm"><strong>✓ Kết quả đúng:</strong> Em chỉ đúng cổng RJ45 và không nhầm với cổng USB, HDMI hoặc DisplayPort.</div>
+          <div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Em chỉ đúng cổng RJ45 và không nhầm với cổng USB, HDMI hoặc DisplayPort.</div>
+          <div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Đặt ảnh cận cảnh bên cạnh PC và so sánh hình dạng cổng trước khi chọn.</div>
         </div>
       </div>
     </article>
@@ -167,6 +175,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
         <div class="flex-1">
           <h3 class="font-extrabold text-lg">BƯỚC 6 — Quan sát Link và Activity</h3>
           <p class="mt-2 text-sm"><strong>Em làm:</strong> Khi thiết bị có đèn LED cạnh cổng mạng, quan sát trạng thái sáng/tắt/nhấp nháy.</p>
+          <div class="action mt-3"><strong>👀 Nhìn vào đây:</strong> Nhìn cả ký hiệu cạnh LED và trạng thái sáng/nhấp nháy. Không đoán ý nghĩa chỉ dựa vào màu.</div>
           <div class="my-4 aspect-video rounded-xl bg-slate-100 border border-dashed flex items-center justify-center text-center text-sm text-slate-500 p-4"><img src="images/kn01-step-05-rj45-port-closeup.svg" alt="Cổng Ethernet và vùng đèn tín hiệu" class="w-full h-auto rounded-xl" loading="lazy"></div>
           <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-sm">
             <strong>⚠ Lưu ý quan trọng:</strong> Màu và ý nghĩa LED <strong>phụ thuộc thiết bị/hãng</strong>.
@@ -214,8 +223,10 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
         <div class="flex-1">
           <h3 class="font-extrabold text-lg">BƯỚC 8 — Cắm đầu RJ45</h3>
           <p class="mt-2 text-sm"><strong>Em làm:</strong> Cầm đầu RJ45, đặt đúng chiều với cổng rồi đẩy thẳng và nhẹ cho đến khi đầu cắm vào vị trí.</p>
+          <div class="action mt-3"><strong>👀 Nhìn vào đây:</strong> Lẫy đầu RJ45 phải hướng đúng với khe khóa của cổng. Đầu cắm đi thẳng, không xoay vặn.</div>
           <div class="my-4 aspect-video rounded-xl bg-slate-100 border border-dashed flex items-center justify-center text-center text-sm text-slate-500 p-4"><img src="images/kn01-step-08-insert-rj45.svg" alt="Cách cắm đầu RJ45" class="w-full h-auto rounded-xl" loading="lazy"></div>
-          <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-sm"><strong>✓ Kết quả đúng:</strong> Đầu cắm nằm chắc trong cổng; không cần dùng lực mạnh.</div>
+          <div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Đầu cắm nằm chắc trong cổng; không cần dùng lực mạnh.</div>
+          <div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Không cố ấn mạnh. Rút ra, kiểm tra chiều đầu cắm và thử lại nhẹ nhàng.</div>
         </div>
       </div>
     </article>
@@ -226,14 +237,26 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
         <div class="flex-1">
           <h3 class="font-extrabold text-lg">BƯỚC 9 — Tháo đầu RJ45</h3>
           <p class="mt-2 text-sm"><strong>Em làm:</strong> Ấn lẫy khóa của đầu RJ45 rồi kéo đầu cắm thẳng ra. Không kéo bằng cách giật mạnh dây.</p>
+          <div class="action mt-3"><strong>👀 Nhìn vào đây:</strong> Ngón tay ấn vào lẫy khóa; tay còn lại giữ đầu cắm. Không kéo bằng phần dây.</div>
           <div class="my-4 aspect-video rounded-xl bg-slate-100 border border-dashed flex items-center justify-center text-center text-sm text-slate-500 p-4"><img src="images/kn01-step-09-remove-rj45.svg" alt="Cách tháo đầu RJ45" class="w-full h-auto rounded-xl" loading="lazy"></div>
-          <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-sm"><strong>✓ Kết quả đúng:</strong> Lẫy không bị bẻ gãy và đầu cáp được tháo ra nguyên vẹn.</div>
+          <div class="result mt-3"><strong>✓ Kết quả đúng:</strong> Lẫy không bị bẻ gãy và đầu cáp được tháo ra nguyên vẹn.</div>
+          <div class="wrong mt-3"><strong>🔧 Nếu sai:</strong> Dừng thao tác, đặt tay vào đầu cắm, ấn lẫy rồi kéo thẳng ra.</div>
         </div>
       </div>
     </article>
   </section>
 
-  <section id="loi" class="section">
+  <section id="kiem-tra-ket-qua" class="section">
+    <h2 class="text-2xl font-extrabold text-slate-900 mb-4">🔎 Kiểm tra kết quả sau thao tác</h2>
+    <div class="grid md:grid-cols-3 gap-3">
+      <div class="card"><strong>1. Nhìn</strong><p class="text-sm text-slate-600 mt-2">Thiết bị/cổng được chỉ đúng, không nhầm với bộ phận gần đó.</p></div>
+      <div class="card"><strong>2. Chạm/kiểm tra</strong><p class="text-sm text-slate-600 mt-2">Chỉ kiểm tra bằng thao tác an toàn; không tháo linh kiện hoặc mở PSU.</p></div>
+      <div class="card"><strong>3. Nói lại</strong><p class="text-sm text-slate-600 mt-2">Em tự nói được tên, vai trò hoặc dấu hiệu nhận diện của đối tượng vừa kiểm tra.</p></div>
+    </div>
+    <div class="result mt-4"><strong>Quy tắc của website:</strong> Mỗi thao tác phải có dấu hiệu để học sinh tự biết “đúng hay chưa đúng”, thay vì chỉ đọc hướng dẫn.</div>
+  </section>
+
+  <section id="thuc-hanh" class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-4">🧪 Thực hành có hướng dẫn</h2>
     <div class="bg-white border rounded-2xl p-5">
       <ol class="list-decimal pl-5 space-y-2 text-sm">
@@ -248,7 +271,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
     </div>
   </section>
 
-  <section id="checklist" class="section">
+  <section id="thuc-hanh-doc-lap" class="section">
     <h2 class="text-2xl font-extrabold text-slate-900 mb-4">🧑‍🔧 Thực hành độc lập — không nhìn hướng dẫn</h2>
     <div class="bg-white border rounded-2xl p-5">
       <p class="text-sm mb-4"><strong>Tình huống:</strong> Giáo viên đưa một bộ thiết bị khác với ảnh mẫu. Em có 7 phút để nhận diện và thao tác. Không được hỏi giáo viên từng bước.</p>
