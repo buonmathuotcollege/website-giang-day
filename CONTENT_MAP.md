@@ -14,7 +14,7 @@ Website **không tổ chức theo 8 KN cũ** và không tổ chức theo tiết 
 | KN01 | Nhận diện PC và thiết bị mạng | published | published | published |
 | KN02 | Bấm cáp mạng RJ45 | published | draft | review |
 | KN03 | Bấm/đấu ổ cắm mạng âm tường | draft | draft | review |
-| KN04 | Đo kiểm và xử lý sự cố cáp mạng | TBD | TBD | TBD |
+| KN04 | Đo kiểm và xử lý sự cố cáp mạng | draft | draft | review |
 | KN05 | Cấu hình IP máy trạm | TBD | TBD | TBD |
 | KN06 | Chia subnet cơ bản | TBD | TBD | TBD |
 | KN07 | Vẽ sơ đồ mạng | TBD | TBD | TBD |
