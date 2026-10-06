@@ -87,3 +87,15 @@ Các mã lỗi cũ gắn với cấu trúc 8 KN phải được chuyển sang m�
 - Kiểm tra: Đối chiếu từng chân với sơ đồ.
 - Cách sửa: Đấu lại theo chuẩn bài.
 - Kiểm tra lại: Test lại.
+
+
+## Bổ sung khi hoàn thiện KN06–KN12
+
+- **ERR-KN05-001 — Sai địa chỉ IP:** máy không liên lạc đúng; kiểm tra IP/mask/gateway và cấu hình lại.
+- **ERR-KN06-001 — Sai subnet:** network/broadcast/dải host tính sai; kiểm tra CIDR và block size.
+- **ERR-KN07-001 — Sơ đồ sai kết nối:** topology không khớp yêu cầu; đối chiếu từng liên kết.
+- **ERR-KN08-001 — Sai membership:** user chưa thuộc group yêu cầu; kiểm tra và thêm lại.
+- **ERR-KN09-001 — Sai quyền chia sẻ:** đọc/ghi không đúng; kiểm tra cả Share và NTFS.
+- **ERR-KN10-001 — Wi-Fi không nhận IP:** kiểm tra SSID, DHCP và uplink.
+- **ERR-KN11-001 — Guest truy cập LAN:** kiểm tra isolation/VLAN/firewall theo thiết bị.
+- **ERR-KN12-001 — Triển khai không khớp sơ đồ:** đối chiếu thực tế và cập nhật sơ đồ bàn giao.
