@@ -8,7 +8,7 @@
   * [KN04 — Đo kiểm và xử lý sự cố cáp mạng](kn-4-do-kiem-xu-ly-cap.html)
 
 * **2. ĐỊA CHỈ IP & THIẾT KẾ**
-  * KN05 — Cấu hình IP máy trạm *(đang xây dựng)*
+  * [KN05 — Cấu hình IP máy trạm](kn-5-cau-hinh-ip-may-tram.html)
   * KN06 — Chia subnet cơ bản *(đang xây dựng)*
   * KN07 — Vẽ sơ đồ mạng *(đang xây dựng)*
 
