@@ -65,3 +65,16 @@ Giai đoạn đầu sử dụng **SVG tự tạo** để website không phụ th
 | KN01-IMG-007 | external source reference | image | KN01 | Wikimedia Commons — Motherboard_in_the_System_Unit.jpg | CC BY 4.0 | chưa tải local | review | Nguồn đối chiếu |
 | KN01-IMG-008 | external source reference | image | KN01 | Wikimedia Commons — Atx_computer_motherboard_with_cpu_and_fan.jpg | Public Domain | chưa tải local | review | Nguồn đối chiếu |
 | KN01-IMG-009 | external source reference | image | KN01 | Wikimedia Commons — Ethernet Switch (Front View).jpg | CC BY-SA 4.0 | chưa tải local | review | Nguồn đối chiếu |
+
+## KN03 — Media hiện tại
+
+| ID | File local | Loại | Nguồn | Quyền | Trạng thái |
+|---|---|---|---|---|---|
+| KN03-IMG-001 | `images/kn03-overview-keystone.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN03-IMG-002 | `images/kn03-step-01-identify.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN03-IMG-003 | `images/kn03-step-02-strip.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN03-IMG-004 | `images/kn03-step-03-order.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN03-IMG-005 | `images/kn03-step-04-punchdown.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN03-IMG-006 | `images/kn03-step-05-trim.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN03-IMG-007 | `images/kn03-step-06-install.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN03-IMG-008 | `images/kn03-step-07-test.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
