@@ -40,3 +40,20 @@ NHÌN MẪU → LÀM TỪNG BƯỚC → KIỂM TRA → SỬA LỖI → TỰ LÀM
 5. Sau đó mới sửa code.
 
 Xem AI_INSTRUCTIONS.md để biết toàn bộ tiêu chuẩn.
+
+## QUY CHUẨN CHI TIẾT
+Khi làm nội dung, đọc thêm:
+- CONTENT_GUIDE.md
+- SOURCE_POLICY.md
+- VISUAL_GUIDE.md
+- SKILL_TEMPLATE.md
+- QUALITY_CHECKLIST.md
+
+## NGUỒN VÀ HÌNH ẢNH
+Được phép nghiên cứu nguồn bên ngoài để nâng chất lượng, nhưng phải kiểm tra quyền sử dụng trước khi sao chép nội dung/hình ảnh/video vào repo. Quyền không rõ thì liên kết hoặc tự tạo tài sản thay thế.
+
+## PHONG CÁCH HƯỚNG DẪN
+Tham khảo kiểu hướng dẫn từng bước trực quan như iFixit: mỗi bước có thao tác, hình/video, kết quả đúng và xử lý lỗi. Không sao chép tài sản hoặc thiết kế có bản quyền.
+
+## TRƯỚC KHI HOÀN THÀNH
+Chạy qua QUALITY_CHECKLIST.md về nội dung, kỹ thuật, media, UI, link và đánh giá. Điểm chưa chắc chắn phải ghi "Cần giáo viên duyệt".
