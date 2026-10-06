@@ -37,7 +37,13 @@ Mỗi bước phải có dấu hiệu để học sinh tự đối chiếu:
 - lệnh nào trả về;
 - sản phẩm cuối cùng ra sao.
 
-## 5. Quy tắc lỗi
+## 5. Quy tắc media trong từng bước
+- Mỗi bước thao tác trực quan phải có ít nhất một hình/diagram/ảnh chụp hoặc placeholder rõ ràng ngay tại bước.
+- Hình phải phục vụ đúng hành động của bước đó; không dùng một ảnh chung để thay cho nhiều bước nếu ảnh không thể hiện đủ thao tác.
+- Video là tùy chọn theo nhu cầu; chỉ dùng khi chuyển động/trình tự khó thể hiện bằng ảnh.
+- Placeholder phải có mã rõ ràng và không được trình bày như ảnh thật.
+
+## 6. Quy tắc lỗi
 Mỗi lỗi quan trọng nên có:
 - Dấu hiệu.
 - Nguyên nhân có khả năng nhất.
@@ -45,20 +51,20 @@ Mỗi lỗi quan trọng nên có:
 - Cách sửa.
 - Cách thử lại.
 
-## 6. Phân tầng
+## 7. Phân tầng
 Mức 1: Làm theo.
 Mức 2: Tự làm.
 Mức 3: Xử lý lỗi.
 
 Không dùng "đã học" làm tiêu chí đạt; phải có hành vi hoặc sản phẩm quan sát được.
 
-## 7. Lý thuyết
+## 8. Lý thuyết
 Chỉ đưa lý thuyết cần thiết để thực hiện nhiệm vụ. Phần mở rộng đưa vào "Biết thêm".
 
-## 8. Nguồn bên ngoài
+## 9. Nguồn bên ngoài
 Có thể nghiên cứu nhiều nguồn để đối chiếu và tổng hợp. Nội dung đưa vào website phải được biên soạn lại phù hợp đối tượng, không sao chép nguyên văn khi không được phép.
 
-## 9. Quy tắc trước khi xuất bản
+## 10. Quy tắc trước khi xuất bản
 Kiểm tra:
 - đúng kỹ thuật;
 - đúng phiên bản/hãng nếu có phụ thuộc;
