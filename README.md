@@ -1,102 +1,64 @@
-# 🎯 Cổng Luyện Tập & Đánh Giá Năng Lực Nghề
+# 🎯 Cổng Luyện Tập & Đánh Giá Năng Lực Nghề Mạng Máy Tính
 
-Chào mừng các bạn học sinh đến với không gian thực hành Mạng máy tính. Hãy chọn bất kỳ kỹ năng nào bên dưới để bắt đầu luyện tập theo tốc độ của riêng bạn!
+Website được tổ chức theo **kỹ năng nghề**, không theo tiết học và không còn dùng cấu trúc 8 KN cũ.
 
----
+## Khung kỹ năng hiện hành
 
-### 🛠️ Nhóm 1: Hạ Tầng & Thi Công Cáp Mạng
+| Mã | Kỹ năng | Trạng thái |
+|---|---|---|
+| KN01 | Nhận diện PC và thiết bị mạng | Đã xây dựng |
+| KN02 | Bấm cáp mạng RJ45 | Đang hoàn thiện/kiểm duyệt |
+| KN03 | Bấm/đấu ổ cắm mạng âm tường | Sẽ xây dựng |
+| KN04 | Đo kiểm và xử lý sự cố cáp mạng | Sẽ xây dựng |
+| KN05 | Cấu hình IP máy trạm | Sẽ xây dựng |
+| KN06 | Chia subnet cơ bản | Sẽ xây dựng |
+| KN07 | Vẽ sơ đồ mạng | Sẽ xây dựng |
+| KN08 | Quản lý User/Group Windows | Sẽ xây dựng |
+| KN09 | Chia sẻ dữ liệu và máy in | Sẽ xây dựng |
+| KN10 | Lắp đặt và cấu hình Wi-Fi | Sẽ xây dựng |
+| KN11 | Bảo mật và phân tách Wi-Fi | Sẽ xây dựng |
+| KN12 | Triển khai mạng văn phòng | Sẽ xây dựng |
 
-<div class="grid-cards">
-  <div class="card-item">
-    <div>
-      <span class="badge">Kỹ năng 01</span>
-      <h3>🔌 Nhận Diện Thiết Bị & PC</h3>
-      <p>Nhận biết cổng mạng NIC, phân biệt Router, Switch, Access Point và các đèn tín hiệu.</p>
-    </div>
-    <a href="#/kn-1-nhan-dien-thiet-bi">👉 Bắt đầu học</a>
-  </div>
+### Hai phần tích hợp
+- **DA01 — Dự án triển khai mạng văn phòng tích hợp**
+- **DG01 — Đánh giá năng lực nghề**
 
-  <div class="card-item">
-    <div>
-      <span class="badge">Kỹ năng 02</span>
-      <h3>✂️ Gia Công Cáp Mạng RJ45</h3>
-      <p>5 bước bấm cáp thẳng, cáp chéo chuẩn A/B và kỹ thuật bấm nhân mạng âm tường.</p>
-    </div>
-    <a href="#/kn-2-gia-cong-cap-mang">👉 Bắt đầu học</a>
-  </div>
+## Nguyên tắc học
+> **NHÌN MẪU → LÀM THEO → KIỂM TRA → SỬA LỖI → TỰ LÀM → ĐẠT NĂNG LỰC**
 
-  <div class="card-item">
-    <div>
-      <span class="badge">Kỹ năng 03</span>
-      <h3>📟 Đo Kiểm & Xử Lý Sự Cố</h3>
-      <p>Đọc mã đèn hộp test cáp, phát hiện đứt ngầm, bấm sai màu và cách sửa nhanh.</p>
-    </div>
-    <a href="#/kn-3-do-kiem-su-co-cap">👉 Bắt đầu học</a>
-  </div>
-</div>
+Mỗi kỹ năng hướng tới:
+- học sinh mới bắt đầu vẫn làm theo được;
+- mỗi bước có hành động rõ ràng;
+- có hình/diagram/video hoặc placeholder phù hợp;
+- có kết quả đúng để đối chiếu;
+- có lỗi thường gặp và cách sửa;
+- có thực hành có hướng dẫn và thực hành độc lập;
+- có checklist và đánh giá 3 mức: Làm theo / Tự làm / Xử lý lỗi.
 
----
+## Quy tắc chuyển đổi từ cấu trúc cũ
+Cấu trúc website trước đây chỉ có **8 KN**. Cấu trúc đó đã được thay thế.
 
-### 🌐 Nhóm 2: Địa Chỉ IP & Quản Trị Hệ Thống
+Nội dung chuyên môn cũ không bị xóa chỉ vì đổi mã. Ví dụ:
+- Dụng cụ và an toàn → đưa vào phần Chuẩn bị/An toàn của kỹ năng tương ứng.
+- Bấm cáp RJ45 → **KN02**.
+- Đánh giá năng lực → **DG01**.
+- Dự án triển khai mạng văn phòng → **DA01/KN12** theo phạm vi nội dung.
 
-<div class="grid-cards">
-  <div class="card-item">
-    <div>
-      <span class="badge">Kỹ năng 04</span>
-      <h3>🔢 Quy Hoạch & Cấu Hình IP</h3>
-      <p>Phân lớp IP A/B/C, đặt IP tĩnh trên Windows và mẹo tính nhanh mạng con Subnet.</p>
-    </div>
-    <a href="#/kn-4-quy-hoach-cau-hinh-ip">👉 Bắt đầu học</a>
-  </div>
+Không tạo nội dung mới theo mã 8 KN cũ.
 
-  <div class="card-item">
-    <div>
-      <span class="badge">Kỹ năng 05</span>
-      <h3>📐 Vẽ Sơ Đồ Packet Tracer</h3>
-      <p>Thiết kế sơ đồ nguyên lý văn phòng và mô phỏng thông mạng bằng Cisco Packet Tracer.</p>
-    </div>
-    <a href="#/kn-5-thiet-ke-so-do-mang">👉 Bắt đầu học</a>
-  </div>
+## Tài liệu quy chuẩn
+- `AI_INSTRUCTIONS.md` — luật tổng thể cho AI.
+- `AGENTS.md` — quy tắc làm việc trong repo.
+- `CONTENT_GUIDE.md` — chuẩn biên soạn nội dung.
+- `SKILL_TEMPLATE.md` — mẫu trang kỹ năng.
+- `VISUAL_GUIDE.md` — chuẩn hình ảnh/video.
+- `SOURCE_POLICY.md` — nguồn và bản quyền.
+- `QUALITY_CHECKLIST.md` — cổng kiểm tra chất lượng.
+- `CONTENT_MAP.md` — bản đồ 12 KN + DA01 + DG01.
+- `ASSESSMENT_STANDARD.md` — chuẩn đánh giá.
+- `ERROR_DATABASE.md` — ngân hàng lỗi.
+- `MEDIA_MANIFEST.md` — quản lý media.
+- `TEACHER_REVIEW.md` — nội dung cần giáo viên duyệt.
 
-  <div class="card-item">
-    <div>
-      <span class="badge">Kỹ năng 06</span>
-      <h3>📂 Phân Quyền Bảo Mật NTFS</h3>
-      <p>Quản lý User/Group, chia sẻ thư mục bảo mật và chia sẻ máy in trong mạng LAN.</p>
-    </div>
-    <a href="#/kn-6-quan-tri-user-phan-quyen">👉 Bắt đầu học</a>
-  </div>
-</div>
-
----
-
-### 🏆 Nhóm 3: Wi-Fi, Dự Án Thực Tế & Đề Thi
-
-<div class="grid-cards">
-  <div class="card-item">
-    <div>
-      <span class="badge">Kỹ năng 07</span>
-      <h3>📡 Lắp Đặt & Bảo Mật Wi-Fi</h3>
-      <p>Cài đặt Access Point, bảo mật WPA2/WPA3 và tách mạng khách an toàn.</p>
-    </div>
-    <a href="#/kn-7-lap-dat-bao-mat-wifi">👉 Bắt đầu học</a>
-  </div>
-
-  <div class="card-item">
-    <div>
-      <span class="badge">Kỹ năng 08</span>
-      <h3>🏢 Thi Công Mạng Văn Phòng</h3>
-      <p>Dự án thực tế từ khâu lập bảng dự trù vật tư (BOM) đến thi công và bàn giao.</p>
-    </div>
-    <a href="#/kn-8-trien-khai-mang-van-phong">👉 Bắt đầu học</a>
-  </div>
-
-  <div class="card-item" style="border: 2px solid #2563eb; background: #eff6ff;">
-    <div>
-      <span class="badge" style="background:#2563eb; color:#fff;">Đánh giá năng lực</span>
-      <h3 style="color:#1d4ed8;">📝 Thi Thử Tay Nghề</h3>
-      <p>Ngân hàng trắc nghiệm ôn tập và đề thi thực hành chấm theo tiêu chí chuẩn doanh nghiệp.</p>
-    </div>
-    <a href="#/bang-danh-gia-nang-luc" style="font-weight:700; color:#1d4ed8;">🚀 Vào thi thử ngay</a>
-  </div>
-</div>
+## Lưu ý
+Việc chuyển từ 8 KN sang 12 KN là **thay đổi cấu trúc website**. Nếu dùng làm cấu trúc chương trình đào tạo chính thức, giáo viên cần xác nhận trong `TEACHER_REVIEW.md`.
