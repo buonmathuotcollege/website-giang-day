@@ -42,3 +42,15 @@ Các ảnh còn thiếu nên được bổ sung sau khi kiểm tra **giấy phé
 6. Ghi nguồn vào `MEDIA_MANIFEST.md`.
 7. Nếu cắt/chỉnh sửa ảnh, ghi rõ trong manifest.
 8. Kiểm tra lại ảnh trên trang KN01 trước khi công bố.
+
+
+## Nguồn ảnh đã bổ sung sau rà soát
+
+| ID | Vị trí dùng | Nội dung | Giấy phép theo trang nguồn | Trang nguồn | Tình trạng |
+|---|---|---|---|---|---|
+| KN01-M07 | Bước 2–4 | Computer motherboard | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Computer-motherboard.jpg | Đã rà soát |
+| KN01-M08 | Bước 1–4 | Motherboard in the System Unit | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:Motherboard_in_the_System_Unit.jpg | Đã rà soát |
+| KN01-M09 | Bước 3 | ATX motherboard with CPU and fan | Public Domain | https://commons.wikimedia.org/wiki/File:Atx_computer_motherboard_with_cpu_and_fan.jpg | Đã rà soát |
+| KN01-M10 | Bước 7 | Ethernet Switch — Front View | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Ethernet_Switch_(Front_View).jpg | Đã rà soát |
+
+> Các nguồn trên được dùng làm **nguồn tham khảo/đối chiếu** ở giai đoạn hiện tại. Chưa đưa ảnh nhị phân vào repo để tránh phụ thuộc vào việc tải và lưu tài sản bên ngoài khi chưa hoàn tất quy trình manifest. Khi giáo viên chọn ảnh chính thức, hãy tải ảnh gốc, ghi tác giả + giấy phép + chỉnh sửa vào `MEDIA_MANIFEST.md`, rồi mới đưa vào trang.
