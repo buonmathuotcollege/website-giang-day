@@ -16,13 +16,13 @@ Website **không tổ chức theo 8 KN cũ** và không tổ chức theo tiết 
 | KN03 | Bấm/đấu ổ cắm mạng âm tường | draft | draft | review |
 | KN04 | Đo kiểm và xử lý sự cố cáp mạng | draft | draft | review |
 | KN05 | Cấu hình IP máy trạm | draft | draft | review |
-| KN06 | Chia subnet cơ bản | TBD | TBD | TBD |
-| KN07 | Vẽ sơ đồ mạng | TBD | TBD | TBD |
-| KN08 | Quản lý User/Group Windows | TBD | TBD | TBD |
-| KN09 | Chia sẻ dữ liệu và máy in | TBD | TBD | TBD |
-| KN10 | Lắp đặt và cấu hình Wi-Fi | TBD | TBD | TBD |
-| KN11 | Bảo mật và phân tách Wi-Fi | TBD | TBD | TBD |
-| KN12 | Triển khai mạng văn phòng | TBD | TBD | TBD |
+| KN06 | Chia subnet cơ bản | draft | draft | review |
+| KN07 | Vẽ sơ đồ mạng | draft | draft | review |
+| KN08 | Quản lý User/Group Windows | draft | draft | review |
+| KN09 | Chia sẻ dữ liệu và máy in | draft | draft | review |
+| KN10 | Lắp đặt và cấu hình Wi-Fi | draft | draft | review |
+| KN11 | Bảo mật và phân tách Wi-Fi | draft | draft | review |
+| KN12 | Triển khai mạng văn phòng | draft | draft | review |
 | DA01 | Dự án triển khai mạng văn phòng tích hợp | TBD | TBD | TBD |
 | DG01 | Đánh giá năng lực nghề | TBD | TBD | TBD |
 
