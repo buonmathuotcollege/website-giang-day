@@ -102,3 +102,18 @@ Giai đoạn đầu sử dụng **SVG tự tạo** để website không phụ th
 | KN05-IMG-005 | `images/kn05-step-04-check.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
 | KN05-IMG-006 | `images/kn05-step-05-ping.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
 | KN05-IMG-007 | `images/kn05-step-06-troubleshoot.svg` | SVG minh họa | Tự tạo | Nội dung tự tạo | generated |
+
+
+## KN06–KN12 — Media minh họa phiên bản Draft
+
+Các file `images/kn06-step-*.svg` đến `images/kn12-step-*.svg` là **generated**, dùng để giữ cấu trúc trực quan theo Chuẩn A. Trước khi phát hành chính thức, giáo viên cần thay/đối chiếu bằng ảnh thiết bị và giao diện thực tế của phòng thực hành khi cần.
+
+| Kỹ năng | Media | Trạng thái |
+|---|---|---|
+| KN06 | `images/kn06-step-01.svg` … `kn06-step-08.svg` | generated/review |
+| KN07 | `images/kn07-step-01.svg` … `kn07-step-06.svg` | generated/review |
+| KN08 | `images/kn08-step-01.svg` … `kn08-step-06.svg` | generated/review |
+| KN09 | `images/kn09-step-01.svg` … `kn09-step-06.svg` | generated/review |
+| KN10 | `images/kn10-step-01.svg` … `kn10-step-07.svg` | generated/review |
+| KN11 | `images/kn11-step-01.svg` … `kn11-step-06.svg` | generated/review |
+| KN12 | `images/kn12-step-01.svg` … `kn12-step-10.svg` | generated/review |
