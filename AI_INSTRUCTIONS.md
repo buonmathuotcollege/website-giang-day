@@ -200,3 +200,36 @@ Một kỹ năng chỉ hoàn chỉnh khi có mục tiêu, dụng cụ/vật tư,
 > LÀM THEO LÀM ĐƯỢC.
 > LÀM SAI BIẾT SỬA.
 > TỰ LÀM ĐƯỢC MỚI TÍNH LÀ ĐẠT.
+
+## 21. HỆ THỐNG QUY CHUẨN BỔ SUNG
+Các quy chuẩn chi tiết nằm trong:
+- CONTENT_GUIDE.md — cách biên soạn nội dung.
+- SOURCE_POLICY.md — tìm, kiểm tra và sử dụng nguồn bên ngoài.
+- VISUAL_GUIDE.md — hình ảnh, diagram và video.
+- SKILL_TEMPLATE.md — mẫu chuẩn cho trang kỹ năng.
+- QUALITY_CHECKLIST.md — kiểm tra trước khi xuất bản.
+
+Khi tạo hoặc sửa một kỹ năng, phải áp dụng các tài liệu này cùng với AI_INSTRUCTIONS.md và AGENTS.md.
+
+## 22. THAM KHẢO PHONG CÁCH IFIXIT
+Có thể tham khảo mô hình hướng dẫn từng bước kiểu iFixit:
+What you need → Step-by-step → Visual evidence → Caution/Tip → Expected result → Troubleshooting → Test.
+
+Chỉ tham khảo phương pháp tổ chức hướng dẫn. Không sao chép nguyên văn, hình ảnh, giao diện hoặc tài sản có bản quyền khi không có quyền sử dụng.
+
+## 23. QUY TRÌNH KHAI THÁC NGUỒN
+Khi nội dung cần hình ảnh/video hoặc cần nâng cao chất lượng:
+TÌM NGUỒN → ĐÁNH GIÁ → KIỂM TRA QUYỀN → ĐỐI CHIẾU KỸ THUẬT → BIÊN SOẠN → GHI NGUỒN → KIỂM TRA → TÍCH HỢP.
+
+Nếu quyền sử dụng không rõ, không đưa bản sao tài sản đó vào repo. Có thể liên kết nguồn hoặc tạo nội dung/hình minh họa riêng.
+
+## 24. CỔNG KIỂM SOÁT CHẤT LƯỢNG
+Trước khi coi một kỹ năng hoàn chỉnh, AI phải tự kiểm tra QUALITY_CHECKLIST.md.
+Nếu có điểm quan trọng chưa xác minh, phải đánh dấu "Cần giáo viên duyệt" thay vì tự khẳng định.
+
+## 25. NGUYÊN TẮC BẢO TRÌ
+Khi cập nhật nội dung:
+- Không phá URL nội bộ đang hoạt động.
+- Không xóa nội dung đào tạo đã duyệt nếu chưa có thay thế.
+- Ưu tiên sửa một kỹ năng độc lập rồi kiểm tra.
+- Khi nguồn bên ngoài thay đổi hoặc không còn phù hợp, cập nhật metadata nguồn và thay thế tài sản nếu cần.
