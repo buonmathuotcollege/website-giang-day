@@ -387,3 +387,53 @@ Một nhóm media của kỹ năng được coi là đạt khi:
 - Không có link hỏng.
 - Ảnh hiển thị đúng trên desktop và mobile.
 - Giáo viên có thể truy ngược từ ảnh trong trang → media ID → nguồn gốc.
+
+## 27. CHUẨN GIAO DIỆN VÀ CẤU TRÚC CHUNG CHO TRANG KỸ NĂNG
+
+Tất cả các trang KN01–KN12 phải dùng cùng một hệ thống giao diện và cấu trúc. Mục tiêu: học sinh 9+3 luôn biết đang ở đâu, phải làm gì, kiểm tra thế nào và sửa lỗi ra sao.
+
+### 27.1. Cấu trúc bắt buộc
+1. Hero: mã + tên + kết quả + thời lượng + cách học + thiết bị.
+2. Navigation: Mục tiêu / Chuẩn bị / Nhìn mẫu / Các bước / Thực hành / Lỗi / Checklist / Đánh giá.
+3. Mục tiêu: 3–6 kết quả quan sát được.
+4. Chuẩn bị: dụng cụ, vật tư, phần mềm, an toàn.
+5. Nhìn mẫu: ảnh tổng quan, ảnh cận, video, diagram nếu cần.
+6. Các bước: mỗi bước gồm Em làm / Nhìn vào đây / Kết quả đúng / Nếu sai.
+7. Thực hành: có hướng dẫn / độc lập / Mức 3 xử lý lỗi.
+8. Lỗi thường gặp: lỗi / dấu hiệu / nguyên nhân / kiểm tra / sửa / kiểm tra lại.
+9. Checklist: học sinh tự đánh dấu.
+10. Đánh giá: Mức 1 Làm theo / Mức 2 Tự làm / Mức 3 Xử lý lỗi. Không tự đặt điểm số chính thức nếu chưa được giáo viên duyệt.
+
+### 27.2. Chuẩn UI
+AI không được tự thiết kế mỗi kỹ năng một giao diện khác nhau. Phải ưu tiên hệ thống trong UI_STANDARD.md: Hero, navigation, Step Card, card nội dung và responsive desktop/mobile thống nhất. Bảng rộng phải cuộn ngang; ảnh không vượt màn hình; vùng chạm đủ lớn trên điện thoại.
+
+Quy ước màu: xanh dương = thao tác; xanh lá = kết quả đúng; vàng = cảnh báo; đỏ = lỗi. Không dùng màu trạng thái theo cách gây nhầm.
+
+### 27.3. Nguyên tắc cho học sinh 9+3
+- Một màn hình nên trả lời một câu hỏi hành động.
+- Một bước tập trung vào một hành động chính.
+- Câu ngắn, từ ngữ trực tiếp.
+- Không bắt học sinh đọc lý thuyết dài trước khi thao tác.
+- Ảnh đủ lớn trên điện thoại và phải có mục đích.
+- Ưu tiên: NHÌN MẪU → LÀM THEO → KIỂM TRA → SỬA LỖI → TỰ LÀM → ĐẠT NĂNG LỰC.
+- Hướng dẫn phải hướng tới hành vi hoặc sản phẩm quan sát được.
+
+### 27.4. Chuẩn hóa khi nhân bản
+Khi tạo KN02–KN12: đọc AI_INSTRUCTIONS.md, AGENTS.md, SKILL_TEMPLATE.md và UI_STANDARD.md; lấy KN01 làm mẫu; giữ nguyên UI chung; chỉ thay nội dung, media, nhiệm vụ và tiêu chí theo kỹ năng. Nếu thay đổi UI chung, cập nhật UI_STANDARD.md và xem xét ảnh hưởng các trang đã hoàn thiện.
+
+### 27.5. Cổng kiểm tra trước khi hoàn thành
+- [ ] Hero
+- [ ] Navigation
+- [ ] Đủ khu vực bắt buộc
+- [ ] Responsive mobile
+- [ ] Step Card nhất quán
+- [ ] Mỗi bước có Em làm / Nhìn vào đây / Kết quả đúng / Nếu sai
+- [ ] Thực hành độc lập
+- [ ] Mức 3
+- [ ] Lỗi và cách sửa
+- [ ] Checklist
+- [ ] Đánh giá
+- [ ] Media không phá bố cục
+- [ ] Không có link tới file/trang chưa tồn tại
+
+Chi tiết UI: UI_STANDARD.md.
