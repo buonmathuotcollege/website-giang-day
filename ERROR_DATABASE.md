@@ -69,3 +69,21 @@ Các mã lỗi cũ gắn với cấu trúc 8 KN phải được chuyển sang m�
 - Cách sửa: Đặt lại lõi và dùng đúng dụng cụ punch-down.
 - Kiểm tra lại: Kiểm tra lại toàn bộ đường truyền.
 - Ảnh lỗi: TBD.
+
+
+## KN04 — Lỗi thực hành
+### ERR-KN04-001 — Một chân không có kết quả
+- Kỹ năng: KN04
+- Mức độ: Cơ bản
+- Dấu hiệu: Một chân không có kết quả phù hợp.
+- Kiểm tra: Kiểm tra đầu nối và lõi tương ứng.
+- Cách sửa: Làm lại điểm đấu/đầu nối bị lỗi.
+- Kiểm tra lại: Test lại toàn bộ đường dây.
+
+### ERR-KN04-002 — Sai thứ tự đường dây
+- Kỹ năng: KN04
+- Mức độ: Cơ bản
+- Dấu hiệu: Kết quả không trùng sơ đồ chuẩn.
+- Kiểm tra: Đối chiếu từng chân với sơ đồ.
+- Cách sửa: Đấu lại theo chuẩn bài.
+- Kiểm tra lại: Test lại.
