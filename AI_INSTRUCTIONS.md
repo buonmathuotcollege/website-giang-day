@@ -425,7 +425,24 @@ Quy ước màu: xanh dương = thao tác; xanh lá = kết quả đúng; vàng 
 ### 27.4. Chuẩn hóa khi nhân bản
 Khi tạo KN02–KN12: đọc AI_INSTRUCTIONS.md, AGENTS.md, SKILL_TEMPLATE.md và UI_STANDARD.md; lấy KN01 làm mẫu; giữ nguyên UI chung; chỉ thay nội dung, media, nhiệm vụ và tiêu chí theo kỹ năng. Nếu thay đổi UI chung, cập nhật UI_STANDARD.md và xem xét ảnh hưởng các trang đã hoàn thiện.
 
-### 27.5. Cổng kiểm tra trước khi hoàn thành
+### 27.4a. Thứ tự ưu tiên khi các tài liệu có vẻ khác nhau
+Bộ luật hiện hành được áp dụng theo thứ tự:
+1. Mapping tại mục 4 của AI_INSTRUCTIONS.md.
+2. Cấu trúc bắt buộc tại mục 27 của AI_INSTRUCTIONS.md.
+3. SKILL_TEMPLATE.md cho khung nội dung.
+4. CONTENT_GUIDE.md cho cách viết.
+5. UI_STANDARD.md cho giao diện.
+6. VISUAL_GUIDE.md và SOURCE_POLICY.md cho media/nguồn.
+7. QUALITY_CHECKLIST.md là cổng kiểm tra cuối.
+
+Nếu tài liệu cũ hoặc ví dụ trong repo mâu thuẫn với các quy tắc trên, phải ưu tiên quy tắc hiện hành và không sao chép ví dụ cũ sang kỹ năng mới.
+
+### 27.5. Quy tắc media theo từng bước
+Mọi bước thao tác có tính trực quan phải có ít nhất một hình/diagram/ảnh chụp hoặc placeholder rõ ràng ngay tại bước đó. Placeholder phải ghi mã cụ thể và không được giả làm ảnh thật.
+
+Video không bắt buộc cho mọi kỹ năng. Chỉ dùng video khi chuyển động tay, góc thao tác hoặc trình tự khó truyền đạt đầy đủ bằng ảnh/diagram. Nếu dùng video, phải có câu hướng dẫn hành động sau video theo VISUAL_GUIDE.md.
+
+### 27.6. Cổng kiểm tra trước khi hoàn thành
 - [ ] Hero
 - [ ] Navigation
 - [ ] Đủ khu vực bắt buộc
