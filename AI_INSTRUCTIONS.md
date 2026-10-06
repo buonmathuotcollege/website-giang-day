@@ -54,21 +54,25 @@ Công thức chuẩn:
 
 Không tổ chức website theo tiết học. Website tổ chức theo KỸ NĂNG.
 
-## 4. KHUNG KỸ NĂNG CHUẨN
+## 4. KHUNG KỸ NĂNG CHUẨN — CẤU TRÚC HIỆN HÀNH
+Website hiện được tổ chức theo **12 kỹ năng nghề**, kèm dự án tích hợp và đánh giá năng lực.
+
 KN01 — Nhận diện PC và thiết bị mạng.
-KN02 — Sử dụng dụng cụ và an toàn phần cứng.
-KN03 — Bấm cáp mạng RJ45.
-KN04 — Bấm/đấu ổ cắm mạng âm tường.
-KN05 — Đo kiểm và xử lý sự cố cáp mạng.
-KN06 — Cấu hình IP máy trạm.
-KN07 — Chia subnet cơ bản.
-KN08 — Vẽ sơ đồ mạng.
-KN09 — Quản lý User/Group Windows.
-KN10 — Chia sẻ dữ liệu và máy in.
-KN11 — Lắp đặt và cấu hình Wi-Fi.
-KN12 — Bảo mật và phân tách Wi-Fi.
-DA01 — Dự án triển khai mạng văn phòng.
+KN02 — Bấm cáp mạng RJ45.
+KN03 — Bấm/đấu ổ cắm mạng âm tường.
+KN04 — Đo kiểm và xử lý sự cố cáp mạng.
+KN05 — Cấu hình IP máy trạm.
+KN06 — Chia subnet cơ bản.
+KN07 — Vẽ sơ đồ mạng.
+KN08 — Quản lý User/Group Windows.
+KN09 — Chia sẻ dữ liệu và máy in.
+KN10 — Lắp đặt và cấu hình Wi-Fi.
+KN11 — Bảo mật và phân tách Wi-Fi.
+KN12 — Triển khai mạng văn phòng.
+DA01 — Dự án triển khai mạng văn phòng tích hợp.
 DG01 — Đánh giá năng lực nghề.
+
+**QUY TẮC LOẠI BỎ CẤU TRÚC CŨ:** Không sử dụng cách đánh số/mapping cũ trong đó KN02 là "Dụng cụ & an toàn", KN03 là RJ45, hoặc website chỉ có 8 KN. Nội dung về dụng cụ và an toàn không bị xóa; nội dung này được đưa vào phần chuẩn bị/an toàn của từng kỹ năng phù hợp.
 
 ## 5. MẪU TRANG KỸ NĂNG BẮT BUỘC
 Mỗi trang kỹ năng nên có:
