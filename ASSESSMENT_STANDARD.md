@@ -77,31 +77,32 @@ Nên dùng: Xác định đúng thiết bị; chọn đúng dụng cụ; xếp �
 - [ ] Sửa lỗi.
 - [ ] Kiểm tra lại sau khi sửa.
 
-## 9. Áp dụng cho KN01–KN12
+## 9. Áp dụng cho KN01–KN12 — CẤU TRÚC HIỆN HÀNH
 ### KN01 — Nhận diện PC và thiết bị mạng
 Sản phẩm: xác định đúng linh kiện/thiết bị và vị trí cổng/kết nối quan trọng. Mức 3: phân biệt được thiết bị bằng dấu hiệu quan sát được.
-### KN02 — Dụng cụ và an toàn phần cứng
-Sản phẩm: chọn đúng dụng cụ và thao tác an toàn. Mức 3: nhận ra thao tác có nguy cơ và chủ động dừng/chỉnh cách thực hiện.
-### KN03 — Bấm cáp mạng RJ45
+### KN02 — Bấm cáp mạng RJ45
 Sản phẩm: đầu cáp đúng yêu cầu, đúng thứ tự dây, tiếp xúc đạt và tester kiểm tra được. Mức 3: phát hiện và sửa lỗi bấm cáp cơ bản.
-### KN04 — Đấu ổ cắm mạng âm tường
+### KN03 — Bấm/đấu ổ cắm mạng âm tường
 Sản phẩm: đấu đúng sơ đồ, chắc chắn và kiểm tra được đường truyền. Mức 3: khoanh vùng và sửa lỗi đấu dây cơ bản.
-### KN05 — Đo kiểm và xử lý sự cố cáp mạng
+### KN04 — Đo kiểm và xử lý sự cố cáp mạng
 Sản phẩm: sử dụng đúng dụng cụ đo và đọc đúng kết quả. Mức 3: dựa trên kết quả đo để xác định lỗi.
-### KN06 — Cấu hình IP máy trạm
+### KN05 — Cấu hình IP máy trạm
 Sản phẩm: cấu hình IP đúng và kiểm tra kết nối. Mức 3: phát hiện và sửa lỗi IP/subnet/gateway cơ bản.
-### KN07 — Chia subnet cơ bản
+### KN06 — Chia subnet cơ bản
 Sản phẩm: xác định đúng network/host/subnet và gán địa chỉ phù hợp. Mức 3: phát hiện và sửa địa chỉ không phù hợp.
-### KN08 — Vẽ sơ đồ mạng
+### KN07 — Vẽ sơ đồ mạng
 Sản phẩm: sơ đồ đúng thiết bị, kết nối và nhãn cần thiết. Mức 3: phát hiện điểm chưa hợp lý và chỉnh sửa.
-### KN09 — Quản lý User/Group Windows
+### KN08 — Quản lý User/Group Windows
 Sản phẩm: tạo/quản lý User/Group và kiểm tra quyền. Mức 3: phát hiện quyền sai và điều chỉnh.
-### KN10 — Chia sẻ dữ liệu và máy in
+### KN09 — Chia sẻ dữ liệu và máy in
 Sản phẩm: tài nguyên được chia sẻ, cấp quyền và truy cập/in được. Mức 3: xử lý lỗi truy cập/chia sẻ cơ bản.
-### KN11 — Lắp đặt và cấu hình Wi-Fi
+### KN10 — Lắp đặt và cấu hình Wi-Fi
 Sản phẩm: kết nối thiết bị đúng, Wi-Fi hoạt động, thiết bị đầu cuối truy cập được. Mức 3: xử lý lỗi kết nối Wi-Fi cơ bản.
-### KN12 — Bảo mật và phân tách Wi-Fi
+### KN11 — Bảo mật và phân tách Wi-Fi
 Sản phẩm: thiết lập bảo mật và phân tách theo yêu cầu, kiểm tra được quyền truy cập. Mức 3: phát hiện và sửa cấu hình chưa đúng.
+
+### KN12 — Triển khai mạng văn phòng
+Sản phẩm: triển khai mô hình mạng văn phòng theo yêu cầu, kiểm tra kết nối và bàn giao. Mức 3: xử lý được lỗi cơ bản trong quá trình triển khai.
 
 ## 10. DA01 — Dự án triển khai mạng văn phòng
 Đánh giá tích hợp: nhận yêu cầu → chọn thiết bị → lập vật tư → đấu/bấm cáp → vẽ sơ đồ → cấu hình → chia sẻ tài nguyên → kiểm tra → xử lý lỗi → bàn giao.
@@ -138,3 +139,6 @@ Có thể gồm: nhận diện; thao tác phần cứng; cấu hình; kiểm tra
 > VÀ CAO HƠN:
 >
 > “EM CÓ TỰ PHÁT HIỆN VÀ SỬA ĐƯỢC KHÔNG?”
+
+## 15. Chuyển đổi từ cấu trúc 8 KN cũ
+Các tiêu chí đánh giá cũ được giữ lại nếu còn phù hợp, nhưng mã kỹ năng phải theo cấu trúc hiện hành. Không tiếp tục sử dụng KN02 = Dụng cụ/an toàn hoặc KN03 = RJ45 trong tài liệu mới. Nội dung dụng cụ/an toàn được đưa vào phần chuẩn bị và an toàn của kỹ năng tương ứng.
