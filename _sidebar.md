@@ -9,17 +9,17 @@
 
 * **2. ĐỊA CHỈ IP & THIẾT KẾ**
   * [KN05 — Cấu hình IP máy trạm](kn-5-cau-hinh-ip-may-tram.html)
-  * KN06 — Chia subnet cơ bản *(đang xây dựng)*
-  * KN07 — Vẽ sơ đồ mạng *(đang xây dựng)*
+  * [KN06 — Chia subnet cơ bản](kn-6-chia-subnet-co-ban.html)
+  * [KN07 — Vẽ sơ đồ mạng](kn-7-ve-so-do-mang.html)
 
 * **3. QUẢN TRỊ MẠNG NỘI BỘ**
-  * KN08 — Quản lý User/Group Windows *(đang xây dựng)*
-  * KN09 — Chia sẻ dữ liệu và máy in *(đang xây dựng)*
+  * [KN08 — Quản lý User/Group Windows](kn-8-quan-ly-user-group-windows.html)
+  * [KN09 — Chia sẻ dữ liệu và máy in](kn-9-chia-se-du-lieu-may-in.html)
 
 * **4. WI-FI & TRIỂN KHAI**
-  * KN10 — Lắp đặt và cấu hình Wi-Fi *(đang xây dựng)*
-  * KN11 — Bảo mật và phân tách Wi-Fi *(đang xây dựng)*
-  * KN12 — Triển khai mạng văn phòng *(đang xây dựng)*
+  * [KN10 — Lắp đặt và cấu hình Wi-Fi](kn-10-lap-dat-cau-hinh-wifi.html)
+  * [KN11 — Bảo mật và phân tách Wi-Fi](kn-11-bao-mat-phan-tach-wifi.html)
+  * [KN12 — Triển khai mạng văn phòng](kn-12-trien-khai-mang-van-phong.html)
 
 * **TÍCH HỢP & ĐÁNH GIÁ**
   * DA01 — Dự án triển khai mạng văn phòng tích hợp *(đang xây dựng)*
