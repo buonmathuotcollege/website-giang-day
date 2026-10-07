@@ -13,185 +13,105 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
 .section{margin:28px 0}.section-title{font-size:24px;font-weight:900;margin-bottom:12px}.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px}.step-card{scroll-margin-top:120px;margin:14px 0;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}.step-card>div{padding:18px}.action{border-left:4px solid var(--brand);background:var(--brand-soft);padding:12px 14px;border-radius:0 12px 12px 0}.result{border-left:4px solid var(--ok);background:var(--ok-soft);padding:12px 14px;border-radius:0 12px 12px 0}.wrong{border-left:4px solid var(--danger);background:var(--danger-soft);padding:12px 14px;border-radius:0 12px 12px 0}.warning{border-left:4px solid var(--warn);background:var(--warn-soft);padding:12px 14px;border-radius:0 12px 12px 0}.media{background:#f1f5f9;border:1px dashed #cbd5e1;border-radius:14px;padding:14px}.pin{font-weight:900;color:#1e3a8a}.wire{height:28px;border-radius:8px;border:1px solid #cbd5e1}.wo{background:repeating-linear-gradient(135deg,#fff 0 7px,#f97316 7px 12px)}.o{background:#f97316}.wg{background:repeating-linear-gradient(135deg,#fff 0 7px,#22c55e 7px 12px)}.g{background:#22c55e}.wb{background:repeating-linear-gradient(135deg,#fff 0 7px,#3b82f6 7px 12px)}.b{background:#3b82f6}.wn{background:repeating-linear-gradient(135deg,#fff 0 7px,#92400e 7px 12px)}.n{background:#92400e}
 @media(max-width:700px){.skill-wrap{padding:16px 12px 40px}.skill-hero{padding:22px 18px;border-radius:18px}.skill-meta{grid-template-columns:1fr}.skill-nav{top:52px}.section-title{font-size:21px}}
 
-/* === Giao diện quy trình kiểu iFixit: ảnh lớn + thumbnail + nội dung === */
-.step-card{scroll-margin-top:120px;margin:22px 0;background:#fff;border:1px solid #dbe2ea;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(15,23,42,.05)}
-.step-card>div{padding:0}
-.step-head{padding:22px 24px 8px}
-.step-head h3{font-size:28px;line-height:1.2;font-weight:700;margin:0}
-.step-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(340px,1fr);gap:24px;padding:0 24px 24px}
-.step-visual{min-width:0}
-.gallery-main{background:#fff;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
-.gallery-main img{width:100%;height:100%;object-fit:contain;background:#fff}
-.gallery-thumbs{display:flex;gap:10px;margin-top:10px;overflow-x:auto;padding:2px 2px 6px}
-.gallery-thumb{flex:0 0 92px;width:92px;height:70px;padding:0;border:1px solid #d1d5db;border-radius:5px;background:#fff;overflow:hidden;cursor:pointer}
-.gallery-thumb:hover,.gallery-thumb.active{border:2px solid #2563eb}
-.gallery-thumb img{width:100%;height:100%;object-fit:cover}
-.gallery-info{display:flex;flex-direction:column;gap:12px;padding-top:2px}
-.gallery-info .action,.gallery-info .result,.gallery-info .wrong{margin-top:0}
-.step-number{display:inline-flex;width:36px;height:36px;border-radius:50%;align-items:center;justify-content:center;background:#0f172a;color:#fff;font-weight:800;margin-right:10px}
-@media(max-width:900px){.step-layout{grid-template-columns:1fr}.step-head{padding:18px 16px 8px}.step-layout{padding:0 16px 18px}.step-head h3{font-size:24px}}
-</style>
+/* === Bố cục repair-guide hai cột === */
+.guide-page{max-width:1280px;margin:auto;padding:0 24px 64px}
+.guide-intro{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:42px;padding:44px 0 30px}
+.guide-intro h2,.needs h2{font-size:30px;line-height:1.15;margin:0 0 24px;font-weight:800}
+.guide-intro p{font-size:18px;line-height:1.6;color:#334155;margin:0 0 18px}
+.go-step{color:#1473c9;font-weight:700;text-decoration:none;margin-left:12px}
+.needs{border-left:1px solid #e2e8f0;padding-left:28px}
+.needs-list{border:1px solid #e2e8f0;border-radius:8px;background:#fff;overflow:hidden}
+.needs-item{padding:16px 18px;border-bottom:1px solid #e2e8f0;font-weight:650}
+.needs-item:last-child{border-bottom:0}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 26px}
+.badge{display:inline-flex;align-items:center;gap:6px;border:1px solid #cbd5e1;border-radius:7px;padding:8px 12px;background:#fff;font-size:14px;font-weight:700}
+.guide-step{margin:0 0 46px;padding-top:24px;border-top:1px solid #e2e8f0;scroll-margin-top:80px}
+.guide-step-head{display:flex;align-items:baseline;gap:12px;margin-bottom:18px}
+.guide-step-head .step-label{font-size:28px;font-weight:800}
+.guide-step-head h3{font-size:28px;line-height:1.2;font-weight:500;margin:0}
+.guide-step-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(360px,1fr);gap:28px;align-items:start}
+.guide-main-image{border:1px solid #e2e8f0;background:#fff;min-height:430px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.guide-main-image img{display:block;width:100%;height:100%;max-height:570px;object-fit:contain}
+.guide-side{min-width:0}
+.guide-thumbs{display:flex;gap:10px;overflow-x:auto;padding:0 0 14px}
+.guide-thumb{flex:0 0 104px;width:104px;height:78px;padding:0;border:1px solid #cbd5e1;border-radius:5px;background:#fff;overflow:hidden;cursor:pointer}
+.guide-thumb:hover,.guide-thumb.active{border:2px solid #1473c9}
+.guide-thumb img{width:100%;height:100%;object-fit:cover}
+.guide-copy{font-size:17px;line-height:1.55;color:#1e293b}
+.guide-copy>div{margin:0 0 18px}
+.guide-copy .result{background:#ecfdf5;border-left:4px solid #059669;padding:12px 14px}
+.guide-copy .wrong{background:#fff1f2;border-left:4px solid #e11d48;padding:12px 14px}
+.guide-nav{display:flex;justify-content:space-between;gap:12px;margin:18px 0 42px;padding:14px 0;border-top:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0}
+.guide-nav a{color:#1473c9;text-decoration:none;font-weight:700}
+@media(max-width:900px){.guide-page{padding:0 14px 48px}.guide-intro{grid-template-columns:1fr;gap:28px;padding-top:28px}.needs{border-left:0;border-top:1px solid #e2e8f0;padding:24px 0 0}.guide-step-grid{grid-template-columns:1fr}.guide-main-image{min-height:300px}.guide-step-head .step-label,.guide-step-head h3{font-size:24px}.guide-copy{font-size:16px}.guide-thumb{flex-basis:88px;width:88px;height:68px}}</style>
 </head>
 <body class="antialiased">
 <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200"><div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between"><a href="index.html" class="text-sm font-semibold text-slate-600">← Cổng kỹ năng</a><span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-700">KN02 / Bấm cáp RJ45</span></div></header>
 <main class="skill-wrap">
 
-<section class="skill-hero">
-<div class="skill-kicker">KỸ NĂNG 02 · THỰC HÀNH</div>
-<h1>Bấm cáp mạng RJ45</h1>
-<p>Em tự chuẩn bị dây mạng, sắp xếp đúng thứ tự màu T568B, đưa dây vào hạt RJ45, bấm đầu cáp và kiểm tra bằng máy test. Mục tiêu là tạo được một sợi cáp đạt yêu cầu và tự tìm lỗi khi cáp không đạt.</p>
-<div class="skill-meta"><div class="meta-box"><small>Hình thức</small><strong>Nhìn mẫu → Làm theo → Tự làm</strong></div><div class="meta-box"><small>Vật tư</small><strong>UTP Cat5e/Cat6 + RJ45</strong></div><div class="meta-box"><small>Thiết bị</small><strong>Kìm bấm + máy test cáp</strong></div></div>
-</section>
-
-<nav class="skill-nav" aria-label="Điều hướng"><a href="#muc-tieu">Mục tiêu</a><a href="#chuan-bi">Chuẩn bị</a><a href="#nhin-mau">Nhìn mẫu</a><a href="#cac-buoc">Các bước</a><a href="#kiem-tra">Kiểm tra</a><a href="#loi">Lỗi</a><a href="#thuc-hanh">Thực hành</a><a href="#checklist">Checklist</a><a href="#danh-gia">Đánh giá</a></nav>
-
-<section id="muc-tieu" class="card section">
-<h2 class="section-title">🎯 Em sẽ làm được gì?</h2>
-<ul class="list-disc pl-5 space-y-2 text-sm"><li>Nhận biết 8 lõi dây và xếp đúng thứ tự T568B.</li><li>Tuốt vỏ, tháo xoắn, vuốt thẳng và cắt đầu dây.</li><li>Đưa đủ 8 lõi vào hạt RJ45 đúng thứ tự và để vỏ cáp nằm trong phần giữ của đầu nối.</li><li>Dùng kìm bấm đúng thao tác.</li><li>Kiểm tra dây bằng máy test và biết cách xử lý khi kết quả không đúng.</li></ul>
-</section>
-
-<section id="chuan-bi" class="card section">
-<h2 class="section-title">🧰 Chuẩn bị</h2>
-<div class="grid sm:grid-cols-2 gap-3 text-sm">
-<div>☐ Cáp mạng UTP Cat5e hoặc Cat6</div><div>☐ Hạt RJ45 loại phù hợp với cáp</div><div>☐ Kìm bấm mạng RJ45</div><div>☐ Dao/khe tuốt vỏ cáp</div><div>☐ Máy test cáp mạng</div><div>☐ Hạt RJ45 dự phòng</div>
+<section class="guide-page">
+<div class="badges"><span class="badge">🕐 30–45 phút</span><span class="badge">✓ Thực hành</span><span class="badge">👨‍🏫 Hướng dẫn từng bước</span></div>
+<div class="guide-intro">
+<div>
+<h2>Giới thiệu <a class="go-step" href="#step-1">Đi đến bước 1 ↓</a></h2>
+<p><strong>Bấm cáp mạng RJ45</strong> là kỹ năng nền tảng trong lắp đặt mạng LAN. Học sinh thực hiện từ chuẩn bị dây, tuốt vỏ, tháo xoắn, sắp xếp màu theo T568B, đưa dây vào đầu RJ45, bấm đầu và kiểm tra.</p>
+<p>Trang này trình bày theo nguyên tắc <strong>nhìn ảnh → đọc thao tác → làm theo → kiểm tra kết quả</strong>. Mỗi bước có ảnh lớn và các ảnh nhỏ để quan sát cận cảnh.</p>
 </div>
-<div class="warning mt-4"><strong>⚠️ An toàn:</strong> Cắt/tuốt hướng ra xa người; dùng kìm đúng chức năng; không đưa tay vào lưỡi cắt. Thực hành theo hướng dẫn của giáo viên.</div>
-</section>
-
-<section id="kien-thuc-toi-thieu" class="card section">
-<h2 class="section-title">📘 Kiến thức tối thiểu</h2>
-<ul class="list-disc pl-5 space-y-1 text-sm">
-<li>Cáp UTP có 4 cặp dây, tổng cộng 8 lõi màu.</li>
-<li>T568A và T568B là hai cách sắp xếp 8 lõi trong đầu RJ45.</li>
-<li>Hai đầu cùng chuẩn tạo cáp thẳng; hai đầu khác chuẩn tạo cáp chéo. Bài thực hành phải theo yêu cầu của giáo viên.</li>
-<li>Máy test dùng để kiểm tra sự liên tục và thứ tự kết nối của các chân.</li>
-</ul>
-</section>
-
-<section id="nhin-mau" class="section">
-<h2 class="section-title">👀 Nhìn mẫu trước khi làm</h2>
-<div class="card mb-4 grid sm:grid-cols-2 gap-4 items-start">
-  <figure><img src="images/kn02-t568b-reference.png" alt="Ảnh mẫu thứ tự dây T568B do giảng viên cung cấp" class="w-full rounded-xl aspect-[4/3] object-cover" loading="lazy"><figcaption class="text-xs text-slate-500 mt-2">Ảnh mẫu T568B do giảng viên cung cấp. Đọc thứ tự từ trái sang phải.</figcaption></figure>
-  <figure><img src="images/kn02-t568a-t568b.svg" alt="Sơ đồ so sánh thứ tự chân T568A và T568B" class="w-full rounded-xl" loading="lazy"><figcaption class="text-xs text-slate-500 mt-2">Sơ đồ đối chiếu hai chuẩn T568A và T568B.</figcaption></figure>
+<aside class="needs"><h2>Cần chuẩn bị</h2><div class="needs-list">
+<div class="needs-item">🧵 Cáp mạng UTP Cat5e/Cat6</div><div class="needs-item">🔌 Hạt RJ45 phù hợp</div><div class="needs-item">✂️ Kìm bấm/tuốt cáp</div><div class="needs-item">🧪 Máy test cáp mạng</div><div class="needs-item">🔧 Hạt RJ45 dự phòng</div>
+</div></aside>
 </div>
-<div class="grid md:grid-cols-2 gap-4">
-<div class="card"><h3 class="font-bold mb-3">T568A</h3><ol class="list-decimal pl-5 text-sm space-y-1"><li>Trắng Xanh lá</li><li>Xanh lá</li><li>Trắng Cam</li><li>Xanh dương</li><li>Trắng Xanh dương</li><li>Cam</li><li>Trắng Nâu</li><li>Nâu</li></ol></div>
-<div class="card"><h3 class="font-bold mb-3">T568B</h3><ol class="list-decimal pl-5 text-sm space-y-1"><li>Trắng Cam</li><li>Cam</li><li>Trắng Xanh lá</li><li>Xanh dương</li><li>Trắng Xanh dương</li><li>Xanh lá</li><li>Trắng Nâu</li><li>Nâu</li></ol></div>
-</div>
-<div class="action mt-4"><strong>Quy tắc nhớ:</strong> T568A và T568B chỉ khác thứ tự hai cặp Cam và Xanh lá ở chân 1–2 và 3–6. Chân 4–5 là Xanh dương và chân 7–8 là Nâu ở cả hai chuẩn.</div>
-<div class="warning mt-4"><strong>Cáp thẳng / cáp chéo:</strong> Hai đầu cùng chuẩn (A–A hoặc B–B) là cáp thẳng; một đầu A và một đầu B là cáp chéo. Trong bài thực hành, học sinh phải làm đúng loại mà giáo viên yêu cầu.</div>
-</section>
-
-<section id="cac-buoc" class="section">
-<h2 class="section-title">🔧 Quy trình bấm cáp — từng bước</h2>
-<p class="text-sm text-slate-600 mb-4">Mỗi bước gồm ảnh lớn, ảnh thu nhỏ và nội dung hướng dẫn. Trên máy tính, di chuột vào ảnh thu nhỏ để xem ảnh lớn; trên điện thoại, chạm vào ảnh.</p>
-<article class="step-card" id="step-1">
-<div class="step-head"><h3><span class="step-number">1</span>Tuốt vỏ ngoài</h3></div>
-<div class="step-layout">
-<div class="step-visual">
-<div class="gallery-main"><img src="images/kn02-step-01-strip.svg" alt="Minh họa dụng cụ tuốt vỏ" loading="lazy"></div>
-<div class="gallery-thumbs" role="list"><button type="button" class="gallery-thumb active" data-src="images/kn02-step-01-strip.svg" data-alt="Minh họa dụng cụ tuốt vỏ" aria-label="Xem Minh họa dụng cụ tuốt vỏ"><img src="images/kn02-step-01-strip.svg" alt="Minh họa dụng cụ tuốt vỏ" loading="lazy"></button></div>
-</div>
-<div class="gallery-info">
+<nav class="guide-nav"><a href="#step-1">← Bắt đầu quy trình</a><a href="#step-7">Bước 7: Kiểm tra →</a></nav>
+<section id="cac-buoc" class="guide-page"><h2 style="font-size:30px;margin:0 0 12px;font-weight:800">Quy trình thực hiện</h2><p style="font-size:16px;color:#475569;margin-bottom:30px">Rê chuột vào ảnh nhỏ để thay đổi ảnh lớn. Trên điện thoại, chạm vào ảnh nhỏ.</p><article class="guide-step" id="step-1"><div class="guide-step-head"><span class="step-label">Bước 1</span><h3>Tuốt vỏ ngoài</h3></div><div class="guide-step-grid"><div class="guide-main-image"><img src="images/kn02-step-01-strip.svg" alt="Minh họa dụng cụ tuốt vỏ" loading="lazy"></div><div class="guide-side"><div class="guide-thumbs"><button type="button" class="guide-thumb active" data-src="images/kn02-step-01-strip.svg" data-alt="Minh họa dụng cụ tuốt vỏ" aria-label="Xem Minh họa dụng cụ tuốt vỏ"><img src="images/kn02-step-01-strip.svg" alt="Minh họa dụng cụ tuốt vỏ" loading="lazy"></button></div><div class="guide-copy">
 <div class="action"><strong>Em làm:</strong> Đặt dây vào phần tuốt của kìm/dao theo hướng dẫn của dụng cụ. Tạo đoạn dây hở đủ để thao tác, tránh cứa vào các lõi bên trong.</div>
 <div class="action">👀 <strong>Quan sát:</strong> Chỉ bóc lớp vỏ ngoài; các lõi bên trong vẫn nguyên vẹn.</div>
 <div class="result">✓ <strong>Kết quả đúng:</strong> Vỏ ngoài được bóc sạch, 8 lõi không bị đứt hoặc trầy đáng kể.</div>
 <div class="wrong">🔧 <strong>Nếu sai:</strong> Cắt bỏ đoạn lỗi và làm lại; không cố sử dụng lõi đã bị cứa.</div>
 </div>
 </div>
-</article>
-<article class="step-card" id="step-2">
-<div class="step-head"><h3><span class="step-number">2</span>Tách 4 cặp và vuốt thẳng</h3></div>
-<div class="step-layout">
-<div class="step-visual">
-<div class="gallery-main"><img src="images/kn02-step-02-separated-cores.png" alt="8 lõi dây đã tách" loading="lazy"></div>
-<div class="gallery-thumbs" role="list"><button type="button" class="gallery-thumb active" data-src="images/kn02-step-02-separated-cores.png" data-alt="8 lõi dây đã tách" aria-label="Xem 8 lõi dây đã tách"><img src="images/kn02-step-02-separated-cores.png" alt="8 lõi dây đã tách" loading="lazy"></button><button type="button" class="gallery-thumb " data-src="images/kn02-step-02-untwist.svg" data-alt="Minh họa tháo xoắn" aria-label="Xem Minh họa tháo xoắn"><img src="images/kn02-step-02-untwist.svg" alt="Minh họa tháo xoắn" loading="lazy"></button><button type="button" class="gallery-thumb " data-src="images/kn02-step-03-ordered-wires.png" data-alt="Cận cảnh các lõi dây" aria-label="Xem Cận cảnh các lõi dây"><img src="images/kn02-step-03-ordered-wires.png" alt="Cận cảnh các lõi dây" loading="lazy"></button></div>
-</div>
-<div class="gallery-info">
+</div></div></div></article><article class="guide-step" id="step-2"><div class="guide-step-head"><span class="step-label">Bước 2</span><h3>Tách 4 cặp và vuốt thẳng</h3></div><div class="guide-step-grid"><div class="guide-main-image"><img src="images/kn02-step-02-separated-cores.png" alt="8 lõi dây đã tách" loading="lazy"></div><div class="guide-side"><div class="guide-thumbs"><button type="button" class="guide-thumb active" data-src="images/kn02-step-02-separated-cores.png" data-alt="8 lõi dây đã tách" aria-label="Xem 8 lõi dây đã tách"><img src="images/kn02-step-02-separated-cores.png" alt="8 lõi dây đã tách" loading="lazy"></button><button type="button" class="guide-thumb " data-src="images/kn02-step-02-untwist.svg" data-alt="Minh họa tháo xoắn" aria-label="Xem Minh họa tháo xoắn"><img src="images/kn02-step-02-untwist.svg" alt="Minh họa tháo xoắn" loading="lazy"></button><button type="button" class="guide-thumb " data-src="images/kn02-step-03-ordered-wires.png" data-alt="Cận cảnh các lõi dây" aria-label="Xem Cận cảnh các lõi dây"><img src="images/kn02-step-03-ordered-wires.png" alt="Cận cảnh các lõi dây" loading="lazy"></button></div><div class="guide-copy">
 <div class="action"><strong>Em làm:</strong> Tháo xoắn 4 cặp thành 8 sợi riêng. Dùng ngón tay vuốt từng sợi cho thẳng.</div>
 <div class="action">👀 <strong>Quan sát:</strong> 8 sợi nằm riêng, không xoắn vào nhau.</div>
 <div class="result">✓ <strong>Kết quả đúng:</strong> Có 8 sợi riêng, đủ 4 cặp màu.</div>
 <div class="wrong">🔧 <strong>Nếu sai:</strong> Tách lại từng cặp, không kéo giật mạnh.</div>
 </div>
 </div>
-</article>
-<article class="step-card" id="step-3">
-<div class="step-head"><h3><span class="step-number">3</span>Xếp 8 sợi theo T568B</h3></div>
-<div class="step-layout">
-<div class="step-visual">
-<div class="gallery-main"><img src="images/kn02-t568b-reference.png" alt="Thứ tự màu T568B" loading="lazy"></div>
-<div class="gallery-thumbs" role="list"><button type="button" class="gallery-thumb active" data-src="images/kn02-t568b-reference.png" data-alt="Thứ tự màu T568B" aria-label="Xem Thứ tự màu T568B"><img src="images/kn02-t568b-reference.png" alt="Thứ tự màu T568B" loading="lazy"></button><button type="button" class="gallery-thumb " data-src="images/kn02-step-03-ordered-wires.png" data-alt="8 lõi đã xếp" aria-label="Xem 8 lõi đã xếp"><img src="images/kn02-step-03-ordered-wires.png" alt="8 lõi đã xếp" loading="lazy"></button><button type="button" class="gallery-thumb " data-src="images/kn02-step-03-order.svg" data-alt="Sơ đồ thứ tự T568B" aria-label="Xem Sơ đồ thứ tự T568B"><img src="images/kn02-step-03-order.svg" alt="Sơ đồ thứ tự T568B" loading="lazy"></button></div>
-</div>
-<div class="gallery-info">
+</div></div></div></article><article class="guide-step" id="step-3"><div class="guide-step-head"><span class="step-label">Bước 3</span><h3>Xếp 8 sợi theo T568B</h3></div><div class="guide-step-grid"><div class="guide-main-image"><img src="images/kn02-t568b-reference.png" alt="Thứ tự màu T568B" loading="lazy"></div><div class="guide-side"><div class="guide-thumbs"><button type="button" class="guide-thumb active" data-src="images/kn02-t568b-reference.png" data-alt="Thứ tự màu T568B" aria-label="Xem Thứ tự màu T568B"><img src="images/kn02-t568b-reference.png" alt="Thứ tự màu T568B" loading="lazy"></button><button type="button" class="guide-thumb " data-src="images/kn02-step-03-ordered-wires.png" data-alt="8 lõi đã xếp" aria-label="Xem 8 lõi đã xếp"><img src="images/kn02-step-03-ordered-wires.png" alt="8 lõi đã xếp" loading="lazy"></button><button type="button" class="guide-thumb " data-src="images/kn02-step-03-order.svg" data-alt="Sơ đồ thứ tự T568B" aria-label="Xem Sơ đồ thứ tự T568B"><img src="images/kn02-step-03-order.svg" alt="Sơ đồ thứ tự T568B" loading="lazy"></button></div><div class="guide-copy">
 <div class="action"><strong>Em làm:</strong> Xếp từ trái sang phải: Trắng Cam – Cam – Trắng Xanh lá – Xanh dương – Trắng Xanh dương – Xanh lá – Trắng Nâu – Nâu.</div>
 <div class="action">👀 <strong>Quan sát:</strong> Nhìn trực tiếp 8 sợi và đọc số 1→8 trước khi cắt.</div>
 <div class="result">✓ <strong>Kết quả đúng:</strong> Thứ tự 1→8 trùng bảng T568B.</div>
 <div class="wrong">🔧 <strong>Nếu sai:</strong> Chưa cắt và chưa đưa vào hạt; tháo ra, xếp lại.</div>
 </div>
 </div>
-</article>
-<article class="step-card" id="step-4">
-<div class="step-head"><h3><span class="step-number">4</span>Cắt phẳng đầu dây</h3></div>
-<div class="step-layout">
-<div class="step-visual">
-<div class="gallery-main"><img src="images/kn02-step-04-cut.svg" alt="Minh họa cắt phẳng" loading="lazy"></div>
-<div class="gallery-thumbs" role="list"><button type="button" class="gallery-thumb active" data-src="images/kn02-step-04-cut.svg" data-alt="Minh họa cắt phẳng" aria-label="Xem Minh họa cắt phẳng"><img src="images/kn02-step-04-cut.svg" alt="Minh họa cắt phẳng" loading="lazy"></button><button type="button" class="gallery-thumb " data-src="images/kn02-step-03-ordered-wires.png" data-alt="Bó 8 lõi trước khi cắt" aria-label="Xem Bó 8 lõi trước khi cắt"><img src="images/kn02-step-03-ordered-wires.png" alt="Bó 8 lõi trước khi cắt" loading="lazy"></button></div>
-</div>
-<div class="gallery-info">
+</div></div></div></article><article class="guide-step" id="step-4"><div class="guide-step-head"><span class="step-label">Bước 4</span><h3>Cắt phẳng đầu dây</h3></div><div class="guide-step-grid"><div class="guide-main-image"><img src="images/kn02-step-04-cut.svg" alt="Minh họa cắt phẳng" loading="lazy"></div><div class="guide-side"><div class="guide-thumbs"><button type="button" class="guide-thumb active" data-src="images/kn02-step-04-cut.svg" data-alt="Minh họa cắt phẳng" aria-label="Xem Minh họa cắt phẳng"><img src="images/kn02-step-04-cut.svg" alt="Minh họa cắt phẳng" loading="lazy"></button><button type="button" class="guide-thumb " data-src="images/kn02-step-03-ordered-wires.png" data-alt="Bó 8 lõi trước khi cắt" aria-label="Xem Bó 8 lõi trước khi cắt"><img src="images/kn02-step-03-ordered-wires.png" alt="Bó 8 lõi trước khi cắt" loading="lazy"></button></div><div class="guide-copy">
 <div class="action"><strong>Em làm:</strong> Giữ chặt bó 8 sợi rồi cắt ngang để các đầu bằng nhau. Độ dài phần lõi hở cần phù hợp với hạt RJ45 đang dùng.</div>
 <div class="action">👀 <strong>Quan sát:</strong> Nhìn mặt cắt: 8 đầu nằm cùng một đường.</div>
 <div class="result">✓ <strong>Kết quả đúng:</strong> Các đầu bằng nhau, không có sợi dài/ngắn lệch rõ.</div>
 <div class="wrong">🔧 <strong>Nếu sai:</strong> Giữ lại thứ tự màu, cắt lại một lần cho phẳng.</div>
 </div>
 </div>
-</article>
-<article class="step-card" id="step-5">
-<div class="step-head"><h3><span class="step-number">5</span>Đưa dây vào hạt RJ45</h3></div>
-<div class="step-layout">
-<div class="step-visual">
-<div class="gallery-main"><img src="images/kn02-step-05-wire-entry.png" alt="Đưa 8 lõi vào đầu RJ45" loading="lazy"></div>
-<div class="gallery-thumbs" role="list"><button type="button" class="gallery-thumb active" data-src="images/kn02-step-05-wire-entry.png" data-alt="Đưa 8 lõi vào đầu RJ45" aria-label="Xem Đưa 8 lõi vào đầu RJ45"><img src="images/kn02-step-05-wire-entry.png" alt="Đưa 8 lõi vào đầu RJ45" loading="lazy"></button><button type="button" class="gallery-thumb " data-src="images/kn02-step-05-rj45-contacts.png" data-alt="8 tiếp điểm kim loại" aria-label="Xem 8 tiếp điểm kim loại"><img src="images/kn02-step-05-rj45-contacts.png" alt="8 tiếp điểm kim loại" loading="lazy"></button><button type="button" class="gallery-thumb " data-src="images/kn02-step-05-jacket-retention.png" data-alt="Vỏ cáp nằm trong phần giữ" aria-label="Xem Vỏ cáp nằm trong phần giữ"><img src="images/kn02-step-05-jacket-retention.png" alt="Vỏ cáp nằm trong phần giữ" loading="lazy"></button><button type="button" class="gallery-thumb " data-src="images/kn02-step-05-rj45-comparison.png" data-alt="Đối chiếu đầu RJ45" aria-label="Xem Đối chiếu đầu RJ45"><img src="images/kn02-step-05-rj45-comparison.png" alt="Đối chiếu đầu RJ45" loading="lazy"></button></div>
-</div>
-<div class="gallery-info">
+</div></div></div></article><article class="guide-step" id="step-5"><div class="guide-step-head"><span class="step-label">Bước 5</span><h3>Đưa dây vào hạt RJ45</h3></div><div class="guide-step-grid"><div class="guide-main-image"><img src="images/kn02-step-05-wire-entry.png" alt="Đưa 8 lõi vào đầu RJ45" loading="lazy"></div><div class="guide-side"><div class="guide-thumbs"><button type="button" class="guide-thumb active" data-src="images/kn02-step-05-wire-entry.png" data-alt="Đưa 8 lõi vào đầu RJ45" aria-label="Xem Đưa 8 lõi vào đầu RJ45"><img src="images/kn02-step-05-wire-entry.png" alt="Đưa 8 lõi vào đầu RJ45" loading="lazy"></button><button type="button" class="guide-thumb " data-src="images/kn02-step-05-rj45-contacts.png" data-alt="8 tiếp điểm kim loại" aria-label="Xem 8 tiếp điểm kim loại"><img src="images/kn02-step-05-rj45-contacts.png" alt="8 tiếp điểm kim loại" loading="lazy"></button><button type="button" class="guide-thumb " data-src="images/kn02-step-05-jacket-retention.png" data-alt="Vỏ cáp nằm trong phần giữ" aria-label="Xem Vỏ cáp nằm trong phần giữ"><img src="images/kn02-step-05-jacket-retention.png" alt="Vỏ cáp nằm trong phần giữ" loading="lazy"></button><button type="button" class="guide-thumb " data-src="images/kn02-step-05-rj45-comparison.png" data-alt="Đối chiếu đầu RJ45" aria-label="Xem Đối chiếu đầu RJ45"><img src="images/kn02-step-05-rj45-comparison.png" alt="Đối chiếu đầu RJ45" loading="lazy"></button></div><div class="guide-copy">
 <div class="action"><strong>Em làm:</strong> Giữ nguyên thứ tự, đẩy thẳng 8 sợi vào hạt. Kiểm tra đầu dây đã đi tới vị trí tiếp xúc và vỏ cáp nằm trong phần giữ của đầu nối.</div>
 <div class="action">👀 <strong>Quan sát:</strong> Nhìn qua nhựa trong: 8 lõi vẫn đúng thứ tự; nhìn bên hông: vỏ cáp được giữ.</div>
 <div class="result">✓ <strong>Kết quả đúng:</strong> Đủ 8 lõi vào đúng rãnh và vỏ cáp được giữ chắc.</div>
 <div class="wrong">🔧 <strong>Nếu sai:</strong> Rút ra, xếp lại; không bấm khi dây chưa đúng.</div>
 </div>
 </div>
-</article>
-<article class="step-card" id="step-6">
-<div class="step-head"><h3><span class="step-number">6</span>Bấm hạt RJ45</h3></div>
-<div class="step-layout">
-<div class="step-visual">
-<div class="gallery-main"><img src="images/kn02-step-06-crimp-tool.png" alt="Kìm bấm đầu RJ45" loading="lazy"></div>
-<div class="gallery-thumbs" role="list"><button type="button" class="gallery-thumb active" data-src="images/kn02-step-06-crimp-tool.png" data-alt="Kìm bấm đầu RJ45" aria-label="Xem Kìm bấm đầu RJ45"><img src="images/kn02-step-06-crimp-tool.png" alt="Kìm bấm đầu RJ45" loading="lazy"></button><button type="button" class="gallery-thumb " data-src="images/kn02-step-06-crimp.svg" data-alt="Minh họa thao tác bấm" aria-label="Xem Minh họa thao tác bấm"><img src="images/kn02-step-06-crimp.svg" alt="Minh họa thao tác bấm" loading="lazy"></button><button type="button" class="gallery-thumb " data-src="images/kn02-step-05-jacket-retention.png" data-alt="Kiểm tra phần giữ vỏ" aria-label="Xem Kiểm tra phần giữ vỏ"><img src="images/kn02-step-05-jacket-retention.png" alt="Kiểm tra phần giữ vỏ" loading="lazy"></button></div>
-</div>
-<div class="gallery-info">
+</div></div></div></article><article class="guide-step" id="step-6"><div class="guide-step-head"><span class="step-label">Bước 6</span><h3>Bấm hạt RJ45</h3></div><div class="guide-step-grid"><div class="guide-main-image"><img src="images/kn02-step-06-crimp-tool.png" alt="Kìm bấm đầu RJ45" loading="lazy"></div><div class="guide-side"><div class="guide-thumbs"><button type="button" class="guide-thumb active" data-src="images/kn02-step-06-crimp-tool.png" data-alt="Kìm bấm đầu RJ45" aria-label="Xem Kìm bấm đầu RJ45"><img src="images/kn02-step-06-crimp-tool.png" alt="Kìm bấm đầu RJ45" loading="lazy"></button><button type="button" class="guide-thumb " data-src="images/kn02-step-06-crimp.svg" data-alt="Minh họa thao tác bấm" aria-label="Xem Minh họa thao tác bấm"><img src="images/kn02-step-06-crimp.svg" alt="Minh họa thao tác bấm" loading="lazy"></button><button type="button" class="guide-thumb " data-src="images/kn02-step-05-jacket-retention.png" data-alt="Kiểm tra phần giữ vỏ" aria-label="Xem Kiểm tra phần giữ vỏ"><img src="images/kn02-step-05-jacket-retention.png" alt="Kiểm tra phần giữ vỏ" loading="lazy"></button></div><div class="guide-copy">
 <div class="action"><strong>Em làm:</strong> Đặt hạt vào đúng khe bấm của kìm, giữ thẳng rồi bóp kìm theo hướng dẫn của dụng cụ.</div>
 <div class="action">👀 <strong>Quan sát:</strong> Kiểm tra hạt nằm đúng vị trí trước khi bóp.</div>
 <div class="result">✓ <strong>Kết quả đúng:</strong> Hạt được bấm chắc; lẫy còn nguyên; vỏ cáp không bị tuột khỏi phần giữ.</div>
 <div class="wrong">🔧 <strong>Nếu sai:</strong> Không bấm lại vô hạn trên cùng một đầu; thay hạt và làm lại nếu đầu nối bị hỏng.</div>
 </div>
 </div>
-</article>
-<article class="step-card" id="step-7">
-<div class="step-head"><h3><span class="step-number">7</span>Làm đầu còn lại và kiểm tra</h3></div>
-<div class="step-layout">
-<div class="step-visual">
-<div class="gallery-main"><img src="images/kn02-step-07-test.svg" alt="Minh họa kiểm tra bằng máy test" loading="lazy"></div>
-<div class="gallery-thumbs" role="list"><button type="button" class="gallery-thumb active" data-src="images/kn02-step-07-test.svg" data-alt="Minh họa kiểm tra bằng máy test" aria-label="Xem Minh họa kiểm tra bằng máy test"><img src="images/kn02-step-07-test.svg" alt="Minh họa kiểm tra bằng máy test" loading="lazy"></button></div>
-</div>
-<div class="gallery-info">
+</div></div></div></article><article class="guide-step" id="step-7"><div class="guide-step-head"><span class="step-label">Bước 7</span><h3>Làm đầu còn lại và kiểm tra</h3></div><div class="guide-step-grid"><div class="guide-main-image"><img src="images/kn02-step-07-test.svg" alt="Minh họa kiểm tra bằng máy test" loading="lazy"></div><div class="guide-side"><div class="guide-thumbs"><button type="button" class="guide-thumb active" data-src="images/kn02-step-07-test.svg" data-alt="Minh họa kiểm tra bằng máy test" aria-label="Xem Minh họa kiểm tra bằng máy test"><img src="images/kn02-step-07-test.svg" alt="Minh họa kiểm tra bằng máy test" loading="lazy"></button></div><div class="guide-copy">
 <div class="action"><strong>Em làm:</strong> Lặp lại quy trình cho đầu còn lại. Nếu bài yêu cầu cáp thẳng, dùng cùng chuẩn; nếu yêu cầu cáp chéo, dùng A ở một đầu và B ở đầu kia.</div>
 <div class="action">👀 <strong>Quan sát:</strong> So sánh hai đầu cạnh nhau trước khi test.</div>
 <div class="result">✓ <strong>Kết quả đúng:</strong> Hai đầu đúng loại cáp mà bài thực hành yêu cầu.</div>
 <div class="wrong">🔧 <strong>Nếu sai:</strong> Đối chiếu từng chân 1→8 của cả hai đầu trước khi test.</div>
 </div>
 </div>
-</article>
-</section>
-
+</div></div></div></article></section>
 <section id="kiem-tra" class="section">
 <h2 class="section-title">🔎 Kiểm tra bằng máy test cáp</h2>
 <div class="card">
@@ -251,9 +171,9 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
 </main>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
- document.querySelectorAll('.step-card').forEach(function(card){
-  const main=card.querySelector('.gallery-main img');
-  const thumbs=card.querySelectorAll('.gallery-thumb');
+ document.querySelectorAll('.guide-step').forEach(function(card){
+  const main=card.querySelector('.guide-main-image img');
+  const thumbs=card.querySelectorAll('.guide-thumb');
   thumbs.forEach(function(btn){
    function show(){
     main.src=btn.dataset.src;
