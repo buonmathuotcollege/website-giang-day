@@ -16,19 +16,20 @@ Theo dõi nguồn và trạng thái media phục vụ KN02. Các SVG hiện dùn
 | KN02-IMG-007 | Bước 6 | Bấm kìm | `images/kn02-step-06-crimp.svg` | Tự tạo cho website | generated |
 | KN02-IMG-008 | Bước 7 | Kiểm tra bằng tester | `images/kn02-step-07-test.svg` | Tự tạo cho website | generated |
 
-## 2. Ảnh thực tế cần bổ sung
+## 2. Ảnh thực tế do giảng viên cung cấp
 
-Ưu tiên ảnh do giáo viên/phòng thực hành tự chụp. Không đưa ảnh ngoài vào repo nếu chưa xác minh quyền sử dụng.
+Tám ảnh PNG do giảng viên gửi đã được đưa vào `images/` và sử dụng ở phần Nhìn mẫu, Bước 2–3 và Bước 5–6. Nguồn: giảng viên cung cấp trực tiếp trong hội thoại. Quyền sử dụng nội bộ được ghi nhận theo xác nhận của người gửi; trạng thái nội dung vẫn là `review` để giáo viên đối chiếu thao tác và chú thích trước khi phát hành chính thức.
 
-| ID dự kiến | Bước | Ảnh cần có | Nguồn | Trạng thái |
-|---|---|---|---|---|
-| KN02-REAL-001 | Chuẩn bị | Kìm bấm, tester, RJ45, cáp UTP | Phòng thực hành | TBD |
-| KN02-REAL-002 | Bước 1 | Cận cảnh tay tuốt vỏ | Phòng thực hành | TBD |
-| KN02-REAL-003 | Bước 3 | 8 dây đã xếp đúng | Phòng thực hành | TBD |
-| KN02-REAL-004 | Bước 5 | Bó dây đi hết vào RJ45 | Phòng thực hành | TBD |
-| KN02-REAL-005 | Bước 6 | Kìm bấm đúng vị trí | Phòng thực hành | TBD |
-| KN02-REAL-006 | Bước 7 | Tester báo đúng | Phòng thực hành | TBD |
-| KN02-REAL-007 | Lỗi | Ví dụ lỗi đảo dây/tiếp xúc kém | Phòng thực hành | TBD |
+| ID | Bước | Nội dung | File | Nguồn | Trạng thái |
+|---|---|---|---|---|---|
+| KN02-REAL-001 | Nhìn mẫu | Bảng thứ tự T568B | `images/kn02-t568b-reference.png` | Giảng viên cung cấp | review |
+| KN02-REAL-002 | Bước 2 | 8 lõi sau khi tách | `images/kn02-step-02-separated-cores.png` | Giảng viên cung cấp | review |
+| KN02-REAL-003 | Bước 3 | 8 lõi đã xếp T568B | `images/kn02-step-03-ordered-wires.png` | Giảng viên cung cấp | review |
+| KN02-REAL-004 | Bước 5 | Đưa lõi dây vào đầu RJ45 | `images/kn02-step-05-wire-entry.png` | Giảng viên cung cấp | review |
+| KN02-REAL-005 | Bước 5 | Cận cảnh 8 tiếp điểm | `images/kn02-step-05-rj45-contacts.png` | Giảng viên cung cấp | review |
+| KN02-REAL-006 | Bước 5 | Vỏ cáp được giữ trong đầu nối | `images/kn02-step-05-jacket-retention.png` | Giảng viên cung cấp | review |
+| KN02-REAL-007 | Bước 5 | So sánh đầu RJ45/tiếp điểm | `images/kn02-step-05-rj45-comparison.png` | Giảng viên cung cấp | review |
+| KN02-REAL-008 | Bước 6 | Kìm bấm đầu RJ45 | `images/kn02-step-06-crimp-tool.png` | Giảng viên cung cấp | review |
 
 ## 3. Quy tắc bản quyền
 - SVG tự tạo: ghi trong MEDIA_MANIFEST.md với trạng thái `generated`.
@@ -40,3 +41,4 @@ Theo dõi nguồn và trạng thái media phục vụ KN02. Các SVG hiện dùn
 Chuẩn T568A/T568B, cách dùng cáp thẳng/chéo và kết quả tester phải được đối chiếu với thiết bị thực tế trước khi giáo viên duyệt phiên bản cuối.
 
 **Trạng thái tài liệu:** review — ⚠️ CẦN GIÁO VIÊN DUYỆT
+

@@ -52,6 +52,14 @@ Ghi ID, ngày tạo, mục đích, kỹ năng sử dụng, người/AI tạo và
 | KN02-IMG-006 | `images/kn02-step-05-rj45.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
 | KN02-IMG-007 | `images/kn02-step-06-crimp.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
 | KN02-IMG-008 | `images/kn02-step-07-test.svg` | SVG minh họa | Tự tạo cho website | Nội dung tự tạo | generated |
+| KN02-REAL-001 | `images/kn02-t568b-reference.png` | Ảnh PNG | Giảng viên cung cấp | Giảng viên cung cấp; sử dụng nội bộ theo xác nhận của người gửi | review |
+| KN02-REAL-002 | `images/kn02-step-02-separated-cores.png` | Ảnh PNG | Giảng viên cung cấp | Giảng viên cung cấp; sử dụng nội bộ theo xác nhận của người gửi | review |
+| KN02-REAL-003 | `images/kn02-step-03-ordered-wires.png` | Ảnh PNG | Giảng viên cung cấp | Giảng viên cung cấp; sử dụng nội bộ theo xác nhận của người gửi | review |
+| KN02-REAL-004 | `images/kn02-step-05-wire-entry.png` | Ảnh PNG | Giảng viên cung cấp | Giảng viên cung cấp; sử dụng nội bộ theo xác nhận của người gửi | review |
+| KN02-REAL-005 | `images/kn02-step-05-rj45-contacts.png` | Ảnh PNG | Giảng viên cung cấp | Giảng viên cung cấp; sử dụng nội bộ theo xác nhận của người gửi | review |
+| KN02-REAL-006 | `images/kn02-step-05-jacket-retention.png` | Ảnh PNG | Giảng viên cung cấp | Giảng viên cung cấp; sử dụng nội bộ theo xác nhận của người gửi | review |
+| KN02-REAL-007 | `images/kn02-step-05-rj45-comparison.png` | Ảnh PNG | Giảng viên cung cấp | Giảng viên cung cấp; sử dụng nội bộ theo xác nhận của người gửi | review |
+| KN02-REAL-008 | `images/kn02-step-06-crimp-tool.png` | Ảnh PNG | Giảng viên cung cấp | Giảng viên cung cấp; sử dụng nội bộ theo xác nhận của người gửi | review |
 
 ### Ảnh tham khảo bên ngoài đã kiểm tra
 
@@ -117,3 +125,4 @@ Các file `images/kn06-step-*.svg` đến `images/kn12-step-*.svg` là **generat
 | KN10 | `images/kn10-step-01.svg` … `kn10-step-07.svg` | generated/review |
 | KN11 | `images/kn11-step-01.svg` … `kn11-step-06.svg` | generated/review |
 | KN12 | `images/kn12-step-01.svg` … `kn12-step-10.svg` | generated/review |
+
