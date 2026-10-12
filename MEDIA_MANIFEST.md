@@ -140,3 +140,18 @@ Các ảnh dưới đây được hiển thị từ Wikimedia Commons qua đư�
 | DA01-REAL-001 | DA01 — Nhìn sơ đồ mẫu | Routers and switch racks - IMG 1678.jpg — Jemimus | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Routers_and_switch_racks_-_IMG_1678.jpg | Không; nhúng qua Special:FilePath, width=1200; ghi công hiển thị dưới ảnh |
 
 Trạng thái: quyền tái sử dụng đã đối chiếu trên trang file Commons; cần kiểm tra hiển thị trên website và đánh giá mức phù hợp thực tế của ảnh trước khi coi ảnh là ảnh mẫu của thiết bị trường.
+
+
+## KN01 — Ảnh do giảng viên cung cấp (2026-10-12)
+
+Ảnh được người gửi xác nhận tự chụp và cung cấp để dùng trên website này. Không gán giấy phép mở. Ảnh #8 được bỏ vì trùng chính xác với ảnh #2. Ảnh #6 giữ lại vì cho thấy bo mạch chủ từ góc trên khác với ảnh #2.
+
+| ID | File local | Loại | Nguồn/Tác giả | Quyền sử dụng | Chỉnh sửa | Trạng thái | Ghi chú |
+|---|---|---|---|---|---|---|---|
+| KN01-REAL-004 | `images/kn01-photo-mainboard-io.jpg` | JPEG | Giảng viên cung cấp (tự chụp) | Được giảng viên xác nhận tự chụp và gửi để dùng trên website này; không phải giấy phép mở | Không | review | Ảnh mẫu; cần đối chiếu model thiết bị phòng thực hành |
+| KN01-REAL-005 | `images/kn01-photo-mainboard-overview.jpg` | JPEG | Giảng viên cung cấp (tự chụp) | Được giảng viên xác nhận tự chụp và gửi để dùng trên website này; không phải giấy phép mở | Không | review | Ảnh mẫu; cần đối chiếu model thiết bị phòng thực hành |
+| KN01-REAL-006 | `images/kn01-photo-cpu-installed.jpg` | JPEG | Giảng viên cung cấp (tự chụp) | Được giảng viên xác nhận tự chụp và gửi để dùng trên website này; không phải giấy phép mở | Không | review | Ảnh mẫu; cần đối chiếu model thiết bị phòng thực hành |
+| KN01-REAL-007 | `images/kn01-photo-cpu-removed.jpg` | JPEG | Giảng viên cung cấp (tự chụp) | Được giảng viên xác nhận tự chụp và gửi để dùng trên website này; không phải giấy phép mở | Không | review | Ảnh mẫu; cần đối chiếu model thiết bị phòng thực hành |
+| KN01-REAL-008 | `images/kn01-photo-components-ddr4.jpg` | JPEG | Giảng viên cung cấp (tự chụp) | Được giảng viên xác nhận tự chụp và gửi để dùng trên website này; không phải giấy phép mở | Không | review | Ảnh mẫu; cần đối chiếu model thiết bị phòng thực hành |
+| KN01-REAL-009 | `images/kn01-photo-mainboard-top-view.jpg` | JPEG | Giảng viên cung cấp (tự chụp) | Được giảng viên xác nhận tự chụp và gửi để dùng trên website này; không phải giấy phép mở | Không | review | Ảnh mẫu; cần đối chiếu model thiết bị phòng thực hành |
+| KN01-REAL-010 | `images/kn01-photo-power-supply.png` | PNG | Giảng viên cung cấp (tự chụp) | Được giảng viên xác nhận tự chụp và gửi để dùng trên website này; không phải giấy phép mở | Không | review | Ảnh mẫu; cần đối chiếu model thiết bị phòng thực hành |
