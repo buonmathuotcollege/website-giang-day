@@ -4,7 +4,16 @@
 Biên soạn nội dung cho học sinh Trung cấp 9+3 theo nguyên tắc:
 NHÌN MẪU → LÀM THEO → KIỂM TRA → SỬA LỖI → TỰ LÀM → ĐẠT.
 
-## 2. Cấu trúc chuẩn
+## 2. Phương thức học ngay tại lớp
+- Không giả định học sinh đã biết thuật ngữ hoặc đã tự học trước ở nhà.
+- Mỗi bài mở bằng lời trấn an ngắn: học sinh làm cùng thầy/cô trong giờ.
+- Thầy/cô làm mẫu trước; học sinh quan sát vị trí và kết quả.
+- Chia quy trình thành một thao tác mỗi bước; dừng để thầy/cô kiểm tra trước khi chuyển tiếp.
+- Có ví dụ đã làm mẫu, dấu hiệu đạt và cách sửa ngay tại bước.
+- Lượt luyện ít gợi ý hơn vẫn diễn ra trong lớp, có thầy/cô quan sát và cho phép yêu cầu trợ giúp.
+- Không chấm tốc độ hoặc phạt học sinh vì cần xem lại hình mẫu trong lượt luyện đầu.
+
+## 3. Cấu trúc chuẩn
 Mỗi kỹ năng ưu tiên:
 1. Em sẽ làm được gì?
 2. Chuẩn bị gì?
