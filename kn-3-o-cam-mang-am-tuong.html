@@ -17,11 +17,21 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
 <body class="antialiased">
 <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200"><div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between"><a href="index.html" class="text-sm font-semibold text-slate-600">← Cổng kỹ năng</a><span class="text-xs font-bold px-3 py-1 rounded-full bg-blue-50 text-blue-700">KN03 / Ổ cắm mạng âm tường</span></div></header>
 <main class="skill-wrap">
+<aside id="hoc-cung-thay-co" aria-label="Cách học trong giờ thực hành" style="background:#eff6ff;border:2px solid #93c5fd;border-radius:18px;padding:16px 18px;margin:0 0 18px;color:#0f172a;line-height:1.6">
+<strong style="display:block;font-size:18px;color:#1e3a8a;margin-bottom:6px">Học cùng thầy/cô ngay tại lớp — em không cần tự học trước ở nhà.</strong>
+<ol style="padding-left:22px;margin:8px 0;font-size:14px">
+<li>Thầy/cô làm mẫu chậm một lần. Em nhìn vào vị trí đang thao tác.</li>
+<li>Cả lớp làm cùng từng bước. Dừng lại ở ô “Kết quả đúng” để tự đối chiếu.</li>
+<li>Nếu chưa làm được, giơ tay và chỉ bước cần giúp. Thầy/cô sẽ làm lại chậm cùng em.</li>
+</ol>
+<p style="font-size:13px;margin:8px 0 0;color:#334155"><strong>Em chỉ cần làm bước đang học.</strong> Chưa cần nhớ hết bài và không phải tự đoán bước kế tiếp.</p>
+</aside>
+
 <section class="skill-hero">
 <div class="skill-kicker">KỸ NĂNG 03 · THỰC HÀNH</div>
 <h1>Bấm/đấu ổ cắm mạng âm tường</h1>
 <p>Em nhận diện module ổ cắm RJ45, đọc sơ đồ màu trên module, đấu dây mạng vào khe IDC, lắp module vào mặt ổ cắm và kiểm tra đường truyền. Mục tiêu là tạo được một điểm mạng cố định, chắc chắn và kiểm tra được kết quả.</p>
-<div class="skill-meta"><div class="meta-box"><small>Hình thức</small><strong>Nhìn mẫu → Làm theo → Tự làm</strong></div><div class="meta-box"><small>Vật tư</small><strong>Cáp UTP + module Keystone</strong></div><div class="meta-box"><small>Dụng cụ</small><strong>Dụng cụ tuốt + punch-down</strong></div></div>
+<div class="skill-meta"><div class="meta-box"><small>Hình thức</small><strong>Thầy/cô làm mẫu → cả lớp làm cùng → luyện lại tại lớp</strong></div><div class="meta-box"><small>Vật tư</small><strong>Cáp UTP + module Keystone</strong></div><div class="meta-box"><small>Dụng cụ</small><strong>Dụng cụ tuốt + punch-down</strong></div></div>
 </section>
 <nav class="skill-nav" aria-label="Điều hướng"><a href="#muc-tieu">Mục tiêu</a><a href="#chuan-bi">Chuẩn bị</a><a href="#kien-thuc-toi-thieu">Kiến thức</a><a href="#nhin-mau">Nhìn mẫu</a><a href="#cac-buoc">Các bước</a><a href="#kiem-tra">Kiểm tra</a><a href="#loi">Lỗi</a><a href="#thuc-hanh">Thực hành</a><a href="#checklist">Checklist</a><a href="#danh-gia">Đánh giá</a></nav>
 
@@ -126,7 +136,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
 <section id="thuc-hanh" class="section"><h2 class="section-title">🧑‍🔧 Thực hành</h2>
 <div class="grid md:grid-cols-2 gap-4">
 <div class="card"><h3 class="font-bold mb-2">Mức 1 — Có hướng dẫn</h3><p class="text-sm">Đấu 01 module theo sơ đồ được giáo viên giao. Được xem lại từng bước và bảng màu.</p></div>
-<div class="card"><h3 class="font-bold mb-2">Mức 2 — Độc lập</h3><p class="text-sm">Nhận một module và đoạn cáp mới. Tự xác định sơ đồ, đấu dây, lắp module và kiểm tra.</p></div>
+<div class="card"><h3 class="font-bold mb-2">Mức 2 — Tự thao tác khi thầy/cô quan sát</h3><p class="text-sm">Nhận một module và đoạn cáp mới. Tự xác định sơ đồ, đấu dây, lắp module và kiểm tra.</p></div>
 <div class="card md:col-span-2"><h3 class="font-bold mb-2">Mức 3 — Xử lý lỗi</h3><p class="text-sm">Giáo viên tạo một lỗi đấu dây cơ bản. Em phải quan sát kết quả kiểm tra, khoanh vùng vị trí lỗi, sửa và kiểm tra lại.</p></div>
 </div></section>
 
@@ -144,7 +154,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;background:#f8fafc;col
 <section id="danh-gia" class="card section"><h2 class="section-title">🏆 Đánh giá năng lực KN03</h2>
 <div class="overflow-x-auto"><table class="min-w-full text-sm border"><thead><tr><th class="p-3 border text-left">Mức</th><th class="p-3 border text-left">Biểu hiện đạt</th></tr></thead><tbody>
 <tr><td class="p-3 border font-bold">Làm theo</td><td class="p-3 border">Đấu được module khi có hướng dẫn từng bước.</td></tr>
-<tr><td class="p-3 border font-bold">Tự làm</td><td class="p-3 border">Tự xác định sơ đồ, đấu dây, lắp và kiểm tra đúng.</td></tr>
+<tr><td class="p-3 border font-bold">Tự thao tác tại lớp</td><td class="p-3 border">Tự xác định sơ đồ, đấu dây, lắp và kiểm tra đúng.</td></tr>
 <tr><td class="p-3 border font-bold">Xử lý lỗi</td><td class="p-3 border">Phát hiện, khoanh vùng và sửa được lỗi đấu dây cơ bản rồi kiểm tra lại.</td></tr>
 </tbody></table></div>
 <p class="warning mt-4"><strong>⚠️ CẦN GIÁO VIÊN DUYỆT:</strong> thời lượng, thang điểm và ngưỡng đạt chính thức chưa được tự đặt trong phiên bản này. Loại module và phương án kiểm tra cũng cần đối chiếu thiết bị thực tế.</p>
