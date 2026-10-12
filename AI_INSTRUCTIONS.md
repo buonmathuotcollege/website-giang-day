@@ -24,9 +24,6 @@ Mục tiêu:
 - Hướng dẫn phải chỉ rõ vị trí, thao tác, kết quả nhìn thấy và cách gọi trợ giúp.
 
 ### PHẢI
-Đối tượng là học sinh Trung cấp 9+3, nhiều em bắt đầu từ đầu và cần được hướng dẫn rất cụ thể.
-
-### PHẢI
 - Câu ngắn, rõ, trực tiếp.
 - Mỗi bước chỉ yêu cầu một thao tác chính.
 - Ưu tiên hình ảnh thật, ảnh chụp thao tác và video ngắn.
