@@ -126,3 +126,17 @@ Các file `images/kn06-step-*.svg` đến `images/kn12-step-*.svg` là **generat
 | KN11 | `images/kn11-step-01.svg` … `kn11-step-06.svg` | generated/review |
 | KN12 | `images/kn12-step-01.svg` … `kn12-step-10.svg` | generated/review |
 
+
+
+## Ảnh thiết bị thật nhúng từ Wikimedia Commons — 2026-10-12
+
+Các ảnh dưới đây được hiển thị từ Wikimedia Commons qua đường Special:FilePath có giới hạn kích thước; dự án không lưu bản sao nhị phân trong repo. Mỗi ảnh có ghi công/giấy phép ngay dưới ảnh và liên kết về trang nguồn. Ảnh chỉ để nhận diện thiết bị mẫu; giáo viên vẫn cần chỉ thiết bị đúng model trong phòng thực hành. Nếu nguồn đổi hoặc ngừng phục vụ, thay bằng ảnh do trường tự chụp.
+
+| ID | Trang sử dụng | Ảnh / tác giả | Giấy phép | Trang nguồn | Chỉnh sửa |
+|---|---|---|---|---|---|
+| KN01-REAL-001 | KN01 — Nhìn mẫu | Computer motherboard 2.jpg — Kurt Kaiser | CC0 1.0 | https://commons.wikimedia.org/wiki/File:Computer_motherboard_2.jpg | Không; nhúng qua Special:FilePath, width=1200 |
+| KN01-REAL-002 | KN01 — Nhìn mẫu | Network Device (Switch).jpg — JBequio | CC BY 4.0 | https://commons.wikimedia.org/wiki/File:Network_Device_(Switch).jpg | Không; nhúng qua Special:FilePath, width=1200; ghi công hiển thị dưới ảnh |
+| KN01-REAL-003 | KN01 — Nhìn mẫu | RJ45 Ethernet Cable.jpg — Khairil Yusof | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:RJ45_Ethernet_Cable.jpg | Không; nhúng qua Special:FilePath, width=1200; ghi công hiển thị dưới ảnh |
+| DA01-REAL-001 | DA01 — Nhìn sơ đồ mẫu | Routers and switch racks - IMG 1678.jpg — Jemimus | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Routers_and_switch_racks_-_IMG_1678.jpg | Không; nhúng qua Special:FilePath, width=1200; ghi công hiển thị dưới ảnh |
+
+Trạng thái: quyền tái sử dụng đã đối chiếu trên trang file Commons; cần kiểm tra hiển thị trên website và đánh giá mức phù hợp thực tế của ảnh trước khi coi ảnh là ảnh mẫu của thiết bị trường.
