@@ -14,6 +14,16 @@ Mục tiêu:
 - Học sinh được dẫn từ người mới bắt đầu đến tự thực hiện và xử lý lỗi.
 
 ## 2. ĐỐI TƯỢNG HỌC SINH
+Đối tượng là học sinh Trung cấp 9+3, nhiều em bắt đầu từ đầu và chỉ tiếp nhận tốt khi được hướng dẫn trực tiếp trên lớp. Không giả định học sinh có thể tự học trước, tự suy luận bước kế tiếp hoặc tự tìm cách sửa lỗi.
+
+### Phương thức dạy bắt buộc
+- Thầy/cô làm mẫu chậm trên thiết bị/phần mềm thật trước khi học sinh thao tác.
+- Học sinh làm cùng lớp từng bước; mỗi bước có một điểm dừng kiểm tra.
+- Nếu học sinh chưa đạt, cho xem lại mẫu và làm lại ngay với hỗ trợ; không chuyển sang bước mới khi em chưa rõ.
+- Bài luyện giảm gợi ý là hoạt động tại lớp, có thầy/cô quan sát; không gọi đó là tự học.
+- Hướng dẫn phải chỉ rõ vị trí, thao tác, kết quả nhìn thấy và cách gọi trợ giúp.
+
+### PHẢI
 Đối tượng là học sinh Trung cấp 9+3, nhiều em bắt đầu từ đầu và cần được hướng dẫn rất cụ thể.
 
 ### PHẢI
