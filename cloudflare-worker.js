@@ -143,6 +143,16 @@ export default {
           // Ưu tiên 1: Ghi vào CSDL Cloudflare D1 (SQL Serverless trên Edge)
           if (env && env.DB) {
             try {
+              await env.DB.prepare(`CREATE TABLE IF NOT EXISTS submissions (
+                id TEXT PRIMARY KEY, date_only TEXT NOT NULL, submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                class_name TEXT NOT NULL, session_name TEXT NOT NULL, class_pin TEXT DEFAULT '',
+                station TEXT NOT NULL, student_name TEXT NOT NULL, ip_address TEXT DEFAULT '',
+                mouse_score INTEGER DEFAULT 0, telex_score INTEGER DEFAULT 0, word_score INTEGER DEFAULT 0,
+                excel_score INTEGER DEFAULT 0, ch_avg_score INTEGER DEFAULT 0, grade10 REAL DEFAULT 0.0,
+                status TEXT DEFAULT 'Cần luyện thêm', most_missed TEXT DEFAULT 'Không có',
+                clicks INTEGER DEFAULT 0, typos INTEGER DEFAULT 0, duration_sec INTEGER DEFAULT 0,
+                UNIQUE(date_only, class_name, session_name, station, student_name)
+              )`).run();
               await env.DB.prepare(`
                 INSERT INTO submissions (
                   id, date_only, class_name, session_name, class_pin, station, student_name,
@@ -287,6 +297,13 @@ export default {
     // ------------------------------------------------------------------------
     // ROUTE 4: PHỤC VỤ TRANG TĨNH TỪ KHO GITHUB (HỖ TRỢ /gv VÀO THẲNG BẢNG ĐIỂM)
     // ------------------------------------------------------------------------
+    // Nếu Cloudflare đã gắn Static Assets trực tiếp (env.ASSETS) -> Phục vụ trực tiếp từ CDN siêu tốc, không bị GitHub chặn giới hạn!
+    if (env && env.ASSETS) {
+      if (url.pathname === "/gv") {
+        return env.ASSETS.fetch(new Request(new URL("/index.html", request.url), request));
+      }
+      return env.ASSETS.fetch(request);
+    }
     let path = (url.pathname === "/" || url.pathname === "/gv") ? "/index.html" : url.pathname;
     const ghUrl = "https://raw.githubusercontent.com/buonmathuotcollege/website-giang-day/main" + path;
     const res = await fetch(ghUrl, { headers: { "User-Agent": "Mozilla/5.0" } });

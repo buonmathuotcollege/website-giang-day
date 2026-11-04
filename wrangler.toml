@@ -2,20 +2,12 @@ name = "website-giang-day"
 main = "cloudflare-worker.js"
 compatibility_date = "2026-11-04"
 
-# 1. CẤU HÌNH CƠ SỞ DỮ LIỆU CLOUDFLARE D1 (SQLITE TRÊN EDGE)
-# Chạy lệnh: npx wrangler d1 create bmtc_teaching_db để lấy database_id
-[[d1_databases]]
-binding = "DB"
-database_name = "bmtc_teaching_db"
-database_id = "00000000-0000-0000-0000-000000000000"
+# Kết hợp phục vụ giao diện Web tĩnh VÀ chạy mã lập trình Backend tại /api/*
+[assets]
+directory = "."
+binding = "ASSETS"
+run_worker_first = true
 
-# 2. CẤU HÌNH BỘ NHỚ LƯU TRỮ KV BỔ TRỢ (180 NGÀY)
-# Chạy lệnh: npx wrangler kv:namespace create BMTC_SCORES_KV để lấy id
-[[kv_namespaces]]
-binding = "SCORES_KV"
-id = "00000000000000000000000000000000"
-
-# 3. BIẾN MÔI TRƯỜNG & MẬT KHẨU GIẢNG VIÊN
+# Cấu hình biến môi trường mặc định (Thầy có thể đổi mật khẩu trực tiếp tại đây hoặc trên Dashboard)
 [vars]
 TEACHER_SECRET = "BMTC2026"
-ALLOWED_ORIGIN = "*"
