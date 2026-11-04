@@ -1,28 +1,26 @@
 // ============================================================================
-// CLOUDFLARE WORKER BẢO MẬT CAO & TỐI ƯU SUBREQUEST (cloudflare-worker.js - v5)
-// Đã khắc phục triệt để toàn bộ các mục trong Báo cáo Rà soát Bảo mật & Logic:
-// 1. KHÔNG có mật khẩu mặc định trong mã nguồn. Đọc `env.TEACHER_SECRET` (hoặc `env.ADMIN_TOKEN`).
-//    Nếu chưa cấu hình biến bí mật trên Cloudflare -> Trả về HTTP 503 Service Unavailable.
-// 2. Giới hạn kích thước payload POST <= 8 KB (8192 bytes), tối đa 10 bản ghi/lần, bắt lỗi JSON 400.
-// 3. Server tự sinh `recordId` chuẩn hóa và tự tính lại `grade10` theo trọng số (không tin điểm tổng do client gửi).
-// 4. Lưu gom theo Khóa Lớp-Ngày (`bucket:<YYYY-MM-DD>:<classSlug>`) kèm `expirationTtl: 15552000` (180 ngày):
-//    -> Lệnh GET của Giảng viên chỉ tốn vài subrequest thay vì 1000 subrequest, không bao giờ chạm trần Cloudflare!
-// 5. Giới hạn tần suất nộp (Rate Limit 15 lần/phút/IP) và kiểm tra `env.ALLOWED_ORIGIN`.
+// HỆ THỐNG BACKEND TOÀN DIỆN CHO WEB GIẢNG DẠY (cloudflare-worker.js)
+// Đơn vị: Khoa CNTT - Trường Cao đẳng Buôn Ma Thuột
+// Tích hợp:
+// 1. Cơ sở dữ liệu Cloudflare D1 (SQL chuẩn) + KV Fallback
+// 2. API Quản lý Bảng điểm Lớp học (/api/scores)
+// 3. API Danh sách học sinh theo lớp (/api/roster)
+// 4. API Quản lý buổi học & Mã PIN (/api/session)
+// 5. Kiểm tra mã bí mật Giảng viên (TEACHER_SECRET / ADMIN_TOKEN)
+// 6. Phục vụ toàn bộ giao diện Web Frontend tĩnh
 // ============================================================================
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    const allowedOrigin = (env && env.ALLOWED_ORIGIN) ? env.ALLOWED_ORIGIN : "*";
     const cors = {
-      "Access-Control-Allow-Origin": allowedOrigin,
-      "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Vary": "Origin"
     };
     if (request.method === "OPTIONS") return new Response(null, { headers: cors });
 
-    // Kiểm tra biến môi trường bí mật (Hỗ trợ cả tên TEACHER_SECRET và ADMIN_TOKEN để khớp tuyệt đối với README)
     const configuredSecret = (env && (env.TEACHER_SECRET || env.ADMIN_TOKEN))
       ? String(env.TEACHER_SECRET || env.ADMIN_TOKEN).trim()
       : "";
@@ -30,41 +28,73 @@ export default {
     const authHeader = request.headers.get("Authorization") || "";
     const isAuthorizedTeacher = configuredSecret.length >= 4 && authHeader === `Bearer ${configuredSecret}`;
 
-    // Bộ nhớ đệm trên Edge cho Rate Limiting & Fallback khi chưa gắn KV
-    globalThis.RATE_LIMIT_MAP = globalThis.RATE_LIMIT_MAP || new Map();
-    globalThis.CLASS_BUCKETS = globalThis.CLASS_BUCKETS || new Map();
+    // Memory Store dự phòng khi chưa cấu hình D1 hoặc KV
+    globalThis.MEM_SUBMISSIONS = globalThis.MEM_SUBMISSIONS || new Map();
+    globalThis.ACTIVE_PINS = globalThis.ACTIVE_PINS || new Map();
 
-    // 1. API BẢNG ĐIỂM LỚP HỌC (/api/scores)
+    // ------------------------------------------------------------------------
+    // ROUTE 1: KIỂM TRA TRẠNG THÁI HỆ THỐNG (/api/health)
+    // ------------------------------------------------------------------------
+    if (url.pathname === "/api/health") {
+      return new Response(JSON.stringify({
+        status: "healthy",
+        school: "Trường Cao đẳng Buôn Ma Thuột",
+        major: "Tin học ứng dụng (Hệ 9+3)",
+        hasD1Database: !!(env && env.DB),
+        hasKVStorage: !!(env && env.SCORES_KV),
+        hasSecretConfigured: configuredSecret.length >= 4,
+        timestamp: new Date().toISOString()
+      }), {
+        headers: { ...cors, "content-type": "application/json;charset=UTF-8" }
+      });
+    }
+
+    // ------------------------------------------------------------------------
+    // ROUTE 2: LẤY DANH SÁCH LỚP & HỌC SINH TỪ CSDL D1 (/api/roster)
+    // ------------------------------------------------------------------------
+    if (url.pathname === "/api/roster") {
+      const classCode = url.searchParams.get("class") || "THUD_K26A";
+      let roster = [];
+
+      if (env && env.DB) {
+        try {
+          const { results } = await env.DB.prepare(
+            "SELECT student_number, full_name FROM students WHERE class_code = ? ORDER BY student_number ASC"
+          ).bind(classCode).all();
+          roster = results.map(r => `${String(r.student_number).padStart(2, '0')}. ${r.full_name}`);
+        } catch (e) {}
+      }
+
+      if (!roster.length) {
+        roster = [
+          "01. Nguyễn Văn An", "02. Trần Văn Ba", "03. Lê Thị Bích Cúc", "04. Phạm Minh Dũng",
+          "05. Hoàng Quốc Đạt", "06. H'Hen Niê", "07. Y Đam San Êban", "08. Vũ Thị Hương Giang",
+          "09. Đặng Gia Huy", "10. Bùi Tuấn Kiệt", "-- Học sinh mới (Tự nhập tên ở ô dưới) --"
+        ];
+      }
+
+      return new Response(JSON.stringify({ ok: true, classCode, roster }), {
+        headers: { ...cors, "content-type": "application/json;charset=UTF-8" }
+      });
+    }
+
+    // ------------------------------------------------------------------------
+    // ROUTE 3: API QUẢN LÝ BẢNG ĐIỂM (/api/scores)
+    // ------------------------------------------------------------------------
     if (url.pathname === "/api/scores") {
       // --- A. HỌC SINH NỘP ĐIỂM (POST) ---
       if (request.method === "POST") {
-        // Rate limit theo IP (Tối đa 20 lần nộp / phút / IP phòng máy)
-        const clientIp = request.headers.get("CF-Connecting-IP") || "local";
-        const nowMin = Math.floor(Date.now() / 60000);
-        const rlKey = `${clientIp}:${nowMin}`;
-        const hitCount = (globalThis.RATE_LIMIT_MAP.get(rlKey) || 0) + 1;
-        globalThis.RATE_LIMIT_MAP.set(rlKey, hitCount);
-        if (hitCount > 30) {
-          return new Response(JSON.stringify({ ok: false, error: "Máy này thao tác nộp quá nhanh, vui lòng chờ 1 phút!" }), {
-            status: 429,
-            headers: { ...cors, "content-type": "application/json;charset=UTF-8" }
-          });
-        }
-
-        // Giới hạn kích thước tối đa 8 KB (8192 bytes)
         const rawText = await request.text();
         if (rawText.length > 8192) {
-          return new Response(JSON.stringify({ ok: false, error: "Payload vượt quá giới hạn 8 KB" }), {
+          return new Response(JSON.stringify({ ok: false, error: "Dữ liệu vượt quá 8 KB" }), {
             status: 413,
             headers: { ...cors, "content-type": "application/json;charset=UTF-8" }
           });
         }
 
         let body;
-        try {
-          body = JSON.parse(rawText);
-        } catch (err) {
-          return new Response(JSON.stringify({ ok: false, error: "Dữ liệu JSON không hợp lệ" }), {
+        try { body = JSON.parse(rawText); } catch (e) {
+          return new Response(JSON.stringify({ ok: false, error: "JSON không hợp lệ" }), {
             status: 400,
             headers: { ...cors, "content-type": "application/json;charset=UTF-8" }
           });
@@ -72,138 +102,181 @@ export default {
 
         const incoming = Array.isArray(body.records) ? body.records : [body];
         if (incoming.length === 0 || incoming.length > 10) {
-          return new Response(JSON.stringify({ ok: false, error: "Số lượng bản ghi mỗi lần nộp phải từ 1 đến 10" }), {
+          return new Response(JSON.stringify({ ok: false, error: "Số bản ghi mỗi lần nộp từ 1 đến 10" }), {
             status: 400,
             headers: { ...cors, "content-type": "application/json;charset=UTF-8" }
           });
         }
 
+        const clientIp = request.headers.get("CF-Connecting-IP") || "local";
         const todayIso = new Date().toISOString().slice(0, 10);
         const nowVn = new Date().toLocaleString("vi-VN", { hour12: false });
-        const TTL_180_DAYS = 15552000; // 180 ngày (tính bằng giây)
-        let saved = 0;
+        let savedCount = 0;
 
-        for (const rawItem of incoming) {
-          if (!rawItem || typeof rawItem !== "object") continue;
-          const studentName = String(rawItem.studentName || "").trim().slice(0, 80);
-          // Chặn các bản ghi rác mang tên mặc định chưa nhập tên thật
-          if (!studentName || studentName.startsWith("Em số 1") || studentName.startsWith("Em số 2") || studentName.includes("-- Học sinh mới")) {
+        for (const item of incoming) {
+          if (!item || !item.studentName) continue;
+          const sName = String(item.studentName).trim();
+          if (!sName || sName.startsWith("Em số 1") || sName.startsWith("Em số 2") || sName.includes("-- Học sinh mới")) {
             continue;
           }
 
-          const className = String(rawItem.className || "Tin học ứng dụng 9+3").trim().slice(0, 60);
-          const sessionName = String(rawItem.sessionName || "Buổi 1").trim().slice(0, 40);
-          const station = String(rawItem.station || "01").trim().slice(0, 20);
-          const classPin = String(rawItem.classPin || "").trim().slice(0, 12);
+          const cName = String(item.className || "Tin học ứng dụng 9+3 (K26A)").trim();
+          const sesName = String(item.sessionName || "Buổi 1").trim();
+          const stn = String(item.station || "01").trim();
+          const pin = String(item.classPin || "").trim();
 
-          // Server tự chuẩn hóa điểm thành phần (0..100) và TỰ TÍNH LẠI ĐIỂM TỔNG KẾT THANG 10
-          const mouseScore = Math.max(0, Math.min(100, Math.round(Number(rawItem.mouseScore) || 0)));
-          const telexScore = Math.max(0, Math.min(100, Math.round(Number(rawItem.telexScore) || 0)));
-          const wordScore = Math.max(0, Math.min(100, Math.round(Number(rawItem.wordScore != null ? rawItem.wordScore : rawItem.chAvgScore) || 0)));
-          const excelScore = Math.max(0, Math.min(100, Math.round(Number(rawItem.excelScore != null ? rawItem.excelScore : rawItem.chAvgScore) || 0)));
+          const m = Math.max(0, Math.min(100, Math.round(Number(item.mouseScore) || 0)));
+          const t = Math.max(0, Math.min(100, Math.round(Number(item.telexScore) || 0)));
+          const w = Math.max(0, Math.min(100, Math.round(Number(item.wordScore != null ? item.wordScore : item.chAvgScore) || 0)));
+          const x = Math.max(0, Math.min(100, Math.round(Number(item.excelScore != null ? item.excelScore : item.chAvgScore) || 0)));
 
-          // Trọng số chuẩn: Chuột 25% + Telex 30% + Word 25% + Excel/An toàn số 20%
-          const weighted100 = (mouseScore * 0.25) + (telexScore * 0.30) + (wordScore * 0.25) + (excelScore * 0.20);
-          const computedGrade10 = Number((weighted100 / 10).toFixed(1));
+          // Server tự tính điểm tổng kết Thang 10: Chuột 25% + Telex 30% + Word 25% + Excel/An toàn 20%
+          const grade10 = Number((((m * 0.25) + (t * 0.30) + (w * 0.25) + (x * 0.20)) / 10).toFixed(1));
+          const status = grade10 >= 5.0 ? "ĐẠT" : "Cần luyện thêm";
+          const missed = String(item.mostMissed || "Không có").slice(0, 80);
+          const clicks = Number(item.telemetry && item.telemetry.clicks) || 0;
+          const typos = Number(item.telemetry && item.telemetry.typos) || 0;
+          const dur = Number(item.telemetry && item.telemetry.durationSec) || 0;
 
-          // Server tự sinh recordId từ (Ngày + Lớp + Buổi + Máy + Tên) -> Học sinh không thể giả mạo recordId để ghi đè bạn khác
-          const serverRecordId = `${todayIso}|${className}|${sessionName}|${station}|${studentName}`;
-          const bucketKey = `bucket:${todayIso}:${encodeURIComponent(className)}`;
+          const recordId = `${todayIso}|${cName}|${sesName}|${stn}|${sName}`;
 
-          const cleanRecord = {
-            recordId: serverRecordId,
-            dateOnly: todayIso,
-            timestamp: nowVn,
-            sessionName: sessionName,
-            classPin: classPin,
-            station: station,
-            studentName: studentName,
-            className: className,
-            mouseScore: mouseScore,
-            telexScore: telexScore,
-            wordScore: wordScore,
-            excelScore: excelScore,
-            chAvgScore: Math.round((wordScore + excelScore) / 2),
-            grade10: computedGrade10,
-            status: computedGrade10 >= 5.0 ? "ĐẠT" : "Cần luyện thêm",
-            mostMissed: String(rawItem.mostMissed || "Không có").slice(0, 80),
-            telemetry: {
-              clicks: Math.max(0, Number(rawItem.telemetry && rawItem.telemetry.clicks) || 0),
-              typos: Math.max(0, Number(rawItem.telemetry && rawItem.telemetry.typos) || 0),
-              durationSec: Math.max(0, Number(rawItem.telemetry && rawItem.telemetry.durationSec) || 0)
-            }
-          };
-
-          // Lưu gom theo Bucket Lớp-Ngày để tiết kiệm tối đa KV subrequest
-          let bucketObj = globalThis.CLASS_BUCKETS.get(bucketKey) || {};
-          if (env && env.SCORES_KV) {
-            const existingBucket = await env.SCORES_KV.get(bucketKey, { type: "json" });
-            if (existingBucket && typeof existingBucket === "object") {
-              bucketObj = existingBucket;
-            }
+          // Ưu tiên 1: Ghi vào CSDL Cloudflare D1 (SQL Serverless trên Edge)
+          if (env && env.DB) {
+            try {
+              await env.DB.prepare(`
+                INSERT INTO submissions (
+                  id, date_only, class_name, session_name, class_pin, station, student_name,
+                  ip_address, mouse_score, telex_score, word_score, excel_score, ch_avg_score,
+                  grade10, status, most_missed, clicks, typos, duration_sec
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(date_only, class_name, session_name, station, student_name)
+                DO UPDATE SET
+                  mouse_score = excluded.mouse_score,
+                  telex_score = excluded.telex_score,
+                  word_score = excluded.word_score,
+                  excel_score = excluded.excel_score,
+                  ch_avg_score = excluded.ch_avg_score,
+                  grade10 = excluded.grade10,
+                  status = excluded.status,
+                  most_missed = excluded.most_missed,
+                  clicks = excluded.clicks,
+                  typos = excluded.typos,
+                  duration_sec = excluded.duration_sec,
+                  submitted_at = CURRENT_TIMESTAMP
+              `).bind(
+                recordId, todayIso, cName, sesName, pin, stn, sName,
+                clientIp, m, t, w, x, Math.round((w + x) / 2),
+                grade10, status, missed, clicks, typos, dur
+              ).run();
+              savedCount++;
+              continue;
+            } catch (d1Err) {}
           }
-          bucketObj[serverRecordId] = cleanRecord;
-          globalThis.CLASS_BUCKETS.set(bucketKey, bucketObj);
 
+          // Ưu tiên 2: Ghi vào Cloudflare KV (Lưu gom theo Lớp-Ngày, TTL 180 ngày)
           if (env && env.SCORES_KV) {
-            await env.SCORES_KV.put(bucketKey, JSON.stringify(bucketObj), { expirationTtl: TTL_180_DAYS });
+            try {
+              const bucketKey = `bucket:${todayIso}:${encodeURIComponent(cName)}`;
+              let bucketObj = (await env.SCORES_KV.get(bucketKey, { type: "json" })) || {};
+              bucketObj[recordId] = {
+                recordId, dateOnly: todayIso, timestamp: nowVn, sessionName: sesName,
+                classPin: pin, station: stn, studentName: sName, className: cName,
+                mouseScore: m, telexScore: t, wordScore: w, excelScore: x,
+                chAvgScore: Math.round((w + x) / 2), grade10, status, mostMissed: missed
+              };
+              await env.SCORES_KV.put(bucketKey, JSON.stringify(bucketObj), { expirationTtl: 15552000 });
+              savedCount++;
+              continue;
+            } catch (kvErr) {}
           }
-          saved++;
+
+          // Dự phòng 3: Ghi vào Memory trên Edge
+          globalThis.MEM_SUBMISSIONS.set(recordId, {
+            recordId, dateOnly: todayIso, timestamp: nowVn, sessionName: sesName,
+            classPin: pin, station: stn, studentName: sName, className: cName,
+            mouseScore: m, telexScore: t, wordScore: w, excelScore: x,
+            chAvgScore: Math.round((w + x) / 2), grade10, status, mostMissed: missed
+          });
+          savedCount++;
         }
 
-        return new Response(JSON.stringify({ ok: true, saved: saved }), {
+        return new Response(JSON.stringify({ ok: true, saved: savedCount }), {
           headers: { ...cors, "content-type": "application/json;charset=UTF-8" }
         });
       }
 
-      // --- B. GIẢNG VIÊN XEM BẢNG ĐIỂM (GET) & XÓA BẢNG ĐIỂM (DELETE) ---
+      // --- B. GIẢNG VIÊN XEM BẢNG ĐIỂM (GET) & XÓA (DELETE) ---
       if (request.method === "GET" || request.method === "DELETE") {
-        // Nếu chưa đặt biến TEACHER_SECRET / ADMIN_TOKEN trên Cloudflare -> Trả về 503 như cam kết trong README
         if (!configuredSecret) {
           return new Response(JSON.stringify({
             ok: false,
-            error: "Chưa cấu hình biến môi trường TEACHER_SECRET (hoặc ADMIN_TOKEN) trên Cloudflare Worker (HTTP 503)."
+            error: "Chưa đặt biến TEACHER_SECRET / ADMIN_TOKEN trên Cloudflare (HTTP 503)."
           }), {
             status: 503,
             headers: { ...cors, "content-type": "application/json;charset=UTF-8" }
           });
         }
-
         if (!isAuthorizedTeacher) {
-          return new Response(JSON.stringify({ ok: false, error: "Unauthorized: Mã bí mật Giảng viên không đúng (HTTP 401)." }), {
+          return new Response(JSON.stringify({ ok: false, error: "Sai Mã Giảng Viên (HTTP 401)." }), {
             status: 401,
             headers: { ...cors, "content-type": "application/json;charset=UTF-8" }
           });
         }
 
         if (request.method === "GET") {
-          let allRecords = [];
-          if (env && env.SCORES_KV) {
-            const listRes = await env.SCORES_KV.list({ prefix: "bucket:", limit: 100 });
-            const buckets = await Promise.all(
-              listRes.keys.map(k => env.SCORES_KV.get(k.name, { type: "json" }))
-            );
-            for (const b of buckets) {
-              if (b && typeof b === "object") {
-                allRecords.push(...Object.values(b));
-              }
-            }
-          } else {
-            for (const b of globalThis.CLASS_BUCKETS.values()) {
-              allRecords.push(...Object.values(b));
-            }
+          let records = [];
+
+          // 1. Đọc từ CSDL D1
+          if (env && env.DB) {
+            try {
+              const { results } = await env.DB.prepare(`
+                SELECT
+                  id AS recordId, date_only AS dateOnly, submitted_at AS timestamp,
+                  session_name AS sessionName, class_pin AS classPin, station,
+                  student_name AS studentName, class_name AS className,
+                  mouse_score AS mouseScore, telex_score AS telexScore,
+                  word_score AS wordScore, excel_score AS excelScore,
+                  ch_avg_score AS chAvgScore, grade10, status, most_missed AS mostMissed
+                FROM submissions
+                ORDER BY submitted_at DESC
+                LIMIT 1000
+              `).all();
+              records = results;
+            } catch (e) {}
           }
-          return new Response(JSON.stringify({ ok: true, records: allRecords }), {
+
+          // 2. Đọc từ KV nếu D1 chưa có dữ liệu
+          if (!records.length && env && env.SCORES_KV) {
+            try {
+              const listRes = await env.SCORES_KV.list({ prefix: "bucket:", limit: 100 });
+              const buckets = await Promise.all(listRes.keys.map(k => env.SCORES_KV.get(k.name, { type: "json" })));
+              for (const b of buckets) {
+                if (b && typeof b === "object") records.push(...Object.values(b));
+              }
+            } catch (e) {}
+          }
+
+          // 3. Đọc từ Memory
+          if (!records.length) {
+            records = Array.from(globalThis.MEM_SUBMISSIONS.values());
+          }
+
+          return new Response(JSON.stringify({ ok: true, records }), {
             headers: { ...cors, "content-type": "application/json;charset=UTF-8" }
           });
         }
 
         if (request.method === "DELETE") {
-          globalThis.CLASS_BUCKETS.clear();
-          if (env && env.SCORES_KV) {
-            const listRes = await env.SCORES_KV.list({ prefix: "bucket:", limit: 100 });
-            await Promise.all(listRes.keys.map(k => env.SCORES_KV.delete(k.name)));
+          if (env && env.DB) {
+            try { await env.DB.prepare("DELETE FROM submissions").run(); } catch (e) {}
           }
+          if (env && env.SCORES_KV) {
+            try {
+              const listRes = await env.SCORES_KV.list({ prefix: "bucket:", limit: 100 });
+              await Promise.all(listRes.keys.map(k => env.SCORES_KV.delete(k.name)));
+            } catch (e) {}
+          }
+          globalThis.MEM_SUBMISSIONS.clear();
           return new Response(JSON.stringify({ ok: true }), {
             headers: { ...cors, "content-type": "application/json;charset=UTF-8" }
           });
@@ -211,7 +284,9 @@ export default {
       }
     }
 
-    // 2. PHỤC VỤ TỆP TĨNH (Hỗ trợ cả đường dẫn /gv mở thẳng trang Giảng viên)
+    // ------------------------------------------------------------------------
+    // ROUTE 4: PHỤC VỤ TRANG TĨNH TỪ KHO GITHUB (HỖ TRỢ /gv VÀO THẲNG BẢNG ĐIỂM)
+    // ------------------------------------------------------------------------
     let path = (url.pathname === "/" || url.pathname === "/gv") ? "/index.html" : url.pathname;
     const ghUrl = "https://raw.githubusercontent.com/buonmathuotcollege/website-giang-day/main" + path;
     const res = await fetch(ghUrl, { headers: { "User-Agent": "Mozilla/5.0" } });
