@@ -1,0 +1,39 @@
+/* FILE GIAO DIEN TUY CHINH (css/style.css) */
+
+body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .pulse-ring {
+      animation: pulseRing 1.6s infinite cubic-bezier(0.4, 0, 0.6, 1);
+    }
+    @keyframes pulseRing {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.55); }
+      50% { transform: scale(1.04); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+    }
+    .pop-in {
+      animation: popIn 0.22s ease-out forwards;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    /* Chế độ Đơn Giản Tối Đa cho học sinh 9+3 (Ẩn các menu phụ gây rối mắt) */
+    body.simple-student-mode .advanced-nav-row {
+      display: none !important;
+    }
+    body.simple-student-mode #subNavBar {
+      display: none !important;
+    }
+    /* Chế độ Máy Chiếu (Projector Mode: Chữ lớn, tương phản cao để GV làm mẫu cho lớp 50 em) */
+    body.projector-mode {
+      font-size: 118% !important;
+      background-color: #ffffff !important;
+    }
+    body.projector-mode h1, body.projector-mode h2, body.projector-mode h3 {
+      letter-spacing: 0.01em;
+    }
+    body.projector-mode button, body.projector-mode input, body.projector-mode select {
+      font-size: 105% !important;
+    }
