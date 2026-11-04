@@ -1,41 +1,46 @@
 # Cổng Thực Hành Tin Học 9+3 – Trường Cao Đẳng Buôn Ma Thuột (CDMH02.1)
 
-Hệ thống học tập và thực hành kỹ năng số trực quan dành cho học sinh Trung cấp hệ 9+3 (45 tiết: 15 LT + 30 TH), thiết kế theo kiến trúc **Mô-đun không cần bước Build (Zero-Build Modular Architecture)** và **Chạy được cả khi phòng máy mất mạng (Offline-First)**.
+> **Mô tả kho lưu trữ (GitHub About Description):**  
+> `Cổng thực hành kỹ năng số và Tin học ứng dụng (CDMH02.1) dành cho học sinh Trung cấp hệ 9+3 – Khoa CNTT Trường Cao đẳng Buôn Ma Thuột. Tích hợp luồng học 5 bước, chấm gõ Telex NFC, mô phỏng Word/Excel và bảng điểm Cloudflare.`  
+> **Chủ đề gợi ý (GitHub Topics):** `education` `vietnam` `vocational-training` `digital-literacy` `telex` `cloudflare-workers` `zero-build`
 
-## 1. Cấu trúc thư mục (`website-giang-day/`)
+---
+
+## 1. Kiến trúc Mô-đun v5 (`website-giang-day/`)
 ```text
 website-giang-day/
-├── index.html                  # Khung giao diện chính (Siêu nhẹ ~38 KB, đã tách sạch CSS & JS)
+├── index.html                        # Giao diện Luồng 5 Bước cho Học sinh & Cổng /gv cho Giảng viên (~42 KB)
 ├── css/
-│   ├── tailwind.css            # CSS Tailwind đã biên dịch sẵn (Không cần tải cdn.tailwindcss.com)
-│   └── style.css               # Hiệu ứng chuyển động, Chế độ Học sinh tối giản & Chế độ Máy chiếu
+│   ├── tailwind.css                  # CSS Tailwind đã biên dịch sẵn (Chạy mượt cho phòng máy 50 em)
+│   └── style.css                     # Hiệu ứng, Chế độ Sáng/Tối (Dark Mode) & Chế độ Máy Chiếu
 ├── data/
-│   └── course-data.js          # NƠI GIẢNG VIÊN SỬA NỘI DUNG (Danh sách lớp, Câu hỏi Telex, Mô tả 6 chương)
+│   └── course-data.js                # Danh sách lớp xổ xuống (Roster), Chuẩn Năng Lực Số (NLS) & Câu hỏi
 ├── js/
-│   ├── app.js                  # Bộ máy điều khiển chính, Mouse Trainer, Telex & Bảng điểm lớp học
-│   └── chapters/
-│       └── ch2-to-6.js         # Mô-đun thực hành Chương 2 (Gmail), Chương 3 (Word), Chương 4 (Excel), Chương 5-6
+│   ├── ch1-mouse.js                  # Mô-đun 1: Quản lý trạng thái (Lưu tự động LocalStorage) & 5 bài Cầm chuột
+│   ├── ch1-telex.js                  # Mô-đun 2: Chấm gõ Telex chuẩn Unicode NFC, phân biệt HOA/thường, chặn Paste
+│   ├── ch3-word.js                   # Mô-đun 3: Thực hành Word (.docx), Excel công thức sống (.xls) & An toàn số
+│   ├── scores.js                     # Mô-đun 4: Nộp điểm trung thực (cảnh báo cam khi lỗi) & Bảng điểm Giảng viên
+│   └── app.js                        # Mô-đun 5: Điều hướng 5 bước cố định & Cổng ẩn Giảng viên (#/gv hoặc /gv)
 ├── vendor/
-│   ├── xlsx.full.min.js        # Bộ xuất bảng tính Excel có công thức chạy Offline (Không phụ thuộc CDN ngoài)
-│   └── confetti.browser.min.js # Hiệu ứng pháo hoa khích lệ chạy Offline
-├── cloudflare-worker.js        # Mã nguồn Cloudflare Worker có xác thực Bearer Token & lưu khóa KV độc lập
-├── GEMINI.md                   # Quy tắc hướng dẫn AI phát triển web (Bản sao: AGENTS.md, CLAUDE.md)
-├── AI_PROMPTS_LIBRARY.md       # Thư viện câu lệnh mẫu để Giảng viên điều khiển AI nâng cấp
-├── .gitignore                  # Quy tắc bỏ qua file rác hệ thống
-└── LICENSE                     # Bản quyền mã nguồn & học liệu
+│   ├── xlsx.full.min.js              # Bộ xuất bảng tính Excel có công thức chạy 100% Offline
+│   └── confetti.browser.min.js       # Hiệu ứng pháo hoa khích lệ chạy 100% Offline
+├── tests/
+│   └── test_scoring_and_telex.mjs    # Bộ kiểm thử tự động (Telex NFC, Điểm trọng số, Chống XSS & CSV Injection)
+├── .github/workflows/
+│   └── ci-tests.yml                  # GitHub Actions tự động kiểm tra chất lượng mỗi khi git push
+├── cloudflare-worker.js              # Worker API (/api/scores): Gom điểm theo Bucket Lớp-Ngày, TTL 180 ngày
+├── GEMINI.md / CLAUDE.md / AGENTS.md # Quy tắc hướng dẫn AI phát triển web
+└── LICENSE                           # Bản quyền MIT & Học liệu mở
 ```
 
-## 2. Hướng dẫn Triển khai (GitHub Pages / Cloudflare Worker + KV)
-1. **Cách 1 (Khuyên dùng – Nhanh nhất): GitHub Pages / Cloudflare Pages kết hợp Worker API**
-   - Đưa toàn bộ thư mục trong gói ZIP lên nhánh `main` của kho `buonmathuotcollege/website-giang-day`.
-   - Bật **GitHub Pages** (hoặc **Cloudflare Pages**) để phân phối các file tĩnh (`index.html`, `css/`, `js/`, `vendor/`) với tốc độ cao.
-2. **Cách 2: Chạy trọn gói qua Cloudflare Worker + Gắn KV Lưu Điểm Vĩnh Viễn**
-   - Trong Cloudflare Dashboard ➔ **Workers & Pages** ➔ **KV** ➔ Tạo một Namespace tên là `BMTC_SCORES_KV`.
-   - Vào Worker `website-giang-day` ➔ **Settings** ➔ **Bindings** ➔ Thêm KV Namespace Binding với tên biến là **`SCORES_KV`**.
-   - Vào **Settings** ➔ **Variables and Secrets** ➔ Thêm biến môi trường **`TEACHER_SECRET`** (ví dụ đặt mật khẩu của thầy là `BMTC2026`).
-   - Dán nội dung file `cloudflare-worker.js` vào mục **Edit code** và bấm **Deploy**.
+---
 
-## 3. Quy trình Kiểm thử Thủ công trước khi Commit (Manual QA Checklist)
-- [ ] **Kiểm tra Chế độ Học sinh 9+3 & Chế độ Máy chiếu:** Bấm qua lại 4 nút `1️⃣ ➔ 2️⃣ ➔ 3️⃣ ➔ 4️⃣`, bấm thử nút `📽️ Chế độ Máy Chiếu` và `👨‍🏫 Menu Giáo Viên`.
-- [ ] **Kiểm tra chống XSS & CSV Injection:** Nhập thử tên học sinh có ký tự `<script>alert(1)</script>` hoặc `=SUM(1,2)` ➔ Bấm nộp điểm ➔ Mở Bảng điểm Giảng viên kiểm tra tên hiển thị an toàn dưới dạng chữ thường và xuất file `.CSV` có dấu nháy bảo vệ `'=SUM(1,2)`.
-- [ ] **Kiểm tra xác thực Mã Giảng viên:** Tại tab `📊 BẢNG ĐIỂM LỚP HỌC`, thử nhập sai ô `🔑 Mã GV` ➔ Hệ thống báo `🔒 Sai Mã GV` và chặn quyền xóa danh sách.
+## 2. Hướng dẫn Triển khai & Bảo mật Bảng điểm trên Cloudflare
+1. **Khuyên dùng:** Kết nối kho GitHub với **Cloudflare Pages** (hoặc **GitHub Pages**) để phân phối tệp tĩnh tốc độ cao; dùng **Cloudflare Worker** cho đường dẫn `/api/scores`.
+2. **Cấu hình Biến môi trường Bí mật (Bắt buộc trước buổi dạy):**
+   - Vào Cloudflare Worker ➔ **Settings** ➔ **Variables and Secrets** ➔ Đặt biến **`TEACHER_SECRET`** (hoặc **`ADMIN_TOKEN`**, Worker hỗ trợ cả hai tên biến này).
+   - **Không có mật khẩu mặc định trong mã nguồn:** Nếu chưa đặt biến này trên Cloudflare, lệnh xem/xóa điểm sẽ trả về lỗi `HTTP 503 Service Unavailable`.
+3. **Cách Giảng viên mở Bảng điểm Lớp học (Đã ẩn hoàn toàn khỏi giao diện học sinh):**
+   - **Cách 1:** Truy cập địa chỉ `https://phamtiendong.name.vn/#/gv` (hoặc `https://phamtiendong.name.vn/gv`).
+   - **Cách 2:** Nháy đúp chuột trái vào biểu tượng mũ cử nhân `🎓` ở góc trên cùng bên trái màn hình.
+   - Nhập mã bí mật vào ô **`🔑 Mã GV`** rồi bấm **`🔄 Làm mới dữ liệu`**.

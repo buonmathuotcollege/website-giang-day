@@ -49,12 +49,18 @@
           ✏️ Đổi tên
         </button>
 
+        <button id="btnTogglePracticeExam" type="button" class="px-2.5 py-1.5 rounded-xl bg-amber-400 text-sky-950 text-xs font-black transition shadow" title="Chuyển giữa Chế độ Tính Điểm và Chế độ Luyện Tự Do (không lo mất điểm)">
+          🎯 Chế độ: TÍNH ĐIỂM
+        </button>
+        <button id="btnToggleDarkTheme" type="button" class="px-2.5 py-1.5 rounded-xl bg-sky-900 hover:bg-sky-800 border border-sky-700 text-xs font-bold transition" title="Bật/Tắt giao diện Sáng/Tối">
+          🌙 Giao diện: SÁNG
+        </button>
         <button id="btnTopSound" type="button" class="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold transition flex items-center gap-1">🔊 Âm thanh: BẬT</button>
 
         <button id="btnTopSubmitCloud" type="button" class="px-3 py-1.5 rounded-xl bg-rose-500 hover:bg-rose-400 text-white text-xs font-extrabold transition shadow flex items-center gap-1">
           <span>📤 Nộp Điểm Cho Thầy</span>
         </button>
-        <button id="btnTopScoreboard" type="button" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-sky-950 text-xs font-extrabold transition shadow">
+        <button id="btnTopScoreboard" type="button" class="teacher-only-ctrl px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-sky-950 text-xs font-extrabold transition shadow">
           🏆 Báo cáo Thầy/Cô
         </button>
       </div>
@@ -90,40 +96,50 @@
           <span>🛡️ CHƯƠNG 6: An toàn thông tin</span>
           <span class="text-[10px] bg-sky-800 text-sky-300 px-1.5 py-0.2 rounded-full">Buổi 13-14</span>
         </button>
-        <button data-chapter="99" class="ch-tab px-3 py-2 rounded-xl bg-amber-400/20 text-amber-300 hover:bg-amber-400 hover:text-sky-950 border border-amber-400/40 flex items-center gap-1.5 whitespace-nowrap font-extrabold ml-auto">
+        <button data-chapter="99" class="teacher-only-ctrl ch-tab px-3 py-2 rounded-xl bg-amber-400/20 text-amber-300 hover:bg-amber-400 hover:text-sky-950 border border-amber-400/40 flex items-center gap-1.5 whitespace-nowrap font-extrabold ml-auto">
           <span>📊 BẢNG ĐIỂM LỚP HỌC (THỐNG KÊ GV)</span>
         </button>
       </div>
     </div>
 
-    <!-- THANH 4 BƯỚC SIÊU ĐƠN GIẢN DÀNH CHO HỌC SINH 9+3 (CHỮ TO - KHÔNG RỐI MẮT) -->
-    <div class="bg-sky-900 border-t border-sky-800 px-4 py-2">
-      <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-        <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
-          <button id="btnSimpleStep0" type="button" class="px-3.5 py-2 rounded-xl bg-amber-400 text-sky-950 font-black text-xs sm:text-sm shadow flex items-center gap-1.5 transition">
-            <span>1️⃣ NHẬP TÊN 2 BẠN</span>
+    <!-- THANH 5 BƯỚC CHUẨN MẪU DÀNH CHO HỌC SINH 9+3 (CHỮ LỚN - NÚT CAO 56PX - RÕ RÀNG) -->
+    <div class="bg-white text-slate-800 border-t border-b border-slate-200 px-3 py-2.5 shadow-sm">
+      <div class="max-w-5xl mx-auto flex flex-col gap-2">
+        <div class="grid grid-cols-5 gap-2">
+          <button id="btnSimpleStep0" type="button" class="step5-pill rounded-2xl border-2 border-sky-600 bg-sky-50 text-sky-900 px-2 py-2 flex flex-col items-center justify-center text-center shadow-sm">
+            <span class="text-base sm:text-lg font-black leading-none">1</span>
+            <span class="text-xs sm:text-sm font-extrabold mt-1">Thông tin</span>
           </button>
-          <span class="text-sky-400 font-black hidden sm:inline">➔</span>
-          <button id="btnSimpleStep1" type="button" class="px-3.5 py-2 rounded-xl bg-sky-800 hover:bg-sky-700 text-white font-extrabold text-xs sm:text-sm flex items-center gap-1.5 transition">
-            <span>2️⃣ TẬP CẦM CHUỘT (BUỔI 1)</span>
+          <button id="btnSimpleStep1" type="button" class="step5-pill rounded-2xl border-2 border-slate-200 bg-white hover:border-sky-400 text-slate-600 px-2 py-2 flex flex-col items-center justify-center text-center">
+            <span class="text-base sm:text-lg font-black leading-none">2</span>
+            <span class="text-xs sm:text-sm font-bold mt-1">Cầm chuột</span>
           </button>
-          <span class="text-sky-400 font-black hidden sm:inline">➔</span>
-          <button id="btnSimpleStep2" type="button" class="px-3.5 py-2 rounded-xl bg-sky-800 hover:bg-sky-700 text-white font-extrabold text-xs sm:text-sm flex items-center gap-1.5 transition">
-            <span>3️⃣ TẬP GÕ TIẾNG VIỆT (BUỔI 2)</span>
+          <button id="btnSimpleStep2" type="button" class="step5-pill rounded-2xl border-2 border-slate-200 bg-white hover:border-sky-400 text-slate-600 px-2 py-2 flex flex-col items-center justify-center text-center">
+            <span class="text-base sm:text-lg font-black leading-none">3</span>
+            <span class="text-xs sm:text-sm font-bold mt-1">Gõ Telex</span>
           </button>
-          <span class="text-sky-400 font-black hidden sm:inline">➔</span>
-          <button id="btnSimpleStep3" type="button" class="px-3.5 py-2 rounded-xl bg-sky-800 hover:bg-sky-700 text-white font-extrabold text-xs sm:text-sm flex items-center gap-1.5 transition">
-            <span>4️⃣ WORD &amp; EXCEL (CHƯƠNG 3-4)</span>
+          <button id="btnSimpleStep3" type="button" class="step5-pill rounded-2xl border-2 border-slate-200 bg-white hover:border-sky-400 text-slate-600 px-2 py-2 flex flex-col items-center justify-center text-center">
+            <span class="text-base sm:text-lg font-black leading-none">4</span>
+            <span class="text-xs sm:text-sm font-bold mt-1">Word &amp; Excel</span>
+          </button>
+          <button id="btnSimpleStep4" type="button" class="step5-pill rounded-2xl border-2 border-slate-200 bg-white hover:border-sky-400 text-slate-600 px-2 py-2 flex flex-col items-center justify-center text-center">
+            <span class="text-base sm:text-lg font-black leading-none">5</span>
+            <span class="text-xs sm:text-sm font-bold mt-1">Nộp điểm</span>
           </button>
         </div>
 
-        <div class="flex flex-wrap items-center gap-1.5">
-          <button id="btnToggleProjector" type="button" class="px-3 py-1.5 rounded-xl bg-sky-950 hover:bg-slate-800 border border-sky-700 text-sky-200 text-xs font-extrabold transition" title="Phóng to chữ và tăng độ tương phản khi chiếu lên bảng cho lớp 50 em">
-            📽️ Chế độ Máy Chiếu: TẮT
-          </button>
-          <button id="btnToggleSimpleMode" type="button" class="px-3 py-1.5 rounded-xl bg-sky-950 hover:bg-slate-800 border border-sky-700 text-amber-300 text-xs font-extrabold transition" title="Bật/Tắt toàn bộ menu 6 chương và bảng thống kê dành cho Giáo viên">
-            👨‍🏫 Menu Giáo Viên (Hiện đủ 6 Chương)
-          </button>
+        <!-- Digital Competency Standard Badge (Chuẩn Năng Lực Số) + Teacher Hidden Controls -->
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs pt-0.5">
+          <div id="lblCompetencyBadge" class="font-bold text-sky-800 bg-sky-50 border border-sky-200 px-3 py-1 rounded-lg">
+            📌 Chuẩn Năng Lực Số (NLS 1.1 &amp; 1.2): Vận hành thiết bị số, điều khiển chuột và quản lý thư mục ổ đĩa D:          </div>
+          <div class="teacher-only-ctrl flex flex-wrap items-center gap-1.5 ml-auto">
+            <button id="btnToggleProjector" type="button" class="px-3 py-1 rounded-xl bg-sky-950 hover:bg-slate-800 text-sky-200 text-xs font-extrabold transition">
+              📽️ Chế độ Máy Chiếu: TẮT
+            </button>
+            <button id="btnToggleSimpleMode" type="button" class="px-3 py-1 rounded-xl bg-sky-950 hover:bg-slate-800 text-amber-300 text-xs font-extrabold transition">
+              👨‍🏫 Menu Giáo Viên (Hiện đủ 6 Chương)
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -209,78 +225,127 @@
             </div>
           </div>
 
-          <!-- Right Quick Student Check-in Card (5 cols) -->
-          <div class="lg:col-span-5 bg-white text-slate-800 rounded-2xl p-5 shadow-2xl border border-slate-100">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <!-- Right Quick Student Check-in Card (5 cols - Chuẩn thiết kế chữ lớn, chọn từ danh sách xổ xuống) -->
+          <div class="lg:col-span-5 bg-white text-slate-800 rounded-3xl p-6 shadow-2xl border-2 border-sky-200">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
               <div>
-                <span class="text-[11px] font-extrabold uppercase text-sky-700">ĐIỂM DANH NHANH TẠI MÁY</span>
-                <h3 class="text-base font-extrabold text-slate-900">👥 Nhập Tên 2 Bạn Ngồi Máy Này</h3>
+                <span class="text-xs font-extrabold uppercase text-sky-700">BƯỚC 1 / 5 • ĐIỂM DANH TẠI MÁY</span>
+                <h3 class="text-xl font-black text-slate-900 mt-0.5">Bắt đầu nào!</h3>
+                <p class="text-xs text-slate-600">Chọn lớp, số máy, tên 2 bạn rồi bấm nút xanh ở dưới.</p>
               </div>
-              <span class="text-2xl">🖥️</span>
+              <span class="text-3xl">🖥️</span>
             </div>
 
-            <div class="mt-3 space-y-2.5 text-xs">
-              <div class="grid grid-cols-2 gap-2">
+            <div class="mt-4 space-y-3 text-sm">
+              <div>
+                <label class="block font-extrabold text-slate-800 mb-1">🏫 Lớp của em:</label>
+                <select id="welcomeSelectClass" class="w-full px-3.5 py-3 rounded-xl border-2 border-slate-300 focus:outline-none focus:border-sky-600 text-base font-bold bg-white">
+                  <option value="Tin học ứng dụng 9+3 (K26A)" selected>Tin học ứng dụng 9+3 (K26A)</option>
+                  <option value="Tin học ứng dụng 9+3 (K26B)">Tin học ứng dụng 9+3 (K26B)</option>
+                  <option value="Tin học ứng dụng 9+3 (K25)">Tin học ứng dụng 9+3 (K25)</option>
+                  <option value="Tin học ứng dụng 9+3">Tin học ứng dụng 9+3 (Ngành chính)</option>
+                  <option value="Điện công nghiệp 9+3">Điện công nghiệp 9+3</option>
+                  <option value="Công nghệ Ô tô 9+3">Công nghệ Ô tô 9+3</option>
+                  <option value="Cắt gọt kim loại / Hàn 9+3">Cắt gọt kim loại / Hàn 9+3</option>
+                  <option value="May thời trang 9+3">May thời trang 9+3</option>
+                  <option value="Kỹ thuật chế biến món ăn 9+3">Kỹ thuật chế biến món ăn 9+3</option>
+                  <option value="Thú y / Bảo vệ thực vật 9+3">Thú y / Bảo vệ thực vật 9+3</option>
+                  <option value="Lớp Trung cấp khác">Lớp Trung cấp khác</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-3 gap-2">
                 <div>
-                  <label class="block font-bold text-slate-700 mb-1">🏫 Lớp nghề 9+3:</label>
-                  <select id="welcomeSelectClass" class="w-full px-2.5 py-2 rounded-xl border-2 border-slate-200 focus:outline-none focus:border-sky-600 text-xs font-bold bg-slate-50">
-                    <option value="Tin học ứng dụng 9+3" selected>Tin học ứng dụng 9+3 (Ngành chính)</option>
-                    <option value="Tin học ứng dụng 9+3 (K26A)">Tin học ứng dụng 9+3 (K26A)</option>
-                    <option value="Tin học ứng dụng 9+3 (K26B)">Tin học ứng dụng 9+3 (K26B)</option>
-                    <option value="Điện công nghiệp 9+3">Điện công nghiệp 9+3</option>
-                    <option value="Công nghệ Ô tô 9+3">Công nghệ Ô tô 9+3</option>
-                    <option value="Cắt gọt kim loại / Hàn 9+3">Cắt gọt kim loại / Hàn 9+3</option>
-                    <option value="May thời trang 9+3">May thời trang 9+3</option>
-                    <option value="Kỹ thuật chế biến món ăn 9+3">Kỹ thuật chế biến món ăn 9+3</option>
-                    <option value="Thú y / Bảo vệ thực vật 9+3">Thú y / Bảo vệ thực vật 9+3</option>
-                    <option value="Lớp Trung cấp khác">Lớp Trung cấp khác</option>
+                  <label class="block font-extrabold text-slate-800 mb-1 text-xs">🖥️ Số máy:</label>
+                  <select id="welcomeInputStation" class="w-full px-2.5 py-2.5 rounded-xl border-2 border-slate-300 focus:outline-none focus:border-sky-600 text-sm font-bold bg-white">
+                    <option value="Máy 01" selected>01</option>
+                    <option value="Máy 02">02</option>
+                    <option value="Máy 03">03</option>
+                    <option value="Máy 04">04</option>
+                    <option value="Máy 05">05</option>
+                    <option value="Máy 06">06</option>
+                    <option value="Máy 07">07</option>
+                    <option value="Máy 08">08</option>
+                    <option value="Máy 09">09</option>
+                    <option value="Máy 10">10</option>
+                    <option value="Máy 11">11</option>
+                    <option value="Máy 12">12</option>
+                    <option value="Máy 13">13</option>
+                    <option value="Máy 14">14</option>
+                    <option value="Máy 15">15</option>
+                    <option value="Máy 16">16</option>
+                    <option value="Máy 17">17</option>
+                    <option value="Máy 18">18</option>
+                    <option value="Máy 19">19</option>
+                    <option value="Máy 20">20</option>
+                    <option value="Máy 21">21</option>
+                    <option value="Máy 22">22</option>
+                    <option value="Máy 23">23</option>
+                    <option value="Máy 24">24</option>
+                    <option value="Máy 25">25</option>
+                    <option value="Máy 26">26</option>
+                    <option value="Máy 27">27</option>
+                    <option value="Máy 28">28</option>
+                    <option value="Máy 29">29</option>
+                    <option value="Máy 30">30</option>
                   </select>
                 </div>
                 <div>
-                  <label class="block font-bold text-slate-700 mb-1">🖥️ Số máy &amp; Buổi học:</label>
-                  <div class="grid grid-cols-2 gap-1">
-                    <input id="welcomeInputStation" type="text" value="Máy 01" placeholder="Máy 01" class="w-full px-2 py-2 rounded-xl border-2 border-slate-200 focus:outline-none focus:border-sky-600 text-xs font-bold">
-                    <select id="welcomeSelectSession" class="w-full px-1.5 py-2 rounded-xl border-2 border-slate-200 focus:outline-none focus:border-sky-600 text-[11px] font-bold bg-slate-50">
-                      <option value="Buổi 1 (Ch.1)">Buổi 1</option>
-                      <option value="Buổi 2 (Ch.1)">Buổi 2</option>
-                      <option value="Buổi 3 (Ch.2)">Buổi 3</option>
-                      <option value="Buổi 4 (Ch.2)">Buổi 4</option>
-                      <option value="Buổi 5 (Ch.3)">Buổi 5</option>
-                      <option value="Buổi 6 (Ch.3)">Buổi 6</option>
-                      <option value="Buổi 7 (Ch.3)">Buổi 7</option>
-                      <option value="Buổi 8 (Ch.4)">Buổi 8</option>
-                      <option value="Buổi 9 (Ch.4)">Buổi 9</option>
-                      <option value="Buổi 10 (Ch.4)">Buổi 10</option>
-                      <option value="Buổi 11 (Ch.5)">Buổi 11</option>
-                      <option value="Buổi 12 (Ch.5)">Buổi 12</option>
-                      <option value="Buổi 13 (Ch.6)">Buổi 13</option>
-                      <option value="Buổi 14 (Thi)">Buổi 14</option>
-                    </select>
-                  </div>
+                  <label class="block font-extrabold text-slate-800 mb-1 text-xs">📅 Buổi học:</label>
+                  <select id="welcomeSelectSession" class="w-full px-2 py-2.5 rounded-xl border-2 border-slate-300 focus:outline-none focus:border-sky-600 text-sm font-bold bg-white">
+                    <option value="Buổi 1 (Ch.1)">Buổi 1</option>
+                    <option value="Buổi 2 (Ch.1)">Buổi 2</option>
+                    <option value="Buổi 3 (Ch.2)">Buổi 3</option>
+                    <option value="Buổi 4 (Ch.2)">Buổi 4</option>
+                    <option value="Buổi 5 (Ch.3)">Buổi 5</option>
+                    <option value="Buổi 6 (Ch.3)">Buổi 6</option>
+                    <option value="Buổi 7 (Ch.3)">Buổi 7</option>
+                    <option value="Buổi 8 (Ch.4)">Buổi 8</option>
+                    <option value="Buổi 9 (Ch.4)">Buổi 9</option>
+                    <option value="Buổi 10 (Ch.4)">Buổi 10</option>
+                    <option value="Buổi 11 (Ch.5)">Buổi 11</option>
+                    <option value="Buổi 12 (Ch.5)">Buổi 12</option>
+                    <option value="Buổi 13 (Ch.6)">Buổi 13</option>
+                    <option value="Buổi 14 (Thi)">Buổi 14</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block font-extrabold text-slate-800 mb-1 text-xs" title="Mã buổi học 4-6 ký tự do Thầy viết trên bảng">🔑 Mã buổi:</label>
+                  <input id="welcomeInputClassPin" type="text" placeholder="VD: TH01" maxlength="8" class="w-full px-2.5 py-2.5 rounded-xl border-2 border-slate-300 focus:outline-none focus:border-sky-600 text-sm font-mono font-bold uppercase" />
                 </div>
               </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">👤 Bạn ngồi bên PHẢI (Thực hành Ca 1):</label>
-                <input id="welcomeInputName1" type="text" placeholder="Ví dụ: Nguyễn Văn An - Tin học 9+3" class="w-full px-3 py-2 rounded-xl border-2 border-slate-200 focus:outline-none focus:border-sky-600 text-sm font-semibold">
-              </div>
-              <div>
-                <label class="block font-bold text-slate-700 mb-1">👤 Bạn ngồi bên TRÁI (Thực hành Ca 2):</label>
-                <input id="welcomeInputName2" type="text" placeholder="Ví dụ: Trần Văn Ba - Tin học 9+3" class="w-full px-3 py-2 rounded-xl border-2 border-slate-200 focus:outline-none focus:border-sky-600 text-sm font-semibold">
-              </div>
-              <button id="btnWelcomeSaveAndStart" type="button" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs sm:text-sm shadow transition">
-                ✅ Lưu Tên 2 Bạn &amp; Vào Bài Học Ngay!
-              </button>
-            </div>
 
-            <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
-              <span>Giảng viên phụ trách: <strong>Khoa CNTT</strong></span>
-              <span>Thời lượng: <strong>45 tiết thực hành</strong></span>
+              <!-- Student 1: Roster Dropdown + Optional Custom Input -->
+              <div>
+                <label class="block font-extrabold text-slate-800 mb-1">👤 Họ tên bạn ngồi bên phải (Bắt buộc):</label>
+                <select id="welcomeRosterSelect1" class="w-full px-3 py-2.5 rounded-xl border-2 border-slate-300 focus:outline-none focus:border-sky-600 text-sm font-bold bg-slate-50 mb-1.5">
+                  <option value="">-- Chọn tên trong danh sách lớp (hoặc gõ ở dưới) --</option>
+                </select>
+                <input id="welcomeInputName1" type="text" placeholder="Ví dụ: Nguyễn Văn An" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-300 focus:outline-none focus:border-sky-600 text-base font-bold" />
+              </div>
+
+              <!-- Student 2: Roster Dropdown + Optional Custom Input -->
+              <div>
+                <label class="block font-extrabold text-slate-800 mb-1">👤 Họ tên bạn ngồi bên trái (Nếu ngồi 2 bạn):</label>
+                <select id="welcomeRosterSelect2" class="w-full px-3 py-2.5 rounded-xl border-2 border-slate-300 focus:outline-none focus:border-sky-600 text-sm font-bold bg-slate-50 mb-1.5">
+                  <option value="">-- Chọn tên trong danh sách lớp (hoặc để trống nếu ngồi 1 mình) --</option>
+                </select>
+                <input id="welcomeInputName2" type="text" placeholder="Ví dụ: Trần Văn Ba (nếu có)" class="w-full px-3.5 py-2.5 rounded-xl border-2 border-slate-300 focus:outline-none focus:border-sky-600 text-base font-bold" />
+              </div>
+
+              <div id="welcomeCheckinWarn" class="text-xs font-extrabold text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+                👉 Em hãy chọn hoặc nhập họ tên ở ô đầu tiên rồi bấm nút xanh ở dưới để bắt đầu!
+              </div>
+
+              <button id="btnWelcomeSaveAndStart" type="button" class="w-full py-3.5 rounded-2xl bg-sky-700 hover:bg-sky-600 text-white font-black text-base shadow-lg transition flex items-center justify-center gap-2">
+                <span>Tiếp tục ➔</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 6 Chapters Roadmap Grid (Thu gọn mặc định cho đỡ rối mắt học sinh 9+3) -->
+      <!-- 6 Chapters Roadmap Grid<!-- 6 Chapters Roadmap Grid (Thu gọn mặc định cho đỡ rối mắt học sinh 9+3) -->
       <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
@@ -801,8 +866,8 @@
             <pre class="bg-white p-3 rounded-lg border border-slate-200 text-xs font-mono text-slate-800 whitespace-pre-wrap leading-relaxed select-text">PHIẾU THÔNG TIN HỌC SINH TRUNG CẤP 9+3
 Họ và tên: Nguyễn Văn An
 Ngày sinh: 15 tháng 08 năm 2011
-Lớp nghề đang học: Trung cấp Điện công nghiệp
-Quê quán: Xã Ea Drăng, Huyện Ea H'Leo, Tỉnh Đắk Lắk
+Lớp nghề đang học: Trung cấp Tin học ứng dụng 9+3
+Quê quán: Tỉnh Đắk Lắk (Khu vực Tây Nguyên)
             </pre>
             <div class="text-[11px] text-slate-500 mt-2 font-medium">
               👉 Đường dẫn nộp bài: <code>D:\TENNGHE_HOVATEN\THONGTIN_HOVATEN.txt</code>
@@ -865,239 +930,53 @@ Quê quán: Xã Ea Drăng, Huyện Ea H'Leo, Tỉnh Đắk Lắk
 
         <p class="text-xs text-slate-600 leading-relaxed" id="lblOtherDesc">Học sinh sẽ học: Chọn khổ giấy A4, phông Times New Roman 14, căn lề, gõ Quốc hiệu - Tiêu ngữ và soạn hoàn chỉnh Đơn xin phép, Thông báo.</p>
 
+        <!-- Quick Chapter Switcher inside Step 4 (Word, Excel, Internet, PowerPoint, An toàn số) -->
+        <div class="flex flex-wrap items-center gap-2 bg-sky-50 p-2.5 rounded-xl border border-sky-200">
+          <span class="text-xs font-extrabold text-sky-950">📂 Chọn bài thực hành:</span>
+          <button data-step4ch="3" class="step4-ch-btn px-3 py-1.5 rounded-xl bg-sky-700 text-white text-xs font-black shadow">📄 Chương 3: Soạn thảo Word (.docx)</button>
+          <button data-step4ch="4" class="step4-ch-btn px-3 py-1.5 rounded-xl bg-white hover:bg-sky-100 text-sky-900 border border-sky-300 text-xs font-extrabold">📊 Chương 4: Bảng tính Excel (11 tiết)</button>
+          <button data-step4ch="2" class="step4-ch-btn px-3 py-1.5 rounded-xl bg-white hover:bg-sky-100 text-sky-900 border border-sky-300 text-xs font-extrabold">🌐 Chương 2: Tìm kiếm &amp; Email</button>
+          <button data-step4ch="6" class="step4-ch-btn px-3 py-1.5 rounded-xl bg-white hover:bg-sky-100 text-sky-900 border border-sky-300 text-xs font-extrabold">🛡️ Chương 6: Bắt lỗi Lừa đảo mạng</button>
+          <button data-step4ch="5" class="step4-ch-btn px-3 py-1.5 rounded-xl bg-white hover:bg-sky-100 text-sky-900 border border-sky-300 text-xs font-extrabold">📽️ Chương 5: PowerPoint</button>
+        </div>
+
         <!-- Dynamic Interactive Simulator Container for Ch 2, 3, 4, 5, 6 -->
         <div id="chapterSimContainer" class="bg-slate-50 rounded-2xl border border-slate-200 p-4">
-          <div class="space-y-4 text-xs">
-            <!-- Mode Switcher: 1. Tập trên Trình mô phỏng Word Web -> 2. Thực hành trên phần mềm Word 2016 thật tại máy -->
-            <div class="bg-sky-900 text-white rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-2 shadow">
-              <div>
-                <span class="text-[10px] font-black uppercase text-amber-300">QUY TRÌNH THỰC HỌC – THỰC HÀNH (CHƯƠNG 3: WORD 2016)</span>
-                <h3 class="text-sm font-extrabold">Bước 1: Tập thao tác nút bấm trên Web ➔ Bước 2: Mở Word 2016 thật trên máy làm ra sản phẩm lưu ổ D:\</h3>
-              </div>
-              <div class="flex flex-wrap items-center gap-1.5">
-                <button id="btnWordModeSim" type="button" class="px-3 py-1.5 rounded-xl bg-amber-400 text-sky-950 font-black text-xs shadow">
-                  🖥️ 1. Bàn Tập Soạn Thảo Word (Trên Web)
-                </button>
-                <button id="btnWordModeReal" type="button" class="px-3 py-1.5 rounded-xl bg-sky-800 hover:bg-sky-700 text-sky-100 font-bold text-xs border border-sky-600">
-                  🚀 2. Thực Hành Trên Phần Mềm Word 2016 Thật
-                </button>
-              </div>
-            </div>
-
-            <!-- SUBVIEW A: INTERACTIVE WORD 2016 RIBBON & A4 CANVAS -->
-            <div id="wordSubViewSim" class="space-y-3">
-              <!-- Practical Scenario Selector (3 Real-world products) -->
-              <div class="bg-white rounded-xl border border-slate-300 p-3 flex flex-wrap items-center justify-between gap-2">
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="font-extrabold text-slate-800">📋 Chọn sản phẩm thực tế cần soạn:</span>
-                  <button data-wtemplate="don" class="w-tpl-btn px-3 py-1.5 rounded-lg bg-sky-700 text-white font-bold">1. Đơn xin nghỉ học (Buổi 6)</button>
-                  <button data-wtemplate="thongbao" class="w-tpl-btn px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold">2. Thông báo lịch thực hành xưởng</button>
-                  <button data-wtemplate="tkb" class="w-tpl-btn px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold">3. Bảng Thời khóa biểu / Danh sách tổ (Buổi 7)</button>
-                </div>
-                <span class="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
-                  Bấm chọn văn bản mẫu rồi dùng thanh công cụ Word bên dưới để chỉnh!
-                </span>
-              </div>
-
-              <!-- Simulated Word 2016 Ribbon Toolbar (Exact Button Names) -->
-              <div class="bg-slate-100 rounded-xl border-2 border-slate-300 shadow-inner overflow-hidden">
-                <!-- Blue Word 2016 Top Title & Tabs -->
-                <div class="bg-[#2b579a] text-white px-3 py-1.5 flex items-center justify-between text-[11px] font-bold">
-                  <div class="flex items-center gap-3">
-                    <span class="bg-white text-[#2b579a] px-2 py-0.5 rounded font-black">W</span>
-                    <span class="underline">Home (Trang đầu)</span>
-                    <span class="text-sky-200">Insert (Chèn bảng)</span>
-                    <span class="text-sky-200">Layout (Khổ giấy &amp; Căn lề)</span>
-                  </div>
-                  <span>Microsoft Word 2016 - Mô phỏng thực hành</span>
-                </div>
-
-                <!-- Ribbon Controls Row -->
-                <div class="p-2.5 bg-white flex flex-wrap items-center gap-2 border-b border-slate-200">
-                  <!-- Page Setup Group -->
-                  <div class="flex items-center gap-1.5 pr-2 border-r border-slate-200">
-                    <div>
-                      <span class="block text-[9px] text-slate-500 font-bold uppercase">Size (Khổ giấy)</span>
-                      <select id="simWordPaper" class="px-2 py-1 rounded border border-slate-300 font-bold text-xs bg-slate-50">
-                        <option value="Letter">Letter (Mặc định sai)</option>
-                        <option value="A4" selected="">A4 (21cm x 29.7cm)</option>
-                      </select>
-                    </div>
-                    <div>
-                      <span class="block text-[9px] text-slate-500 font-bold uppercase">Margins (Căn lề chuẩn)</span>
-                      <select id="simWordMargins" class="px-2 py-1 rounded border border-slate-300 font-bold text-xs bg-slate-50">
-                        <option value="normal">Mặc định (2.54cm)</option>
-                        <option value="nd30" selected="">Chuẩn NĐ30 (Trái 3cm - Phải 2cm)</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <!-- Font Group -->
-                  <div class="flex items-center gap-1.5 pr-2 border-r border-slate-200">
-                    <div>
-                      <span class="block text-[9px] text-slate-500 font-bold uppercase">Font (Phông chữ)</span>
-                      <select id="simWordFont" class="px-2 py-1 rounded border border-slate-300 font-bold text-xs bg-slate-50">
-                        <option value="Calibri">Calibri (Mặc định)</option>
-                        <option value="Times New Roman" selected="">Times New Roman</option>
-                        <option value="Arial">Arial</option>
-                      </select>
-                    </div>
-                    <div>
-                      <span class="block text-[9px] text-slate-500 font-bold uppercase">Size (Cỡ chữ)</span>
-                      <select id="simWordSize" class="px-2 py-1 rounded border border-slate-300 font-bold text-xs bg-slate-50">
-                        <option value="11">11</option>
-                        <option value="13">13</option>
-                        <option value="14" selected="">14 (Chuẩn)</option>
-                        <option value="16">16</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <!-- Style Buttons B / I / U -->
-                  <div class="flex items-center gap-1 pr-2 border-r border-slate-200">
-                    <button id="btnCmdBold" type="button" class="w-8 h-8 rounded border border-slate-300 hover:bg-sky-100 font-black text-sm" title="In đậm (Ctrl + B)">B</button>
-                    <button id="btnCmdItalic" type="button" class="w-8 h-8 rounded border border-slate-300 hover:bg-sky-100 italic font-serif font-bold text-sm" title="In nghiêng (Ctrl + I)">I</button>
-                    <button id="btnCmdUnderline" type="button" class="w-8 h-8 rounded border border-slate-300 hover:bg-sky-100 underline font-bold text-sm" title="Gạch chân (Ctrl + U)">U</button>
-                  </div>
-
-                  <!-- Paragraph Alignment Buttons -->
-                  <div class="flex items-center gap-1 pr-2 border-r border-slate-200">
-                    <button id="btnCmdLeft" type="button" class="px-2 h-8 rounded border border-slate-300 hover:bg-sky-100 font-bold text-[11px]" title="Căn trái (Ctrl + L)">⬅ Trái</button>
-                    <button id="btnCmdCenter" type="button" class="px-2 h-8 rounded border border-slate-300 hover:bg-sky-100 font-bold text-[11px]" title="Căn giữa (Ctrl + E)">↔ Giữa</button>
-                    <button id="btnCmdRight" type="button" class="px-2 h-8 rounded border border-slate-300 hover:bg-sky-100 font-bold text-[11px]" title="Căn phải (Ctrl + R)">Phải ➡</button>
-                    <button id="btnCmdJustify" type="button" class="px-2 h-8 rounded border border-slate-300 hover:bg-sky-100 font-bold text-[11px]" title="Căn đều 2 bên (Ctrl + J)">☰ Đều 2 bên</button>
-                  </div>
-
-                  <!-- Insert Table & Export to Real Word -->
-                  <div class="flex items-center gap-1.5">
-                    <button id="btnCmdInsertTable" type="button" class="px-2.5 h-8 rounded bg-sky-50 border border-sky-300 hover:bg-sky-100 text-sky-900 font-extrabold text-[11px]">
-                      ⊞ Chèn Bảng 3x4
-                    </button>
-                    <button id="btnDownloadDocFile" type="button" class="px-3 h-8 rounded bg-[#2b579a] hover:bg-sky-800 text-white font-extrabold text-[11px] shadow flex items-center gap-1">
-                      <span>💾 Lưu về ổ D:\ mở bằng Word 2016 (.doc)</span>
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Simulated A4 Paper Sheet -->
-                <div class="bg-slate-200 p-4 sm:p-6 flex justify-center">
-                  <div id="wordEditorPaper" contenteditable="true" spellcheck="false" class="bg-white shadow-xl border border-slate-300 w-full max-w-3xl min-h-[360px] p-6 sm:p-10 focus:outline-none focus:ring-2 focus:ring-sky-500 text-slate-900 leading-relaxed select-text" style="font-family: 'Times New Roman', Times, serif; font-size: 14pt;">
-                    <div style="text-align: center; font-weight: bold;"><div style="text-align: center;"><span style="font-size: 14pt;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</span></div>
-                      <span style="text-decoration: underline;">Độc lập - Tự do - Hạnh phúc</span>
-                    </div>
-                    <p style="text-align: center; font-weight: bold; font-size: 16pt; margin-top: 14px; margin-bottom: 10px;">
-                      ĐƠN XIN NGHỈ HỌC
-                    </p>
-                    <p><strong>Kính gửi:</strong> Giáo viên chủ nhiệm và Khoa Công nghệ thông tin – Trường Cao đẳng Buôn Ma Thuột.</p>
-                    <p><strong>Em tên là:</strong> Nguyễn Văn An – Học sinh lớp: Trung cấp Tin học ứng dụng 9+3.</p>
-                    <p><strong>Lý do xin nghỉ:</strong> Hôm nay em bị sốt cao nên xin phép Thầy/Cô cho em nghỉ học 01 buổi thực hành.</p>
-                    <p>Em xin hứa sẽ chép bài và hoàn thành đầy đủ bài thực hành vào buổi học tiếp theo.</p>
-                    <div style="text-align: right; margin-top: 16px;">
-                      <em>Đắk Lắk, ngày 03 tháng 11 năm 2026</em><br>
-                      <strong>Học sinh viết đơn</strong><br><br>
-                      Nguyễn Văn An
-                    </div>
-                  
-            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 10px;" border="1" cellpadding="6">
-              <tbody><tr style="background-color: #f1f5f9; font-weight: bold; text-align: center;">
-                <td>STT</td><td>Tên dụng cụ / Vật tư</td><td>Số lượng</td><td>Ghi chú</td>
-              </tr>
-              <tr><td style="text-align: center;">1</td><td>Ổ cứng SSD 256GB &amp; RAM DDR4 8GB</td><td style="text-align: center;">02 cái</td><td>Đạt chuẩn</td></tr>
-              <tr><td style="text-align: center;">2</td><td>Bộ bàn phím &amp; Chuột quang USB</td><td style="text-align: center;">04 cái</td><td>Đạt chuẩn</td></tr>
-            </tbody></table>
-          
-            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 10px;" border="1" cellpadding="6">
-              <tbody><tr style="background-color: #f1f5f9; font-weight: bold; text-align: center;">
-                <td>STT</td><td>Tên dụng cụ / Vật tư</td><td>Số lượng</td><td>Ghi chú</td>
-              </tr>
-              <tr><td style="text-align: center;">1</td><td>Ổ cứng SSD 256GB &amp; RAM DDR4 8GB</td><td style="text-align: center;">02 cái</td><td>Đạt chuẩn</td></tr>
-              <tr><td style="text-align: center;">2</td><td>Bộ bàn phím &amp; Chuột quang USB</td><td style="text-align: center;">04 cái</td><td>Đạt chuẩn</td></tr>
-            </tbody></table>
-          
-            <table style="width: 100%; border-collapse: collapse; border: 1px solid #000; margin-top: 10px;" border="1" cellpadding="6">
-              <tbody><tr style="background-color: #f1f5f9; font-weight: bold; text-align: center;">
-                <td>STT</td><td>Tên dụng cụ / Vật tư</td><td>Số lượng</td><td>Ghi chú</td>
-              </tr>
-              <tr><td style="text-align: center;">1</td><td>Ổ cứng SSD 256GB &amp; RAM DDR4 8GB</td><td style="text-align: center;">02 cái</td><td>Đạt chuẩn</td></tr>
-              <tr><td style="text-align: center;">2</td><td>Bộ bàn phím &amp; Chuột quang USB</td><td style="text-align: center;">04 cái</td><td>Đạt chuẩn</td></tr>
-            </tbody></table>
-          </div>
-                </div>
-              </div>
-
-              <!-- Grading & Action Bar -->
-              <div class="bg-white rounded-xl border border-slate-300 p-3 flex flex-wrap items-center justify-between gap-2">
-                <div id="simWordFeedback" class="font-extrabold text-emerald-700">💾 Đã tải file về máy! Em hãy mở file này bằng phần mềm Microsoft Word 2016 trên máy tính và lưu vào ổ D:\ nhé!</div>
-                <div class="flex items-center gap-2">
-                  <input id="simWordTitleInput" type="hidden" value="ĐƠN XIN NGHỈ HỌC">
-                  <input id="simWordAlign" type="hidden" value="center">
-                  <button id="btnSimCheckWord" type="button" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold shadow">
-                    ✅ Chấm Điểm Văn Bản Word (100đ)
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- SUBVIEW B: HANDS-ON CHECKLIST FOR REAL MICROSOFT WORD 2016 ON LAB PC -->
-            <div id="wordSubViewReal" class="hidden space-y-3">
-              <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 space-y-3">
-                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-amber-200 pb-2.5">
-                  <div>
-                    <span class="text-[11px] font-black uppercase text-amber-900">CẦM TAY CHỈ VIỆC TRÊN MÁY TÍNH PHÒNG THỰC HÀNH</span>
-                    <h4 class="text-base font-extrabold text-slate-900">🚀 5 BƯỚC THAO TÁC TRỰC TIẾP TRÊN PHẦN MỀM WORD 2016 THẬT</h4>
-                  </div>
-                  <span class="px-3 py-1 rounded-xl bg-emerald-600 text-white font-extrabold text-xs">
-                    Tích chọn từng bước sau khi em làm xong trên Word 2016
-                  </span>
-                </div>
-
-                <div class="space-y-2 text-xs text-slate-800">
-                  <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-sky-400">
-                    <input type="checkbox" class="real-word-chk w-4 h-4 mt-0.5">
-                    <div>
-                      <strong>Bước 1 (Mở Word 2016 thật trên máy):</strong> Nhìn ra màn hình nền (Desktop) hoặc bấm nút <strong>Start</strong> góc dưới bên trái ➔ Mở biểu tượng chữ <strong>W màu xanh dương (Word 2016)</strong> ➔ Bấm vào trang giấy trắng <strong>Blank document</strong>.
-                    </div>
-                  </label>
-                  <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-sky-400">
-                    <input type="checkbox" class="real-word-chk w-4 h-4 mt-0.5">
-                    <div>
-                      <strong>Bước 2 (Chọn khổ giấy A4 &amp; Căn lề):</strong> Bấm thẻ <strong>Layout</strong> (trên thanh menu ngang) ➔ Bấm nút <strong>Size</strong> chọn <strong>A4</strong> ➔ Bấm nút <strong>Margins</strong> chọn căn lề chuẩn.
-                    </div>
-                  </label>
-                  <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-sky-400">
-                    <input type="checkbox" class="real-word-chk w-4 h-4 mt-0.5">
-                    <div>
-                      <strong>Bước 3 (Chọn phông chữ Times New Roman cỡ 14):</strong> Quay lại thẻ <strong>Home</strong> (góc trên bên trái) ➔ Đổi ô phông chữ thành <strong>Times New Roman</strong>, ô cỡ chữ bên cạnh chọn số <strong>14</strong>.
-                    </div>
-                  </label>
-                  <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-sky-400">
-                    <input type="checkbox" class="real-word-chk w-4 h-4 mt-0.5">
-                    <div>
-                      <strong>Bước 4 (Gõ Đơn xin nghỉ học / Kẻ bảng Thời khóa biểu):</strong> Kiểm tra chữ <strong>V màu đỏ</strong> của Unikey ➔ Gõ nội dung văn bản (Dùng nút <strong>B</strong> in đậm, nút <strong>Căn giữa Ctrl+E</strong> cho dòng Quốc hiệu và Tiêu đề).
-                    </div>
-                  </label>
-                  <label class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white border border-slate-200 cursor-pointer hover:border-sky-400">
-                    <input type="checkbox" class="real-word-chk w-4 h-4 mt-0.5">
-                    <div>
-                      <strong>Bước 5 (Bấm Ctrl + S lưu vào ổ đĩa D:\):</strong> Bấm <strong>File ➔ Save As ➔ Browse ➔ Ổ đĩa (D:)</strong> ➔ Mở thư mục tên mình (<code>D:\TENNGHE_HOVATEN\WORD</code>) ➔ Đặt tên file <code>DON_XIN_PHEP_HOVATEN.docx</code> rồi bấm <strong>Save</strong>.
-                    </div>
-                  </label>
-                </div>
-
-                <div class="flex flex-wrap items-center justify-between gap-2 pt-2">
-                  <span id="realWordChkStatus" class="font-extrabold text-amber-900">Đã hoàn thành: 0 / 5 bước trên phần mềm Word 2016 thật</span>
-                  <button id="btnCompleteRealWord" type="button" class="px-5 py-2 rounded-xl bg-sky-800 hover:bg-sky-700 text-white font-extrabold shadow">
-                    🏆 Xác Nhận Đã Lưu File .DOCX Vào Ổ D:\ (100đ)
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <!-- Populated dynamically by renderChapterSimulator(chNum) -->
         </div>
       </div>
     </div>
 
-    <!-- VIEW 99: TEACHER LIVE CLASSROOM SCOREBOARD (BẢNG ĐIỂM LỚP HỌC TRỰC TUYẾN) -->
+    <!-- VIEW STEP 5: DEDICATED STUDENT SUBMISSION & SCORE REVIEW SCREEN (BƯỚC 5: NỘP ĐIỂM) -->
+    <div id="viewStep5Submit" class="hidden space-y-4">
+      <div class="bg-white rounded-3xl border-2 border-sky-200 p-6 shadow-lg max-w-3xl mx-auto space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+          <div>
+            <span class="text-xs font-extrabold uppercase text-sky-700">BƯỚC 5 / 5 • HOÀN THÀNH &amp; GỬI KẾT QUẢ</span>
+            <h2 class="text-xl font-black text-slate-900 mt-0.5">📤 Kiểm Tra Phiếu Điểm &amp; Nộp Cho Thầy/Cô</h2>
+          </div>
+          <span class="text-3xl">🏆</span>
+        </div>
+
+        <div class="bg-sky-50 border border-sky-200 rounded-2xl p-3.5 text-xs text-sky-950 font-semibold leading-relaxed">
+          💡 <strong>Cách tính điểm tổng kết Thang 10 (Trọng số chuẩn):</strong> Cầm chuột (<strong>25%</strong>) + Gõ tiếng Việt Telex (<strong>30%</strong>) + Soạn thảo Word/Email (<strong>25%</strong>) + Bảng tính Excel/An toàn số (<strong>20%</strong>). Điểm trên web dùng để theo dõi tiến độ luyện tập; điểm chính thức cuối buổi Thầy/Cô chấm trực tiếp trên sản phẩm lưu tại ổ <code>D:\</code> của em.
+        </div>
+
+        <div id="step5CardsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Rendered by renderStep5Summary() -->
+        </div>
+
+        <div id="step5SubmitStatusBox" class="hidden p-4 rounded-2xl text-sm font-extrabold text-center"></div>
+
+        <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button id="btnStep5SendNow" type="button" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-base shadow-lg transition flex items-center justify-center gap-2">
+            <span>📤 NỘP ĐIỂM LÊN MÁY CHỦ LỚP HỌC NGAY</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 99: TEACHER LIVE CLASSROOM SCOREBOARD<!-- VIEW 99: TEACHER LIVE CLASSROOM SCOREBOARD (BẢNG ĐIỂM LỚP HỌC TRỰC TUYẾN) -->
     <div id="viewTeacherDashboard" class="hidden space-y-4">
       <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
@@ -1149,7 +1028,7 @@ Quê quán: Xã Ea Drăng, Huyện Ea H'Leo, Tỉnh Đắk Lắk
         <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
           <div class="flex flex-wrap items-center gap-2">
             <span class="font-bold text-slate-700">🔑 Mã GV:</span>
-            <input id="inputTeacherToken" type="password" value="BMTC2026" placeholder="Mã bí mật GV" class="px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white w-28 font-mono font-bold" title="Mã bí mật để tải điểm hoặc xóa danh sách trên Cloudflare Worker (Mặc định: BMTC2026)">
+            <input id="inputTeacherToken" type="password" value="" placeholder="Nhập Mã GV..." class="px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white w-28 font-mono font-bold" title="Mã bí mật để tải điểm hoặc xóa danh sách trên Cloudflare Worker (Mặc định: BMTC2026)">
             <span class="font-bold text-slate-700 ml-1">Lớp:</span>
             <select id="filterScoreClass" class="px-2.5 py-1.5 rounded-lg border border-slate-300 font-bold bg-white">
               <option value="ALL">-- Tất cả các lớp --</option>
@@ -1201,6 +1080,35 @@ Quê quán: Xã Ea Drăng, Huyện Ea H'Leo, Tỉnh Đắk Lắk
           <pre id="preWorkerCode" class="bg-slate-950 p-3 rounded-xl border border-slate-700 font-mono text-[11px] text-emerald-300 overflow-x-auto select-all leading-relaxed">Bấm nút "⚙️ Mã Cloudflare Worker Lưu Điểm" để tự động nạp nội dung từ file chuẩn cloudflare-worker.js (Một nguồn duy nhất - Single Source of Truth)...</pre>
         </div>
 
+        <!-- 2-Step Delete Confirmation Banner (Hidden by default - Prevents accidental deletion) -->
+        <div id="confirmDeleteBanner" class="hidden bg-rose-50 border-2 border-rose-400 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="font-extrabold text-rose-900">
+            ⚠️ XÁC NHẬN AN TOÀN: Thầy/Cô có chắc chắn muốn xóa toàn bộ danh sách điểm hiện tại không? (Hành động này yêu cầu Mã bí mật Giảng viên hợp lệ).
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="btnConfirmDeleteYes" type="button" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-black shadow">
+              🗑️ Đồng ý xóa sạch
+            </button>
+            <button id="btnConfirmDeleteCancel" type="button" class="px-4 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold">
+              Hủy bỏ
+            </button>
+          </div>
+        </div>
+
+        <!-- Score Distribution Visual Bar Chart (Phân bố điểm lớp học) -->
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs space-y-2">
+          <div class="flex items-center justify-between font-extrabold text-slate-800">
+            <span>📈 BIỂU ĐỒ PHÂN BỐ ĐIỂM LỚP HỌC (THEO BỘ LỌC HIỆN TẠI)</span>
+            <span id="lblDistSummary" class="text-slate-500 font-semibold">Giỏi (≥8đ): 0 | Khá (6.5–7.9đ): 0 | Đạt (5–6.4đ): 0 | Cần luyện (&lt;5đ): 0</span>
+          </div>
+          <div class="w-full h-5 rounded-full bg-slate-200 overflow-hidden flex text-[10px] font-black text-white text-center leading-5">
+            <div id="barDistGioi" class="bg-emerald-600 transition-all" style="width: 25%"></div>
+            <div id="barDistKha" class="bg-sky-600 transition-all" style="width: 25%"></div>
+            <div id="barDistDat" class="bg-amber-500 transition-all" style="width: 25%"></div>
+            <div id="barDistYeu" class="bg-rose-500 transition-all" style="width: 25%"></div>
+          </div>
+        </div>
+
         <!-- Scoreboard Data Table -->
         <div class="overflow-x-auto border border-slate-200 rounded-xl">
           <table class="w-full text-left text-xs">
@@ -1215,6 +1123,7 @@ Quê quán: Xã Ea Drăng, Huyện Ea H'Leo, Tỉnh Đắk Lắk
                 <th class="p-2.5 text-center">Telex (100đ)</th>
                 <th class="p-2.5 text-center">Ch.2-6 (TB)</th>
                 <th class="p-2.5 text-center">Tổng kết (Thang 10)</th>
+                <th class="p-2.5">Kỹ năng / Phím hay sai</th>
                 <th class="p-2.5 text-center">Xếp loại</th>
               </tr>
             </thead>
@@ -1224,6 +1133,19 @@ Quê quán: Xã Ea Drăng, Huyện Ea H'Leo, Tỉnh Đắk Lắk
           </table>
         </div>
       </div>
+    </div>
+
+    <!-- THANH ĐIỀU HƯỚNG CỐ ĐỊNH CUỐI TRANG (QUAY LẠI / TIẾP TỤC - CHUẨN GIAO DIỆN 5 BƯỚC) -->
+    <div id="bottomWizardNav" class="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between gap-3 max-w-4xl w-full mx-auto">
+      <button id="btnWizPrev" type="button" class="bottom-wiz-btn px-6 py-3 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-800 font-extrabold transition flex items-center gap-2">
+        <span>⬅ Quay lại</span>
+      </button>
+      <div id="lblWizStepIndicator" class="text-xs sm:text-sm font-extrabold text-slate-600 text-center">
+        Bước 1 / 5: Thông tin điểm danh
+      </div>
+      <button id="btnWizNext" type="button" class="bottom-wiz-btn px-8 py-3 rounded-2xl bg-sky-700 hover:bg-sky-600 text-white font-black shadow-lg transition flex items-center gap-2">
+        <span>Tiếp tục ➔</span>
+      </button>
     </div>
 
   </main>
@@ -1355,9 +1277,12 @@ Quê quán: Xã Ea Drăng, Huyện Ea H'Leo, Tỉnh Đắk Lắk
   <!-- =========================================================================
        JAVASCRIPT APP LOGIC
        ========================================================================= -->
-  <!-- Nạp File Dữ Liệu & Các Mô-đun Chương Học (Tách Rời Dễ Nâng Cấp) -->
+  <!-- Nạp Dữ Liệu & 5 Mô-đun Tách Rời (Zero-Build Modular Architecture v5) -->
   <script src="data/course-data.js"></script>
-  <script src="js/chapters/ch2-to-6.js"></script>
+  <script src="js/ch1-mouse.js"></script>
+  <script src="js/ch1-telex.js"></script>
+  <script src="js/ch3-word.js"></script>
+  <script src="js/scores.js"></script>
   <script src="js/app.js"></script>
-
-</body></html>
+</body>
+</html>

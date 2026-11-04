@@ -1,4 +1,4 @@
-/* FILE GIAO DIEN TUY CHINH (css/style.css) */
+/* FILE GIAO DIEN TUY CHINH & DARK MODE (css/style.css - v5) */
 
 body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -36,4 +36,40 @@ body {
     }
     body.projector-mode button, body.projector-mode input, body.projector-mode select {
       font-size: 105% !important;
+    }
+    /* Mặc định ẩn hoàn toàn các nút Giảng viên & Menu nâng cao đối với Học sinh (chỉ hiện khi vào ?gv=1, #/gv hoặc /gv) */
+    body:not(.teacher-unlocked) .teacher-only-ctrl {
+      display: none !important;
+    }
+    /* Chế độ Tối (Dark Mode) hỗ trợ học sinh ôn bài buổi tối trên điện thoại/máy tính */
+    body.dark-theme {
+      background-color: #0f172a !important;
+      color: #f1f5f9 !important;
+    }
+    body.dark-theme .bg-white {
+      background-color: #1e293b !important;
+      color: #f1f5f9 !important;
+      border-color: #334155 !important;
+    }
+    body.dark-theme .bg-slate-50, body.dark-theme .bg-slate-100 {
+      background-color: #0f172a !important;
+      color: #e2e8f0 !important;
+      border-color: #334155 !important;
+    }
+    body.dark-theme .text-slate-900, body.dark-theme .text-slate-800, body.dark-theme .text-slate-700 {
+      color: #f8fafc !important;
+    }
+    body.dark-theme input, body.dark-theme select, body.dark-theme textarea {
+      background-color: #0f172a !important;
+      color: #f8fafc !important;
+      border-color: #475569 !important;
+    }
+    /* Chuẩn nút bấm 5 bước lớn (cao >= 54px, chữ rõ nét như bản mẫu) */
+    .step5-pill {
+      min-height: 56px;
+      transition: all 0.15s ease;
+    }
+    .bottom-wiz-btn {
+      min-height: 54px;
+      font-size: 1.05rem;
     }
