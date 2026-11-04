@@ -72,7 +72,7 @@
     }
 
     // App state (Expanded with Telex Score, Chapter 2-6 Sim Scores, Class, Station & Session)
-    let currentClassName = 'Điện công nghiệp 9+3';
+    let currentClassName = 'Tin học ứng dụng 9+3';
     let currentStationName = 'Máy 01';
     let currentSessionName = 'Buổi 1 (Ch.1)';
     const students = {
@@ -100,13 +100,13 @@
       },
       {
         title: 'CÂU 2/5: GÕ TÊN KHOA & HỆ ĐÀO TẠO (20 điểm)',
-        target: 'Khoa Công nghệ thông tin hệ trung cấp',
-        hint: '💡 Gợi ý phím Telex: K-h-o-a  C-o-o-n-g  n-g-h-e-e-j  t-h-o-o-n-g  t-i-n  h-e-e-j  t-r-u-n-g  c-a-a-p-s'
+        target: 'Khoa Công nghệ thông tin ngành Tin học ứng dụng',
+        hint: '💡 Gợi ý phím Telex: K-h-o-a  C-o-o-n-g  n-g-h-e-e-j  t-h-o-o-n-g  t-i-n  n-g-a-n-h-f  T-i-n  h-o-c-j  u-w-n-g-s  d-u-n-g-j'
       },
       {
         title: 'CÂU 3/5: GÕ TÊN NGHỀ HỌC (20 điểm)',
-        target: 'Học nghề Điện công nghiệp và Sửa chữa ô tô',
-        hint: '💡 Gợi ý phím Telex: H-o-c-j  n-g-h-e-e-f  D-d-i-e-e-n-j  c-o-o-n-g  n-g-h-i-e-e-p-j  v-a-f  S-u-w-a-r  c-h-u-w-a-x  o-o  t-o-o'
+        target: 'Thực hành lắp ráp máy tính và quản trị mạng',
+        hint: '💡 Gợi ý phím Telex: T-h-u-w-c-j  h-a-n-h-f  l-a-w-p-s  r-a-p-s  m-a-y-s  t-i-n-h-s  v-a-f  q-u-a-n-r  t-r-i-j  m-a-n-g-j'
       },
       {
         title: 'CÂU 4/5: GÕ ĐỊA CHỈ QUÊ QUÁN ĐẮK LẮK (20 điểm)',
@@ -433,7 +433,7 @@
       const fList = [
         { id: 'f1', name: 'This PC' },
         { id: 'f2', name: 'Ổ đĩa (D:)' },
-        { id: 'f3', name: 'DIEN_NGUYENVANA' },
+        { id: 'f3', name: 'THUD_NGUYENVANA' },
         { id: 'f4', name: 'WORD' },
         { id: 'f5', name: 'EXCEL' }
       ];
@@ -514,7 +514,7 @@
       let count = 0;
       document.getElementById('lblStepProgress').textContent = `0 / 4 mục`;
       const list = [
-        { id: 'r1', oldN: 'New folder (1)', newN: 'DIEN_NGUYENVANA' },
+        { id: 'r1', oldN: 'New folder (1)', newN: 'THUD_NGUYENVANA' },
         { id: 'r2', oldN: 'New folder (2)', newN: 'BUOI_1' },
         { id: 'r3', oldN: 'New folder (3)', newN: 'WORD' },
         { id: 'r4', oldN: 'New folder (4)', newN: 'EXCEL' }

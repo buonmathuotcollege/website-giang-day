@@ -1,6 +1,6 @@
 // ============================================================================
 // MO-DUN MO PHONG THUC HANH CHUONG 2 DEN CHUONG 6 (js/chapters/ch2-to-6.js)
-// Tach roi khoi js/app.js de AI hoac Giang vien nang cap tung chuong de dang
+// Chuyen nganh trong tam: Trung cap Tin hoc ung dung (He 9+3)
 // ============================================================================
 
 // =========================================================================
@@ -194,7 +194,7 @@
                       ĐƠN XIN NGHỈ HỌC
                     </p>
                     <p><strong>Kính gửi:</strong> Giáo viên chủ nhiệm và Khoa Công nghệ thông tin – Trường Cao đẳng Buôn Ma Thuột.</p>
-                    <p><strong>Em tên là:</strong> Nguyễn Văn An – Học sinh lớp: Trung cấp Điện công nghiệp 9+3.</p>
+                    <p><strong>Em tên là:</strong> Nguyễn Văn An – Học sinh lớp: Trung cấp Tin học ứng dụng 9+3.</p>
                     <p><strong>Lý do xin nghỉ:</strong> Hôm nay em bị sốt cao nên xin phép Thầy/Cô cho em nghỉ học 01 buổi thực hành.</p>
                     <p>Em xin hứa sẽ chép bài và hoàn thành đầy đủ bài thực hành vào buổi học tiếp theo.</p>
                     <div style="text-align: right; margin-top: 16px;">
@@ -309,7 +309,7 @@
               ĐƠN XIN NGHỈ HỌC
             </p>
             <p><strong>Kính gửi:</strong> Giáo viên chủ nhiệm và Khoa Công nghệ thông tin – Trường Cao đẳng Buôn Ma Thuột.</p>
-            <p><strong>Em tên là:</strong> Nguyễn Văn An – Học sinh lớp: Trung cấp Điện công nghiệp 9+3.</p>
+            <p><strong>Em tên là:</strong> Nguyễn Văn An – Học sinh lớp: Trung cấp Tin học ứng dụng 9+3.</p>
             <p><strong>Lý do xin nghỉ:</strong> Hôm nay em bị sốt cao nên xin phép Thầy/Cô cho em nghỉ học 01 buổi thực hành.</p>
             <p>Em xin hứa sẽ chép bài và hoàn thành đầy đủ bài thực hành vào buổi học tiếp theo.</p>
             <div style="text-align: right; margin-top: 16px;">
@@ -344,19 +344,19 @@
               <tr>
                 <td style="text-align: center;">1</td>
                 <td>Nguyễn Văn An</td>
-                <td>Điện công nghiệp</td>
+                <td>Tin học ứng dụng 9+3</td>
                 <td style="text-align: center;">Máy 01 (Ca 1)</td>
               </tr>
               <tr>
                 <td style="text-align: center;">2</td>
                 <td>Trần Văn Ba</td>
-                <td>Điện công nghiệp</td>
+                <td>Tin học ứng dụng 9+3</td>
                 <td style="text-align: center;">Máy 01 (Ca 2)</td>
               </tr>
               <tr>
                 <td style="text-align: center;">3</td>
                 <td>Lê Thị Cúc</td>
-                <td>May thời trang</td>
+                <td>Tin học ứng dụng 9+3</td>
                 <td style="text-align: center;">Máy 02 (Ca 1)</td>
               </tr>
             </table>
@@ -395,8 +395,8 @@
               <tr style="background-color: #f1f5f9; font-weight: bold; text-align: center;">
                 <td>STT</td><td>Tên dụng cụ / Vật tư</td><td>Số lượng</td><td>Ghi chú</td>
               </tr>
-              <tr><td style="text-align: center;">1</td><td>Kìm điện vạn năng</td><td style="text-align: center;">02 cái</td><td>Đạt chuẩn</td></tr>
-              <tr><td style="text-align: center;">2</td><td>Tua vít cách điện</td><td style="text-align: center;">04 cái</td><td>Đạt chuẩn</td></tr>
+              <tr><td style="text-align: center;">1</td><td>Ổ cứng SSD 256GB &amp; RAM DDR4 8GB</td><td style="text-align: center;">02 cái</td><td>Đạt chuẩn</td></tr>
+              <tr><td style="text-align: center;">2</td><td>Bộ bàn phím &amp; Chuột quang USB</td><td style="text-align: center;">04 cái</td><td>Đạt chuẩn</td></tr>
             </table>
           `;
           paper.innerHTML += tblHtml;
