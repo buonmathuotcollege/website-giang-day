@@ -190,14 +190,17 @@
             </div>
           </div>
 
+          <!-- Danh sách gợi ý tên học sinh tự động theo lớp đang chọn (Hỗ trợ cả lớp đơn, lớp ghép 2 lớp, lớp tách 1/2) -->
+          <datalist id="studentRosterDatalist"></datalist>
+
           <div>
             <label for="inpName1" class="block text-[14px] font-bold text-slate-800 mb-1.5">Họ tên bạn ngồi bên phải</label>
-            <input id="inpName1" type="text" placeholder="Ví dụ: Nguyễn Văn An" class="form-input" />
+            <input id="inpName1" list="studentRosterDatalist" type="text" placeholder="Chọn tên trong danh sách hoặc gõ (VD: Nguyễn Văn An)" class="form-input" autocomplete="off" />
           </div>
 
           <div>
             <label for="inpName2" class="block text-[14px] font-bold text-slate-800 mb-1.5">Họ tên bạn ngồi bên trái (nếu có)</label>
-            <input id="inpName2" type="text" placeholder="" class="form-input" />
+            <input id="inpName2" list="studentRosterDatalist" type="text" placeholder="Chọn tên trong danh sách hoặc để trống nếu ngồi 1 mình" class="form-input" autocomplete="off" />
           </div>
 
           <p id="step0WarnMsg" class="hidden text-[15px] font-bold text-[#b45309]">
@@ -312,52 +315,27 @@
           </button>
         </div>
 
-        <!-- KHUNG PHẦN A: WORD (5 BƯỚC THỰC HÀNH + TRANG GIẤY MẪU NGÀY ĐỘNG) -->
+        <!-- KHUNG PHẦN A: WORD (CHỌN ĐỀ BÀI LINH HOẠT + 5 BƯỚC THỰC HÀNH + MẪU NGÀY ĐỘNG) -->
         <div id="subViewWord" class="bg-white rounded-2xl border-2 border-slate-200 p-5 space-y-4 shadow-sm">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
-            <div class="font-extrabold text-slate-900 text-base">5 bước làm bài trên phần mềm Word và lưu vào ổ D:\</div>
-            <button id="btnDownloadSampleDoc" type="button" class="px-3.5 py-2 rounded-xl bg-[#0066b2] hover:bg-[#005291] text-white font-bold text-xs shadow">
-              💾 Tải mẫu Đơn xin phép (.docx/.doc)
-            </button>
+          <!-- Danh sách nút chọn các bài tập Word (Tự động tạo từ data/course-data.js) -->
+          <div class="space-y-2 border-b border-slate-100 pb-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-xs font-extrabold uppercase text-slate-500">CHỌN BÀI TẬP SOẠN THẢO WORD:</span>
+              <button id="btnDownloadSampleDoc" type="button" class="px-3.5 py-2 rounded-xl bg-[#0066b2] hover:bg-[#005291] text-white font-bold text-xs shadow">
+                💾 Tải văn bản mẫu này (.doc/.docx)
+              </button>
+            </div>
+            <div id="wordExerciseTabsBox" class="flex flex-wrap gap-2">
+              <!-- Tự động sinh nút Bài 1, Bài 2, Bài 3... từ COURSE_DATA.wordExercises -->
+            </div>
           </div>
 
-          <div class="space-y-2.5 text-[15px]">
-            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:border-sky-400">
-              <input type="checkbox" class="word-step-chk w-5 h-5 mt-0.5 accent-[#0066b2]" />
-              <span><strong>Bước 1:</strong> Mở phần mềm <strong>Microsoft Word</strong> trên màn hình ➔ Chọn <strong>Blank document</strong>.</span>
-            </label>
-            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:border-sky-400">
-              <input type="checkbox" class="word-step-chk w-5 h-5 mt-0.5 accent-[#0066b2]" />
-              <span><strong>Bước 2:</strong> Vào thẻ <strong>Layout</strong> ➔ Chọn khổ giấy <strong>Size: A4</strong> và căn lề <strong>Margins</strong> chuẩn.</span>
-            </label>
-            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:border-sky-400">
-              <input type="checkbox" class="word-step-chk w-5 h-5 mt-0.5 accent-[#0066b2]" />
-              <span><strong>Bước 3:</strong> Vào thẻ <strong>Home</strong> ➔ Chọn phông chữ <strong>Times New Roman</strong>, cỡ chữ <strong>14</strong>.</span>
-            </label>
-            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:border-sky-400">
-              <input type="checkbox" class="word-step-chk w-5 h-5 mt-0.5 accent-[#0066b2]" />
-              <span><strong>Bước 4:</strong> Gõ nội dung <strong>Đơn xin nghỉ học</strong> (căn giữa Quốc hiệu, Tiêu ngữ và tên Đơn).</span>
-            </label>
-            <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:border-sky-400">
-              <input type="checkbox" class="word-step-chk w-5 h-5 mt-0.5 accent-[#0066b2]" />
-              <span><strong>Bước 5:</strong> Bấm <strong>Ctrl + S</strong> ➔ Chọn <strong>Ổ đĩa (D:)</strong> ➔ Lưu tên tệp <code>DON_XIN_PHEP.docx</code>.</span>
-            </label>
+          <div id="wordStepsChecklistBox" class="space-y-2.5 text-[15px]">
+            <!-- Tự động sinh 5 bước hướng dẫn tương ứng với bài Word đang chọn -->
           </div>
 
-          <!-- Bản xem trước tờ đơn mẫu (Chỉ 1 mẫu duy nhất, ngày tháng tự động theo ngày hôm nay) -->
+          <!-- Bản xem trước tờ văn bản mẫu (Chỉ hiện đúng 1 mẫu đang chọn, ngày tháng tự động theo hôm nay) -->
           <div id="wordSamplePaper" class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm leading-relaxed" style="font-family: 'Times New Roman', serif;">
-            <div class="text-center font-bold">
-              CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br/>
-              <span class="underline">Độc lập - Tự do - Hạnh phúc</span>
-            </div>
-            <div class="text-center font-bold text-base my-2">ĐƠN XIN NGHỈ HỌC</div>
-            <p><strong>Kính gửi:</strong> Giáo viên chủ nhiệm và Khoa Công nghệ thông tin.</p>
-            <p><strong>Em tên là:</strong> <span id="tplStudentName">Nguyễn Văn An</span> – <strong>Lớp:</strong> <span id="tplClassName">Tin học ứng dụng 9+3</span>.</p>
-            <p><strong>Lý do:</strong> Hôm nay em bị ốm nên xin phép Thầy/Cô cho em nghỉ học 01 buổi thực hành.</p>
-            <div class="text-right mt-3">
-              <em id="tplDynamicDate">Đắk Lắk, ngày ... tháng ... năm ...</em><br/>
-              <strong>Người viết đơn</strong>
-            </div>
           </div>
         </div>
 
@@ -465,23 +443,106 @@
 
         <div id="lblAdminStatus" class="text-xs font-bold text-slate-500"></div>
 
-        <div class="overflow-x-auto border border-slate-200 rounded-xl">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-800 text-white font-bold">
-              <tr>
-                <th class="p-2.5">STT</th>
-                <th class="p-2.5">Thời gian / Buổi</th>
-                <th class="p-2.5">Máy</th>
-                <th class="p-2.5">Họ tên học sinh</th>
-                <th class="p-2.5">Lớp</th>
-                <th class="p-2.5 text-center">Chuột (30%)</th>
-                <th class="p-2.5 text-center">Telex (40%)</th>
-                <th class="p-2.5 text-center">Word/Excel (30%)</th>
-                <th class="p-2.5 text-center">Tổng (Thang 10)</th>
-              </tr>
-            </thead>
-            <tbody id="adminTableBody" class="divide-y divide-slate-200"></tbody>
-          </table>
+        <!-- 2 Tab Quản trị dành cho Giảng viên: 1. Bảng điểm lớp học | 2. Quản lý Lớp ghép & Thêm Bài tập -->
+        <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-2 text-xs font-extrabold">
+          <button id="btnAdminTabScores" type="button" class="px-3.5 py-2 rounded-xl bg-slate-800 text-white">
+            📊 1. Bảng điểm lớp học
+          </button>
+          <button id="btnAdminTabManager" type="button" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">
+            🛠️ 2. Quản lý Lớp đơn / Lớp ghép / 1/2 Lớp &amp; Thêm Bài tập Word
+          </button>
+        </div>
+
+        <!-- TAB 1: BẢNG ĐIỂM -->
+        <div id="adminSubTabScores">
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-800 text-white font-bold">
+                <tr>
+                  <th class="p-2.5">STT</th>
+                  <th class="p-2.5">Thời gian / Buổi</th>
+                  <th class="p-2.5">Máy</th>
+                  <th class="p-2.5">Họ tên học sinh</th>
+                  <th class="p-2.5">Lớp</th>
+                  <th class="p-2.5 text-center">Chuột (30%)</th>
+                  <th class="p-2.5 text-center">Telex (40%)</th>
+                  <th class="p-2.5 text-center">Word/Excel (30%)</th>
+                  <th class="p-2.5 text-center">Tổng (Thang 10)</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody" class="divide-y divide-slate-200"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 2: CÔNG CỤ QUẢN LÝ LỚP HỌC (LỚP ĐƠN, GHÉP 2 LỚP, GHÉP 1/2 LỚP) & THÊM BÀI TẬP WORD -->
+        <div id="adminSubTabManager" class="hidden space-y-5 text-xs">
+          <!-- Khối A: Thêm Lớp mới / Ghép 2 lớp / Tách 1/2 lớp từ Excel -->
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+            <div class="font-extrabold text-sm text-slate-900">
+              🏫 A. Tạo Lớp Mới / Lớp Học Ghép (Ghép 2 lớp hoặc Ghép 1/2 lớp)
+            </div>
+            <p class="text-slate-600 leading-relaxed">
+              Thầy chỉ cần đặt tên lớp (ví dụ: <code>Lớp ghép: THUD K26A + Điện 9+3</code> hoặc <code>THUD K26B (Nửa lớp Ca 1: STT 01-20)</code>) rồi copy cột Họ tên học sinh từ Excel dán vào ô dưới đây (mỗi học sinh 1 dòng):
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">1. Tên lớp / Nhóm lớp học ghép:</label>
+                <input id="mgrClassName" type="text" placeholder="VD: Lớp ghép: THUD K26A + Ô tô (Nửa lớp)" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-bold" />
+                <div class="mt-2 flex flex-wrap gap-1.5">
+                  <button id="btnPresetMerged2" type="button" class="px-2.5 py-1 rounded-lg bg-sky-100 text-sky-900 font-bold hover:bg-sky-200">+ Mẫu ghép 2 lớp</button>
+                  <button id="btnPresetHalf1" type="button" class="px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-900 font-bold hover:bg-emerald-200">+ Mẫu ghép với 1/2 lớp (Ca 1)</button>
+                  <button id="btnPresetHalf2" type="button" class="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 font-bold hover:bg-amber-200">+ Mẫu tách 1/2 lớp (Ca 2)</button>
+                </div>
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">2. Danh sách học sinh (Dán từ Excel - mỗi dòng 1 tên):</label>
+                <textarea id="mgrClassStudents" rows="4" placeholder="01. Nguyễn Văn An (THUD)&#10;02. Trần Văn Ba (THUD)&#10;03. Lê Minh Đức (Điện - Nửa lớp)" class="w-full p-2.5 rounded-xl border border-slate-300 bg-white font-mono"></textarea>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <span id="mgrClassSavedMsg" class="font-bold text-emerald-700"></span>
+              <button id="btnMgrSaveClass" type="button" class="px-4 py-2 rounded-xl bg-[#0066b2] text-white font-extrabold shadow">
+                ✓ Lưu Lớp &amp; Danh Sách Học Sinh Này
+              </button>
+            </div>
+          </div>
+
+          <!-- Khối B: Thêm Bài tập Word mới vào Bước 4 -->
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+            <div class="font-extrabold text-sm text-slate-900">
+              📄 B. Thêm Bài Tập Word Mới Vào Bước 4
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">1. Tên nút bài tập (Hiện ở Bước 4):</label>
+                <input id="mgrWordTitle" type="text" placeholder="VD: Bài 4: Biên bản bàn giao phòng máy" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-bold" />
+                <label class="block font-bold text-slate-700 mt-2 mb-1">2. Tên tệp yêu cầu học sinh lưu ở ổ D:\:</label>
+                <input id="mgrWordFile" type="text" placeholder="VD: BIEN_BAN_BAN_GIAO.docx" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-white font-mono font-bold" />
+              </div>
+              <div>
+                <label class="block font-bold text-slate-700 mb-1">3. Nội dung văn bản mẫu hiển thị cho học sinh nhìn gõ theo:</label>
+                <textarea id="mgrWordSample" rows="4" placeholder="CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM&#10;Độc lập - Tự do - Hạnh phúc&#10;&#10;BIÊN BẢN BÀN GIAO CA THỰC HÀNH..." class="w-full p-2.5 rounded-xl border border-slate-300 bg-white"></textarea>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <span id="mgrWordSavedMsg" class="font-bold text-emerald-700"></span>
+              <button id="btnMgrSaveWord" type="button" class="px-4 py-2 rounded-xl bg-emerald-600 text-white font-extrabold shadow">
+                ✓ Thêm Bài Tập Word Này
+              </button>
+            </div>
+          </div>
+
+          <!-- Khối C: Xuất file data/course-data.js chuẩn để lưu vĩnh viễn lên GitHub -->
+          <div class="p-4 rounded-2xl bg-sky-50 border border-sky-200 flex flex-wrap items-center justify-between gap-3">
+            <div class="space-y-0.5">
+              <div class="font-extrabold text-sky-950">💾 Lưu vĩnh viễn vào mã nguồn GitHub (data/course-data.js)</div>
+              <div class="text-sky-800">Sau khi thêm lớp hoặc thêm bài tập ở trên, bấm nút bên phải để tải file <code>course-data.js</code> mới nhất về chép đè vào thư mục <code>D:\website-giang-day\data\course-data.js</code>.</div>
+            </div>
+            <button id="btnMgrDownloadCourseData" type="button" class="px-4 py-2.5 rounded-xl bg-sky-900 hover:bg-sky-800 text-amber-300 font-black shadow">
+              📥 Tải file course-data.js mới nhất
+            </button>
+          </div>
         </div>
       </section>
     </div>
@@ -502,22 +563,164 @@
   <script src="data/course-data.js"></script>
   <script>
     // =========================================================================
-    // BỘ MÁY XỬ LÝ LUỒNG 5 BƯỚC ĐƠN GIẢN, BẢO MẬT & LƯU TỰ ĐỘNG (js/app.js)
+    // BỘ MÁY XỬ LÝ LUỒNG 5 BƯỚC + QUẢN LÝ LỚP GHÉP / 1/2 LỚP & BÀI TẬP WORD
     // =========================================================================
-    const CFG = window.COURSE_DATA || {
+    const DEFAULT_CFG = {
+      portalTitle: "🎓 Cổng Thực Hành Tin Học 9+3 • Trường CĐ Buôn Ma Thuột",
       sendUrl: "/api/scores",
-      classes: ["Tin học ứng dụng 9+3", "Tin học ứng dụng 9+3 (K26A)", "Tin học ứng dụng 9+3 (K26B)", "Điện công nghiệp 9+3", "Công nghệ Ô tô 9+3"],
+      classRosters: {
+        "Tin học ứng dụng 9+3 (K26A)": [
+          "01. Nguyễn Văn An", "02. Trần Văn Ba", "03. Lê Thị Bích Cúc", "04. Phạm Minh Dũng",
+          "05. Hoàng Quốc Đạt", "06. H'Hen Niê", "07. Y Đam San Êban", "08. Vũ Thị Hương Giang",
+          "09. Đặng Gia Huy", "10. Bùi Tuấn Kiệt", "11. Nguyễn Thị Khánh Linh", "12. Trần Hoàng Long",
+          "13. Y Minh Mlô", "14. H'Mai Кbuôr", "15. Ngô Bảo Nam", "16. Phan Trọng Nghĩa",
+          "17. Lê Hồng Phúc", "18. Trương Minh Quân", "19. Đỗ Thanh Sơn", "20. Nguyễn Anh Tuấn"
+        ],
+        "Tin học ứng dụng 9+3 (K26B)": [
+          "01. Nguyễn Hoàng Anh", "02. Trần Minh Bảo", "03. Lê Quốc Cường", "04. Phạm Thị Thùy Dương",
+          "05. Y Duy Êban", "06. H'Lan Niê", "07. Hoàng Văn Hải", "08. Vũ Minh Hiếu"
+        ],
+        "Lớp ghép: THUD K26A + Điện 9+3": [
+          "01. Nguyễn Văn An (THUD K26A)", "02. Trần Văn Ba (THUD K26A)", "03. Lê Thị Bích Cúc (THUD K26A)",
+          "04. Nguyễn Văn Bình (Điện 9+3)", "05. Trần Quốc Cường (Điện 9+3)", "06. Lê Minh Đức (Điện 9+3)"
+        ],
+        "Lớp ghép 1/2: THUD K26B (Ca 1: STT 01-12) + Ô tô 9+3 (Nửa lớp)": [
+          "01. Nguyễn Hoàng Anh (THUD - Ca 1)", "02. Trần Minh Bảo (THUD - Ca 1)", "03. Lê Quốc Cường (THUD - Ca 1)",
+          "04. Trần Quốc Anh (Ô tô - Nửa lớp)", "05. Nguyễn Minh Chiến (Ô tô - Nửa lớp)"
+        ],
+        "Tin học ứng dụng 9+3 (Nửa lớp - Ca 2: STT 13-25)": [
+          "13. Y Minh Mlô (Ca 2)", "14. H'Mai Кbuôr (Ca 2)", "15. Ngô Bảo Nam (Ca 2)", "16. Phan Trọng Nghĩa (Ca 2)"
+        ],
+        "Điện công nghiệp 9+3": [
+          "01. Nguyễn Văn Bình", "02. Trần Quốc Cường", "03. Lê Minh Đức", "04. Phạm Văn Hùng"
+        ],
+        "Công nghệ Ô tô 9+3": [
+          "01. Trần Quốc Anh", "02. Nguyễn Minh Chiến", "03. Lê Văn Đạt", "04. Phạm Tuấn Hưng"
+        ]
+      },
       telexSentences: [
         { target: "Trường Cao đẳng Buôn Ma Thuột", hint: "Gợi ý gõ: T-r-u-w-o-w-n-g-f  C-a-o  d-d-a-w-n-g-r  B-u-o-o-n  M-a  T-h-u-o-o-t-j" },
         { target: "Ngành Tin học ứng dụng thực hành", hint: "Gợi ý gõ: N-g-a-n-h-f  T-i-n  h-o-c-j  u-w-n-g-s  d-u-n-g-j  t-h-u-w-c-j  h-a-n-h-f" },
         { target: "Lắp ráp máy tính và quản trị mạng", hint: "Gợi ý gõ: L-a-w-p-s  r-a-p-s  m-a-y-s  t-i-n-h-s  v-a-f  q-u-a-n-r  t-r-i-j  m-a-n-g-j" },
         { target: "Em học tập tại tỉnh Đắk Lắk Tây Nguyên", hint: "Gợi ý gõ: E-m  h-o-c-j  t-a-a-p-j  t-a-i-j  t-i-n-h-r  D-d-a-w-s-k  L-a-w-s-k  T-a-a-y  N-g-u-y-e-e-n" },
         { target: "Em luôn lưu bài tập vào ổ đĩa D an toàn", hint: "Gợi ý gõ: E-m  l-u-o-o-n  l-u-w-u  b-a-i-f  t-a-a-p-j  v-a-o-f  o-o-r  d-d-i-a-x  D  a-n  t-o-a-n-f" }
+      ],
+      wordExercises: [
+        {
+          id: "word_don",
+          buttonLabel: "Bài 1: Đơn xin nghỉ học",
+          fileName: "DON_XIN_PHEP.docx",
+          steps: [
+            "Bước 1: Mở phần mềm Microsoft Word trên màn hình ➔ Chọn trang giấy trắng (Blank document).",
+            "Bước 2: Vào thẻ Layout ➔ Chọn khổ giấy Size: A4 và căn lề Margins chuẩn (Trái 3cm, Phải 2cm).",
+            "Bước 3: Vào thẻ Home ➔ Chọn phông chữ Times New Roman, cỡ chữ 14.",
+            "Bước 4: Gõ Quốc hiệu, Tiêu ngữ, tên ĐƠN XIN NGHỈ HỌC (căn giữa, in đậm) và nội dung đơn.",
+            "Bước 5: Bấm Ctrl + S ➔ Chọn Ổ đĩa (D:) ➔ Lưu tên tệp DON_XIN_PHEP.docx vào thư mục của em."
+          ],
+          sampleHtml: `
+            <div class="text-center font-bold">
+              CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br/>
+              <span class="underline">Độc lập - Tự do - Hạnh phúc</span>
+            </div>
+            <div class="text-center font-bold text-base my-2">ĐƠN XIN NGHỈ HỌC</div>
+            <p><strong>Kính gửi:</strong> Giáo viên chủ nhiệm và Khoa Công nghệ thông tin.</p>
+            <p><strong>Em tên là:</strong> {{STUDENT_NAME}} – <strong>Lớp:</strong> {{CLASS_NAME}}.</p>
+            <p><strong>Lý do:</strong> Hôm nay em bị ốm nên xin phép Thầy/Cô cho em nghỉ học 01 buổi thực hành.</p>
+            <p>Em xin hứa sẽ chép bài và làm bù bài thực hành đầy đủ.</p>
+            <div class="text-right mt-3">
+              <em>{{TODAY_DATE}}</em><br/>
+              <strong>Người viết đơn</strong><br/>
+              {{STUDENT_NAME}}
+            </div>
+          `
+        },
+        {
+          id: "word_thongbao",
+          buttonLabel: "Bài 2: Thông báo bảo trì phòng máy",
+          fileName: "THONG_BAO_PHONG_MAY.docx",
+          steps: [
+            "Bước 1: Mở Microsoft Word ➔ Chọn khổ giấy A4, phông chữ Times New Roman cỡ 14.",
+            "Bước 2: Gõ tên trường và Khoa CNTT ở góc trên, gõ tiêu đề THÔNG BÁO (cỡ chữ 16, in đậm, căn giữa).",
+            "Bước 3: Gõ 3 mục nội dung thông báo (Đối tượng, Nội quy lưu bài ổ D:\\, Đăng xuất Gmail).",
+            "Bước 4: Bôi đen các tiêu đề mục 1, 2, 3 và bấm nút B (Ctrl + B) để in đậm rõ ràng.",
+            "Bước 5: Bấm Ctrl + S ➔ Lưu vào ổ đĩa D:\\ với tên tệp THONG_BAO_PHONG_MAY.docx."
+          ],
+          sampleHtml: `
+            <div class="text-center font-bold">
+              TRƯỜNG CAO ĐẲNG BUÔN MA THUỘT<br/>
+              <span class="underline">KHOA CÔNG NGHỆ THÔNG TIN</span>
+            </div>
+            <div class="text-center font-bold text-base my-2">THÔNG BÁO LỊCH THỰC HÀNH &amp; BẢO TRÌ PHÒNG MÁY</div>
+            <p><strong>1. Đối tượng áp dụng:</strong> Học sinh lớp {{CLASS_NAME}}.</p>
+            <p><strong>2. Nội quy lưu bài:</strong> Toàn bộ bài tập thực hành phải lưu vào ổ đĩa <strong>D:\\</strong> (không lưu ở màn hình Desktop).</p>
+            <p><strong>3. An toàn tài khoản:</strong> Cuối buổi học, các em bắt buộc đăng xuất tài khoản Gmail và tắt máy đúng quy định.</p>
+            <div class="text-right mt-3">
+              <em>{{TODAY_DATE}}</em><br/>
+              <strong>Phụ trách phòng máy</strong>
+            </div>
+          `
+        },
+        {
+          id: "word_bang",
+          buttonLabel: "Bài 3: Kẻ bảng cấu hình máy tính",
+          fileName: "BANG_LINH_KIEN_PC.docx",
+          steps: [
+            "Bước 1: Mở Microsoft Word ➔ Gõ tiêu đề BẢNG KÊ LINH KIỆN MÁY TÍNH (in đậm, căn giữa).",
+            "Bước 2: Bấm thẻ Insert trên thanh công cụ ➔ Bấm nút Table ➔ Kéo chọn bảng 4 cột x 4 dòng.",
+            "Bước 3: Gõ tiêu đề 4 cột: STT | Tên linh kiện | Thông số kỹ thuật | Tình trạng.",
+            "Bước 4: Điền 3 dòng linh kiện (CPU Core i5, RAM DDR4 8GB, Ổ cứng SSD 256GB) và căn giữa cột STT.",
+            "Bước 5: Bấm Ctrl + S ➔ Lưu vào ổ đĩa D:\\ với tên tệp BANG_LINH_KIEN_PC.docx."
+          ],
+          sampleHtml: `
+            <div class="text-center font-bold text-base mb-2">BẢNG KÊ CẤU HÌNH MÁY TÍNH THỰC HÀNH</div>
+            <p class="mb-2"><strong>Học sinh lập bảng:</strong> {{STUDENT_NAME}} – <strong>Lớp:</strong> {{CLASS_NAME}}</p>
+            <table class="w-full border-collapse border border-slate-400 text-xs sm:text-sm">
+              <thead>
+                <tr class="bg-slate-200 font-bold text-center">
+                  <th class="border border-slate-400 p-1.5">STT</th>
+                  <th class="border border-slate-400 p-1.5">Tên linh kiện CNTT</th>
+                  <th class="border border-slate-400 p-1.5">Thông số kỹ thuật</th>
+                  <th class="border border-slate-400 p-1.5">Tình trạng</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="border border-slate-400 p-1.5 text-center">1</td><td class="border border-slate-400 p-1.5">Bộ vi xử lý (CPU)</td><td class="border border-slate-400 p-1.5">Intel Core i5</td><td class="border border-slate-400 p-1.5 text-center">Tốt</td></tr>
+                <tr><td class="border border-slate-400 p-1.5 text-center">2</td><td class="border border-slate-400 p-1.5">Bộ nhớ trong (RAM)</td><td class="border border-slate-400 p-1.5">DDR4 8GB</td><td class="border border-slate-400 p-1.5 text-center">Tốt</td></tr>
+                <tr><td class="border border-slate-400 p-1.5 text-center">3</td><td class="border border-slate-400 p-1.5">Ổ cứng lưu trữ</td><td class="border border-slate-400 p-1.5">SSD 256GB (Ổ C và D)</td><td class="border border-slate-400 p-1.5 text-center">Tốt</td></tr>
+              </tbody>
+            </table>
+          `
+        }
       ]
     };
 
-    const STORAGE_KEY_STATE = "BMTC_SIMPLE_STATE_V6";
-    const STORAGE_KEY_RECORDS = "BMTC_SIMPLE_RECORDS_V6";
+    const STORAGE_KEY_CUSTOM_CFG = "BMTC_CUSTOM_CFG_V7";
+    const STORAGE_KEY_STATE = "BMTC_SIMPLE_STATE_V7";
+    const STORAGE_KEY_RECORDS = "BMTC_SIMPLE_RECORDS_V7";
+
+    // Gộp dữ liệu từ data/course-data.js với các lớp/bài tập thầy thêm trực tiếp trên Web
+    let CFG = Object.assign({}, DEFAULT_CFG, window.COURSE_DATA || {});
+    try {
+      const savedCustom = localStorage.getItem(STORAGE_KEY_CUSTOM_CFG);
+      if (savedCustom) {
+        const parsedCustom = JSON.parse(savedCustom);
+        if (parsedCustom.classRosters) {
+          CFG.classRosters = Object.assign({}, CFG.classRosters, parsedCustom.classRosters);
+        }
+        if (Array.isArray(parsedCustom.wordExercises) && parsedCustom.wordExercises.length) {
+          CFG.wordExercises = parsedCustom.wordExercises;
+        }
+      }
+    } catch (e) {}
+
+    function persistCustomConfig() {
+      try {
+        localStorage.setItem(STORAGE_KEY_CUSTOM_CFG, JSON.stringify({
+          classRosters: CFG.classRosters,
+          wordExercises: CFG.wordExercises
+        }));
+      } catch (e) {}
+    }
 
     function escapeHtml(str) {
       return String(str == null ? "" : str)
@@ -539,15 +742,15 @@
       return `Đắk Lắk, ngày ${String(d.getDate()).padStart(2, "0")} tháng ${String(d.getMonth() + 1).padStart(2, "0")} năm ${d.getFullYear()}`;
     }
 
-    // Trạng thái lưu tự động (Nhấn F5 không bao giờ mất bài)
     let state = {
       step: 0,
-      className: "Tin học ứng dụng 9+3",
+      className: Object.keys(CFG.classRosters)[0] || "Tin học ứng dụng 9+3 (K26A)",
       station: "01",
       session: "Buổi 1",
       activeStudent: 1,
       mouseLevel: 1,
       telexIdx: 0,
+      wordExIdx: 0,
       students: {
         1: { name: "", mouseScores: [0, 0, 0, 0, 0], telexScores: [0, 0, 0, 0, 0], wordScore: 0, excelScore: 0 },
         2: { name: "", mouseScores: [0, 0, 0, 0, 0], telexScores: [0, 0, 0, 0, 0], wordScore: 0, excelScore: 0 }
@@ -578,12 +781,35 @@
     function getWordExcelBest(stId) {
       return Math.max(state.students[stId].wordScore || 0, state.students[stId].excelScore || 0);
     }
-    // Trọng số chuẩn: Chuột 30% + Telex 40% + Word/Excel 30%
     function getOverallGrade10(stId) {
       const m = getMouseTotal(stId);
       const t = getTelexTotal(stId);
       const w = getWordExcelBest(stId);
       return (((m * 0.30) + (t * 0.40) + (w * 0.30)) / 10).toFixed(1);
+    }
+
+    // Nạp danh sách lớp & gợi ý tên học sinh (Hỗ trợ cả lớp đơn, lớp ghép 2 lớp, lớp ghép 1/2 lớp)
+    function refreshClassDropdownsAndRoster() {
+      const clsNames = Object.keys(CFG.classRosters || {});
+      const clsSelect = document.getElementById("inpClass");
+      const adminClsSelect = document.getElementById("filterAdminClass");
+      if (clsSelect && clsNames.length) {
+        clsSelect.innerHTML = clsNames.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+        if (!clsNames.includes(state.className)) state.className = clsNames[0];
+        clsSelect.value = state.className;
+      }
+      if (adminClsSelect && clsNames.length) {
+        adminClsSelect.innerHTML = `<option value="ALL">-- Tất cả các lớp (${clsNames.length} lớp) --</option>` +
+          clsNames.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+      }
+      updateRosterAutocomplete(state.className);
+    }
+
+    function updateRosterAutocomplete(clsName) {
+      const dl = document.getElementById("studentRosterDatalist");
+      if (!dl) return;
+      const list = (CFG.classRosters && CFG.classRosters[clsName]) ? CFG.classRosters[clsName] : [];
+      dl.innerHTML = list.map(n => `<option value="${escapeHtml(n)}"></option>`).join("");
     }
 
     function updateStudentSwitcherUI() {
@@ -601,8 +827,8 @@
         bar.classList.remove("flex");
       }
 
-      b1.textContent = `👤 ${n1 ? n1.split(" ").slice(-2).join(" ") : "Em 1"}`;
-      b2.textContent = `👤 ${n2 ? n2.split(" ").slice(-2).join(" ") : "Em 2"}`;
+      b1.textContent = `👤 ${n1 ? n1.replace(/^\d+\.\s*/, "").split(" ").slice(0, 3).join(" ") : "Em 1"}`;
+      b2.textContent = `👤 ${n2 ? n2.replace(/^\d+\.\s*/, "").split(" ").slice(0, 3).join(" ") : "Em 2"}`;
 
       if (state.activeStudent === 1) {
         b1.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-[#0066b2] text-white";
@@ -614,10 +840,9 @@
     }
 
     // =========================================================================
-    // ĐIỀU HƯỚNG 5 BƯỚC (1 MÀN HÌNH = 1 VIỆC DUY NHẤT)
+    // ĐIỀU HƯỚNG 5 BƯỚC
     // =========================================================================
     function goToStep(targetStep) {
-      // Kiểm tra bắt buộc nhập họ tên ở Bước 1 trước khi sang Bước 2
       if (state.step === 0 && targetStep > 0) {
         state.className = document.getElementById("inpClass").value;
         state.station = document.getElementById("inpStation").value;
@@ -626,8 +851,7 @@
         state.students[2].name = document.getElementById("inpName2").value.trim();
 
         if (!state.students[1].name) {
-          const warn = document.getElementById("step0WarnMsg");
-          warn.classList.remove("hidden");
+          document.getElementById("step0WarnMsg").classList.remove("hidden");
           document.getElementById("inpName1").focus();
           return;
         }
@@ -638,7 +862,6 @@
       saveState();
       updateStudentSwitcherUI();
 
-      // Cập nhật 5 thẻ bước trên đầu
       for (let i = 0; i < 5; i++) {
         const card = document.getElementById("navStep" + i);
         const view = document.getElementById("viewStep" + i);
@@ -651,12 +874,6 @@
         }
       }
 
-      // Cập nhật mẫu đơn Word ngày động & tên học sinh
-      document.getElementById("tplStudentName").textContent = state.students[state.activeStudent].name || state.students[1].name || "Nguyễn Văn An";
-      document.getElementById("tplClassName").textContent = state.className;
-      document.getElementById("tplDynamicDate").textContent = getTodayVietnameseDate();
-
-      // Cập nhật 2 nút cố định ở cuối trang
       const btnBack = document.getElementById("btnFooterBack");
       const btnNext = document.getElementById("btnFooterNext");
       if (targetStep === 0) {
@@ -672,7 +889,10 @@
 
       if (targetStep === 1) renderMouseStage(state.mouseLevel);
       if (targetStep === 2) renderTelexStep(state.telexIdx);
-      if (targetStep === 3) updateWordExcelScoreUI();
+      if (targetStep === 3) {
+        renderWordExerciseView(state.wordExIdx || 0);
+        updateWordExcelScoreUI();
+      }
       if (targetStep === 4) renderStep5Summary();
     }
 
@@ -919,14 +1139,71 @@
     }
 
     // =========================================================================
-    // BƯỚC 4: CHẤM ĐIỂM WORD & EXCEL
+    // BƯỚC 4: HIỂN THỊ ĐỘNG CÁC BÀI TẬP WORD & EXCEL (DỄ DÀNG THÊM BÀI MỚI)
     // =========================================================================
+    function renderWordExerciseView(exIdx) {
+      const exercises = CFG.wordExercises || DEFAULT_CFG.wordExercises;
+      if (exIdx >= exercises.length) exIdx = 0;
+      state.wordExIdx = exIdx;
+      saveState();
+
+      const curEx = exercises[exIdx];
+      const tabsBox = document.getElementById("wordExerciseTabsBox");
+      const stepsBox = document.getElementById("wordStepsChecklistBox");
+      const paperBox = document.getElementById("wordSamplePaper");
+
+      // Render các nút chọn bài Word (Bài 1, Bài 2, Bài 3...)
+      tabsBox.innerHTML = exercises.map((ex, i) => `
+        <button data-wex="${i}" type="button" class="w-ex-btn px-3.5 py-2 rounded-xl text-xs font-extrabold transition ${
+          i === exIdx
+            ? "bg-[#0066b2] text-white shadow"
+            : "bg-slate-100 hover:bg-slate-200 text-slate-700"
+        }">
+          ${escapeHtml(ex.buttonLabel)}
+        </button>
+      `).join("");
+
+      tabsBox.querySelectorAll(".w-ex-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          renderWordExerciseView(parseInt(btn.getAttribute("data-wex"), 10));
+        });
+      });
+
+      // Render 5 bước hướng dẫn của bài Word đang chọn
+      stepsBox.innerHTML = (curEx.steps || []).map(stText => `
+        <label class="flex items-start gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer hover:border-sky-400">
+          <input type="checkbox" class="word-step-chk w-5 h-5 mt-0.5 accent-[#0066b2]" />
+          <span>${escapeHtml(stText)}</span>
+        </label>
+      `).join("");
+
+      stepsBox.querySelectorAll(".word-step-chk").forEach(chk => {
+        chk.addEventListener("change", () => {
+          const checkedCount = Array.from(stepsBox.querySelectorAll(".word-step-chk")).filter(c => c.checked).length;
+          const totalSteps = Math.max(1, (curEx.steps || []).length);
+          state.students[state.activeStudent].wordScore = Math.round((checkedCount / totalSteps) * 100);
+          saveState();
+          updateWordExcelScoreUI();
+        });
+      });
+
+      // Render văn bản mẫu với Tên học sinh, Lớp và Ngày hôm nay
+      const stName = escapeHtml(state.students[state.activeStudent].name || state.students[1].name || "Nguyễn Văn An");
+      const clsName = escapeHtml(state.className);
+      const todayStr = escapeHtml(getTodayVietnameseDate());
+
+      paperBox.innerHTML = (curEx.sampleHtml || "")
+        .replace(/\{\{STUDENT_NAME\}\}/g, stName)
+        .replace(/\{\{CLASS_NAME\}\}/g, clsName)
+        .replace(/\{\{TODAY_DATE\}\}/g, todayStr);
+    }
+
     function updateWordExcelScoreUI() {
       document.getElementById("lblWordExcelScore").textContent = getWordExcelBest(state.activeStudent);
     }
 
     // =========================================================================
-    // BƯỚC 5: TỔNG HỢP & NỘP ĐIỂM TRUNG THỰC LÊN CLOUDFLARE WORKER / D1
+    // BƯỚC 5: TỔNG HỢP & NỘP ĐIỂM
     // =========================================================================
     function renderStep5Summary() {
       const box = document.getElementById("summaryCardsBox");
@@ -1002,7 +1279,6 @@
         });
       });
 
-      // Lưu bản sao tại máy trước
       const localArr = getLocalSavedRecords();
       for (const rec of payloadRecords) {
         const idx = localArr.findIndex(r => r.recordId === rec.recordId);
@@ -1029,14 +1305,13 @@
         banner.className = "p-4 rounded-2xl bg-emerald-600 text-white text-[15px] font-extrabold text-center shadow";
         banner.textContent = "✅ Đã nộp điểm thành công! Thầy/Cô đã nhận được bài của em.";
       } else {
-        // Cảnh báo màu cam trung thực đúng như bản mẫu của thầy
         banner.className = "p-4 rounded-2xl bg-amber-100 border-2 border-amber-400 text-amber-900 text-[15px] font-extrabold text-center";
         banner.textContent = "⚠️ CHƯA gửi được lên máy chủ (Bản xem thử hoặc mất mạng). Điểm đã lưu trên máy này, em hãy báo Thầy/Cô nhé!";
       }
     }
 
     // =========================================================================
-    // CỔNG GIẢNG VIÊN (/gv HOẶC NHÁY ĐÚP TIÊU ĐỀ)
+    // CỔNG GIẢNG VIÊN (#/gv): XEM ĐIỂM + QUẢN LÝ LỚP GHÉP & BÀI TẬP
     // =========================================================================
     let cachedAdminList = [];
 
@@ -1103,34 +1378,45 @@
       `).join("");
     }
 
+    // Xuất toàn bộ cấu hình hiện tại ra file `course-data.js` chuẩn để thầy lưu vào GitHub
+    function exportUpdatedCourseDataJs() {
+      const content = `// ============================================================================\n` +
+        `// FILE CẤU HÌNH NỘI DUNG BÀI HỌC & DANH SÁCH LỚP (data/course-data.js)\n` +
+        `// Tự động xuất từ Cổng Quản Trị Giảng Viên ngày ${new Date().toLocaleDateString("vi-VN")}\n` +
+        `// ============================================================================\n\n` +
+        `window.COURSE_DATA = ${JSON.stringify(CFG, null, 2)};\n`;
+      const blob = new Blob([content], { type: "application/javascript;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "course-data.js";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
     // =========================================================================
     // KHỞI TẠO SỰ KIỆN KHI MỞ TRANG
     // =========================================================================
     window.addEventListener("DOMContentLoaded", () => {
       loadState();
+      refreshClassDropdownsAndRoster();
 
-      // Đổ danh sách lớp từ data/course-data.js vào ô chọn
       const clsSelect = document.getElementById("inpClass");
-      const adminClsSelect = document.getElementById("filterAdminClass");
-      if (CFG.classes && CFG.classes.length) {
-        clsSelect.innerHTML = CFG.classes.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
-        adminClsSelect.innerHTML = `<option value="ALL">-- Tất cả các lớp --</option>` +
-          CFG.classes.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
-      }
+      clsSelect.addEventListener("change", (e) => {
+        state.className = e.target.value;
+        updateRosterAutocomplete(state.className);
+        saveState();
+      });
 
-      // Khôi phục thông tin đã lưu
-      clsSelect.value = state.className;
       document.getElementById("inpStation").value = state.station;
       document.getElementById("inpSession").value = state.session;
       document.getElementById("inpName1").value = state.students[1].name;
       document.getElementById("inpName2").value = state.students[2].name;
 
-      // Bấm vào 5 ô bước trên đầu
       for (let i = 0; i < 5; i++) {
         document.getElementById("navStep" + i).addEventListener("click", () => goToStep(i));
       }
 
-      // 2 nút Quay lại / Tiếp tục ở dưới cùng
       document.getElementById("btnFooterBack").addEventListener("click", () => {
         if (state.step > 0) goToStep(state.step - 1);
       });
@@ -1139,7 +1425,6 @@
         else submitFinalScores();
       });
 
-      // Đổi học sinh 1 / 2
       document.getElementById("btnSwitchSt1").addEventListener("click", () => {
         state.activeStudent = 1;
         goToStep(state.step);
@@ -1149,13 +1434,11 @@
         goToStep(state.step);
       });
 
-      // Sự kiện Bước 2 (Chuột)
       document.querySelectorAll(".m-lv-btn").forEach(btn => {
         btn.addEventListener("click", () => renderMouseStage(parseInt(btn.getAttribute("data-mlv"), 10)));
       });
       document.getElementById("btnResetMouseTask").addEventListener("click", () => renderMouseStage(state.mouseLevel));
 
-      // Sự kiện Bước 3 (Telex + Chặn Paste/Copy)
       document.querySelectorAll(".t-lv-btn").forEach(btn => {
         btn.addEventListener("click", () => renderTelexStep(parseInt(btn.getAttribute("data-tidx"), 10)));
       });
@@ -1170,7 +1453,6 @@
       });
       document.getElementById("lblTelexTarget").addEventListener("copy", (e) => e.preventDefault());
 
-      // Sự kiện Bước 4 (Word & Excel)
       const btnTabW = document.getElementById("btnTabWord");
       const btnTabE = document.getElementById("btnTabExcel");
       const viewW = document.getElementById("subViewWord");
@@ -1188,22 +1470,14 @@
         btnTabW.className = "py-3 px-4 rounded-xl border border-slate-300 bg-white text-slate-700 font-bold text-sm text-center";
       });
 
-      document.querySelectorAll(".word-step-chk").forEach(chk => {
-        chk.addEventListener("change", () => {
-          const checkedCount = Array.from(document.querySelectorAll(".word-step-chk")).filter(c => c.checked).length;
-          state.students[state.activeStudent].wordScore = checkedCount * 20;
-          saveState();
-          updateWordExcelScoreUI();
-        });
-      });
-
       document.getElementById("btnDownloadSampleDoc").addEventListener("click", () => {
         const paperHtml = document.getElementById("wordSamplePaper").innerHTML;
+        const curEx = (CFG.wordExercises || DEFAULT_CFG.wordExercises)[state.wordExIdx || 0];
         const docContent = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body style="font-family:'Times New Roman',serif;font-size:14pt;">${paperHtml}</body></html>`;
         const blob = new Blob(["\ufeff", docContent], { type: "application/msword" });
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
-        a.download = "Don_Xin_Nghi_Hoc_Mau.doc";
+        a.download = (curEx && curEx.fileName ? curEx.fileName.replace(/\.docx$/i, ".doc") : "Bai_Mau_Word.doc");
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -1229,7 +1503,7 @@
         msg.className = pts === 100 ? "text-sm font-extrabold text-emerald-700" : "text-sm font-bold text-amber-700";
       });
 
-      // Mở Cổng Giảng Viên khi vào địa chỉ #/gv, /gv hoặc nháy đúp vào dòng tiêu đề trên cùng
+      // Cổng Giảng Viên (#/gv) & Chuyển đổi giữa 2 tab: Bảng điểm vs Quản lý Lớp ghép/Bài tập
       function checkAdminRoute() {
         const adminSec = document.getElementById("viewTeacherAdmin");
         if (location.hash === "#/gv" || location.pathname.endsWith("/gv") || location.search.includes("gv=1")) {
@@ -1246,6 +1520,92 @@
       document.getElementById("btnExitTeacherView").addEventListener("click", () => {
         location.hash = "";
       });
+
+      const tabScoresBtn = document.getElementById("btnAdminTabScores");
+      const tabMgrBtn = document.getElementById("btnAdminTabManager");
+      const subScores = document.getElementById("adminSubTabScores");
+      const subMgr = document.getElementById("adminSubTabManager");
+
+      tabScoresBtn.addEventListener("click", () => {
+        subScores.classList.remove("hidden");
+        subMgr.classList.add("hidden");
+        tabScoresBtn.className = "px-3.5 py-2 rounded-xl bg-slate-800 text-white";
+        tabMgrBtn.className = "px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700";
+      });
+      tabMgrBtn.addEventListener("click", () => {
+        subMgr.classList.remove("hidden");
+        subScores.classList.add("hidden");
+        tabMgrBtn.className = "px-3.5 py-2 rounded-xl bg-slate-800 text-white";
+        tabScoresBtn.className = "px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700";
+      });
+
+      // 3 Nút điền mẫu nhanh cho Lớp ghép 2 lớp, Ghép 1/2 lớp Ca 1, Tách 1/2 lớp Ca 2
+      document.getElementById("btnPresetMerged2").addEventListener("click", () => {
+        document.getElementById("mgrClassName").value = "Lớp ghép: THUD K26A + Điện 9+3";
+        document.getElementById("mgrClassStudents").value =
+          "01. Nguyễn Văn An (THUD K26A)\n02. Trần Văn Ba (THUD K26A)\n03. Lê Thị Bích Cúc (THUD K26A)\n04. Nguyễn Văn Bình (Điện 9+3)\n05. Trần Quốc Cường (Điện 9+3)";
+      });
+      document.getElementById("btnPresetHalf1").addEventListener("click", () => {
+        document.getElementById("mgrClassName").value = "Lớp ghép 1/2: THUD K26B (Ca 1: STT 01-15) + Ô tô 9+3 (Nửa lớp)";
+        document.getElementById("mgrClassStudents").value =
+          "01. Nguyễn Hoàng Anh (THUD - Ca 1)\n02. Trần Minh Bảo (THUD - Ca 1)\n03. Lê Quốc Cường (THUD - Ca 1)\n04. Trần Quốc Anh (Ô tô - Nửa lớp)\n05. Nguyễn Minh Chiến (Ô tô - Nửa lớp)";
+      });
+      document.getElementById("btnPresetHalf2").addEventListener("click", () => {
+        document.getElementById("mgrClassName").value = "Tin học ứng dụng 9+3 (Nửa lớp - Ca 2: STT 16-30)";
+        document.getElementById("mgrClassStudents").value =
+          "16. Phan Trọng Nghĩa (Ca 2)\n17. Lê Hồng Phúc (Ca 2)\n18. Trương Minh Quân (Ca 2)\n19. Đỗ Thanh Sơn (Ca 2)\n20. Nguyễn Anh Tuấn (Ca 2)";
+      });
+
+      // Lưu Lớp mới / Lớp ghép
+      document.getElementById("btnMgrSaveClass").addEventListener("click", () => {
+        const cName = document.getElementById("mgrClassName").value.trim();
+        const rawSt = document.getElementById("mgrClassStudents").value.trim();
+        const msg = document.getElementById("mgrClassSavedMsg");
+        if (!cName) {
+          msg.textContent = "⚠️ Vui lòng nhập tên lớp hoặc tên nhóm lớp ghép!";
+          return;
+        }
+        const stArr = rawSt
+          ? rawSt.split(/\r?\n/).map(line => line.trim()).filter(Boolean)
+          : [];
+        CFG.classRosters[cName] = stArr;
+        persistCustomConfig();
+        state.className = cName;
+        refreshClassDropdownsAndRoster();
+        msg.textContent = `✅ Đã lưu lớp "${cName}" (${stArr.length} học sinh) vào hệ thống!`;
+      });
+
+      // Lưu Bài tập Word mới vào Bước 4
+      document.getElementById("btnMgrSaveWord").addEventListener("click", () => {
+        const wTitle = document.getElementById("mgrWordTitle").value.trim();
+        const wFile = document.getElementById("mgrWordFile").value.trim() || "BAI_TAP_MOI.docx";
+        const wSample = document.getElementById("mgrWordSample").value.trim();
+        const msg = document.getElementById("mgrWordSavedMsg");
+        if (!wTitle || !wSample) {
+          msg.textContent = "⚠️ Vui lòng nhập tên nút bài tập và nội dung văn bản mẫu!";
+          return;
+        }
+        const formattedHtml = wSample.split(/\r?\n/).map(line => `<p>${escapeHtml(line)}</p>`).join("");
+        CFG.wordExercises.push({
+          id: "word_custom_" + Date.now(),
+          buttonLabel: wTitle,
+          fileName: wFile,
+          steps: [
+            "Bước 1: Mở phần mềm Microsoft Word trên màn hình ➔ Chọn trang giấy trắng (Blank document).",
+            "Bước 2: Vào thẻ Layout ➔ Chọn khổ giấy Size: A4 và căn lề Margins chuẩn.",
+            "Bước 3: Vào thẻ Home ➔ Chọn phông chữ Times New Roman, cỡ chữ 14.",
+            `Bước 4: Gõ đầy đủ nội dung bài "${wTitle}" theo mẫu bên dưới.`,
+            `Bước 5: Bấm Ctrl + S ➔ Chọn Ổ đĩa (D:) ➔ Lưu tên tệp ${wFile}.`
+          ],
+          sampleHtml: formattedHtml
+        });
+        persistCustomConfig();
+        renderWordExerciseView(CFG.wordExercises.length - 1);
+        msg.textContent = `✅ Đã thêm "${wTitle}" vào Bước 4!`;
+      });
+
+      document.getElementById("btnMgrDownloadCourseData").addEventListener("click", exportUpdatedCourseDataJs);
+
       document.getElementById("btnAdminFetch").addEventListener("click", fetchAdminScores);
       document.getElementById("filterAdminClass").addEventListener("change", renderAdminTable);
       document.getElementById("filterAdminSearch").addEventListener("input", renderAdminTable);
@@ -1283,7 +1643,6 @@
         fetchAdminScores();
       });
 
-      // Khởi chạy ở bước đã lưu
       goToStep(state.step || 0);
       checkAdminRoute();
     });
