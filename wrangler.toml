@@ -1,6 +1,13 @@
 name = "website-giang-day"
+main = "dist/_worker.js/index.js"
 compatibility_date = "2026-11-04"
-pages_build_output_dir = "dist"
+
+[build]
+command = "npm run build"
+
+[assets]
+directory = "dist"
+binding = "ASSETS"
 
 [vars]
 TEACHER_SECRET = "BMTC2026"
