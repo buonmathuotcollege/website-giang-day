@@ -9,34 +9,55 @@
     -moz-osx-font-smoothing: grayscale;
   }
   body {
-    @apply bg-gray-50 text-gray-900 font-sans;
+    @apply bg-slate-50/60 text-gray-900 font-sans;
   }
-  h1 { @apply text-2xl sm:text-3xl font-bold text-gray-900; }
+  h1 { @apply text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight; }
   h2 { @apply text-xl sm:text-2xl font-bold text-gray-800; }
   h3 { @apply text-lg sm:text-xl font-semibold text-gray-800; }
 }
 
 @layer components {
+  /* Minimalist buttons - Japanese Shibui styling */
   .btn-primary {
-    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-lg
-           bg-primary-700 text-white font-semibold text-sm
-           hover:bg-primary-800 transition-colors duration-150;
+    @apply inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl
+           bg-primary-700 text-white font-semibold text-xs sm:text-sm
+           hover:bg-primary-800 active:scale-[0.98] transition-all duration-150 shadow-sm hover:shadow;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-5 py-2.5 rounded-lg
-           bg-gray-200 text-gray-800 font-semibold text-sm
-           hover:bg-gray-300 transition-colors duration-150;
+    @apply inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl
+           bg-white text-gray-700 font-semibold text-xs sm:text-sm border border-gray-200
+           hover:bg-gray-50 active:scale-[0.98] transition-all duration-150 shadow-sm;
   }
   .card {
-    @apply bg-white rounded-xl border border-gray-200 p-5 
-           hover:border-primary-300 hover:shadow-sm transition-all duration-150;
+    @apply bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6
+           hover:border-primary-300 hover:shadow-md transition-all duration-200;
   }
   .sidebar-link {
-    @apply block px-3 py-2 rounded-lg text-sm text-gray-700
+    @apply block px-3 py-2 rounded-xl text-sm text-gray-700
            hover:bg-primary-50 hover:text-primary-700 transition-colors duration-150;
   }
   .sidebar-link.active {
     @apply bg-primary-50 text-primary-700 font-semibold;
+  }
+
+  /* Keyboard shortcut badges (Kanso styling) */
+  kbd {
+    @apply inline-flex items-center justify-center font-mono text-[10px] font-bold text-gray-600
+           bg-gray-100 border border-gray-300 px-1.5 py-0.5 rounded shadow-[0_1px_0_rgba(0,0,0,0.1)];
+  }
+
+  /* Poka-Yoke & Status Badges */
+  .badge-poka-yoke {
+    @apply inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full
+           bg-amber-100 text-amber-900 border border-amber-300;
+  }
+  .badge-safe {
+    @apply inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full
+           bg-emerald-100 text-emerald-900 border border-emerald-300;
+  }
+  .badge-danger {
+    @apply inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full
+           bg-rose-100 text-rose-900 border border-rose-300;
   }
 
   /* Markdown content styling */
@@ -50,15 +71,75 @@
   .prose th { @apply border border-gray-300 bg-gray-100 px-3 py-2 text-left font-semibold; }
   .prose td { @apply border border-gray-300 px-3 py-2; }
   .prose code { @apply bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono text-primary-800; }
-  .prose pre { @apply bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto mb-4; }
+  .prose pre { @apply bg-gray-900 text-gray-100 p-4 rounded-xl overflow-x-auto mb-4; }
   .prose pre code { @apply bg-transparent text-inherit p-0; }
   .prose blockquote { @apply border-l-4 border-primary-300 bg-primary-50 pl-4 py-2 my-4 italic text-gray-700; }
-  .prose img { @apply rounded-lg shadow-sm my-4 max-w-full; }
+  .prose img { @apply rounded-xl shadow-sm my-4 max-w-full; }
   .prose a { @apply text-primary-700 underline hover:text-primary-900; }
 
-  /* Alert boxes in markdown */
-  .alert-note { @apply bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg my-4; }
-  .alert-tip { @apply bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg my-4; }
-  .alert-warning { @apply bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg my-4; }
-  .alert-important { @apply bg-purple-50 border-l-4 border-purple-500 p-4 rounded-r-lg my-4; }
+  /* Alert boxes */
+  .alert-note { @apply bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl my-4 text-sm; }
+  .alert-tip { @apply bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-xl my-4 text-sm; }
+  .alert-warning { @apply bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl my-4 text-sm; }
+  .alert-important { @apply bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-xl my-4 text-sm; }
+}
+
+/* Zen / Focus Mode (Chế độ tập trung chuẩn Nhật) */
+body.zen-mode header,
+body.zen-mode footer,
+body.zen-mode nav,
+body.zen-mode .zen-hidden {
+  display: none !important;
+}
+
+body.zen-mode {
+  background-color: #f8fafc !important;
+}
+
+body.zen-mode main {
+  max-width: 100% !important;
+  padding-top: 1rem !important;
+}
+
+/* ============================================================================ */
+/* CHUẨN IN ẤN NHẬT BẢN CHO PHIẾU DỊCH VỤ KỸ THUẬT A4                           */
+/* ============================================================================ */
+@media print {
+  /* Ẩn toàn bộ các thành phần thừa trên trang web */
+  header, footer, nav, breadcrumb, .no-print, button, .btn-primary, .btn-secondary {
+    display: none !important;
+  }
+  
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  .print\\:border-none {
+    border: none !important;
+  }
+
+  .print\\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  .print\\:p-0 {
+    padding: 0 !important;
+  }
+
+  /* Định dạng trang in A4 chuẩn */
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm 12mm 15mm;
+  }
 }

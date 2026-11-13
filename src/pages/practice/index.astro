@@ -2,57 +2,93 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Thực hành - Cổng Giảng Dạy CNTT">
-  <section class="max-w-3xl mx-auto px-4 py-10">
-    <h1 class="mb-2">Thực hành</h1>
-    <p class="text-gray-500 mb-8">Chọn lớp và buổi học để bắt đầu bài thực hành</p>
+<BaseLayout title="Khu vực thực hành - Cổng Giảng Dạy CNTT">
+  <section class="max-w-4xl mx-auto px-4 py-10">
+    <div class="mb-8">
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Khu Vực Thực Hành Kỹ Thuật</h1>
+      <p class="text-gray-500 text-sm mt-1">Cổng thực hành tại xưởng máy tính & nộp bài tập theo từng buổi học</p>
+    </div>
 
+    <!-- Featured Workshop Workbench Card -->
+    <div class="bg-gradient-to-r from-primary-800 to-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-md mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1.5 max-w-xl">
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400 text-amber-950 font-bold text-xs uppercase tracking-wide">
+          ⭐ XƯỞNG THỰC HÀNH CHUYÊN SÂU
+        </span>
+        <h2 class="text-xl sm:text-2xl font-extrabold text-white">
+          Bàn Kỹ Thuật Phần Cứng 7 Bước (OL-01)
+        </h2>
+        <p class="text-primary-100 text-xs sm:text-sm leading-relaxed">
+          Tiếp nhận ca bệnh máy tính thực tế, tuân thủ 3 Luật sống còn, 3 Điểm dừng an toàn và xuất phiếu dịch vụ kỹ thuật A4 chuẩn Nhật.
+        </p>
+      </div>
+
+      <a
+        href="/assessment/phan-cung"
+        class="btn-primary bg-white text-primary-900 hover:bg-primary-50 font-extrabold text-xs sm:text-sm px-5 py-3 rounded-xl whitespace-nowrap shadow shrink-0"
+      >
+        Vào Bàn Máy Sát Hạch →
+      </a>
+    </div>
+
+    <!-- Practice session form -->
     <div class="card" x-data="{ started: false }">
+      <div class="border-b border-gray-100 pb-3 mb-5">
+        <h2 class="text-base font-bold text-gray-900">Điểm danh & Nộp bài thực hành theo buổi</h2>
+        <p class="text-xs text-gray-500">Dành cho sinh viên các lớp Tin học ứng dụng & Mạng máy tính</p>
+      </div>
+
       <form @submit.prevent="started = true" x-show="!started" class="space-y-5">
         <!-- Chọn lớp -->
         <div>
-          <label for="class-select" class="block text-sm font-semibold text-gray-700 mb-1">Lớp</label>
+          <label for="class-select" class="block text-xs font-bold text-gray-700 mb-1">Lớp chuyên ngành</label>
           <select id="class-select" required
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
-            <option value="">-- Chọn lớp --</option>
-            <option value="CD24TH01">CĐ24TH01</option>
-            <option value="CD24TH02">CĐ24TH02</option>
-            <option value="CD24TH03">CĐ24TH03</option>
-            <option value="CD24MM01">CĐ24MM01</option>
+            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+            <option value="">-- Chọn lớp của bạn --</option>
+            <option value="CD24TH01">CĐ24TH01 - Tin học ứng dụng K24</option>
+            <option value="CD24TH02">CĐ24TH02 - Tin học ứng dụng K24</option>
+            <option value="CD24TH03">CĐ24TH03 - Tin học ứng dụng K24</option>
+            <option value="CD24MM01">CĐ24MM01 - Mạng máy tính K24</option>
           </select>
         </div>
 
         <!-- Chọn buổi học -->
         <div>
-          <label for="session-select" class="block text-sm font-semibold text-gray-700 mb-1">Buổi học</label>
+          <label for="session-select" class="block text-xs font-bold text-gray-700 mb-1">Buổi thực hành</label>
           <select id="session-select" required
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
+            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500">
             <option value="">-- Chọn buổi học --</option>
-            <option value="buoi-1">Buổi 1</option>
-            <option value="buoi-2">Buổi 2</option>
-            <option value="buoi-3">Buổi 3</option>
-            <option value="buoi-4">Buổi 4</option>
-            <option value="buoi-5">Buổi 5</option>
+            <option value="buoi-1">Buổi 1: Thao tác chuột, bàn phím & gõ Telex 10 ngón</option>
+            <option value="buoi-2">Buổi 2: Soạn thảo văn bản hành chính & Đơn từ</option>
+            <option value="buoi-3">Buổi 3: Bảng biểu & Biểu mẫu quản lý</option>
+            <option value="buoi-4">Buổi 4: Bảng tính Excel & Hàm thống kê căn bản</option>
+            <option value="buoi-5">Buổi 5: Xử lý logic hàm điều kiện IF/VLOOKUP</option>
           </select>
         </div>
 
         <!-- Nhập tên -->
         <div>
-          <label for="student-name" class="block text-sm font-semibold text-gray-700 mb-1">Họ và tên</label>
-          <input id="student-name" type="text" required placeholder="Nhập họ tên của bạn"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
+          <label for="student-name" class="block text-xs font-bold text-gray-700 mb-1">Họ và tên sinh viên</label>
+          <input id="student-name" type="text" required placeholder="Ví dụ: Nguyễn Văn An"
+            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
         </div>
 
-        <button type="submit" class="btn-primary w-full">Bắt đầu</button>
+        <button type="submit" class="btn-primary w-full py-3 text-sm font-bold shadow">
+          Bắt Đầu Buổi Thực Hành
+        </button>
       </form>
 
       <!-- Practice content area (placeholder) -->
       <div x-show="started" x-cloak>
-        <div class="text-center py-12">
-          <span class="text-5xl mb-4 block">🛠️</span>
-          <h2 class="text-xl font-bold text-gray-800 mb-2">Khu vực thực hành</h2>
-          <p class="text-gray-500 mb-6">Nội dung bài thực hành sẽ hiển thị ở đây.</p>
-          <button @click="started = false" class="btn-secondary">← Quay lại</button>
+        <div class="text-center py-10 space-y-3">
+          <span class="text-5xl block mb-2">💻</span>
+          <h2 class="text-lg font-bold text-gray-800">Đã Vào Buổi Thực Hành Thành Công</h2>
+          <p class="text-gray-500 text-xs max-w-md mx-auto leading-relaxed">
+            Hệ thống đã ghi nhận thông tin điểm danh của em. Vui lòng làm theo hướng dẫn bài tập trên máy hoặc tại phiếu giao việc của giảng viên.
+          </p>
+          <div class="pt-3">
+            <button @click="started = false" class="btn-secondary text-xs px-4 py-2 font-bold">← Quay lại danh sách buổi</button>
+          </div>
         </div>
       </div>
     </div>

@@ -57,6 +57,83 @@ const exam = isHardware
       <!-- HARDWARE COMPETENCY SUITE (TỔNG HỢP ĐÁNH GIÁ NĂNG LỰC NGHỀ PC)       -->
       <!-- ==================================================================== -->
       <div class="mt-6" x-data="hardwareMasterEngine">
+        <!-- Poka-Yoke Auto-Recovery Notification Banner -->
+        <div
+          x-show="showRecoveryBanner"
+          x-cloak
+          x-transition
+          class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 sm:p-5 shadow-sm mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs"
+        >
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🛡️</span>
+            <div>
+              <p class="font-bold text-amber-950 text-sm">Poka-Yoke: Phát hiện dữ liệu bài làm trước đó</p>
+              <p class="text-amber-800 mt-0.5">
+                Hệ thống tự động lưu trữ phiên làm việc của <strong class="text-gray-900" x-text="savedSessionInfo.name || 'Học sinh'"></strong>
+                vào lúc <span class="font-mono font-bold" x-text="savedSessionInfo.time"></span>. Em có muốn khôi phục lại không?
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 self-end sm:self-center shrink-0">
+            <button
+              type="button"
+              @click="restoreSavedSession()"
+              class="btn-primary text-xs px-4 py-2 bg-amber-700 hover:bg-amber-800 font-bold"
+            >
+              ✓ Khôi phục bài làm
+            </button>
+            <button
+              type="button"
+              @click="discardSavedSession()"
+              class="btn-secondary text-xs px-3 py-2"
+            >
+              Bỏ qua & làm mới
+            </button>
+          </div>
+        </div>
+
+        <!-- Japanese Engineering & Zen Mode Toolbar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900 text-white px-4 sm:px-6 py-2.5 rounded-2xl mb-4 shadow">
+          <div class="flex items-center gap-3 text-xs">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono font-bold border border-emerald-500/30">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              POKA-YOKE V2.0
+            </span>
+
+            <!-- Auto-save state -->
+            <span class="text-slate-300 hidden sm:inline-flex items-center gap-1">
+              <span>💾</span>
+              <span x-text="lastSavedText ? ('Đã lưu: ' + lastSavedText) : 'Tự động lưu vào máy'"></span>
+            </span>
+          </div>
+
+          <!-- Right: Timer & Zen Mode Button -->
+          <div class="flex items-center gap-3">
+            <!-- Workshop Timer -->
+            <div class="flex items-center gap-1.5 bg-slate-800 px-3 py-1 rounded-xl border border-slate-700 font-mono text-xs">
+              <span class="text-slate-400">⏱️</span>
+              <span
+                class="font-bold tracking-wider"
+                :class="timerSeconds < 180 ? 'text-rose-400 animate-pulse' : (timerSeconds < 600 ? 'text-amber-300' : 'text-emerald-400')"
+                x-text="formattedTimer"
+              ></span>
+            </div>
+
+            <!-- Zen / Focus Mode Toggle -->
+            <button
+              type="button"
+              @click="toggleZenMode()"
+              class="px-3 py-1 rounded-xl text-xs font-bold transition-all border flex items-center gap-1.5"
+              :class="zenMode ? 'bg-primary-600 text-white border-primary-500' : 'bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700'"
+              title="Chế độ tập trung Zen Mode: Ẩn bớt giao diện thừa để làm bài"
+            >
+              <span>🎯</span>
+              <span x-text="zenMode ? 'Thoát Zen Mode' : 'Chế độ tập trung (Zen)'"></span>
+            </button>
+          </div>
+        </div>
+
         <!-- Main Top Header -->
         <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm mb-6">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-4">
@@ -87,7 +164,7 @@ const exam = isHardware
           <div class="mt-4 flex flex-wrap gap-2 pt-2">
             <button
               type="button"
-              @click="activeMode = 'simulator'"
+              @click="switchMode('simulator')"
               class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border"
               :class="activeMode === 'simulator'
                 ? 'bg-primary-700 text-white border-primary-700 shadow-md'
@@ -99,7 +176,7 @@ const exam = isHardware
 
             <button
               type="button"
-              @click="activeMode = 'mcq'; initRandomMCQ();"
+              @click="switchMode('mcq')"
               class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border"
               :class="activeMode === 'mcq'
                 ? 'bg-primary-700 text-white border-primary-700 shadow-md'
@@ -111,7 +188,7 @@ const exam = isHardware
 
             <button
               type="button"
-              @click="activeMode = 'library'"
+              @click="switchMode('library')"
               class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border"
               :class="activeMode === 'library'
                 ? 'bg-primary-700 text-white border-primary-700 shadow-md'
@@ -999,94 +1076,160 @@ const exam = isHardware
           <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">
+                <span class="text-xs font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                   NGÂN HÀNG 50 CÂU THỰC CHIẾN
                 </span>
-                <span class="text-xs text-gray-500 font-mono">Bốc ngẫu nhiên 10 câu / đề</span>
+                <span class="text-xs text-gray-500 font-mono">Bốc ngẫu nhiên 10 câu / đề cá nhân hóa</span>
               </div>
               <h2 class="text-xl font-bold text-gray-900 mt-1">Bài Thi Trắc Nghiệm Tình Huống Kỹ Thuật Máy Tính</h2>
-              <p class="text-xs text-gray-600 mt-0.5">Đề thi tự động xáo trộn ngẫu nhiên câu hỏi và đáp án cho từng học sinh, chống trùng lặp và gian lận.</p>
+              <p class="text-xs text-gray-600 mt-0.5">Xáo trộn ngẫu nhiên đề & đáp án. Hỗ trợ phím tắt A-D/1-4, cắm cờ xem lại & chống nộp nhầm Poka-Yoke.</p>
             </div>
 
             <button
               type="button"
               @click="initRandomMCQ()"
-              class="btn-secondary text-xs px-3.5 py-2 font-bold whitespace-nowrap"
+              class="btn-secondary text-xs px-3.5 py-2 font-bold whitespace-nowrap shadow-sm hover:border-primary-300"
             >
-              🔄 Bốc lại đề thi ngẫu nhiên mới
+              🔄 Bốc lại đề ngẫu nhiên mới
             </button>
           </div>
 
-          <!-- MCQ Progress & Score area -->
+          <!-- MCQ In-Progress Area -->
           <div x-show="!mcqSubmitted" class="space-y-4">
-            <!-- Progress Bar -->
-            <div class="bg-white p-4 rounded-xl border border-gray-200 flex items-center justify-between text-xs">
-              <span class="font-bold text-gray-700">
-                Câu <span x-text="mcqCurrentIndex + 1"></span> / <span x-text="randomMCQs.length"></span>
-              </span>
-              <span class="text-gray-500 font-mono" x-text="'Đã trả lời: ' + Object.keys(mcqAnswers).length + '/' + randomMCQs.length"></span>
+            <!-- Mieruka Question Mini-Map Matrix (Visual Management) -->
+            <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="font-bold text-gray-700 font-mono text-[11px] uppercase tracking-wide">Tiến độ câu hỏi:</span>
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <template x-for="(q, idx) in randomMCQs" :key="q.id">
+                    <button
+                      type="button"
+                      @click="mcqCurrentIndex = idx"
+                      class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl font-mono text-xs font-bold transition-all relative flex items-center justify-center border shadow-sm"
+                      :class="{
+                        'ring-2 ring-primary-600 ring-offset-2 border-primary-600 bg-primary-50 text-primary-900 scale-105 z-10': mcqCurrentIndex === idx,
+                        'bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold': mcqAnswers[idx] !== undefined && mcqCurrentIndex !== idx,
+                        'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200': mcqAnswers[idx] === undefined && mcqCurrentIndex !== idx,
+                      }"
+                      :title="'Chuyển đến câu ' + (idx + 1) + (mcqAnswers[idx] !== undefined ? ' (Đã chọn)' : ' (Chưa làm)')"
+                    >
+                      <span x-text="idx + 1"></span>
+                      <!-- Red Flag for Review indicator -->
+                      <span x-show="mcqFlagged[idx]" class="absolute -top-1 -right-1 text-[10px]">🚩</span>
+                    </button>
+                  </template>
+                </div>
+              </div>
+
+              <!-- Toolbar: Flag question & Stats -->
+              <div class="flex items-center gap-2.5 self-end sm:self-center">
+                <button
+                  type="button"
+                  @click="toggleFlagCurrentMCQ()"
+                  class="px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
+                  :class="mcqFlagged[mcqCurrentIndex] ? 'bg-amber-100 border-amber-300 text-amber-900' : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'"
+                  title="Cắm cờ để ghi nhớ xem lại trước khi nộp bài (Phím tắt: F)"
+                >
+                  <span>🚩</span>
+                  <span x-text="mcqFlagged[mcqCurrentIndex] ? 'Đã cắm cờ xem lại' : 'Cắm cờ xem lại (F)'"></span>
+                </button>
+
+                <div class="text-[11px] font-mono text-gray-500 bg-gray-100 px-2.5 py-1.5 rounded-xl border border-gray-200">
+                  <span>Đã làm: </span>
+                  <strong class="text-primary-800" x-text="Object.keys(mcqAnswers).length"></strong>
+                  <span> / </span>
+                  <span x-text="randomMCQs.length"></span>
+                </div>
+              </div>
             </div>
 
             <!-- Current Question Card -->
             <template x-if="randomMCQs.length > 0">
               <div class="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-sm space-y-4">
-                <div class="flex items-center gap-2">
-                  <span class="text-xs font-mono font-bold text-primary-800 bg-primary-50 px-2 py-0.5 rounded uppercase" x-text="'CHỦ ĐỀ: ' + randomMCQs[mcqCurrentIndex].category"></span>
+                <div class="flex items-center justify-between gap-2 border-b border-gray-100 pb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-mono font-bold text-primary-800 bg-primary-50 px-2.5 py-0.5 rounded-full uppercase border border-primary-200" x-text="'CHỦ ĐỀ: ' + randomMCQs[mcqCurrentIndex].category"></span>
+                    <span x-show="mcqFlagged[mcqCurrentIndex]" class="badge-poka-yoke">🚩 ĐANG CẮM CỜ XEM LẠI</span>
+                  </div>
+
+                  <span class="text-xs font-mono text-gray-400" x-text="'Câu ' + (mcqCurrentIndex + 1) + ' / ' + randomMCQs.length"></span>
                 </div>
 
                 <h3 class="text-base sm:text-lg font-bold text-gray-900 leading-snug" x-text="'Câu ' + (mcqCurrentIndex + 1) + ': ' + randomMCQs[mcqCurrentIndex].question"></h3>
 
-                <!-- Options -->
+                <!-- Options with Kanso Keyboard Badges -->
                 <div class="space-y-2.5 pt-2">
                   <template x-for="(opt, oIdx) in randomMCQs[mcqCurrentIndex].options" :key="oIdx">
                     <label
-                      class="flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all text-xs sm:text-sm"
+                      class="flex items-start gap-3 p-3.5 sm:p-4 rounded-xl border-2 cursor-pointer transition-all text-xs sm:text-sm group"
                       :class="mcqAnswers[mcqCurrentIndex] === oIdx
-                        ? 'border-primary-600 bg-primary-50 font-semibold shadow-sm'
-                        : 'border-gray-200 hover:bg-gray-50'"
+                        ? 'border-primary-600 bg-primary-50/70 font-semibold shadow-sm'
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50/60 bg-white'"
                     >
                       <input
                         type="radio"
                         :name="'mcq_q_' + mcqCurrentIndex"
                         :value="oIdx"
-                        @change="mcqAnswers[mcqCurrentIndex] = oIdx"
+                        @change="selectMCQOption(oIdx)"
                         :checked="mcqAnswers[mcqCurrentIndex] === oIdx"
-                        class="mt-0.5 text-primary-700 accent-primary-700"
+                        class="mt-0.5 text-primary-700 accent-primary-700 w-4 h-4"
                       />
-                      <span x-text="['A', 'B', 'C', 'D'][oIdx] + '. ' + opt" class="flex-1"></span>
+
+                      <div class="flex-1 flex items-start gap-2">
+                        <kbd
+                          class="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded border transition-colors shadow-sm shrink-0"
+                          :class="mcqAnswers[mcqCurrentIndex] === oIdx
+                            ? 'bg-primary-700 text-white border-primary-700'
+                            : 'bg-gray-100 text-gray-600 border-gray-300 group-hover:bg-white'"
+                          x-text="['A (1)', 'B (2)', 'C (3)', 'D (4)'][oIdx]"
+                        ></kbd>
+                        <span x-text="opt" class="leading-relaxed"></span>
+                      </div>
                     </label>
                   </template>
                 </div>
 
+                <!-- Keyboard shortcuts helper pill -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2 text-[11px] text-slate-600 flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-1.5">
+                    <span>💡</span>
+                    <span><strong>Phím tắt chuẩn Nhật:</strong> Bấm <kbd>1</kbd>-<kbd>4</kbd> (hoặc <kbd>A</kbd>-<kbd>D</kbd>) chọn nhanh • <kbd>←</kbd>/<kbd>→</kbd> chuyển câu • <kbd>F</kbd> cắm cờ • <kbd>Enter</kbd> câu tiếp</span>
+                  </div>
+                  <span class="text-slate-400 font-mono text-[10px] hidden sm:inline">Poka-Yoke Auto-Save Active</span>
+                </div>
+
                 <!-- Prev / Next Navigation -->
-                <div class="flex justify-between items-center pt-6 border-t border-gray-100">
+                <div class="flex justify-between items-center pt-5 border-t border-gray-100">
                   <button
                     type="button"
-                    @click="mcqCurrentIndex--"
+                    @click="mcqPrevQuestion()"
                     :disabled="mcqCurrentIndex === 0"
-                    class="btn-secondary text-xs px-4 py-2"
+                    class="btn-secondary text-xs px-4 py-2 flex items-center gap-1.5"
                     :class="mcqCurrentIndex === 0 ? 'opacity-40 cursor-not-allowed' : ''"
                   >
-                    ← Câu trước
+                    <span>←</span>
+                    <span>Câu trước</span>
                   </button>
 
                   <div class="flex items-center gap-2">
                     <button
                       type="button"
                       x-show="mcqCurrentIndex < randomMCQs.length - 1"
-                      @click="mcqCurrentIndex++"
-                      class="btn-primary text-xs px-5 py-2 font-bold"
+                      @click="mcqNextQuestion()"
+                      class="btn-primary text-xs px-5 py-2 font-bold flex items-center gap-1.5"
                     >
-                      Câu tiếp theo →
+                      <span>Câu tiếp theo</span>
+                      <span>→</span>
                     </button>
 
                     <button
                       type="button"
                       x-show="mcqCurrentIndex === randomMCQs.length - 1"
-                      @click="submitMCQExam()"
-                      class="btn-primary text-xs px-6 py-2.5 font-bold bg-emerald-600 hover:bg-emerald-700 shadow"
+                      @click="triggerSubmitMCQ()"
+                      class="btn-primary text-xs px-6 py-2.5 font-bold bg-emerald-600 hover:bg-emerald-700 shadow-md flex items-center gap-1.5"
                     >
-                      Nộp bài trắc nghiệm 🏁
+                      <span>Nộp bài trắc nghiệm</span>
+                      <span>🏁</span>
                     </button>
                   </div>
                 </div>
@@ -1094,53 +1237,123 @@ const exam = isHardware
             </template>
           </div>
 
-          <!-- MCQ Result Screen with Explanations -->
+          <!-- Poka-Yoke Submit Confirmation Modal -->
+          <div
+            x-show="showSubmitModal"
+            x-cloak
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          >
+            <div
+              class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-gray-200 space-y-4 animate-in fade-in zoom-in duration-150"
+              @click.away="showSubmitModal = false"
+            >
+              <div class="flex items-center gap-3">
+                <span class="text-3xl">⚠️</span>
+                <div>
+                  <h3 class="font-extrabold text-gray-900 text-base">Poka-Yoke: Kiểm Tra Trước Khi Nộp</h3>
+                  <p class="text-xs text-gray-500">Quy tắc chuẩn Nhật - Không để sót câu hỏi</p>
+                </div>
+              </div>
+
+              <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-xs space-y-2">
+                <p class="text-amber-900 font-medium">
+                  Em vẫn còn <strong class="text-red-700 font-bold" x-text="unansweredMCQList.length"></strong> câu chưa chọn đáp án:
+                </p>
+                <div class="flex flex-wrap gap-1.5">
+                  <template x-for="qNum in unansweredMCQList" :key="qNum">
+                    <span class="px-2 py-0.5 rounded bg-amber-200 text-amber-900 font-mono font-bold text-xs" x-text="'Câu ' + qNum"></span>
+                  </template>
+                </div>
+                <p class="text-[11px] text-amber-800 italic mt-1">
+                  Nếu nộp bài ngay bây giờ, các câu chưa trả lời sẽ được tính 0 điểm!
+                </p>
+              </div>
+
+              <div class="flex justify-end gap-2.5 pt-3 border-t border-gray-100">
+                <button
+                  type="button"
+                  @click="showSubmitModal = false"
+                  class="btn-secondary text-xs px-4 py-2 font-bold"
+                >
+                  ← Quay lại làm tiếp
+                </button>
+
+                <button
+                  type="button"
+                  @click="confirmSubmitMCQ()"
+                  class="btn-primary text-xs px-5 py-2 font-bold bg-rose-600 hover:bg-rose-700 text-white shadow"
+                >
+                  Vẫn muốn nộp bài 🏁
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- MCQ Result Screen with Explanations & Printable Report -->
           <div x-show="mcqSubmitted" class="space-y-6" x-cloak>
             <div class="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 text-center shadow-sm">
               <span class="text-5xl block mb-2">🏆</span>
               <h2 class="text-2xl font-extrabold text-gray-900 mb-1">Kết Quả Bài Thi Trắc Nghiệm Tình Huống</h2>
-              <p class="text-xs text-gray-500 mb-4">Đánh giá theo chuẩn Kỹ thuật viên Thực chiến</p>
+              <p class="text-xs text-gray-500 mb-4">Đánh giá theo chuẩn Kỹ thuật viên Thực chiến (Thông tư 55/2026/TT-BGDĐT)</p>
 
-              <div class="text-4xl font-extrabold text-primary-700 font-mono mb-2">
+              <div class="text-4xl sm:text-5xl font-extrabold text-primary-700 font-mono mb-2">
                 <span x-text="mcqScore"></span> / 10 Điểm
               </div>
 
-              <p class="text-sm font-bold" :class="mcqScore >= 5.0 ? 'text-emerald-700' : 'text-red-700'" x-text="mcqScore >= 5.0 ? 'CHÚC MỪNG EM ĐÃ ĐẠT CHUẨN NĂNG LỰC!' : 'EM CẦN ÔN TẬP THÊM KỸ THUẬT!'"></p>
+              <p class="text-sm font-bold" :class="mcqScore >= 5.0 ? 'text-emerald-700' : 'text-red-700'" x-text="mcqScore >= 5.0 ? 'CHÚC MỪNG EM ĐÃ ĐẠT CHUẨN NĂNG LỰC NGHỀ!' : 'EM CẦN ÔN TẬP THÊM QUY TRÌNH KỸ THUẬT!'"></p>
 
-              <div class="mt-4 flex justify-center gap-3">
-                <button type="button" @click="initRandomMCQ()" class="btn-secondary text-xs px-4 py-2">
-                  Làm đề trắc nghiệm ngẫu nhiên khác
+              <div class="mt-5 flex flex-wrap justify-center gap-3">
+                <button type="button" @click="window.print()" class="btn-secondary text-xs px-4 py-2 flex items-center gap-1.5 font-bold shadow-sm">
+                  <span>🖨️</span>
+                  <span>In Phiếu Điểm Trắc Nghiệm (A4 Chuẩn Nhật)</span>
+                </button>
+
+                <button type="button" @click="initRandomMCQ()" class="btn-primary text-xs px-4 py-2 font-bold shadow-sm">
+                  🔄 Làm đề trắc nghiệm ngẫu nhiên khác
                 </button>
               </div>
             </div>
 
             <!-- Detailed Answers & Pro Explanations -->
             <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4">
-              <h3 class="text-base font-bold text-gray-900 border-b pb-2">
-                Chi Tiết Đáp Án & Lời Khuyên Của Người Thợ 20 Năm Nghề
-              </h3>
+              <div class="flex items-center justify-between border-b pb-3">
+                <h3 class="text-base font-bold text-gray-900">
+                  Chi Tiết Đáp Án & Lời Khuyên Của Người Thợ 20 Năm Nghề
+                </h3>
+                <span class="text-xs text-gray-500 font-mono" x-text="'Đúng ' + mcqCorrectCount + ' / ' + randomMCQs.length + ' câu'"></span>
+              </div>
 
               <div class="space-y-4">
                 <template x-for="(q, idx) in randomMCQs" :key="q.id">
                   <div
-                    class="p-4 rounded-xl border text-xs space-y-2"
-                    :class="mcqAnswers[idx] === q.correctIndex ? 'border-emerald-200 bg-emerald-50/40' : 'border-red-200 bg-red-50/40'"
+                    class="p-4 rounded-xl border text-xs space-y-2.5 transition-all"
+                    :class="mcqAnswers[idx] === q.correctIndex ? 'border-emerald-200 bg-emerald-50/40' : 'border-rose-200 bg-rose-50/40'"
                   >
-                    <div class="flex items-center justify-between">
-                      <span class="font-bold text-gray-900" x-text="'Câu ' + (idx + 1) + ': ' + q.question"></span>
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="font-bold text-gray-900 text-xs sm:text-sm" x-text="'Câu ' + (idx + 1) + ': ' + q.question"></span>
                       <span
-                        class="text-[11px] font-bold px-2 py-0.5 rounded"
-                        :class="mcqAnswers[idx] === q.correctIndex ? 'bg-emerald-200 text-emerald-900' : 'bg-red-200 text-red-900'"
+                        class="text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 font-mono"
+                        :class="mcqAnswers[idx] === q.correctIndex ? 'bg-emerald-200 text-emerald-900' : 'bg-rose-200 text-rose-900'"
                         x-text="mcqAnswers[idx] === q.correctIndex ? 'ĐÚNG (+1.0đ)' : 'SAI (0đ)'"
                       ></span>
                     </div>
 
-                    <p class="text-gray-700">
-                      <strong class="text-gray-900">Đáp án chuẩn: </strong>
-                      <span class="text-emerald-800 font-semibold" x-text="['A', 'B', 'C', 'D'][q.correctIndex] + '. ' + q.options[q.correctIndex]"></span>
-                    </p>
+                    <div class="text-gray-700 space-y-1">
+                      <p>
+                        <span class="text-gray-500">Đáp án em chọn: </span>
+                        <strong
+                          :class="mcqAnswers[idx] === q.correctIndex ? 'text-emerald-800' : 'text-rose-700'"
+                          x-text="mcqAnswers[idx] !== undefined ? (['A', 'B', 'C', 'D'][mcqAnswers[idx]] + '. ' + q.options[mcqAnswers[idx]]) : 'Chưa chọn đáp án'"
+                        ></strong>
+                      </p>
 
-                    <div class="bg-white p-2.5 rounded-lg border border-gray-200 text-gray-600 text-[11px]">
+                      <p x-show="mcqAnswers[idx] !== q.correctIndex">
+                        <span class="text-gray-500">Đáp án chuẩn kỹ thuật: </span>
+                        <strong class="text-emerald-800" x-text="['A', 'B', 'C', 'D'][q.correctIndex] + '. ' + q.options[q.correctIndex]"></strong>
+                      </p>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-xl border border-gray-200 text-gray-600 text-[11px] leading-relaxed shadow-xs">
                       💡 <strong>Thợ mách nước:</strong> <span x-text="q.explanation"></span>
                     </div>
                   </div>
@@ -1148,6 +1361,7 @@ const exam = isHardware
               </div>
             </div>
           </div>
+        </div>
         </div>
 
         <!-- ============================================================== -->
@@ -1319,6 +1533,19 @@ const exam = isHardware
         librarySubTab: 'oral', // 'oral' | 'assembly' | 'windows'
         librarySearch: '',
 
+        // Zen / Focus Mode
+        zenMode: false,
+
+        // Poka-Yoke Recovery & Auto-save state
+        showRecoveryBanner: false,
+        savedSessionInfo: { name: '', time: '' },
+        lastSavedText: '',
+        showSubmitModal: false,
+
+        // Timers
+        timerSeconds: 10800, // 180 mins for workshop, 900 for MCQ
+        timerInterval: null,
+
         // Data sources
         tickets: initialTickets,
         allOralQuestions: initialOral,
@@ -1358,6 +1585,7 @@ const exam = isHardware
         randomMCQs: [],
         mcqCurrentIndex: 0,
         mcqAnswers: {},
+        mcqFlagged: {},
         mcqSubmitted: false,
         mcqScore: 0,
 
@@ -1381,9 +1609,213 @@ const exam = isHardware
           );
         },
 
+        get formattedTimer() {
+          const h = Math.floor(this.timerSeconds / 3600);
+          const m = Math.floor((this.timerSeconds % 3600) / 60);
+          const s = this.timerSeconds % 60;
+          if (h > 0) {
+            return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+          }
+          return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+        },
+
+        get unansweredMCQList() {
+          const missing = [];
+          for (let i = 0; i < this.randomMCQs.length; i++) {
+            if (this.mcqAnswers[i] === undefined) {
+              missing.push(i + 1);
+            }
+          }
+          return missing;
+        },
+
+        get mcqCorrectCount() {
+          let count = 0;
+          this.randomMCQs.forEach((q, idx) => {
+            if (this.mcqAnswers[idx] === q.correctIndex) count++;
+          });
+          return count;
+        },
+
         init() {
           this.syncTicketData();
           this.initRandomMCQ();
+          this.checkSavedSession();
+          this.startTimer();
+          this.setupKeyboardListeners();
+        },
+
+        switchMode(mode) {
+          this.activeMode = mode;
+          if (mode === 'mcq') {
+            this.timerSeconds = 900; // 15 mins for MCQ
+          } else if (mode === 'simulator') {
+            this.timerSeconds = 10800; // 180 mins for workshop
+          }
+          this.persistSession();
+        },
+
+        toggleZenMode() {
+          this.zenMode = !this.zenMode;
+          if (typeof document !== 'undefined') {
+            document.body.classList.toggle('zen-mode', this.zenMode);
+          }
+        },
+
+        startTimer() {
+          if (this.timerInterval) clearInterval(this.timerInterval);
+          this.timerInterval = setInterval(() => {
+            if (this.timerSeconds > 0) {
+              this.timerSeconds--;
+            }
+          }, 1000);
+        },
+
+        // --- POKA-YOKE PERSISTENCE & CRASH RECOVERY ---
+        persistSession() {
+          try {
+            const data = {
+              timestamp: new Date().toLocaleTimeString('vi-VN'),
+              student: this.student,
+              activeMode: this.activeMode,
+              simPhase: this.simPhase,
+              selectedTicketIndex: this.selectedTicketIndex,
+              currentStep: this.currentStep,
+              step1: this.step1,
+              step2: this.step2,
+              step3: this.step3,
+              step4: this.step4,
+              step5: this.step5,
+              step6: this.step6,
+              step7: this.step7,
+              randomMCQs: this.randomMCQs,
+              mcqCurrentIndex: this.mcqCurrentIndex,
+              mcqAnswers: this.mcqAnswers,
+              mcqFlagged: this.mcqFlagged,
+              mcqSubmitted: this.mcqSubmitted,
+              timerSeconds: this.timerSeconds,
+            };
+            localStorage.setItem('bmtc_hardware_state_v2', JSON.stringify(data));
+            this.lastSavedText = data.timestamp;
+          } catch (e) {}
+        },
+
+        checkSavedSession() {
+          try {
+            const raw = localStorage.getItem('bmtc_hardware_state_v2');
+            if (raw) {
+              const data = JSON.parse(raw);
+              if (data && (data.student?.name || Object.keys(data.mcqAnswers || {}).length > 0)) {
+                this.savedSessionInfo = {
+                  name: data.student?.name || 'Kỹ thuật viên',
+                  time: data.timestamp || 'gần đây'
+                };
+                this.showRecoveryBanner = true;
+              }
+            }
+          } catch (e) {}
+        },
+
+        restoreSavedSession() {
+          try {
+            const raw = localStorage.getItem('bmtc_hardware_state_v2');
+            if (raw) {
+              const data = JSON.parse(raw);
+              if (data.student) this.student = data.student;
+              if (data.activeMode) this.activeMode = data.activeMode;
+              if (data.simPhase) this.simPhase = data.simPhase;
+              if (data.selectedTicketIndex !== undefined) this.selectedTicketIndex = data.selectedTicketIndex;
+              if (data.currentStep) this.currentStep = data.currentStep;
+              if (data.step1) this.step1 = data.step1;
+              if (data.step2) this.step2 = data.step2;
+              if (data.step3) this.step3 = data.step3;
+              if (data.step4) this.step4 = data.step4;
+              if (data.step5) this.step5 = data.step5;
+              if (data.step6) this.step6 = data.step6;
+              if (data.step7) this.step7 = data.step7;
+              if (data.randomMCQs && data.randomMCQs.length > 0) this.randomMCQs = data.randomMCQs;
+              if (data.mcqCurrentIndex !== undefined) this.mcqCurrentIndex = data.mcqCurrentIndex;
+              if (data.mcqAnswers) this.mcqAnswers = data.mcqAnswers;
+              if (data.mcqFlagged) this.mcqFlagged = data.mcqFlagged;
+              if (data.mcqSubmitted !== undefined) this.mcqSubmitted = data.mcqSubmitted;
+              if (data.timerSeconds) this.timerSeconds = data.timerSeconds;
+              this.showRecoveryBanner = false;
+              this.syncTicketData();
+            }
+          } catch (e) {}
+        },
+
+        discardSavedSession() {
+          try {
+            localStorage.removeItem('bmtc_hardware_state_v2');
+          } catch (e) {}
+          this.showRecoveryBanner = false;
+        },
+
+        // --- KEYBOARD SHORTCUTS (KANSO DESIGN) ---
+        setupKeyboardListeners() {
+          window.addEventListener('keydown', (e) => {
+            // Ignore if active in input/textarea/select
+            const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+            if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+
+            if (this.activeMode === 'mcq' && !this.mcqSubmitted && this.randomMCQs.length > 0) {
+              // Keys 1, 2, 3, 4 or A, B, C, D
+              if (e.key === '1' || e.key.toLowerCase() === 'a') {
+                this.selectMCQOption(0);
+                e.preventDefault();
+              } else if (e.key === '2' || e.key.toLowerCase() === 'b') {
+                this.selectMCQOption(1);
+                e.preventDefault();
+              } else if (e.key === '3' || e.key.toLowerCase() === 'c') {
+                this.selectMCQOption(2);
+                e.preventDefault();
+              } else if (e.key === '4' || e.key.toLowerCase() === 'd') {
+                this.selectMCQOption(3);
+                e.preventDefault();
+              } else if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'h') {
+                this.mcqPrevQuestion();
+                e.preventDefault();
+              } else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'l') {
+                this.mcqNextQuestion();
+                e.preventDefault();
+              } else if (e.key.toLowerCase() === 'f') {
+                this.toggleFlagCurrentMCQ();
+                e.preventDefault();
+              } else if (e.key === 'Enter') {
+                if (this.mcqCurrentIndex === this.randomMCQs.length - 1) {
+                  this.triggerSubmitMCQ();
+                } else {
+                  this.mcqNextQuestion();
+                }
+                e.preventDefault();
+              }
+            }
+          });
+        },
+
+        selectMCQOption(oIdx) {
+          this.mcqAnswers[this.mcqCurrentIndex] = oIdx;
+          this.persistSession();
+        },
+
+        mcqPrevQuestion() {
+          if (this.mcqCurrentIndex > 0) {
+            this.mcqCurrentIndex--;
+            this.persistSession();
+          }
+        },
+
+        mcqNextQuestion() {
+          if (this.mcqCurrentIndex < this.randomMCQs.length - 1) {
+            this.mcqCurrentIndex++;
+            this.persistSession();
+          }
+        },
+
+        toggleFlagCurrentMCQ() {
+          this.mcqFlagged[this.mcqCurrentIndex] = !this.mcqFlagged[this.mcqCurrentIndex];
+          this.persistSession();
         },
 
         handleNameChange() {
@@ -1396,6 +1828,7 @@ const exam = isHardware
             }
             this.selectedTicketIndex = Math.abs(hash) % this.tickets.length;
             this.syncTicketData();
+            this.persistSession();
           }
         },
 
@@ -1408,6 +1841,7 @@ const exam = isHardware
         pickRandomTicket() {
           this.selectedTicketIndex = Math.floor(Math.random() * this.tickets.length);
           this.syncTicketData();
+          this.persistSession();
         },
 
         startWorkbench() {
@@ -1418,17 +1852,20 @@ const exam = isHardware
           this.syncTicketData();
           this.simPhase = 'workbench';
           this.currentStep = 1;
+          this.persistSession();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         },
 
         triggerCutSafetyViolation() {
           this.safetyViolation = true;
           this.safetyViolationReason = 'Em đã dùng lệnh CUT thay vì COPY! Nếu cúp điện hoặc đơ máy giữa chừng, toàn bộ file gốc của khách sẽ biến mất vĩnh viễn!';
+          this.persistSession();
           alert(this.safetyViolationReason);
         },
 
         approveStop1() {
           this.step2.teacherApprovedStop1 = true;
+          this.persistSession();
           alert('✅ Thầy Phạm Tiến Đồng: Đã kiểm tra đối chiếu khớp 100% dữ liệu. Cho phép em chuyển sang Bước 3 mở máy xử lý!');
         },
 
@@ -1439,6 +1876,7 @@ const exam = isHardware
           }
           this.step3.screenRevived = true;
           this.step4.ramDualSnapAudible = true;
+          this.persistSession();
           alert('✨ Em đã tháo thanh RAM, dùng CỤC TẨY TRẮNG chà sạch 2 mặt chân vàng mạ vàng, cắm lại nghe 2 tiếng TÁCH sập tai khóa. Bật máy lên hình trơn tru!');
         },
 
@@ -1448,37 +1886,44 @@ const exam = isHardware
             return;
           }
           this.step3.screenRevived = true;
+          this.persistSession();
           alert('✨ Em đã cắm chặt lại cả 2 đầu cáp SATA và dây nguồn ổ cứng. Vào BIOS chỉnh lại Boot Option #1. Máy đã nhận diện ổ cứng!');
         },
 
         approveStop2() {
           this.step4.teacherApprovedStop2 = true;
+          this.persistSession();
           alert('✅ Thầy Phạm Tiến Đồng: Đã kiểm tra thùng máy an toàn, CPU_FAN cắm chuẩn, không rơi ốc. Cho phép cắm điện thử máy!');
         },
 
         selectDriveC() {
           this.step5.targetPartitionGB = 'correct';
+          this.persistSession();
           alert('✅ CHÍNH XÁC! Em đã chọn đúng phân vùng ' + this.currentTicket.targetDriveC_GB + 'GB (Ổ C) để cài Windows. Dữ liệu trên ổ D được giữ an toàn tuyệt đối!');
         },
 
         triggerFormatWrongDriveD() {
           this.safetyViolation = true;
           this.safetyViolationReason = 'THẢM HỌA: Em đã bấm Format nhầm vào phân vùng ổ D chứa toàn bộ dữ liệu của khách!';
+          this.persistSession();
           alert(this.safetyViolationReason);
         },
 
         handlePrintTestPage() {
           this.step6.testPagePrinted = true;
+          this.persistSession();
           alert('🖨️ RÈ RÈ... TÁCH! Đã xóa sạch lệnh kẹt trong Print Spooler. Máy in kéo giấy và in ra bản Windows Printer Test Page sắc nét hoàn hảo!');
         },
 
         approveStop3() {
           this.step7.teacherApprovedStop3 = true;
+          this.persistSession();
           alert('✅ Thầy Phạm Tiến Đồng: Ca máy xử lý xuất sắc! Máy chạy mát êm, dữ liệu nguyên vẹn, bàn sạch sẽ. Chúc mừng em đã hoàn thành ca sát hạch!');
         },
 
         finishEvaluation() {
           this.simPhase = 'result';
+          this.persistSession();
           window.scrollTo({ top: 0, behavior: 'smooth' });
         },
 
@@ -1590,11 +2035,23 @@ const exam = isHardware
           this.randomMCQs = selected.sort(() => 0.5 - Math.random());
           this.mcqCurrentIndex = 0;
           this.mcqAnswers = {};
+          this.mcqFlagged = {};
           this.mcqSubmitted = false;
           this.mcqScore = 0;
+          this.timerSeconds = 900; // 15 minutes
+          this.persistSession();
         },
 
-        submitMCQExam() {
+        triggerSubmitMCQ() {
+          if (this.unansweredMCQList.length > 0) {
+            this.showSubmitModal = true;
+          } else {
+            this.confirmSubmitMCQ();
+          }
+        },
+
+        confirmSubmitMCQ() {
+          this.showSubmitModal = false;
           let score = 0;
           this.randomMCQs.forEach((q, idx) => {
             if (this.mcqAnswers[idx] === q.correctIndex) {
@@ -1603,6 +2060,7 @@ const exam = isHardware
           });
           this.mcqScore = score;
           this.mcqSubmitted = true;
+          this.persistSession();
           window.scrollTo({ top: 0, behavior: 'smooth' });
 
           // Lưu bài thi trắc nghiệm lên D1 nếu có tên

@@ -4,8 +4,22 @@ import CourseCard from '../components/CourseCard.astro';
 import { COURSES } from '../data/courses';
 
 const ASSESSMENTS = [
-  { slug: 'phan-cung', name: 'Phần cứng Máy tính', icon: '🔧', questions: 30, time: 45, subdomain: 'danhgia' },
-  { slug: 'mang', name: 'Mạng Máy tính', icon: '🌐', questions: 30, time: 45, subdomain: 'danhgia' },
+  {
+    slug: 'phan-cung',
+    name: 'Phần cứng Máy tính (OL-01)',
+    icon: '🛠️',
+    desc: 'Mô phỏng bàn kỹ thuật 7 bước, 50 câu trắc nghiệm tình huống, 20 câu vấn đáp & chuẩn in ấn A4',
+    badge: 'Chuẩn TT55 - Mới',
+    time: '15 - 180',
+  },
+  {
+    slug: 'mang',
+    name: 'Mạng Máy tính Căn bản',
+    icon: '🌐',
+    desc: 'Kiểm tra mô hình OSI, IP subnetting, dịch vụ mạng DHCP/DNS và định tuyến',
+    badge: 'Trắc nghiệm 30 câu',
+    time: '45',
+  },
 ];
 ---
 
@@ -62,12 +76,17 @@ const ASSESSMENTS = [
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
       {ASSESSMENTS.map((exam) => (
         <a href={`/assessment/${exam.slug}`} class="card flex items-start gap-4 no-underline group hover:border-primary-400">
-          <span class="text-3xl shrink-0 p-2 rounded-xl bg-primary-50">{exam.icon}</span>
+          <span class="text-3xl shrink-0 p-2.5 rounded-2xl bg-primary-50">{exam.icon}</span>
           <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-[11px] font-mono font-bold text-primary-800 bg-primary-50 px-2 py-0.5 rounded-full">
+                {exam.badge}
+              </span>
+            </div>
             <h3 class="text-base font-bold text-gray-900 group-hover:text-primary-700 transition-colors mb-1">
-              Đánh giá năng lực: {exam.name}
+              {exam.name}
             </h3>
-            <p class="text-sm text-gray-500 mb-2">30 câu hỏi trắc nghiệm kiến thức & xử lý tình huống thực tế</p>
+            <p class="text-xs text-gray-500 mb-3 leading-relaxed">{exam.desc}</p>
             <div class="flex items-center gap-3 text-xs text-gray-500 font-medium">
               <span>⏱️ Thời gian: {exam.time} phút</span>
               <span>•</span>

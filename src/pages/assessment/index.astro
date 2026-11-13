@@ -1,54 +1,134 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const EXAMS = [
-  {
-    slug: 'phan-cung',
-    name: 'Phần cứng Máy tính',
-    icon: '🔧',
-    questions: 30,
-    time: 45,
-    difficulty: 'Trung bình',
-    description: 'Kiểm tra kiến thức về linh kiện, lắp ráp và bảo trì máy tính',
-  },
-  {
-    slug: 'mang',
-    name: 'Mạng Máy tính',
-    icon: '🌐',
-    questions: 30,
-    time: 45,
-    difficulty: 'Trung bình',
-    description: 'Kiểm tra kiến thức về mạng máy tính, mô hình OSI, TCP/IP',
-  },
-];
 ---
 
-<BaseLayout title="Đánh giá năng lực - Cổng Giảng Dạy CNTT">
-  <section class="max-w-4xl mx-auto px-4 py-10">
-    <h1 class="mb-2">Đánh giá năng lực</h1>
-    <p class="text-gray-500 mb-8">Làm bài kiểm tra trắc nghiệm để đánh giá kiến thức chuyên ngành</p>
+<BaseLayout title="Đánh giá năng lực nghề - Khoa CNTT CĐ Buôn Ma Thuột">
+  <section class="max-w-5xl mx-auto px-4 py-10">
+    <div class="mb-8">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-xs font-mono font-bold text-primary-800 bg-primary-100 px-2.5 py-0.5 rounded-full uppercase">
+          Chuẩn Thông tư 55/2026/TT-BGDĐT
+        </span>
+        <span class="text-xs text-gray-500 font-mono">Tiêu chuẩn Kỹ thuật viên Thực chiến</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Hệ Thống Đánh Giá Năng Lực Nghề</h1>
+      <p class="text-gray-500 text-sm mt-1">Sát hạch tay nghề thực hành, chẩn đoán sự cố phần cứng & thi trắc nghiệm tình huống xáo trộn chống trùng lặp.</p>
+    </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-      {EXAMS.map((exam) => (
-        <a href={`/assessment/${exam.slug}`} class="card no-underline block">
-          <div class="flex items-center gap-3 mb-3">
-            <span class="text-3xl">{exam.icon}</span>
-            <h2 class="text-lg font-bold text-gray-900">{exam.name}</h2>
-          </div>
-          <p class="text-sm text-gray-600 mb-4">{exam.description}</p>
-          <div class="flex flex-wrap gap-2 text-xs">
-            <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
-              {exam.questions} câu hỏi
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <!-- Feature Card 1: Hardware Master Portal (Featured) -->
+      <div class="md:col-span-2 bg-gradient-to-br from-primary-900 via-primary-800 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-lg relative overflow-hidden flex flex-col justify-between">
+        <div class="relative z-10">
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span class="bg-amber-400 text-amber-950 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+              ⭐ TRỌNG ĐIỂM SÁT HẠCH TAY NGHỀ
             </span>
-            <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full font-medium">
-              {exam.time} phút
-            </span>
-            <span class="bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full font-medium">
-              {exam.difficulty}
+            <span class="bg-white/20 text-white text-xs font-mono px-2.5 py-1 rounded-full">
+              MÃ MÔN: OL-01_PHAN_CUNG
             </span>
           </div>
-        </a>
-      ))}
+
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-2 leading-tight">
+            Sát Hạch Năng Lực Phần Cứng & Xử Lý Sự Cố PC
+          </h2>
+          <p class="text-primary-100 text-xs sm:text-sm leading-relaxed mb-6 max-w-xl">
+            Mô phỏng tiếp nhận phiếu yêu cầu sửa chữa khách hàng thực tế. Bao gồm mô phỏng bàn kỹ thuật 7 bước, ngân hàng 50 câu trắc nghiệm tình huống cá nhân hóa, 20 câu hỏi vấn đáp tại bàn máy và chuẩn in ấn nghiệm thu A4.
+          </p>
+
+          <!-- 3 Modes mini preview -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6 text-xs">
+            <div class="bg-white/10 backdrop-blur-xs p-3 rounded-2xl border border-white/10">
+              <span class="text-base block mb-1">🎮</span>
+              <strong class="text-white block">Mô phỏng 7 bước</strong>
+              <span class="text-primary-200 text-[11px]">3 Điểm dừng an toàn & chấm điểm Rubric 10.0</span>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-xs p-3 rounded-2xl border border-white/10">
+              <span class="text-base block mb-1">🎲</span>
+              <strong class="text-white block">50 Câu trắc nghiệm</strong>
+              <span class="text-primary-200 text-[11px]">Bốc 10 câu ngẫu nhiên, phím tắt chuẩn Nhật</span>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-xs p-3 rounded-2xl border border-white/10">
+              <span class="text-base block mb-1">📚</span>
+              <strong class="text-white block">20 Vấn đáp + 12 Ca</strong>
+              <span class="text-primary-200 text-[11px]">Bẫy nghề lắp ráp thùng máy & cài đặt Win</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative z-10 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-white/20">
+          <div class="flex items-center gap-3 text-xs text-primary-200">
+            <span>🛡️ Poka-Yoke Auto-Save</span>
+            <span>•</span>
+            <span>⌨️ Phím tắt Kanso</span>
+            <span>•</span>
+            <span>⏱️ 15-180 phút</span>
+          </div>
+
+          <a
+            href="/assessment/phan-cung"
+            class="btn-primary bg-white text-primary-900 hover:bg-primary-50 font-extrabold text-sm px-6 py-3 shadow-md hover:shadow-lg rounded-xl transition-all"
+          >
+            Vào Sát Hạch Ngay →
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 2: Network Assessment -->
+      <div class="bg-white border border-gray-200 rounded-3xl p-6 sm:p-7 shadow-sm flex flex-col justify-between hover:border-primary-400 hover:shadow-md transition-all">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-700 flex items-center justify-center text-2xl mb-4">
+            🌐
+          </div>
+          <span class="text-xs font-mono font-bold text-gray-500 uppercase tracking-wider block mb-1">
+            MÔN HỌC MẠNG
+          </span>
+          <h2 class="text-lg font-bold text-gray-900 mb-2">Mạng Máy Tính Căn Bản</h2>
+          <p class="text-xs text-gray-600 leading-relaxed mb-4">
+            Kiểm tra năng lực mô hình OSI, thiết bị mạng Tầng 2 - Tầng 3, kỹ thuật chia mạng con IPv4 (Subnetting) và cấu hình dịch vụ mạng DHCP/DNS.
+          </p>
+
+          <div class="space-y-2 text-xs text-gray-500">
+            <div class="flex justify-between border-b pb-1.5">
+              <span>Số câu hỏi:</span>
+              <strong class="text-gray-800 font-mono">30 câu</strong>
+            </div>
+            <div class="flex justify-between border-b pb-1.5">
+              <span>Thời gian làm bài:</span>
+              <strong class="text-gray-800 font-mono">45 phút</strong>
+            </div>
+            <div class="flex justify-between pb-1">
+              <span>Điểm chuẩn đạt:</span>
+              <strong class="text-emerald-700 font-mono">≥ 5.0 / 10</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-6">
+          <a
+            href="/assessment/mang"
+            class="btn-secondary w-full text-center text-xs py-2.5 font-bold block"
+          >
+            Làm bài trắc nghiệm mạng →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Japanese Standards & Quality Banner -->
+    <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-5 text-xs text-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">🇯🇵</span>
+        <div>
+          <h3 class="font-bold text-slate-900 text-sm">Áp Dụng Tiêu Chuẩn Kỹ Thuật Chuẩn Nhật Bản (Monozukuri & 5S)</h3>
+          <p class="text-slate-500 mt-0.5">Tích hợp Poka-Yoke (chống sai lỗi), Mieruka (trực quan hóa), Kanso (tinh gọn) và lưu trữ chống mất bài khi rớt mạng.</p>
+        </div>
+      </div>
+
+      <a href="/courses/phan-cung-may-tinh" class="text-primary-700 font-bold hover:underline shrink-0">
+        Xem Cẩm nang 20 năm nghề →
+      </a>
     </div>
   </section>
 </BaseLayout>
