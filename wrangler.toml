@@ -1,6 +1,7 @@
 name = "website-giang-day"
 main = "dist/_worker.js/index.js"
 compatibility_date = "2026-11-04"
+compatibility_flags = ["nodejs_compat"]
 
 [build]
 command = "npm run build"
