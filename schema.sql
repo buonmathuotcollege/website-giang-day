@@ -1,125 +1,163 @@
 -- ============================================================================
--- HỆ THỐNG CƠ SỞ DỮ LIỆU CLOUDFLARE D1 (SQLITE TRÊN EDGE)
--- MÔN HỌC: TIN HỌC (CDMH02.1) - TRƯỜNG CAO ĐẲNG BUÔN MA THUỘT
+-- CƠ SỞ DỮ LIỆU CLOUDFLARE D1 CHO HỆ THỐNG GIẢNG DẠY CNTT
+-- Trường Cao đẳng Buôn Ma Thuột
 -- ============================================================================
 
--- 1. BẢNG DANH MỤC LỚP HỌC (Classes)
-CREATE TABLE IF NOT EXISTS classes (
+-- 1. BẢNG MÔN HỌC (Courses)
+CREATE TABLE IF NOT EXISTS courses (
   id TEXT PRIMARY KEY,
-  class_code TEXT UNIQUE NOT NULL,
-  class_name TEXT NOT NULL,
-  major TEXT NOT NULL DEFAULT 'Tin học ứng dụng',
-  academic_year TEXT NOT NULL DEFAULT '2026-2027',
+  slug TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT DEFAULT '',
+  icon TEXT DEFAULT '💻',
+  subdomain TEXT DEFAULT '',
+  sort_order INTEGER DEFAULT 1,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. BẢNG DANH SÁCH HỌC SINH (Students Roster)
+-- 2. BẢNG CHƯƠNG BÀI HỌC (Chapters)
+CREATE TABLE IF NOT EXISTS chapters (
+  id TEXT PRIMARY KEY,
+  course_id TEXT NOT NULL,
+  chapter_num INTEGER NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT DEFAULT '',
+  sort_order INTEGER DEFAULT 1,
+  FOREIGN KEY (course_id) REFERENCES courses(id)
+);
+
+-- 3. BẢNG BÀI GIẢNG CHI TIẾT (Lessons)
+CREATE TABLE IF NOT EXISTS lessons (
+  id TEXT PRIMARY KEY,
+  chapter_id TEXT NOT NULL,
+  slug TEXT NOT NULL,
+  title TEXT NOT NULL,
+  content_markdown TEXT DEFAULT '',
+  lesson_type TEXT DEFAULT 'theory',
+  sort_order INTEGER DEFAULT 1,
+  is_published INTEGER DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (chapter_id) REFERENCES chapters(id)
+);
+
+-- 4. BẢNG LỚP HỌC (Classes)
+CREATE TABLE IF NOT EXISTS classes (
+  id TEXT PRIMARY KEY,
+  course_id TEXT,
+  class_code TEXT UNIQUE NOT NULL,
+  class_name TEXT NOT NULL,
+  academic_year TEXT DEFAULT '2026-2027',
+  is_active INTEGER DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (course_id) REFERENCES courses(id)
+);
+
+-- 5. BẢNG HỌC SINH (Students)
 CREATE TABLE IF NOT EXISTS students (
   id TEXT PRIMARY KEY,
-  class_code TEXT NOT NULL,
+  class_id TEXT NOT NULL,
   student_number INTEGER NOT NULL,
   full_name TEXT NOT NULL,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (class_code) REFERENCES classes(class_code)
+  FOREIGN KEY (class_id) REFERENCES classes(id)
 );
 
--- 3. BẢNG BUỔI HỌC & MÃ PIN LỚP (Sessions & PIN Control)
+-- 6. BẢNG BUỔI HỌC & PIN (Sessions)
 CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY,
-  session_code TEXT NOT NULL,           -- Ví dụ: BUOI_01, BUOI_02...
-  session_title TEXT NOT NULL,          -- Ví dụ: Buổi 1 (Ch.1 - Cầm chuột)
-  chapter_num INTEGER NOT NULL,         -- 1..6
-  class_pin TEXT NOT NULL DEFAULT '',   -- Mã PIN 4-6 ký tự GV viết trên bảng
-  is_open_submission INTEGER DEFAULT 1, -- 1: Đang mở nhận bài, 0: Khóa nộp
+  class_id TEXT,
+  session_code TEXT NOT NULL,
+  session_title TEXT NOT NULL,
+  class_pin TEXT DEFAULT '',
+  is_open INTEGER DEFAULT 1,
+  session_date TEXT DEFAULT '',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. BẢNG KẾT QUẢ THỰC HÀNH CỦA HỌC SINH (Submissions & Scores)
+-- 7. BẢNG KẾT QUẢ THỰC HÀNH / NỘP ĐIỂM (Submissions)
 CREATE TABLE IF NOT EXISTS submissions (
-  id TEXT PRIMARY KEY,                  -- Khóa chính duy nhất (Server tự sinh)
-  date_only TEXT NOT NULL,              -- YYYY-MM-DD
-  submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  id TEXT PRIMARY KEY,
+  session_id TEXT,
   class_name TEXT NOT NULL,
   session_name TEXT NOT NULL,
-  class_pin TEXT DEFAULT '',
-  station TEXT NOT NULL,                -- Số máy: Máy 01, Máy 02...
   student_name TEXT NOT NULL,
-  ip_address TEXT DEFAULT '',
-  mouse_score INTEGER NOT NULL DEFAULT 0,
-  telex_score INTEGER NOT NULL DEFAULT 0,
-  word_score INTEGER NOT NULL DEFAULT 0,
-  excel_score INTEGER NOT NULL DEFAULT 0,
-  ch_avg_score INTEGER NOT NULL DEFAULT 0,
-  grade10 REAL NOT NULL DEFAULT 0.0,    -- Server tự tính theo trọng số chuẩn
-  status TEXT NOT NULL DEFAULT 'Cần luyện thêm', -- 'ĐẠT' (>=5.0) hoặc 'Cần luyện thêm'
-  most_missed TEXT DEFAULT 'Không có',
-  clicks INTEGER DEFAULT 0,
-  typos INTEGER DEFAULT 0,
-  duration_sec INTEGER DEFAULT 0,
-  UNIQUE(date_only, class_name, session_name, station, student_name) -- Chống trùng lặp tự động ở tầng CSDL
+  station TEXT DEFAULT '',
+  date_only TEXT NOT NULL,
+  score REAL DEFAULT 0.0,
+  details_json TEXT DEFAULT '{}',
+  status TEXT DEFAULT 'Đạt',
+  submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 5. BẢNG NHẬT KÝ BẢO MẬT GIẢNG VIÊN (Audit Logs)
+-- 8. BẢNG ĐỢT ĐÁNH GIÁ NĂNG LỰC (Assessments)
+CREATE TABLE IF NOT EXISTS assessments (
+  id TEXT PRIMARY KEY,
+  slug TEXT UNIQUE NOT NULL,
+  title TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  description TEXT DEFAULT '',
+  duration_minutes INTEGER DEFAULT 45,
+  total_questions INTEGER DEFAULT 30,
+  pass_score REAL DEFAULT 5.0,
+  is_active INTEGER DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 9. BẢNG CÂU HỎI TRẮC NGHIỆM ĐÁNH GIÁ (Assessment Questions)
+CREATE TABLE IF NOT EXISTS assessment_questions (
+  id TEXT PRIMARY KEY,
+  assessment_id TEXT NOT NULL,
+  question_text TEXT NOT NULL,
+  options_json TEXT NOT NULL,
+  correct_option INTEGER NOT NULL,
+  explanation TEXT DEFAULT '',
+  sort_order INTEGER DEFAULT 1,
+  FOREIGN KEY (assessment_id) REFERENCES assessments(id)
+);
+
+-- 10. BẢNG KẾT QUẢ ĐÁNH GIÁ NĂNG LỰC (Assessment Results)
+CREATE TABLE IF NOT EXISTS assessment_results (
+  id TEXT PRIMARY KEY,
+  assessment_id TEXT NOT NULL,
+  student_name TEXT NOT NULL,
+  class_name TEXT NOT NULL,
+  station TEXT DEFAULT '',
+  score REAL NOT NULL,
+  total INTEGER NOT NULL,
+  percentage REAL NOT NULL,
+  status TEXT NOT NULL,
+  answers_json TEXT DEFAULT '{}',
+  completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (assessment_id) REFERENCES assessments(id)
+);
+
+-- 11. BẢNG NHẬT KÝ GIẢNG VIÊN (Audit Logs)
 CREATE TABLE IF NOT EXISTS audit_logs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   action TEXT NOT NULL,
-  actor TEXT NOT NULL DEFAULT 'Giảng viên',
+  actor TEXT DEFAULT 'Giảng viên',
   details TEXT DEFAULT '',
-  ip_address TEXT DEFAULT '',
+  ip TEXT DEFAULT '',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- ============================================================================
--- CHÈN DỮ LIỆU BAN ĐẦU (SEED DATA: LỚP HỌC & DANH SÁCH 50 HỌC SINH TIN HỌC ỨNG DỤNG)
+-- DỮ LIỆU MẪU BAN ĐẦU (SEED DATA)
 -- ============================================================================
-INSERT OR IGNORE INTO classes (id, class_code, class_name, major) VALUES
-  ('cls_thud_k26a', 'THUD_K26A', 'Tin học ứng dụng 9+3 (K26A)', 'Tin học ứng dụng'),
-  ('cls_thud_k26b', 'THUD_K26B', 'Tin học ứng dụng 9+3 (K26B)', 'Tin học ứng dụng'),
-  ('cls_thud_k25',  'THUD_K25',  'Tin học ứng dụng 9+3 (K25)',  'Tin học ứng dụng'),
-  ('cls_dien_93',   'DIEN_93',   'Điện công nghiệp 9+3',        'Điện công nghiệp'),
-  ('cls_oto_93',    'OTO_93',    'Công nghệ Ô tô 9+3',          'Công nghệ Ô tô');
 
--- Chèn danh sách học sinh mẫu lớp Tin học ứng dụng K26A
-INSERT OR IGNORE INTO students (id, class_code, student_number, full_name) VALUES
-  ('st_01', 'THUD_K26A', 1, 'Nguyễn Văn An'),
-  ('st_02', 'THUD_K26A', 2, 'Trần Văn Ba'),
-  ('st_03', 'THUD_K26A', 3, 'Lê Thị Bích Cúc'),
-  ('st_04', 'THUD_K26A', 4, 'Phạm Minh Dũng'),
-  ('st_05', 'THUD_K26A', 5, 'Hoàng Quốc Đạt'),
-  ('st_06', 'THUD_K26A', 6, 'H''Hen Niê'),
-  ('st_07', 'THUD_K26A', 7, 'Y Đam San Êban'),
-  ('st_08', 'THUD_K26A', 8, 'Vũ Thị Hương Giang'),
-  ('st_09', 'THUD_K26A', 9, 'Đặng Gia Huy'),
-  ('st_10', 'THUD_K26A', 10, 'Bùi Tuấn Kiệt'),
-  ('st_11', 'THUD_K26A', 11, 'Nguyễn Thị Khánh Linh'),
-  ('st_12', 'THUD_K26A', 12, 'Trần Hoàng Long'),
-  ('st_13', 'THUD_K26A', 13, 'Y Minh Mlô'),
-  ('st_14', 'THUD_K26A', 14, 'H''Mai Кbuôr'),
-  ('st_15', 'THUD_K26A', 15, 'Ngô Bảo Nam'),
-  ('st_16', 'THUD_K26A', 16, 'Phan Trọng Nghĩa'),
-  ('st_17', 'THUD_K26A', 17, 'Lê Hồng Phúc'),
-  ('st_18', 'THUD_K26A', 18, 'Trương Minh Quân'),
-  ('st_19', 'THUD_K26A', 19, 'Đỗ Thanh Sơn'),
-  ('st_20', 'THUD_K26A', 20, 'Nguyễn Anh Tuấn'),
-  ('st_21', 'THUD_K26A', 21, 'Võ Thị Thanh Thảo'),
-  ('st_22', 'THUD_K26A', 22, 'Huỳnh Công Thành'),
-  ('st_23', 'THUD_K26A', 23, 'Ksor Y Tuyên'),
-  ('st_24', 'THUD_K26A', 24, 'Phạm Quốc Việt'),
-  ('st_25', 'THUD_K26A', 25, 'Trần Thị Như Ý');
+INSERT OR IGNORE INTO courses (id, slug, name, description, icon, subdomain, sort_order) VALUES
+  ('crs_nls', 'nang-luc-so', 'Năng lực số', 'Trang bị kỹ năng số, an toàn thông tin và ứng dụng CNTT thời đại mới', '💻', 'nanglucso', 1),
+  ('crs_ktmt', 'kien-truc-may-tinh', 'Kiến trúc máy tính và Hệ điều hành', 'Cấu tạo hệ thống máy tính, vi xử lý, quản lý bộ nhớ và hệ điều hành', '🖥️', 'kientruc', 2),
+  ('crs_pcmt', 'phan-cung-may-tinh', 'Phần cứng máy tính', 'Linh kiện phần cứng, chẩn đoán, lắp ráp, bảo trì và sửa chữa PC/Laptop', '🔧', 'phancung', 3),
+  ('crs_mcb', 'mang-can-ban', 'Mạng căn bản', 'Nền tảng mạng máy tính, mô hình OSI, TCP/IP, định tuyến và phân chia mạng con', '🌐', 'mang', 4),
+  ('crs_lanwan', 'thiet-ke-quan-tri-lan-wan', 'Thiết kế và Quản trị mạng LAN/WAN', 'Thiết kế hệ thống mạng doanh nghiệp, Switch VLAN, Routing, NAT, VPN', '🏗️', 'lanwan', 5),
+  ('crs_srvlin', 'quan-tri-windows-linux', 'Quản trị Windows Server/Linux và Ảo hóa', 'Dịch vụ mạng AD DS, DNS, DHCP trên Windows Server, cấu hình Linux và máy ảo', '🖧', 'winlinux', 6);
 
--- Chèn 14 buổi học tương ứng 45 tiết trong đề cương
-INSERT OR IGNORE INTO sessions (id, session_code, session_title, chapter_num, class_pin) VALUES
-  ('ses_01', 'BUOI_01', 'Buổi 1 (Ch.1 - Cầm chuột)', 1, 'TH01'),
-  ('ses_02', 'BUOI_02', 'Buổi 2 (Ch.1 - Gõ Telex)', 1, 'TH02'),
-  ('ses_03', 'BUOI_03', 'Buổi 3 (Ch.2 - Tìm kiếm Chrome)', 2, 'TH03'),
-  ('ses_04', 'BUOI_04', 'Buổi 4 (Ch.2 - Gửi Gmail)', 2, 'TH04'),
-  ('ses_05', 'BUOI_05', 'Buổi 5 (Ch.3 - Word cơ bản)', 3, 'TH05'),
-  ('ses_06', 'BUOI_06', 'Buổi 6 (Ch.3 - Đơn xin phép)', 3, 'TH06'),
-  ('ses_07', 'BUOI_07', 'Buổi 7 (Ch.3 - Kẻ bảng Word)', 3, 'TH07'),
-  ('ses_08', 'BUOI_08', 'Buổi 8 (Ch.4 - Excel cơ bản)', 4, 'TH08'),
-  ('ses_09', 'BUOI_09', 'Buổi 9 (Ch.4 - Hàm SUM, AVG)', 4, 'TH09'),
-  ('ses_10', 'BUOI_10', 'Buổi 10 (Ch.4 - Hàm IF)', 4, 'TH10'),
-  ('ses_11', 'BUOI_11', 'Buổi 11 (Ch.5 - Thiết kế Slide)', 5, 'TH11'),
-  ('ses_12', 'BUOI_12', 'Buổi 12 (Ch.5 - Trình chiếu F5)', 5, 'TH12'),
-  ('ses_13', 'BUOI_13', 'Buổi 13 (Ch.6 - An toàn số 3 Không)', 6, 'TH13'),
-  ('ses_14', 'BUOI_14', 'Buổi 14 (Kiểm tra cuối môn)', 6, 'TH14');
+INSERT OR IGNORE INTO classes (id, class_code, class_name, academic_year) VALUES
+  ('cls_thud_k26a', 'THUD_K26A', 'Tin học ứng dụng K26A', '2026-2027'),
+  ('cls_thud_k26b', 'THUD_K26B', 'Tin học ứng dụng K26B', '2026-2027'),
+  ('cls_qtm_k26',   'QTM_K26',   'Quản trị mạng K26',     '2026-2027');
+
+INSERT OR IGNORE INTO assessments (id, slug, title, subject, description, duration_minutes, total_questions, pass_score) VALUES
+  ('asm_pc', 'phan-cung', 'Đánh giá năng lực: Phần cứng máy tính', 'Phần cứng máy tính', 'Kiểm tra năng lực nhận biết linh kiện, chẩn đoán sự cố phần cứng PC/Laptop', 45, 30, 5.0),
+  ('asm_net', 'mang', 'Đánh giá năng lực: Mạng máy tính', 'Mạng căn bản & LAN/WAN', 'Kiểm tra kiến thức mô hình mạng, địa chỉ IP, chia mạng con và thiết bị mạng', 45, 30, 5.0);

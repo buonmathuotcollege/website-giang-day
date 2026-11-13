@@ -128,6 +128,79 @@ export async function onRequestPost(context) {
     const userAnswers = body.answers || {}; // Object dạng: { pc_01: 1, pc_02: 2 }
 
     const bank = QUESTION_BANKS[slug] || QUESTION_BANKS["phan-cung"];
+
+    // KIỂM TRA NẾU ĐÂY LÀ BÀI THI MÔ PHỎNG TAY NGHỀ THỰC TẾ (JOB TICKET SIMULATION)
+    if (userAnswers && userAnswers.rubric) {
+      const rubric = userAnswers.rubric;
+      const score10 = Number(rubric.total || 0);
+      const total = 10;
+      const percentage = Math.round((score10 / 10) * 100);
+      const status = rubric.isPass ? "ĐẠT" : "CHƯA ĐẠT";
+
+      if (env && env.DB) {
+        try {
+          const resId = "sim_res_" + Date.now();
+          await env.DB.prepare(`
+            CREATE TABLE IF NOT EXISTS assessment_results (
+              id TEXT PRIMARY KEY,
+              assessment_id TEXT NOT NULL,
+              student_name TEXT NOT NULL,
+              class_name TEXT NOT NULL,
+              station TEXT DEFAULT '',
+              score REAL NOT NULL,
+              total INTEGER NOT NULL,
+              percentage REAL NOT NULL,
+              status TEXT NOT NULL,
+              answers_json TEXT DEFAULT '{}',
+              completed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+          `).run();
+
+          await env.DB.prepare(`
+            INSERT INTO assessment_results (id, assessment_id, student_name, class_name, station, score, total, percentage, status, answers_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `).bind(resId, slug, studentName, className, station, score10, total, percentage, status, JSON.stringify(userAnswers)).run();
+
+          // Đồng bộ sang bảng submissions để giảng viên xem và xuất CSV ngay tại trang /admin/scores
+          await env.DB.prepare(`
+            CREATE TABLE IF NOT EXISTS submissions (
+              id TEXT PRIMARY KEY,
+              session_id TEXT,
+              class_name TEXT NOT NULL,
+              session_name TEXT NOT NULL,
+              student_name TEXT NOT NULL,
+              station TEXT DEFAULT '',
+              date_only TEXT NOT NULL,
+              score REAL DEFAULT 0.0,
+              details_json TEXT DEFAULT '{}',
+              status TEXT DEFAULT 'Đạt',
+              submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            )
+          `).run();
+
+          const dateOnly = new Date().toISOString().slice(0, 10);
+          const sessionName = `Sát hạch: ${userAnswers.ticketTitle || 'Phần cứng PC (OL-01)'}`;
+          await env.DB.prepare(`
+            INSERT INTO submissions (id, class_name, session_name, student_name, station, date_only, score, details_json, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `).bind(resId, className, sessionName, studentName, station, dateOnly, score10, JSON.stringify(userAnswers), status).run();
+        } catch (err) {}
+      }
+
+      return new Response(JSON.stringify({
+        ok: true,
+        isSimulation: true,
+        studentName,
+        className,
+        station,
+        score10,
+        total,
+        percentage,
+        status,
+        rubric
+      }), { headers: CORS_HEADERS });
+    }
+
     let correctCount = 0;
     const reviewDetails = [];
 

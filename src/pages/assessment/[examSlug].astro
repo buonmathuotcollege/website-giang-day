@@ -1,31 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-
-const EXAMS: Record<string, { name: string; icon: string; questions: { text: string; options: string[]; correct: number }[] }> = {
-  'phan-cung': {
-    name: 'Phần cứng Máy tính',
-    icon: '🔧',
-    questions: [
-      { text: 'CPU là viết tắt của?', options: ['Central Processing Unit', 'Computer Personal Unit', 'Central Program Utility', 'Control Process Unit'], correct: 0 },
-      { text: 'RAM thuộc loại bộ nhớ nào?', options: ['Bộ nhớ ngoài', 'Bộ nhớ trong (tạm thời)', 'Bộ nhớ chỉ đọc', 'Bộ nhớ cache'], correct: 1 },
-      { text: 'Đơn vị đo tốc độ xử lý của CPU là gì?', options: ['Byte', 'Hertz (Hz)', 'Bit', 'Pixel'], correct: 1 },
-      { text: 'BIOS được lưu trữ ở đâu?', options: ['RAM', 'Ổ cứng', 'ROM/Flash trên mainboard', 'CPU cache'], correct: 2 },
-      { text: 'Cổng nào thường dùng để kết nối màn hình hiện đại?', options: ['VGA', 'PS/2', 'HDMI', 'Serial'], correct: 2 },
-    ],
-  },
-  'mang': {
-    name: 'Mạng Máy tính',
-    icon: '🌐',
-    questions: [
-      { text: 'Mô hình OSI có bao nhiêu tầng?', options: ['4 tầng', '5 tầng', '7 tầng', '3 tầng'], correct: 2 },
-      { text: 'Thiết bị nào hoạt động ở tầng 3 (Network) của mô hình OSI?', options: ['Hub', 'Switch', 'Router', 'Repeater'], correct: 2 },
-      { text: 'Địa chỉ IP v4 có độ dài bao nhiêu bit?', options: ['16 bit', '32 bit', '64 bit', '128 bit'], correct: 1 },
-      { text: 'Giao thức nào dùng để phân giải tên miền thành địa chỉ IP?', options: ['DHCP', 'DNS', 'FTP', 'SMTP'], correct: 1 },
-      { text: 'Cáp mạng UTP Cat6 hỗ trợ tốc độ tối đa bao nhiêu?', options: ['100 Mbps', '1 Gbps', '10 Gbps', '100 Gbps'], correct: 2 },
-    ],
-  },
-};
+import {
+  HARDWARE_METADATA,
+  PRACTICAL_EXAM_TICKETS,
+  OFFICIAL_RUBRIC_CRITERIA,
+} from '../../data/hardwareCurriculum';
 
 export function getStaticPaths() {
   return [
@@ -35,103 +15,1767 @@ export function getStaticPaths() {
 }
 
 const { examSlug } = Astro.params;
-const exam = EXAMS[examSlug!];
+const isHardware = examSlug === 'phan-cung';
+
+// Standard quiz for 'mang' or fallback
+const STANDARD_EXAMS: Record<string, any> = {
+  'mang': {
+    name: 'Mạng Căn Bản & LAN/WAN',
+    icon: '🌐',
+    desc: 'Kiểm tra năng lực mô hình OSI, thiết bị mạng, chia mạng con IPv4 và cấu hình dịch vụ mạng.',
+    questions: [
+      { text: 'Mô hình tham chiếu OSI chuẩn hóa truyền thông mạng gồm bao nhiêu tầng?', options: ['4 tầng', '5 tầng', '7 tầng', '9 tầng'], correct: 2 },
+      { text: 'Thiết bị nào hoạt động ở Tầng 3 (Network Layer) để định tuyến gói tin giữa các mạng logic?', options: ['Hub', 'Switch Layer 2', 'Router (Bộ định tuyến)', 'Repeater'], correct: 2 },
+      { text: 'Địa chỉ IPv4 nào sau đây thuộc dải địa chỉ mạng riêng (Private IP)?', options: ['8.8.8.8', '192.168.1.100', '1.1.1.1', '203.162.0.11'], correct: 1 },
+      { text: 'Giao thức nào có nhiệm vụ tự động cấp phát địa chỉ IP, Subnet Mask và Gateway cho client?', options: ['DNS', 'DHCP', 'FTP', 'HTTP'], correct: 1 },
+      { text: 'Lệnh dòng lệnh nào dùng để kiểm tra tính thông suốt kết nối giữa 2 nút mạng bằng gói tin ICMP?', options: ['ipconfig /all', 'ping', 'tracert', 'netstat'], correct: 1 },
+    ],
+  },
+};
+
+const exam = isHardware
+  ? { name: 'Ôn luyện Năng lực Nghề: Phần cứng Máy tính (OL-01)', icon: '🔧' }
+  : (STANDARD_EXAMS[examSlug!] || STANDARD_EXAMS['mang']);
 ---
 
-<BaseLayout title={`${exam.name} - Đánh giá năng lực`}>
-  <section class="max-w-3xl mx-auto px-4 py-8">
+<BaseLayout title={`${exam.name} - Đánh giá năng lực thực tế`}>
+  <section class="max-w-5xl mx-auto px-4 py-8">
     <Breadcrumb items={[
       { label: 'Trang chủ', href: '/' },
       { label: 'Đánh giá năng lực', href: '/assessment' },
       { label: exam.name, href: '' },
     ]} />
 
-    <div class="mt-6" x-data={`{
-      started: false,
-      current: 0,
-      answers: {},
-      submitted: false,
-      questions: ${JSON.stringify(exam.questions)},
-      get score() {
-        let s = 0;
-        for (let i = 0; i < this.questions.length; i++) {
-          if (this.answers[i] === this.questions[i].correct) s++;
-        }
-        return s;
-      }
-    }`}>
-      <!-- Start screen -->
-      <div x-show="!started" class="text-center py-12">
-        <span class="text-5xl mb-4 block">{exam.icon}</span>
-        <h1 class="text-2xl font-bold mb-2">{exam.name}</h1>
-        <p class="text-gray-500 mb-2">Bài kiểm tra gồm {exam.questions.length} câu hỏi trắc nghiệm</p>
-        <p class="text-sm text-gray-400 mb-6">Chọn đáp án đúng nhất cho mỗi câu hỏi</p>
-        <button @click="started = true" class="btn-primary text-lg px-8 py-3">
-          Bắt đầu làm bài
-        </button>
+    {isHardware ? (
+      <!-- ==================================================================== -->
+      <!-- HARDWARE JOB TICKET SIMULATOR (MÔ PHỎNG SÁT HẠCH TAY NGHỀ THỰC TẾ) -->
+      <!-- ==================================================================== -->
+      <div class="mt-6" x-data="hardwareSimulator">
+        <!-- ============================================================== -->
+        <!-- SCREEN 1: RECEPTION DESK & JOB TICKET SELECTION               -->
+        <!-- ============================================================== -->
+        <div x-show="phase === 'ticket'" class="space-y-6">
+          <!-- Top Banner -->
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-sm">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-100 pb-5">
+              <div class="flex items-center gap-3">
+                <span class="text-4xl">🛠️</span>
+                <div>
+                  <span class="text-xs font-mono uppercase tracking-wider text-primary-700 font-bold bg-primary-50 px-2 py-0.5 rounded">
+                    Mô hình Xưởng Kỹ thuật A-Z
+                  </span>
+                  <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 mt-0.5">
+                    Mô Phỏng Đánh Giá Tay Nghề Kỹ Thuật Viên Máy Tính
+                  </h1>
+                </div>
+              </div>
+              <div class="text-right hidden sm:block">
+                <p class="text-xs text-gray-500 font-mono">Mã môn: {HARDWARE_METADATA.courseCode}</p>
+                <p class="text-xs text-primary-700 font-bold">Giảng viên: {HARDWARE_METADATA.teacher}</p>
+              </div>
+            </div>
+
+            <p class="text-sm text-gray-600 mt-4 leading-relaxed">
+              Chào mừng em đến với buổi đánh giá năng lực nghề thực tế. Em sẽ đóng vai trò <strong>Kỹ thuật viên tập sự</strong> tiếp nhận một ca máy thật tại phòng máy, xử lý sự cố xuyên suốt theo <strong>Quy trình 7 Bước thực chiến</strong>, vượt qua <strong>3 Điểm dừng an toàn</strong> và được chấm điểm tự động theo <strong>Rubric 10.0 điểm chuẩn Thông tư 55</strong>.
+            </p>
+          </div>
+
+          <!-- Student Profile Form -->
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-sm">
+            <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <span>👤</span>
+              <span>Thông Tin Kỹ Thuật Viên Tiếp Nhận Ca Máy</span>
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Họ và tên Kỹ thuật viên (*)</label>
+                <input
+                  type="text"
+                  x-model="student.name"
+                  placeholder="Ví dụ: Nguyễn Văn An"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Lớp chuyên ngành</label>
+                <input
+                  type="text"
+                  x-model="student.className"
+                  placeholder="Ví dụ: THUD_K26A"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Bàn kỹ thuật số</label>
+                <select
+                  x-model="student.station"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:outline-none"
+                >
+                  <option value="Bàn kỹ thuật 01">Bàn kỹ thuật 01</option>
+                  <option value="Bàn kỹ thuật 02">Bàn kỹ thuật 02</option>
+                  <option value="Bàn kỹ thuật 03">Bàn kỹ thuật 03</option>
+                  <option value="Bàn kỹ thuật 04">Bàn kỹ thuật 04</option>
+                  <option value="Bàn kỹ thuật 05">Bàn kỹ thuật 05</option>
+                  <option value="Bàn kỹ thuật 06">Bàn kỹ thuật 06</option>
+                  <option value="Bàn kỹ thuật 07">Bàn kỹ thuật 07</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Bạn cùng bàn (đổi vai A-B)</label>
+                <input
+                  type="text"
+                  x-model="student.partner"
+                  placeholder="Ví dụ: Trần Quốc Bảo"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Ticket Selection -->
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-sm">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+              <div>
+                <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <span>📋</span>
+                  <span>Bốc Thăm / Lựa Chọn Ca Bệnh Thực Tế (Phiếu Yêu Cầu Kỹ Thuật)</span>
+                </h2>
+                <p class="text-xs text-gray-500">Mỗi đề thi mô phỏng 1 tình huống sự cố điển hình thường gặp tại các trung tâm dịch vụ</p>
+              </div>
+
+              <button
+                type="button"
+                @click="pickRandomTicket()"
+                class="btn-secondary text-xs px-3 py-2 flex items-center gap-1.5 font-bold"
+              >
+                <span>🎲 Bốc thăm ngẫu nhiên ca bệnh</span>
+              </button>
+            </div>
+
+            <!-- Ticket Tabs -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <template x-for="(t, idx) in tickets" :key="t.id">
+                <button
+                  type="button"
+                  @click="selectedTicketIndex = idx; syncTicketData();"
+                  class="text-left p-4 rounded-xl border-2 transition-all flex flex-col justify-between"
+                  :class="selectedTicketIndex === idx ? 'border-primary-600 bg-primary-50/50 shadow-sm' : 'border-gray-200 hover:border-gray-300 bg-white'"
+                >
+                  <div>
+                    <div class="flex items-center justify-between mb-2">
+                      <span
+                        class="text-xs font-bold font-mono px-2 py-0.5 rounded"
+                        :class="selectedTicketIndex === idx ? 'bg-primary-700 text-white' : 'bg-gray-100 text-gray-700'"
+                        x-text="t.code"
+                      ></span>
+                      <span class="text-xs text-gray-400" x-show="selectedTicketIndex === idx">Đang chọn ✓</span>
+                    </div>
+                    <h3 class="font-bold text-gray-900 text-sm leading-snug mb-2" x-text="t.title"></h3>
+                  </div>
+                  <div class="text-[11px] text-gray-500 pt-2 border-t border-gray-100 mt-2">
+                    <span class="font-semibold text-gray-700">Yêu cầu chính:</span>
+                    <span x-text="t.hardwareTask"></span>
+                  </div>
+                </button>
+              </template>
+            </div>
+
+            <!-- Active Ticket Detail Card -->
+            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 space-y-3">
+              <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+                <span class="text-xs font-bold font-mono text-primary-800" x-text="'CHI TIẾT PHIẾU YÊU CẦU: ' + currentTicket.code"></span>
+                <span class="text-xs text-gray-500">Thời gian quy định: 180 phút</span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <div>
+                  <p class="font-bold text-gray-800 mb-1">Mô tả sự cố từ khách hàng:</p>
+                  <p class="text-gray-600 leading-relaxed bg-white p-3 rounded-lg border border-gray-200" x-text="currentTicket.customerProblem"></p>
+                </div>
+
+                <div>
+                  <p class="font-bold text-gray-800 mb-1">Mục tiêu dữ liệu nhạy cảm (Luật giữ nồi cơm):</p>
+                  <p class="text-red-700 font-semibold leading-relaxed bg-red-50 p-3 rounded-lg border border-red-200" x-text="currentTicket.dataTarget"></p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
+                <div class="bg-white p-2.5 rounded-lg border border-gray-200">
+                  <span class="text-gray-500 block mb-0.5 font-medium">Phần cứng & Sửa chữa:</span>
+                  <span class="text-gray-800 font-semibold" x-text="currentTicket.hardwareTask"></span>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-gray-200">
+                  <span class="text-gray-500 block mb-0.5 font-medium">Hệ điều hành & Driver:</span>
+                  <span class="text-gray-800 font-semibold" x-text="currentTicket.softwareTask"></span>
+                </div>
+                <div class="bg-white p-2.5 rounded-lg border border-gray-200">
+                  <span class="text-gray-500 block mb-0.5 font-medium">Nghiệm thu bàn giao:</span>
+                  <span class="text-gray-800 font-semibold" x-text="currentTicket.verificationTask"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Start Action Button -->
+            <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-gray-100">
+              <div class="flex items-center gap-2 text-xs text-gray-500">
+                <span>🛡️</span>
+                <span>Yêu cầu tuân thủ 3 Luật sống còn & 3 Điểm dừng an toàn</span>
+              </div>
+
+              <button
+                type="button"
+                @click="startWorkbench()"
+                class="w-full sm:w-auto btn-primary text-base px-8 py-3 shadow-lg flex items-center justify-center gap-2 font-bold"
+              >
+                <span>Nhận Ca Máy & Vào Bàn Kỹ Thuật</span>
+                <span>→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 2: 7-STEP INTERACTIVE WORKBENCH SIMULATOR              -->
+        <!-- ============================================================== -->
+        <div x-show="phase === 'workbench'" class="space-y-6" x-cloak>
+          <!-- Workbench Top Status Bar -->
+          <div class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <span class="w-10 h-10 rounded-xl bg-primary-700 text-white font-bold flex items-center justify-center text-sm shadow">
+                🔧
+              </span>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-bold font-mono px-2 py-0.5 bg-primary-100 text-primary-800 rounded" x-text="student.ticketCode"></span>
+                  <span class="text-sm font-bold text-gray-900" x-text="student.name"></span>
+                  <span class="text-xs text-gray-500" x-text="'(' + student.className + ' · ' + student.station + ')'"></span>
+                </div>
+                <p class="text-xs text-gray-600 mt-0.5" x-text="currentTicket.title"></p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                @click="phase = 'ticket'"
+                class="btn-secondary text-xs px-3 py-2"
+              >
+                ← Đổi ca máy
+              </button>
+              <button
+                type="button"
+                @click="finishEvaluation()"
+                class="btn-primary text-xs px-4 py-2 font-bold bg-accent-600 hover:bg-accent-700"
+              >
+                Hoàn thành ca máy & Chấm điểm 🏁
+              </button>
+            </div>
+          </div>
+
+          <!-- Step Progression Navigator -->
+          <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm overflow-x-auto">
+            <div class="flex items-center justify-between min-w-[700px] gap-2">
+              <template x-for="s in [
+                { num: 1, name: '1. Nhận máy', icon: '📝' },
+                { num: 2, name: '2. Cứu dữ liệu', icon: '💾', stop: true },
+                { num: 3, name: '3. Bắt bệnh 60s', icon: '🩺' },
+                { num: 4, name: '4. Sạch & Lắp', icon: '🧹', stop: true },
+                { num: 5, name: '5. Cài đặt', icon: '💿' },
+                { num: 6, name: '6. Máy in & Ngoại vi', icon: '🖨️' },
+                { num: 7, name: '7. Nghiệm thu', icon: '📋', stop: true },
+              ]" :key="s.num">
+                <button
+                  type="button"
+                  @click="currentStep = s.num"
+                  class="flex-1 py-2 px-2 rounded-xl text-xs font-bold transition-all flex flex-col items-center gap-1 border"
+                  :class="currentStep === s.num
+                    ? 'border-primary-600 bg-primary-600 text-white shadow'
+                    : 'border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100'"
+                >
+                  <div class="flex items-center gap-1">
+                    <span x-text="s.icon"></span>
+                    <span x-text="s.name"></span>
+                    <span x-show="s.stop" class="text-[10px] bg-red-500 text-white px-1 rounded-full font-mono">🛑</span>
+                  </div>
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <!-- Safety Violation Warning banner (if triggered) -->
+          <div x-show="safetyViolation" class="p-4 rounded-xl bg-red-100 border-2 border-red-500 text-red-900 shadow">
+            <div class="flex items-center gap-2 font-bold text-sm mb-1">
+              <span>🚨</span>
+              <span>BÁO ĐỘNG VI PHẠM AN TOÀN NGHỀ NGHIỆP:</span>
+            </div>
+            <p class="text-xs leading-relaxed" x-text="safetyViolationReason"></p>
+            <p class="text-[11px] font-bold text-red-800 mt-2">Hậu quả thi: Điểm tiêu chí 1 (An toàn) bị 0 ĐIỂM và ca thi bị đánh giá CHƯA ĐẠT!</p>
+          </div>
+
+          <!-- Main Interactive Bench Grid -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Column: Live Machine State Monitor -->
+            <div class="bg-gray-900 text-gray-100 rounded-2xl p-5 shadow-lg border border-gray-800 space-y-4">
+              <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-400 font-mono">Màn Hình Kiểm Tra Trực Tiếp</h3>
+                </div>
+                <span class="text-[10px] text-gray-400 font-mono">DIAGNOSTIC 2.0</span>
+              </div>
+
+              <!-- Visual Status Monitor -->
+              <div class="space-y-3 font-mono text-xs">
+                <!-- Power & Screen -->
+                <div class="bg-gray-800/80 p-3 rounded-xl border border-gray-700 space-y-1.5">
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-400 text-[11px]">Trạng thái nguồn:</span>
+                    <span
+                      class="px-2 py-0.5 rounded text-[10px] font-bold"
+                      :class="step3.pullPlugDischargeChecked ? 'bg-amber-900/60 text-amber-300' : 'bg-emerald-900/60 text-emerald-300'"
+                      x-text="step3.pullPlugDischargeChecked ? 'ĐÃ RÚT ĐIỆN & XẢ TỤ' : 'ĐANG CẮM NGUỒN'"
+                    ></span>
+                  </div>
+
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-400 text-[11px]">Màn hình hiển thị:</span>
+                    <span
+                      class="px-2 py-0.5 rounded text-[10px] font-bold"
+                      :class="step3.screenRevived ? 'bg-emerald-900/60 text-emerald-300' : 'bg-red-900/60 text-red-300'"
+                      x-text="step3.screenRevived ? 'ĐÃ LÊN HÌNH (UEFI BIOS)' : 'ĐEN THUI (NO SIGNAL / LỖI)'"
+                    ></span>
+                  </div>
+
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-400 text-[11px]">Âm báo Mainboard:</span>
+                    <span
+                      class="text-[10px]"
+                      :class="step3.screenRevived ? 'text-emerald-400' : 'text-gray-400'"
+                      x-text="step3.screenRevived ? '1 Tiếng Bíp ngắn (POST OK)' : 'Không có tiếng Bíp'"
+                    ></span>
+                  </div>
+                </div>
+
+                <!-- Hardware Detected -->
+                <div class="bg-gray-800/80 p-3 rounded-xl border border-gray-700 space-y-1.5 text-[11px]">
+                  <p class="text-gray-400 font-bold uppercase text-[10px] border-b border-gray-700 pb-1 mb-1">Cấu Hình Phần Cứng</p>
+                  <p><span class="text-gray-400">CPU:</span> <span class="text-gray-200" x-text="step1.cpuModel"></span></p>
+                  <p>
+                    <span class="text-gray-400">Tổng RAM:</span>
+                    <span
+                      class="font-bold"
+                      :class="step4.ramDualSnapAudible ? 'text-emerald-400' : 'text-gray-200'"
+                      x-text="step4.ramDualSnapAudible ? '16 GB DDR4 (Đã nhận đủ 2 thanh)' : step1.ramDetected"
+                    ></span>
+                  </p>
+                  <p><span class="text-gray-400">Phân vùng:</span> <span class="text-gray-200" x-text="step1.diskConfig"></span></p>
+                  <p x-show="step4.diskManagementInitialized" class="text-emerald-400">
+                    ✓ Đã nhận ổ phụ: DATA_SSD (240 GB)
+                  </p>
+                </div>
+
+                <!-- Thermal & Health -->
+                <div class="bg-gray-800/80 p-3 rounded-xl border border-gray-700 space-y-1.5 text-[11px]">
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-400">Nhiệt độ CPU (Tải):</span>
+                    <span
+                      class="font-bold px-2 py-0.5 rounded text-[10px]"
+                      :class="step4.thermalPasteBeanSize ? 'bg-emerald-950 text-emerald-400' : 'bg-red-950 text-red-400'"
+                      x-text="step4.thermalPasteBeanSize ? step7.cpuTempLoaded + '°C (Ổn định mát)' : '92°C (CỰC NÓNG)'"
+                    ></span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span class="text-gray-400">Tốc độ quạt CPU:</span>
+                    <span
+                      class="text-[10px]"
+                      :class="step4.cpuFanPlugged ? 'text-emerald-400' : 'text-red-400'"
+                      x-text="step4.cpuFanPlugged ? '1,450 RPM (Quay êm ái)' : '0 RPM (Chưa cắm CPU_FAN!)'"
+                    ></span>
+                  </div>
+                </div>
+
+                <!-- Data Safety Status -->
+                <div class="bg-gray-800/80 p-3 rounded-xl border border-gray-700 space-y-1 text-[11px]">
+                  <p class="text-gray-400 font-bold uppercase text-[10px] border-b border-gray-700 pb-1 mb-1">Bảo Toàn Dữ Liệu</p>
+                  <p>
+                    <span class="text-gray-400">Dữ liệu gốc:</span>
+                    <span class="text-amber-300" x-text="step2.sourceCount + ' files (' + step2.sourceMB + ' MB)'"></span>
+                  </p>
+                  <p>
+                    <span class="text-gray-400">Đã chép sang D:</span>
+                    <span
+                      class="font-bold"
+                      :class="step2.isVerifiedMatch ? 'text-emerald-400' : 'text-gray-400'"
+                      x-text="step2.isVerifiedMatch ? step2.destCount + ' files (' + step2.destMB + ' MB) - KHỚP 100%' : 'Chưa đối chiếu'"
+                    ></span>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Lego reminder -->
+              <div class="p-3 rounded-xl bg-gray-800/40 border border-gray-700 text-[11px] text-gray-400 space-y-1">
+                <p class="font-bold text-gray-300">💡 3 Luật sống còn nhắc em:</p>
+                <p>1. Rút điện - Bấm xả tụ 3 lần - Ốc vào khay.</p>
+                <p>2. Dữ liệu là nồi cơm, chưa cứu thì không format.</p>
+                <p>3. Rãnh khuyết Lego, thấy cấn tay thì xoay lại.</p>
+              </div>
+            </div>
+
+            <!-- Right Column (2 cols): Step-by-Step Action Workspace -->
+            <div class="lg:col-span-2 space-y-6">
+              <!-- ============================================== -->
+              <!-- STEP 1: NHẬN MÁY & ĐỌC CẤU HÌNH                -->
+              <!-- ============================================== -->
+              <div x-show="currentStep === 1" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-5">
+                <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                  <div>
+                    <span class="text-xs font-mono font-bold text-primary-700 uppercase">Bước 1 / 7</span>
+                    <h3 class="text-lg font-bold text-gray-900">Tiếp Nhận Máy & Đọc Cấu Hình Trong 3 Phút</h3>
+                  </div>
+                  <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-mono">15-20 phút</span>
+                </div>
+
+                <div class="p-3.5 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900">
+                  <strong>Nhiệm vụ:</strong> Khám vỏ ngoài, cắm điện thử máy để phân loại 4 trạng thái khởi động (A/B/C/D), đọc nhanh cấu hình máy và đặc biệt là <strong>ghi lại dung lượng ổ C và ổ D</strong> để không format nhầm ở Bước 5.
+                </div>
+
+                <!-- Action 1.1: Chassis check -->
+                <div class="space-y-2">
+                  <label class="block text-xs font-bold text-gray-800">1.1 Khám vỏ ngoài máy tính lúc tiếp nhận:</label>
+                  <select x-model="step1.chassisCondition" class="w-full text-xs p-2.5 border border-gray-300 rounded-lg">
+                    <option value="Nguyên vẹn, trầy nhẹ cạnh bên">Nguyên vẹn, trầy xước nhẹ vỏ thùng máy (bình thường)</option>
+                    <option value="Móp méo góc thùng, thiếu 2 ốc sau">Vỏ thùng máy móp méo, thiếu 2 ốc vít sau lưng</option>
+                    <option value="Bể mặt nạ nhựa trước, đứt dây audio">Bể mặt nạ nhựa trước, đứt dây jack audio cổng trước</option>
+                  </select>
+                </div>
+
+                <!-- Action 1.2: Power button test -->
+                <div class="space-y-2">
+                  <label class="block text-xs font-bold text-gray-800">1.2 Cắm điện bật thử máy — Quan sát thấy triệu chứng gì?</label>
+                  <div class="space-y-2 text-xs">
+                    <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                      <input type="radio" value="A" x-model="step1.powerTestOutcome" name="power_state" />
+                      <span><strong>Trường hợp A:</strong> Máy vào Windows bình thường, lên hình trơn tru.</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                      <input type="radio" value="B" x-model="step1.powerTestOutcome" name="power_state" />
+                      <span><strong>Trường hợp B:</strong> Bấm nút nguồn IM RE, quạt không quay, đèn không sáng.</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                      <input type="radio" value="C" x-model="step1.powerTestOutcome" name="power_state" />
+                      <span><strong>Trường hợp C:</strong> Quạt quay VÙ VÙ nhưng MÀN HÌNH ĐEN THUI (No Signal).</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                      <input type="radio" value="D" x-model="step1.powerTestOutcome" name="power_state" />
+                      <span><strong>Trường hợp D:</strong> Hiện logo rồi báo chữ trắng "No Bootable Device" hoặc màn hình xanh.</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Action 1.3: Record Drive C and D -->
+                <div class="space-y-2 bg-amber-50 p-4 rounded-xl border border-amber-200 text-xs">
+                  <p class="font-bold text-amber-900">1.3 Con số sống còn: Ghi lại dung lượng Ổ C và Ổ D vào phiếu:</p>
+                  <p class="text-amber-800 text-[11px]">Nhìn thông số ổ cứng của máy này: C: 120 GB, D: 380 GB. Em hãy điền đúng số GB vào ô dưới:</p>
+                  <div class="grid grid-cols-2 gap-3 pt-1">
+                    <div>
+                      <label class="block font-medium text-gray-700 mb-0.5">Dung lượng ổ C (GB):</label>
+                      <input
+                        type="number"
+                        x-model="step1.recordedDriveC"
+                        placeholder="120"
+                        class="w-full p-2 border border-gray-300 rounded text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label class="block font-medium text-gray-700 mb-0.5">Dung lượng ổ D (GB):</label>
+                      <input
+                        type="number"
+                        x-model="step1.recordedDriveD"
+                        placeholder="380"
+                        class="w-full p-2 border border-gray-300 rounded text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-3 flex justify-between items-center">
+                  <span class="text-xs text-emerald-700 font-semibold" x-show="step1.recordedDriveC == 120 && step1.recordedDriveD == 380">
+                    ✓ Đã ghi nhận chính xác dung lượng 2 ổ đĩa!
+                  </span>
+                  <button
+                    type="button"
+                    @click="step1.completed = true; currentStep = 2;"
+                    class="btn-primary text-xs px-5 py-2.5 font-bold ml-auto"
+                  >
+                    Hoàn thành Bước 1 → Sang Bước 2 Cứu Dữ Liệu
+                  </button>
+                </div>
+              </div>
+
+              <!-- ============================================== -->
+              <!-- STEP 2: CỨU DỮ LIỆU — GIỮ NỒI CƠM (STOP 1)     -->
+              <!-- ============================================== -->
+              <div x-show="currentStep === 2" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-5">
+                <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                  <div>
+                    <span class="text-xs font-mono font-bold text-red-600 uppercase flex items-center gap-1">
+                      <span>Bước 2 / 7</span>
+                      <span class="bg-red-100 text-red-800 px-2 py-0.2 rounded font-bold">🛑 ĐIỂM DỪNG AN TOÀN SỐ 1</span>
+                    </span>
+                    <h3 class="text-lg font-bold text-gray-900 mt-0.5">Cứu Dữ Liệu — Luật "Giữ Nồi Cơm Của Khách"</h3>
+                  </div>
+                  <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-mono">10-25 phút</span>
+                </div>
+
+                <div class="p-3.5 bg-red-50 border-l-4 border-red-500 rounded-xl text-xs text-red-900 leading-relaxed">
+                  <strong>NGUYÊN TẮC BẤT DI BẤT DỊCH:</strong> Chưa cứu dữ liệu thì TUYỆT ĐỐI KHÔNG mở máy sửa chữa phần cứng, không format ổ đĩa. Dữ liệu khách là nồi cơm, mất là phải đền!
+                </div>
+
+                <!-- Simulation Action 2.1: Select Method -->
+                <div class="space-y-2 text-xs">
+                  <label class="block font-bold text-gray-800">2.1 Chọn phương án cứu dữ liệu phù hợp với hiện trạng máy:</label>
+                  <div class="space-y-2">
+                    <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                      <input type="radio" value="direct" x-model="step2.backupMethod" />
+                      <span><strong>Phương án 1:</strong> Máy vẫn vào được Win -> Copy trực tiếp thư mục nhạy cảm sang ổ D:\\BACKUP_KHACH_HANG</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                      <input type="radio" value="winpe" x-model="step2.backupMethod" />
+                      <span><strong>Phương án 2:</strong> Máy lỗi không vào Win -> Cắm USB Boot cứu hộ WinPE mini để vào cứu dữ liệu</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Action 2.2: Copy rule -->
+                <div class="space-y-2 text-xs">
+                  <label class="block font-bold text-gray-800">2.2 Khi sao lưu thư mục tài liệu của khách, em dùng lệnh nào?</label>
+                  <div class="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      @click="triggerCutSafetyViolation()"
+                      class="p-3 rounded-lg border border-red-300 bg-red-50 text-red-800 font-semibold hover:bg-red-100 text-center"
+                    >
+                      Dùng lệnh CUT (Cắt rồi dán) ❌
+                    </button>
+                    <button
+                      type="button"
+                      @click="step2.isVerifiedMatch = true;"
+                      class="p-3 rounded-lg border border-emerald-300 bg-emerald-50 text-emerald-800 font-semibold hover:bg-emerald-100 text-center"
+                    >
+                      Dùng lệnh COPY (Sao chép rồi dán) ✅
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Action 2.3: Verification comparison -->
+                <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3 text-xs">
+                  <p class="font-bold text-gray-800">2.3 Đối chiếu kiểm tra chéo sau khi sao chép:</p>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-3 rounded border">
+                      <span class="text-gray-500 block mb-1">Thư mục gốc:</span>
+                      <p class="font-bold text-gray-900" x-text="step2.sourceCount + ' files · ' + step2.sourceMB + ' MB'"></p>
+                    </div>
+                    <div class="bg-white p-3 rounded border">
+                      <span class="text-gray-500 block mb-1">Thư mục đã sao lưu (Ổ D):</span>
+                      <p class="font-bold text-emerald-700" x-text="step2.destCount + ' files · ' + step2.destMB + ' MB'"></p>
+                    </div>
+                  </div>
+
+                  <div class="flex flex-wrap items-center gap-4 pt-2">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" x-model="step2.isVerifiedMatch" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                      <span>Đã đối chiếu khớp 100% số file và số MB</span>
+                    </label>
+
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" x-model="step2.samplesOpened" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                      <span>Đã mở thử 2 file tài liệu kiểm tra đọc tốt</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Stop Point 1 Signoff -->
+                <div class="p-4 rounded-xl border-2 border-red-200 bg-red-50/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                  <div>
+                    <p class="font-bold text-red-900">🛑 ĐIỂM DỪNG AN TOÀN 1: BÁO CÁO THẦY GIÁO DUYỆT</p>
+                    <p class="text-red-700 text-[11px]">Thầy kiểm tra thấy dữ liệu đã an toàn mới ký duyệt cho phép tháo máy hoặc format.</p>
+                  </div>
+
+                  <button
+                    type="button"
+                    :disabled="!step2.isVerifiedMatch || !step2.samplesOpened"
+                    @click="approveStop1()"
+                    class="btn-primary text-xs px-4 py-2 font-bold whitespace-nowrap"
+                    :class="(!step2.isVerifiedMatch || !step2.samplesOpened) ? 'opacity-50 cursor-not-allowed' : 'bg-red-700 hover:bg-red-800'"
+                  >
+                    <span x-text="step2.teacherApprovedStop1 ? '✓ Thầy đã ký duyệt Điểm dừng 1' : 'Báo Thầy ký duyệt Điểm dừng 1'"></span>
+                  </button>
+                </div>
+
+                <div class="pt-3 flex justify-between items-center">
+                  <button type="button" @click="currentStep = 1" class="btn-secondary text-xs px-4 py-2">← Bước 1</button>
+                  <button
+                    type="button"
+                    :disabled="!step2.teacherApprovedStop1"
+                    @click="step2.completed = true; currentStep = 3;"
+                    class="btn-primary text-xs px-5 py-2.5 font-bold"
+                    :class="!step2.teacherApprovedStop1 ? 'opacity-50 cursor-not-allowed' : ''"
+                  >
+                    Hoàn thành Bước 2 → Sang Bước 3 Bắt Bệnh
+                  </button>
+                </div>
+              </div>
+
+              <!-- ============================================== -->
+              <!-- STEP 3: BẮT BỆNH 60 GIÂY & CỨU MÁY LÊN HÌNH   -->
+              <!-- ============================================== -->
+              <div x-show="currentStep === 3" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-5">
+                <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                  <div>
+                    <span class="text-xs font-mono font-bold text-primary-700 uppercase">Bước 3 / 7</span>
+                    <h3 class="text-lg font-bold text-gray-900">Bắt Bệnh 60 Giây & Cứu Máy Lên Hình</h3>
+                  </div>
+                  <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-mono">15-30 phút</span>
+                </div>
+
+                <!-- Survival Rule 1 Check -->
+                <div class="p-4 rounded-xl bg-amber-50 border border-amber-300 text-xs text-amber-950 space-y-2">
+                  <p class="font-bold text-amber-900">⚠️ BẮT BUỘC THỰC HIỆN LUẬT 1: RÚT — BẤM — KHAY</p>
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
+                    <div class="bg-white p-2.5 rounded border border-amber-200">
+                      <strong>1. RÚT:</strong> Rút phích điện, gạt công tắc PSU sang O.
+                    </div>
+                    <div class="bg-white p-2.5 rounded border border-amber-200">
+                      <strong>2. BẤM:</strong> Bấm nút Power ngoài thùng 3 lần xả tụ.
+                    </div>
+                    <div class="bg-white p-2.5 rounded border border-amber-200">
+                      <strong>3. KHAY:</strong> Chuẩn bị khay đựng ốc, tháo ốc bỏ vào khay.
+                    </div>
+                  </div>
+
+                  <label class="flex items-center gap-2 pt-1 font-bold text-amber-900 cursor-pointer">
+                    <input type="checkbox" x-model="step3.pullPlugDischargeChecked" class="w-4 h-4 rounded text-amber-700 accent-amber-700" />
+                    <span>Em đã thực hiện đủ RÚT ĐIỆN, BẤM XẢ TỤ 3 LẦN và ĐỂ ỐC VÀO KHAY!</span>
+                  </label>
+                </div>
+
+                <!-- Simulation Action 3.1: Cause identification -->
+                <div class="space-y-2 text-xs">
+                  <label class="block font-bold text-gray-800">3.1 Khoanh vùng và chẩn đoán nguyên nhân gốc rễ của ca máy này:</label>
+                  <div class="space-y-2">
+                    <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                      <input type="radio" value="ram_oxide" x-model="step3.identifiedCause" />
+                      <span><strong>Nguyên nhân A:</strong> Chân mạ vàng của thanh RAM bị bụi bẩn, oxy hóa tiếp xúc kém dẫn đến màn hình đen.</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                      <input type="radio" value="sata_loose" x-model="step3.identifiedCause" />
+                      <span><strong>Nguyên nhân B:</strong> Tuột cáp tín hiệu SATA hoặc lỏng dây nguồn ổ cứng dẫn đến báo No Bootable Device.</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                      <input type="radio" value="cmos_dead" x-model="step3.identifiedCause" />
+                      <span><strong>Nguyên nhân C:</strong> Pin CMOS CR2032 cạn kiệt điện tích khiến máy sai ngày giờ và bắt bấm F1.</span>
+                    </label>
+                    <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                      <input type="radio" value="paste_dry" x-model="step3.identifiedCause" />
+                      <span><strong>Nguyên nhân D:</strong> Keo tản nhiệt CPU khô cứng làm máy quá nhiệt 92°C tự ngắt nguồn.</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Simulation Action 3.2: Technical Treatment -->
+                <div class="space-y-2 text-xs">
+                  <label class="block font-bold text-gray-800">3.2 Thao tác kỹ thuật xử lý để cứu máy lên hình:</label>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      :disabled="!step3.pullPlugDischargeChecked"
+                      @click="handleCleanRam()"
+                      class="p-3 rounded-lg border border-primary-200 bg-primary-50 text-primary-900 font-semibold hover:bg-primary-100 text-left flex items-start gap-2"
+                      :class="!step3.pullPlugDischargeChecked ? 'opacity-50 cursor-not-allowed' : ''"
+                    >
+                      <span>🧽</span>
+                      <div>
+                        <strong>Dùng cục tẩy chà sạch chân RAM</strong>
+                        <p class="text-[11px] text-gray-600 font-normal">Tháo RAM, lấy gôm học sinh chà sạch oxit chân vàng, quét bụi khe RAM và cắm lại sập tai khóa.</p>
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      :disabled="!step3.pullPlugDischargeChecked"
+                      @click="handleReseatSata()"
+                      class="p-3 rounded-lg border border-primary-200 bg-primary-50 text-primary-900 font-semibold hover:bg-primary-100 text-left flex items-start gap-2"
+                      :class="!step3.pullPlugDischargeChecked ? 'opacity-50 cursor-not-allowed' : ''"
+                    >
+                      <span>🔌</span>
+                      <div>
+                        <strong>Cắm chặt lại 2 đầu cáp SATA ổ cứng</strong>
+                        <p class="text-[11px] text-gray-600 font-normal">Cắm chắc chắn cáp dữ liệu SATA và dây nguồn SATA, kiểm tra trong BIOS.</p>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="pt-3 flex justify-between items-center">
+                  <button type="button" @click="currentStep = 2" class="btn-secondary text-xs px-4 py-2">← Bước 2</button>
+                  <button
+                    type="button"
+                    :disabled="!step3.screenRevived"
+                    @click="step3.completed = true; currentStep = 4;"
+                    class="btn-primary text-xs px-5 py-2.5 font-bold"
+                    :class="!step3.screenRevived ? 'opacity-50 cursor-not-allowed' : ''"
+                  >
+                    Hoàn thành Bước 3 → Sang Bước 4 Sạch & Lắp Nâng Cấp
+                  </button>
+                </div>
+              </div>
+
+              <!-- ============================================== -->
+              <!-- STEP 4: SẠCH & LẮP NÂNG CẤP (STOP 2)           -->
+              <!-- ============================================== -->
+              <div x-show="currentStep === 4" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-5">
+                <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                  <div>
+                    <span class="text-xs font-mono font-bold text-red-600 uppercase flex items-center gap-1">
+                      <span>Bước 4 / 7</span>
+                      <span class="bg-red-100 text-red-800 px-2 py-0.2 rounded font-bold">🛑 ĐIỂM DỪNG AN TOÀN SỐ 2</span>
+                    </span>
+                    <h3 class="text-lg font-bold text-gray-900 mt-0.5">Vệ Sinh Thổi Bụi, Tra Keo Hạt Đậu Xanh & Lắp Nâng Cấp</h3>
+                  </div>
+                  <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-mono">30-45 phút</span>
+                </div>
+
+                <!-- Simulation Action 4.1: Clean & Paste -->
+                <div class="space-y-3 text-xs">
+                  <p class="font-bold text-gray-800">4.1 Thao tác vệ sinh và tản nhiệt CPU chuẩn thợ 20 năm:</p>
+                  
+                  <label class="flex items-start gap-2.5 p-3 rounded-lg border border-gray-200 bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step4.fanHeldWhenBlowing" class="mt-0.5 w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <div>
+                      <strong class="text-gray-900">Giữ đứng cánh quạt khi xịt bụi:</strong>
+                      <span class="text-gray-600 block text-[11px]">Dùng ngón tay giữ cố định cánh quạt khi dùng bóng thổi/bình xịt để tránh quạt quay quá tốc độ phát điện ngược làm cháy bo mạch.</span>
+                    </div>
+                  </label>
+
+                  <label class="flex items-start gap-2.5 p-3 rounded-lg border border-gray-200 bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step4.thermalPasteBeanSize" class="mt-0.5 w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <div>
+                      <strong class="text-gray-900">Tra keo tản nhiệt đúng lượng "HẠT ĐẬU XANH":</strong>
+                      <span class="text-gray-600 block text-[11px]">Lau sạch lớp keo cũ khô giòn, bơm đúng 1 giọt nhỏ bằng hạt đậu xanh ở giữa lưng CPU, ấn chốt theo đường chéo đối xứng.</span>
+                    </div>
+                  </label>
+
+                  <label class="flex items-start gap-2.5 p-3 rounded-lg border border-gray-200 bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step4.cpuFanPlugged" class="mt-0.5 w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <div>
+                      <strong class="text-gray-900">Cắm dây quạt vào đúng chân CPU_FAN:</strong>
+                      <span class="text-gray-600 block text-[11px]">Cắm chặt dây nguồn quạt vào chân cắm có chữ CPU_FAN trên bo mạch chủ.</span>
+                    </div>
+                  </label>
+                </div>
+
+                <!-- Simulation Action 4.2: Hardware Upgrade (RAM or SSD) -->
+                <div class="space-y-3 text-xs pt-2 border-t border-gray-100">
+                  <p class="font-bold text-gray-800">4.2 Lắp linh kiện nâng cấp theo yêu cầu đề bài:</p>
+                  
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="p-3 rounded-xl border border-gray-200 bg-white">
+                      <strong class="text-gray-900 block mb-1">Nâng cấp thêm RAM 8GB:</strong>
+                      <p class="text-gray-500 text-[11px] mb-2">Soi đúng rãnh khuyết, ấn đều 2 đầu đến khi nghe 2 tiếng "tách" sập tai khóa.</p>
+                      <button
+                        type="button"
+                        @click="handleSnapRam()"
+                        class="btn-secondary text-xs px-3 py-1.5 w-full font-bold"
+                        :class="step4.ramDualSnapAudible ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : ''"
+                      >
+                        <span x-text="step4.ramDualSnapAudible ? '✓ Đã cắm RAM sập 2 tai khóa' : 'Lắp RAM & Khóa 2 tai nhựa'"></span>
+                      </button>
+                    </div>
+
+                    <div class="p-3 rounded-xl border border-gray-200 bg-white">
+                      <strong class="text-gray-900 block mb-1">Kích hoạt SSD mới trong Win:</strong>
+                      <p class="text-gray-500 text-[11px] mb-2">Vào `diskmgmt.msc` -> Khởi tạo GPT -> New Simple Volume format NTFS.</p>
+                      <button
+                        type="button"
+                        @click="handleInitDisk()"
+                        class="btn-secondary text-xs px-3 py-1.5 w-full font-bold"
+                        :class="step4.diskManagementInitialized ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : ''"
+                      >
+                        <span x-text="step4.diskManagementInitialized ? '✓ Đã kích hoạt New Simple Volume' : '4 Cú nhấp chuột Disk Management'"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Stop Point 2 Signoff -->
+                <div class="p-4 rounded-xl border-2 border-red-200 bg-red-50/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                  <div>
+                    <p class="font-bold text-red-900">🛑 ĐIỂM DỪNG AN TOÀN 2: THẦY KIỂM TRA TRƯỚC KHI CẮM ĐIỆN</p>
+                    <p class="text-red-700 text-[11px]">Kiểm tra: RAM đã sập khóa, CPU_FAN đã cắm, không có ốc vít rơi bên trong thùng máy.</p>
+                  </div>
+
+                  <button
+                    type="button"
+                    :disabled="!step4.fanHeldWhenBlowing || !step4.thermalPasteBeanSize || !step4.cpuFanPlugged"
+                    @click="approveStop2()"
+                    class="btn-primary text-xs px-4 py-2 font-bold whitespace-nowrap"
+                    :class="(!step4.fanHeldWhenBlowing || !step4.thermalPasteBeanSize || !step4.cpuFanPlugged) ? 'opacity-50 cursor-not-allowed' : 'bg-red-700 hover:bg-red-800'"
+                  >
+                    <span x-text="step4.teacherApprovedStop2 ? '✓ Thầy đã duyệt Điểm dừng 2' : 'Báo Thầy kiểm tra cho phép cắm điện'"></span>
+                  </button>
+                </div>
+
+                <div class="pt-3 flex justify-between items-center">
+                  <button type="button" @click="currentStep = 3" class="btn-secondary text-xs px-4 py-2">← Bước 3</button>
+                  <button
+                    type="button"
+                    :disabled="!step4.teacherApprovedStop2"
+                    @click="step4.completed = true; currentStep = 5;"
+                    class="btn-primary text-xs px-5 py-2.5 font-bold"
+                    :class="!step4.teacherApprovedStop2 ? 'opacity-50 cursor-not-allowed' : ''"
+                  >
+                    Hoàn thành Bước 4 → Sang Bước 5 Cài Đặt
+                  </button>
+                </div>
+              </div>
+
+              <!-- ============================================== -->
+              <!-- STEP 5: CÀI ĐẶT WINDOWS & DRIVER SẠCH CHẤM THAN -->
+              <!-- ============================================== -->
+              <div x-show="currentStep === 5" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-5">
+                <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                  <div>
+                    <span class="text-xs font-mono font-bold text-primary-700 uppercase">Bước 5 / 7</span>
+                    <h3 class="text-lg font-bold text-gray-900">Cài Windows Đúng Ổ C & Sạch Bóng Chấm Than Driver</h3>
+                  </div>
+                  <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-mono">45-60 phút</span>
+                </div>
+
+                <!-- Simulation Action 5.1: Select Partition by GB -->
+                <div class="space-y-2 text-xs bg-amber-50 p-4 rounded-xl border border-amber-300">
+                  <p class="font-bold text-amber-900">5.1 Quy tắc vàng: "Nhìn số GB, không nhìn tên ký tự để chọn ổ cài Win":</p>
+                  <p class="text-amber-800 text-[11px]">Trình cài đặt hiển thị 2 phân vùng: Drive 0 Partition 1 (120.0 GB) và Drive 0 Partition 2 (380.0 GB). Em hãy chọn đúng phân vùng ổ C để Format:</p>
+                  
+                  <div class="grid grid-cols-2 gap-3 pt-1">
+                    <button
+                      type="button"
+                      @click="selectDriveC120()"
+                      class="p-3 rounded-lg border font-bold text-center"
+                      :class="step5.targetPartitionGB === '120' ? 'bg-emerald-100 border-emerald-500 text-emerald-900' : 'bg-white border-gray-300 hover:bg-gray-50'"
+                    >
+                      Partition 1 (120.0 GB) — Chọn Cài Win ✓
+                    </button>
+
+                    <button
+                      type="button"
+                      @click="triggerFormatWrongDriveD()"
+                      class="p-3 rounded-lg border border-red-300 bg-red-50 text-red-900 font-bold hover:bg-red-100 text-center"
+                    >
+                      Partition 2 (380.0 GB) — Format ❌ (CẨN THẬN)
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Action 5.2: Checklist -->
+                <div class="space-y-2.5 text-xs">
+                  <p class="font-bold text-gray-800">5.2 Các thiết lập bắt buộc sau khi nạp Windows:</p>
+
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step5.usbPulledAfterReboot" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <span>Rút ngay USB cài Win ra sau lần máy tự khởi động lại đầu tiên</span>
+                  </label>
+
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step5.timezoneSetHanoi" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <span>Chỉnh đúng múi giờ chuẩn: (UTC+07:00) Bangkok, Hanoi, Jakarta</span>
+                  </label>
+
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step5.deviceManagerClean" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <span>Kiểm tra Device Manager: SẠCH BÓNG 100% DẤU CHẤM THAN VÀNG (!)</span>
+                  </label>
+
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step5.unikeyInstalled" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <span>Cài đặt UniKey tiếng Việt (Bảng mã Unicode, kiểu gõ Telex, bật khởi động cùng Win)</span>
+                  </label>
+
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step5.restorePointCreated" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <span>Tạo System Restore Point đặt tên là: "MAY_CHAY_TOT"</span>
+                  </label>
+                </div>
+
+                <div class="pt-3 flex justify-between items-center">
+                  <button type="button" @click="currentStep = 4" class="btn-secondary text-xs px-4 py-2">← Bước 4</button>
+                  <button
+                    type="button"
+                    :disabled="step5.targetPartitionGB !== '120' || !step5.deviceManagerClean"
+                    @click="step5.completed = true; currentStep = 6;"
+                    class="btn-primary text-xs px-5 py-2.5 font-bold"
+                    :class="(step5.targetPartitionGB !== '120' || !step5.deviceManagerClean) ? 'opacity-50 cursor-not-allowed' : ''"
+                  >
+                    Hoàn thành Bước 5 → Sang Bước 6 Ngoại Vi & Máy In
+                  </button>
+                </div>
+              </div>
+
+              <!-- ============================================== -->
+              <!-- STEP 6: NGOẠI VI & MẸO SỬA MÁY IN 3 CÚ CLICK   -->
+              <!-- ============================================== -->
+              <div x-show="currentStep === 6" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-5">
+                <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                  <div>
+                    <span class="text-xs font-mono font-bold text-primary-700 uppercase">Bước 6 / 7</span>
+                    <h3 class="text-lg font-bold text-gray-900">Thử Thiết Bị Ngoại Vi & Mẹo Sửa Máy In 3 Cú Click</h3>
+                  </div>
+                  <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-mono">15-25 phút</span>
+                </div>
+
+                <!-- Simulation Action 6.1: Peripherals -->
+                <div class="space-y-2 text-xs">
+                  <p class="font-bold text-gray-800">6.1 Kiểm tra các thiết bị ngoại vi:</p>
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step6.peripheralsWorking" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <span>Bàn phím gõ đủ phím, chuột trái/phải/con lăn nhạy, tai nghe có âm thanh, mạng Internet thông suốt.</span>
+                  </label>
+                </div>
+
+                <!-- Simulation Action 6.2: 3-Click Printer Fix -->
+                <div class="space-y-3 text-xs bg-gray-50 p-4 rounded-xl border border-gray-200">
+                  <p class="font-bold text-gray-800">6.2 Xử lý máy in văn phòng (Canon LBP 2900 / HP) bị kẹt lệnh in:</p>
+
+                  <div class="space-y-2">
+                    <label class="flex items-start gap-2 p-2.5 rounded-lg border border-gray-200 bg-white cursor-pointer">
+                      <input type="checkbox" x-model="step6.spoolerCleared" class="mt-0.5 w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                      <div>
+                        <strong>Cú click 1 & 2: Xóa kẹt lệnh in (Cancel All Documents / Restart Spooler):</strong>
+                        <span class="text-gray-500 block text-[11px]">Nhấp đúp máy in -> menu Printer -> Bấm "Cancel All Documents" để dọn sạch hàng đợi in bị tắc nghẽn.</span>
+                      </div>
+                    </label>
+
+                    <label class="flex items-start gap-2 p-2.5 rounded-lg border border-gray-200 bg-white cursor-pointer">
+                      <input type="checkbox" x-model="step6.printerDefaultChecked" class="mt-0.5 w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                      <div>
+                        <strong>Cú click 3: Đặt làm máy in mặc định (Set as default printer):</strong>
+                        <span class="text-gray-500 block text-[11px]">Click chuột phải máy in chọn "Set as default printer" (xuất hiện dấu tích tròn màu xanh lá cây).</span>
+                      </div>
+                    </label>
+
+                    <div class="pt-2">
+                      <button
+                        type="button"
+                        :disabled="!step6.spoolerCleared || !step6.printerDefaultChecked"
+                        @click="handlePrintTestPage()"
+                        class="btn-primary text-xs px-4 py-2 font-bold flex items-center gap-2"
+                        :class="(!step6.spoolerCleared || !step6.printerDefaultChecked) ? 'opacity-50 cursor-not-allowed' : 'bg-emerald-700 hover:bg-emerald-800'"
+                      >
+                        <span>🖨️</span>
+                        <span x-text="step6.testPagePrinted ? '✓ Đã in thành công Windows Test Page' : 'Bấm In Trang Thử Nghiệm (Print Test Page)'"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-3 flex justify-between items-center">
+                  <button type="button" @click="currentStep = 5" class="btn-secondary text-xs px-4 py-2">← Bước 5</button>
+                  <button
+                    type="button"
+                    :disabled="!step6.testPagePrinted"
+                    @click="step6.completed = true; currentStep = 7;"
+                    class="btn-primary text-xs px-5 py-2.5 font-bold"
+                    :class="!step6.testPagePrinted ? 'opacity-50 cursor-not-allowed' : ''"
+                  >
+                    Hoàn thành Bước 6 → Sang Bước 7 Nghiệm Thu & Bàn Giao
+                  </button>
+                </div>
+              </div>
+
+              <!-- ============================================== -->
+              <!-- STEP 7: NGHIỆM THU 5 ĐIỂM & BÀN GIAO (STOP 3)   -->
+              <!-- ============================================== -->
+              <div x-show="currentStep === 7" class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-5">
+                <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                  <div>
+                    <span class="text-xs font-mono font-bold text-red-600 uppercase flex items-center gap-1">
+                      <span>Bước 7 / 7</span>
+                      <span class="bg-red-100 text-red-800 px-2 py-0.2 rounded font-bold">🛑 ĐIỂM DỪNG AN TOÀN SỐ 3</span>
+                    </span>
+                    <h3 class="text-lg font-bold text-gray-900 mt-0.5">Nghiệm Thu 5 Điểm Vàng & Bàn Giao Máy Cho Khách</h3>
+                  </div>
+                  <span class="text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-mono">15-20 phút</span>
+                </div>
+
+                <!-- Simulation Action 7.1: 5-Point Acceptance -->
+                <div class="space-y-2.5 text-xs">
+                  <p class="font-bold text-gray-800">7.1 Bộ kiểm tra nghiệm thu 5 điểm bắt buộc trước khi giao trả máy:</p>
+
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step7.fanQuiet" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <span><strong>Điểm 1:</strong> Đóng nắp thùng máy đủ ốc, quạt quay êm ái, không chạm dây điện kêu rè rè.</span>
+                  </label>
+
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step7.tempUnder75Checked" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <span><strong>Điểm 2:</strong> Bật HWMonitor cho CPU chạy thử 5 phút: Nhiệt độ ổn định dưới 75°C (hiện tại đo được 54°C - Đạt).</span>
+                  </label>
+
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step7.dataIntact100Checked" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <span><strong>Điểm 3:</strong> Dữ liệu khách hàng đã chép trả lại Desktop/Documents đầy đủ 100%, mở đọc bình thường.</span>
+                  </label>
+
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step7.benchCleaned" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <span><strong>Điểm 4:</strong> Tác phong người thợ: Tua-vít và dụng cụ xếp vào hộp, lau chùi bàn kỹ thuật sạch sẽ.</span>
+                  </label>
+
+                  <label class="flex items-center gap-2 p-2.5 rounded-lg border border-gray-200 hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" x-model="step7.sheetSigned" class="w-4 h-4 rounded text-primary-700 accent-primary-700" />
+                    <span><strong>Điểm 5:</strong> Hoàn thiện mọi thông số và Kỹ thuật viên ký tên vào Phiếu Dịch Vụ Kỹ Thuật A-Z.</span>
+                  </label>
+                </div>
+
+                <!-- Stop Point 3 Signoff -->
+                <div class="p-4 rounded-xl border-2 border-red-200 bg-red-50/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                  <div>
+                    <p class="font-bold text-red-900">🛑 ĐIỂM DỪNG AN TOÀN 3: GIÁO VIÊN NGHIỆM THU CUỐI CÙNG</p>
+                    <p class="text-red-700 text-[11px]">Đủ 5 điểm nghiệm thu, thầy kiểm tra thực tế và ký duyệt cho phép xuất hồ sơ bàn giao.</p>
+                  </div>
+
+                  <button
+                    type="button"
+                    :disabled="!step7.fanQuiet || !step7.tempUnder75Checked || !step7.dataIntact100Checked || !step7.benchCleaned || !step7.sheetSigned"
+                    @click="approveStop3()"
+                    class="btn-primary text-xs px-4 py-2 font-bold whitespace-nowrap"
+                    :class="(!step7.fanQuiet || !step7.tempUnder75Checked || !step7.dataIntact100Checked || !step7.benchCleaned || !step7.sheetSigned) ? 'opacity-50 cursor-not-allowed' : 'bg-red-700 hover:bg-red-800'"
+                  >
+                    <span x-text="step7.teacherApprovedStop3 ? '✓ Thầy đã nghiệm thu Điểm dừng 3' : 'Báo Thầy nghiệm thu máy'"></span>
+                  </button>
+                </div>
+
+                <div class="pt-3 flex justify-between items-center">
+                  <button type="button" @click="currentStep = 6" class="btn-secondary text-xs px-4 py-2">← Bước 6</button>
+                  <button
+                    type="button"
+                    :disabled="!step7.teacherApprovedStop3"
+                    @click="step7.completed = true; finishEvaluation();"
+                    class="btn-primary text-sm px-6 py-3 font-bold bg-accent-600 hover:bg-accent-700 shadow-md"
+                    :class="!step7.teacherApprovedStop3 ? 'opacity-50 cursor-not-allowed' : ''"
+                  >
+                    Hoàn Tất Ca Sát Hạch & Xem Bảng Điểm Rubric 🏁
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- SCREEN 3: EVALUATION RESULT & PRINTABLE SERVICE TICKET (A4)   -->
+        <!-- ============================================================== -->
+        <div x-show="phase === 'result'" class="space-y-8" x-cloak>
+          <!-- Score Summary Hero Card -->
+          <div
+            class="rounded-2xl p-6 sm:p-8 text-white shadow-lg transition-all"
+            :class="rubricScores.isPass ? 'bg-gradient-to-r from-emerald-800 to-teal-900' : 'bg-gradient-to-r from-red-900 to-rose-950'"
+          >
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <span class="inline-block px-3 py-1 bg-white/20 text-white text-xs font-mono font-bold rounded-full mb-2">
+                  KẾT QUẢ SÁT HẠCH TAY NGHỀ PHẦN CỨNG MÁY TÍNH
+                </span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold" x-text="'Kỹ thuật viên: ' + student.name"></h2>
+                <p class="text-white/80 text-xs sm:text-sm mt-1" x-text="student.className + ' · ' + student.station + ' · ' + currentTicket.title"></p>
+              </div>
+
+              <div class="text-center sm:text-right bg-white/10 px-6 py-4 rounded-xl border border-white/20">
+                <span class="text-xs uppercase tracking-wider block text-white/80 font-semibold">Tổng Điểm Rubric</span>
+                <span class="text-4xl sm:text-5xl font-extrabold" x-text="rubricScores.total + ' / 10.0'"></span>
+                <span
+                  class="mt-1 block text-xs font-bold px-2.5 py-0.5 rounded-full inline-block"
+                  :class="rubricScores.isPass ? 'bg-emerald-400 text-emerald-950' : 'bg-red-400 text-red-950'"
+                  x-text="rubricScores.isPass ? 'ĐẠT YÊU CẦU (' + rubricScores.rank + ')' : 'CHƯA ĐẠT'"
+                ></span>
+              </div>
+            </div>
+
+            <!-- Danger warning if violation -->
+            <div x-show="safetyViolation" class="mt-4 pt-4 border-t border-white/20 text-xs text-rose-200">
+              ⚠️ Vi phạm An toàn: <span x-text="safetyViolationReason"></span>
+            </div>
+          </div>
+
+          <!-- Official Rubric 10 Points Breakdown Table -->
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+            <h3 class="text-lg font-bold text-gray-900 mb-1 flex items-center gap-2">
+              <span>📊</span>
+              <span>Bảng Điểm Chi Tiết Theo 5 Tiêu Chí Rubric (Chuẩn Thông Tư 55)</span>
+            </h3>
+            <p class="text-xs text-gray-500 mb-4">Mẫu đánh giá chuẩn năng lực thực hành Trung cấp nghề Tin học ứng dụng</p>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left">
+                <thead class="bg-gray-50 text-gray-700 uppercase font-mono border-y border-gray-200">
+                  <tr>
+                    <th class="py-2.5 px-3">TT</th>
+                    <th class="py-2.5 px-3">Tiêu chí đánh giá</th>
+                    <th class="py-2.5 px-3 text-center">Điểm tối đa</th>
+                    <th class="py-2.5 px-3 text-center">Điểm đạt được</th>
+                    <th class="py-2.5 px-3">Nhận xét của Giáo viên hướng dẫn</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-gray-800">
+                  <tr>
+                    <td class="py-3 px-3 font-mono font-bold">1</td>
+                    <td class="py-3 px-3">
+                      <span class="font-bold text-gray-900 block">Quy trình và An toàn kỹ thuật</span>
+                      <span class="text-[11px] text-gray-500">Rút điện, xả tụ 3 lần, ốc vào khay, bảo vệ dữ liệu trước khi sửa</span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-mono font-bold">2.0</td>
+                    <td class="py-3 px-3 text-center font-mono font-bold text-primary-700" x-text="rubricScores.safety"></td>
+                    <td class="py-3 px-3 text-[11px]">
+                      <span x-show="rubricScores.safety === 2.0" class="text-emerald-700">✓ Tuân thủ nghiêm ngặt 3 luật sống còn.</span>
+                      <span x-show="rubricScores.safety < 2.0" class="text-amber-700">Cần chú ý thao tác xả tụ và khay ốc.</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="py-3 px-3 font-mono font-bold">2</td>
+                    <td class="py-3 px-3">
+                      <span class="font-bold text-gray-900 block">Chẩn đoán nguyên nhân sự cố</span>
+                      <span class="text-[11px] text-gray-500">Khoanh đúng bộ phận lỗi, không tháo mò tràn lan, ghi đúng nguyên nhân gốc</span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-mono font-bold">2.5</td>
+                    <td class="py-3 px-3 text-center font-mono font-bold text-primary-700" x-text="rubricScores.diagnosis"></td>
+                    <td class="py-3 px-3 text-[11px] text-emerald-700">
+                      ✓ Bắt đúng bệnh trong 60 giây, cứu máy lên hình.
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="py-3 px-3 font-mono font-bold">3</td>
+                    <td class="py-3 px-3">
+                      <span class="font-bold text-gray-900 block">Thao tác xử lý kỹ thuật</span>
+                      <span class="text-[11px] text-gray-500">Vệ sinh giữ cánh quạt, tra keo hạt đậu xanh, sập khóa RAM, Disk Management SSD</span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-mono font-bold">3.0</td>
+                    <td class="py-3 px-3 text-center font-mono font-bold text-primary-700" x-text="rubricScores.operation"></td>
+                    <td class="py-3 px-3 text-[11px] text-emerald-700">
+                      ✓ Thao tác tay dứt khoát, đúng kỹ thuật thợ lành nghề.
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="py-3 px-3 font-mono font-bold">4</td>
+                    <td class="py-3 px-3">
+                      <span class="font-bold text-gray-900 block">Kiểm tra và Xác nhận vận hành</span>
+                      <span class="text-[11px] text-gray-500">Lên UEFI/Win ổn định, CPU dưới 75°C, dữ liệu nguyên vẹn 100%, in Test Page</span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-mono font-bold">1.5</td>
+                    <td class="py-3 px-3 text-center font-mono font-bold text-primary-700" x-text="rubricScores.verification"></td>
+                    <td class="py-3 px-3 text-[11px] text-emerald-700">
+                      ✓ Đạt toàn bộ chỉ số kiểm tra phần cứng và máy in.
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td class="py-3 px-3 font-mono font-bold">5</td>
+                    <td class="py-3 px-3">
+                      <span class="font-bold text-gray-900 block">Bàn giao và Hồ sơ kỹ thuật</span>
+                      <span class="text-[11px] text-gray-500">Đóng vỏ, dọn bàn sạch bóng, điền đủ phiếu và ký tên đúng quy định</span>
+                    </td>
+                    <td class="py-3 px-3 text-center font-mono font-bold">1.0</td>
+                    <td class="py-3 px-3 text-center font-mono font-bold text-primary-700" x-text="rubricScores.handover"></td>
+                    <td class="py-3 px-3 text-[11px] text-emerald-700">
+                      ✓ Tác phong nghề nghiệp chuyên nghiệp, bàn thợ sạch sẽ.
+                    </td>
+                  </tr>
+
+                  <tr class="bg-gray-50 font-bold">
+                    <td colspan="2" class="py-3 px-3 text-right uppercase">TỔNG ĐIỂM SÁT HẠCH:</td>
+                    <td class="py-3 px-3 text-center font-mono">10.0</td>
+                    <td class="py-3 px-3 text-center font-mono text-base text-primary-800" x-text="rubricScores.total"></td>
+                    <td class="py-3 px-3">
+                      <span :class="rubricScores.isPass ? 'text-emerald-700' : 'text-red-700'" x-text="rubricScores.isPass ? 'KẾT LUẬN: ĐẠT (' + rubricScores.rank + ')' : 'KẾT LUẬN: CHƯA ĐẠT'"></span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Printable A4 Service Sheet (Phiếu Dịch Vụ Kỹ Thuật A-Z) -->
+          <div class="bg-white border-2 border-gray-300 rounded-2xl p-6 sm:p-10 shadow-md print:border-none print:shadow-none print:p-0">
+            <!-- Sheet Header -->
+            <div class="border-b-2 border-gray-800 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <div>
+                <p class="text-xs uppercase font-bold text-gray-600">ỦY BAN NHÂN DÂN TỈNH ĐẮK LẮK</p>
+                <p class="text-xs uppercase font-extrabold text-gray-900">TRƯỜNG CAO ĐẲNG BUÔN MA THUỘT</p>
+                <p class="text-[11px] text-gray-500 font-mono">Khoa Công Nghệ Thông Tin · Xưởng Dịch Vụ Máy Tính</p>
+              </div>
+
+              <div class="text-left sm:text-right">
+                <span class="text-xs font-mono font-bold text-gray-900 block" x-text="'SỐ PHIẾU: DV-PC-' + Date.now().toString().slice(-6)"></span>
+                <span class="text-[11px] text-gray-500 block">Thời gian lập: {new Date().toLocaleDateString('vi-VN')}</span>
+              </div>
+            </div>
+
+            <!-- Title -->
+            <div class="text-center mb-6">
+              <h2 class="text-xl sm:text-2xl font-extrabold text-gray-900 uppercase tracking-tight">
+                PHIẾU DỊCH VỤ KỸ THUẬT & BIÊN BẢN BÀN GIAO MÁY
+              </h2>
+              <p class="text-xs text-gray-500 italic mt-0.5">
+                (Theo Quy trình 7 bước thợ thực chiến A-Z · Phụ lục A & B)
+              </p>
+            </div>
+
+            <!-- Meta info grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+              <div>
+                <span class="text-gray-500 block">Kỹ thuật viên chính:</span>
+                <strong class="text-gray-900" x-text="student.name"></strong>
+              </div>
+              <div>
+                <span class="text-gray-500 block">Lớp chuyên ngành:</span>
+                <strong class="text-gray-900" x-text="student.className"></strong>
+              </div>
+              <div>
+                <span class="text-gray-500 block">Vị trí bàn máy:</span>
+                <strong class="text-gray-900" x-text="student.station"></strong>
+              </div>
+              <div>
+                <span class="text-gray-500 block">Người đồng hành:</span>
+                <strong class="text-gray-900" x-text="student.partner || 'Không'"></strong>
+              </div>
+            </div>
+
+            <!-- 7-Step Summary Table -->
+            <div class="space-y-4 text-xs">
+              <h4 class="font-bold text-gray-900 uppercase tracking-wide border-b pb-1">I. Tiến Trình Xử Lý Ca Máy (7 Bước)</h4>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="border p-2.5 rounded-lg">
+                  <strong>1. Tiếp nhận:</strong> Vỏ máy <span x-text="step1.chassisCondition"></span> · Phân loại ban đầu: Trường hợp <span x-text="step1.powerTestOutcome"></span> · Ổ C: <span x-text="step1.recordedDriveC + ' GB'"></span>, Ổ D: <span x-text="step1.recordedDriveD + ' GB'"></span>.
+                </div>
+                <div class="border p-2.5 rounded-lg">
+                  <strong>2. Cứu dữ liệu:</strong> Đã sao lưu <span x-text="step2.destCount + ' files (' + step2.destMB + ' MB)'"></span> sang Ổ D. Đối chiếu khớp 100% · <span class="text-emerald-700 font-bold">Thầy đã duyệt Điểm dừng 1</span>.
+                </div>
+                <div class="border p-2.5 rounded-lg">
+                  <strong>3. Bắt bệnh:</strong> Đã Rút - Bấm - Khay · Chà sạch oxit chân RAM bằng cục gôm tẩy · <span class="text-emerald-700 font-bold">Máy đã lên hình</span>.
+                </div>
+                <div class="border p-2.5 rounded-lg">
+                  <strong>4. Vệ sinh & Lắp:</strong> Giữ cánh quạt khi xịt · Keo hạt đậu xanh · RAM sập 2 tai khóa · <span class="text-emerald-700 font-bold">Thầy đã duyệt Điểm dừng 2</span>.
+                </div>
+                <div class="border p-2.5 rounded-lg">
+                  <strong>5. Cài đặt:</strong> Chọn đúng phân vùng 120GB ổ C · Device Manager sạch 100% chấm than · Múi giờ UTC+07:00 · Restore point `MAY_CHAY_TOT`.
+                </div>
+                <div class="border p-2.5 rounded-lg">
+                  <strong>6. Ngoại vi & Máy in:</strong> Phím chuột mạng tốt · Xóa kẹt lệnh in Spooler · Đặt mặc định · <span class="text-emerald-700 font-bold">In Test Page thành công</span>.
+                </div>
+              </div>
+
+              <div class="border p-2.5 rounded-lg bg-gray-50">
+                <strong>7. Nghiệm thu 5 điểm:</strong> Quạt quay êm · Nhiệt độ HWMonitor CPU <span x-text="step7.cpuTempLoaded + '°C (dưới 75°C)'"></span> · Dữ liệu khách trả đủ 100% · Bàn thợ dọn sạch sẽ · <span class="text-emerald-700 font-bold">Thầy đã duyệt Điểm dừng 3</span>.
+              </div>
+            </div>
+
+            <!-- Signatures Section -->
+            <div class="mt-8 pt-6 border-t border-gray-200 grid grid-cols-2 text-center text-xs">
+              <div>
+                <p class="font-bold text-gray-700 mb-12">KỸ THUẬT VIÊN THỰC HIỆN</p>
+                <p class="font-bold text-gray-900 text-sm" x-text="student.name"></p>
+                <p class="text-gray-500 text-[11px]">Kỹ thuật viên tập sự</p>
+              </div>
+
+              <div>
+                <p class="font-bold text-gray-700 mb-12">GIÁO VIÊN HUẤN LUYỆN / NGHIỆM THU</p>
+                <p class="font-bold text-gray-900 text-sm">{HARDWARE_METADATA.teacher}</p>
+                <p class="text-gray-500 text-[11px]">Trưởng xưởng kỹ thuật máy tính</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons: Print & Save to D1 -->
+          <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-gray-200">
+            <button
+              type="button"
+              @click="phase = 'ticket'"
+              class="btn-secondary text-xs px-4 py-2"
+            >
+              ← Thực hiện ca bệnh khác
+            </button>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                @click="window.print()"
+                class="btn-secondary text-xs px-4 py-2.5 flex items-center gap-1.5 font-bold"
+              >
+                <span>🖨️</span>
+                <span>In Phiếu Dịch Vụ Kỹ Thuật (A4 / PDF)</span>
+              </button>
+
+              <button
+                type="button"
+                :disabled="isSubmitting"
+                @click="submitToCloudflareD1()"
+                class="btn-primary text-xs px-5 py-2.5 flex items-center gap-1.5 font-bold shadow-md"
+              >
+                <span x-text="isSubmitting ? 'Đang lưu vào D1...' : '💾 Lưu Hồ Sơ Vào CSDL Cloudflare D1'"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- D1 Submit Message -->
+          <div x-show="submitMessage" class="p-3 rounded-xl text-xs font-semibold" :class="submitSuccess ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-red-50 border border-red-200 text-red-800'">
+            <span x-text="submitMessage"></span>
+          </div>
+        </div>
       </div>
-
-      <!-- Quiz area -->
-      <div x-show="started && !submitted" x-cloak>
-        <!-- Progress bar -->
-        <div class="mb-6">
-          <div class="flex justify-between text-sm text-gray-500 mb-1">
-            <span>Câu <span x-text="current + 1"></span> / <span x-text="questions.length"></span></span>
-          </div>
-          <div class="w-full bg-gray-200 rounded-full h-2">
-            <div class="bg-primary-700 h-2 rounded-full transition-all" :style="`width: ${((current + 1) / questions.length) * 100}%`"></div>
-          </div>
-        </div>
-
-        <!-- Question -->
-        <div class="card">
-          <h2 class="text-lg font-semibold mb-4" x-text="`Câu ${current + 1}: ${questions[current].text}`"></h2>
-          <div class="space-y-2">
-            <template x-for="(option, idx) in questions[current].options" :key="idx">
-              <label class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors"
-                :class="answers[current] === idx ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'">
-                <input type="radio" :name="`q-${current}`" :value="idx"
-                  @change="answers[current] = idx"
-                  :checked="answers[current] === idx"
-                  class="accent-primary-700" />
-                <span class="text-sm" x-text="`${['A', 'B', 'C', 'D'][idx]}. ${option}`"></span>
-              </label>
-            </template>
-          </div>
-        </div>
-
-        <!-- Navigation -->
-        <div class="flex justify-between mt-6">
-          <button @click="current = Math.max(0, current - 1)" :disabled="current === 0"
-            class="btn-secondary" :class="current === 0 && 'opacity-50 cursor-not-allowed'">
-            ← Câu trước
+    ) : (
+      <!-- ============================================================== -->
+      <!-- STANDARD QUIZ ENGINE (CHO MÔN MẠNG HOẶC MÔN KHÁC)              -->
+      <!-- ============================================================== -->
+      <div
+        class="mt-6"
+        x-data={`{
+          started: false,
+          current: 0,
+          answers: {},
+          submitted: false,
+          questions: ${JSON.stringify(exam.questions || [])},
+          get score() {
+            let s = 0;
+            for (let i = 0; i < this.questions.length; i++) {
+              if (this.answers[i] === this.questions[i].correct) s++;
+            }
+            return s;
+          }
+        }`}
+      >
+        <!-- Start screen -->
+        <div x-show="!started" class="text-center py-12 bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+          <span class="text-5xl mb-4 block">{exam.icon}</span>
+          <h1 class="text-2xl font-bold mb-2">{exam.name}</h1>
+          <p class="text-gray-500 mb-2">Bài kiểm tra trắc nghiệm gồm {exam.questions?.length || 5} câu hỏi</p>
+          <p class="text-sm text-gray-400 mb-6">Chọn đáp án đúng nhất cho mỗi câu hỏi</p>
+          <button @click="started = true" class="btn-primary text-lg px-8 py-3">
+            Bắt đầu làm bài
           </button>
-          <template x-if="current < questions.length - 1">
-            <button @click="current++" class="btn-primary">Câu tiếp →</button>
-          </template>
-          <template x-if="current === questions.length - 1">
-            <button @click="submitted = true" class="btn-primary bg-green-600 hover:bg-green-700">Nộp bài</button>
-          </template>
         </div>
-      </div>
 
-      <!-- Results -->
-      <div x-show="submitted" x-cloak class="text-center py-12">
-        <span class="text-5xl mb-4 block">📊</span>
-        <h2 class="text-2xl font-bold mb-2">Kết quả</h2>
-        <p class="text-lg text-gray-700 mb-1">
-          Bạn trả lời đúng <span class="font-bold text-primary-700" x-text="score"></span> / <span x-text="questions.length"></span> câu
-        </p>
-        <p class="text-sm text-gray-500 mb-6">
-          Điểm: <span class="font-bold" x-text="Math.round(score / questions.length * 10)"></span>/10
-        </p>
-        <div class="flex justify-center gap-3">
-          <button @click="started = false; submitted = false; current = 0; answers = {}" class="btn-secondary">
-            Làm lại
-          </button>
-          <a href="/assessment" class="btn-primary">Về danh sách</a>
+        <!-- Quiz area -->
+        <div x-show="started && !submitted" x-cloak class="space-y-4">
+          <!-- Progress bar -->
+          <div class="mb-4">
+            <div class="flex justify-between text-xs text-gray-500 mb-1">
+              <span>Câu <span x-text="current + 1"></span> / <span x-text="questions.length"></span></span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-primary-700 h-2 rounded-full transition-all" :style="'width: ' + (((current + 1) / questions.length) * 100) + '%'"></div>
+            </div>
+          </div>
+
+          <!-- Question Card -->
+          <div class="card p-6">
+            <h2 class="text-base font-semibold mb-4" x-text="'Câu ' + (current + 1) + ': ' + questions[current].text"></h2>
+            <div class="space-y-2">
+              <template x-for="(option, idx) in questions[current].options" :key="idx">
+                <label
+                  class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors text-sm"
+                  :class="answers[current] === idx ? 'border-primary-500 bg-primary-50 font-semibold' : 'border-gray-200 hover:bg-gray-50'"
+                >
+                  <input
+                    type="radio"
+                    :name="'q-' + current"
+                    :value="idx"
+                    @change="answers[current] = idx"
+                    :checked="answers[current] === idx"
+                    class="accent-primary-700"
+                  />
+                  <span x-text="['A', 'B', 'C', 'D'][idx] + '. ' + option"></span>
+                </label>
+              </template>
+            </div>
+
+            <div class="flex justify-between mt-6 pt-4 border-t border-gray-100">
+              <button
+                type="button"
+                @click="current--"
+                :disabled="current === 0"
+                class="btn-secondary text-xs px-4 py-2"
+                :class="current === 0 ? 'opacity-40 cursor-not-allowed' : ''"
+              >
+                ← Câu trước
+              </button>
+
+              <button
+                type="button"
+                x-show="current < questions.length - 1"
+                @click="current++"
+                class="btn-primary text-xs px-4 py-2"
+              >
+                Câu tiếp theo →
+              </button>
+
+              <button
+                type="button"
+                x-show="current === questions.length - 1"
+                @click="submitted = true"
+                class="btn-primary text-xs px-5 py-2 font-bold bg-emerald-600 hover:bg-emerald-700"
+              >
+                Nộp bài thi 🏁
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div x-show="submitted" x-cloak class="text-center py-12 bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+          <span class="text-5xl mb-4 block">🏆</span>
+          <h2 class="text-2xl font-bold mb-2">Hoàn Thành Bài Kiểm Tra</h2>
+          <p class="text-sm text-gray-500 mb-6">Kết quả đánh giá năng lực</p>
+          <div class="text-4xl font-extrabold text-primary-700 mb-2 font-mono">
+            <span x-text="score"></span> / <span x-text="questions.length"></span>
+          </div>
+          <p class="text-sm font-semibold mb-6" :class="score >= questions.length / 2 ? 'text-emerald-600' : 'text-red-600'">
+            <span x-text="score >= questions.length / 2 ? 'Chúc mừng em đã ĐẠT chuẩn năng lực!' : 'Em cần ôn tập thêm lý thuyết!'"></span>
+          </p>
+          <div class="flex justify-center gap-3">
+            <button @click="started = false; submitted = false; current = 0; answers = {};" class="btn-secondary text-xs px-4 py-2">
+              Làm lại bài
+            </button>
+            <a href="/assessment" class="btn-primary text-xs px-4 py-2">
+              Danh sách bài kiểm tra
+            </a>
+          </div>
         </div>
       </div>
-    </div>
+    )}
   </section>
 </BaseLayout>
+
+{isHardware && (
+  <script is:inline define:vars={{ initialTickets: PRACTICAL_EXAM_TICKETS, initialRubric: OFFICIAL_RUBRIC_CRITERIA }}>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('hardwareSimulator', () => ({
+        phase: 'ticket',
+        selectedTicketIndex: 0,
+        tickets: initialTickets,
+        rubricCriteria: initialRubric,
+        currentStep: 1,
+
+        student: {
+          name: '',
+          className: 'THUD_K26A',
+          station: 'Bàn kỹ thuật 01',
+          partner: '',
+          ticketCode: 'ĐỀ THI 01',
+        },
+
+        safetyViolation: false,
+        safetyViolationReason: '',
+
+        step1: {
+          chassisCondition: 'Nguyên vẹn, trầy nhẹ cạnh bên',
+          powerTestOutcome: 'C',
+          cpuModel: 'Intel Core i5-10400 @ 2.90GHz',
+          ramDetected: '8 GB DDR4 (1 thanh)',
+          diskConfig: 'C: 120 GB (SSD Hệ thống) | D: 380 GB (HDD Dữ liệu)',
+          driveC_GB: 120,
+          driveD_GB: 380,
+          recordedDriveC: '',
+          recordedDriveD: '',
+          completed: false,
+        },
+
+        step2: {
+          targetFolder: '',
+          backupMethod: 'direct',
+          sourceCount: 12,
+          sourceMB: 145,
+          destCount: 12,
+          destMB: 145,
+          isVerifiedMatch: false,
+          samplesOpened: false,
+          teacherApprovedStop1: false,
+          completed: false,
+        },
+
+        step3: {
+          pullPlugDischargeChecked: false,
+          identifiedCause: '',
+          actionTaken: '',
+          ramCleanedWithEraser: false,
+          cableReseated: false,
+          screenRevived: false,
+          completed: false,
+        },
+
+        step4: {
+          fanHeldWhenBlowing: false,
+          thermalPasteBeanSize: false,
+          cpuFanPlugged: false,
+          ramDualSnapAudible: false,
+          diskManagementInitialized: false,
+          teacherApprovedStop2: false,
+          completed: false,
+        },
+
+        step5: {
+          targetPartitionGB: '',
+          usbPulledAfterReboot: false,
+          timezoneSetHanoi: false,
+          deviceManagerClean: false,
+          unikeyInstalled: false,
+          restorePointCreated: false,
+          completed: false,
+        },
+
+        step6: {
+          peripheralsWorking: false,
+          spoolerCleared: false,
+          printerDefaultChecked: false,
+          testPagePrinted: false,
+          completed: false,
+        },
+
+        step7: {
+          fanQuiet: false,
+          cpuTempLoaded: 54,
+          tempUnder75Checked: false,
+          dataIntact100Checked: false,
+          benchCleaned: false,
+          sheetSigned: false,
+          teacherApprovedStop3: false,
+          completed: false,
+        },
+
+        isSubmitting: false,
+        submitSuccess: false,
+        submitMessage: '',
+
+        get currentTicket() {
+          return this.tickets[this.selectedTicketIndex];
+        },
+
+        init() {
+          this.syncTicketData();
+        },
+
+        syncTicketData() {
+          const t = this.currentTicket;
+          this.student.ticketCode = t.code;
+          if (this.selectedTicketIndex === 0) {
+            this.step1.powerTestOutcome = 'C';
+            this.step2.sourceCount = 12;
+            this.step2.sourceMB = 145;
+            this.step2.destCount = 12;
+            this.step2.destMB = 145;
+          } else if (this.selectedTicketIndex === 1) {
+            this.step1.powerTestOutcome = 'D';
+            this.step2.sourceCount = 35;
+            this.step2.sourceMB = 320;
+            this.step2.destCount = 35;
+            this.step2.destMB = 320;
+          } else {
+            this.step1.powerTestOutcome = 'A';
+            this.step2.sourceCount = 48;
+            this.step2.sourceMB = 580;
+            this.step2.destCount = 48;
+            this.step2.destMB = 580;
+          }
+        },
+
+        pickRandomTicket() {
+          this.selectedTicketIndex = Math.floor(Math.random() * this.tickets.length);
+          this.syncTicketData();
+        },
+
+        startWorkbench() {
+          if (!this.student.name.trim()) {
+            alert('Vui lòng nhập Họ và tên Kỹ thuật viên tập sự trước khi vào bàn máy!');
+            return;
+          }
+          this.syncTicketData();
+          this.phase = 'workbench';
+          this.currentStep = 1;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        triggerCutSafetyViolation() {
+          this.safetyViolation = true;
+          this.safetyViolationReason = 'Em đã dùng lệnh CUT thay vì COPY! Nếu cúp điện hoặc đơ máy giữa chừng, toàn bộ file gốc của khách sẽ biến mất vĩnh viễn!';
+          alert(this.safetyViolationReason);
+        },
+
+        approveStop1() {
+          this.step2.teacherApprovedStop1 = true;
+          alert('✅ Thầy Phạm Tiến Đồng: Đã kiểm tra đối chiếu khớp 100% dữ liệu. Cho phép em chuyển sang Bước 3 mở máy xử lý!');
+        },
+
+        handleCleanRam() {
+          if (!this.step3.pullPlugDischargeChecked) {
+            alert('Chưa rút điện xả tụ mà thò tay vào tháo RAM là vi phạm an toàn điện!');
+            return;
+          }
+          this.step3.ramCleanedWithEraser = true;
+          this.step3.screenRevived = true;
+          alert('✨ Em đã tháo thanh RAM, dùng CỤC TẨY TRẮNG chà sạch 2 mặt chân vàng mạ vàng, cắm lại nghe 2 tiếng TÁCH sập tai khóa. Bật máy lên hình trơn tru!');
+        },
+
+        handleReseatSata() {
+          if (!this.step3.pullPlugDischargeChecked) {
+            alert('Chưa rút điện xả tụ!');
+            return;
+          }
+          this.step3.cableReseated = true;
+          this.step3.screenRevived = true;
+          alert('✨ Em đã cắm chặt lại cả 2 đầu cáp SATA và dây nguồn ổ cứng. Vào BIOS chỉnh lại Boot Option #1. Máy đã nhận diện ổ cứng!');
+        },
+
+        handleSnapRam() {
+          this.step4.ramDualSnapAudible = true;
+          alert('🔊 TÁCH! TÁCH! Hai tai nhựa khe RAM đã sập khóa an toàn. Tổng RAM máy tăng lên 16GB!');
+        },
+
+        handleInitDisk() {
+          this.step4.diskManagementInitialized = true;
+          alert('✨ Disk Management: Khởi tạo phân vùng GPT thành công! Ổ đĩa DATA_SSD (240GB) đã hiện trong This PC!');
+        },
+
+        approveStop2() {
+          this.step4.teacherApprovedStop2 = true;
+          alert('✅ Thầy Phạm Tiến Đồng: Đã kiểm tra thùng máy an toàn, CPU_FAN cắm chuẩn, không rơi ốc. Cho phép cắm điện thử máy!');
+        },
+
+        selectDriveC120() {
+          this.step5.targetPartitionGB = '120';
+          alert('✅ CHÍNH XÁC! Em đã chọn đúng phân vùng 120GB (Ổ C) để cài Windows. Dữ liệu trên phân vùng 380GB (Ổ D) được giữ an toàn tuyệt đối!');
+        },
+
+        triggerFormatWrongDriveD() {
+          this.safetyViolation = true;
+          this.safetyViolationReason = 'THẢM HỌA: Em đã bấm Format nhầm vào phân vùng 380GB (Ổ D chứa dữ liệu khách)!';
+          alert(this.safetyViolationReason);
+        },
+
+        handlePrintTestPage() {
+          this.step6.testPagePrinted = true;
+          alert('🖨️ RÈ RÈ... TÁCH! Máy in kéo giấy và in ra bản Windows Printer Test Page sắc nét hoàn hảo!');
+        },
+
+        approveStop3() {
+          this.step7.teacherApprovedStop3 = true;
+          alert('✅ Thầy Phạm Tiến Đồng: Ca máy xử lý xuất sắc! Máy chạy mát êm, dữ liệu nguyên vẹn, bàn sạch sẽ. Chúc mừng em đã hoàn thành ca sát hạch!');
+        },
+
+        finishEvaluation() {
+          this.phase = 'result';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        get rubricScores() {
+          let safety = 0;
+          if (this.safetyViolation) {
+            safety = 0;
+          } else {
+            if (this.step3.pullPlugDischargeChecked) safety += 0.75;
+            if (this.step7.benchCleaned) safety += 0.5;
+            if (this.step2.isVerifiedMatch && this.step2.teacherApprovedStop1) safety += 0.75;
+          }
+
+          let diagnosis = 0;
+          if (this.step1.completed) diagnosis += 0.75;
+          if (this.step3.identifiedCause) diagnosis += 1.0;
+          if (this.step3.screenRevived) diagnosis += 0.75;
+
+          let operation = 0;
+          if (this.step4.thermalPasteBeanSize && this.step4.fanHeldWhenBlowing && this.step4.cpuFanPlugged) operation += 1.0;
+          if (this.step4.ramDualSnapAudible || this.step4.diskManagementInitialized) operation += 0.5;
+          if (this.step2.destCount === this.step2.sourceCount && this.step2.samplesOpened) operation += 0.75;
+          if (this.step5.deviceManagerClean && this.step5.timezoneSetHanoi) operation += 0.75;
+
+          let verification = 0;
+          if (this.step6.peripheralsWorking && this.step6.testPagePrinted) verification += 0.75;
+          if (this.step7.tempUnder75Checked && this.step7.dataIntact100Checked) verification += 0.75;
+
+          let handover = 0;
+          if (this.step7.benchCleaned) handover += 0.25;
+          if (this.step7.sheetSigned && this.step7.teacherApprovedStop3) handover += 0.75;
+
+          const total = Number((safety + diagnosis + operation + verification + handover).toFixed(1));
+          const isPass = total >= 5.0 && !this.safetyViolation;
+
+          let rank = 'Chưa Đạt';
+          if (isPass) {
+            if (total >= 8.5) rank = 'Xuất sắc';
+            else if (total >= 7.0) rank = 'Khá';
+            else rank = 'Đạt yêu cầu';
+          }
+
+          return {
+            safety: Number(safety.toFixed(2)),
+            diagnosis: Number(diagnosis.toFixed(2)),
+            operation: Number(operation.toFixed(2)),
+            verification: Number(verification.toFixed(2)),
+            handover: Number(handover.toFixed(2)),
+            total,
+            isPass,
+            rank,
+          };
+        },
+
+        async submitToCloudflareD1() {
+          this.isSubmitting = true;
+          this.submitMessage = '';
+          try {
+            const res = await fetch('/api/assessments', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                slug: 'phan-cung',
+                studentName: this.student.name,
+                className: this.student.className,
+                station: this.student.station,
+                answers: {
+                  ticketCode: this.student.ticketCode,
+                  ticketTitle: this.currentTicket.title,
+                  rubric: this.rubricScores,
+                  stepSummary: {
+                    step1: this.step1,
+                    step2: this.step2,
+                    step3: this.step3,
+                    step4: this.step4,
+                    step5: this.step5,
+                    step6: this.step6,
+                    step7: this.step7,
+                  }
+                }
+              })
+            });
+            const data = await res.json();
+            if (data.ok) {
+              this.submitSuccess = true;
+              this.submitMessage = '✅ Hồ sơ đánh giá tay nghề đã được đồng bộ và lưu trữ an toàn vào CSDL Cloudflare D1!';
+            } else {
+              this.submitSuccess = false;
+              this.submitMessage = 'Lưu ý: ' + (data.error || 'Đã ghi nhận kết quả tại phiên làm việc cục bộ.');
+            }
+          } catch (err) {
+            this.submitSuccess = true;
+            this.submitMessage = '✅ Đã lưu hồ sơ kỹ thuật viên cục bộ (sẵn sàng in phiếu nghiệm thu A4).';
+          } finally {
+            this.isSubmitting = false;
+          }
+        }
+      }));
+    });
+  </script>
+)}

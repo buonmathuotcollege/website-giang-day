@@ -1,16 +1,17 @@
 {
   "slug": "phan-cung-may-tinh",
-  "name": "Phần cứng máy tính",
+  "name": "Ôn luyện Nghề: Phần cứng máy tính (OL-01)",
   "subdomain": "phancung",
   "icon": "🔧",
-  "description": "Nhận biết linh kiện, nguyên lý hoạt động, kỹ năng lắp ráp, chẩn đoán sự cố và nâng cấp PC/Laptop.",
+  "description": "Bí kíp 20 năm nghề Kỹ thuật viên máy tính: Cầm tay chỉ việc từ số 0, quy trình 7 bước Nhận - Cứu - Bắt - Sạch - Cài - Thử - Giao và Rubric 10 điểm sát hạch.",
   "chapters": [
-    { "slug": "chuong-1-tong-quan-linh-kien", "num": 1, "title": "Chương 1: Tổng quan linh kiện phần cứng PC" },
-    { "slug": "chuong-2-bo-vi-xu-ly-cpu", "num": 2, "title": "Chương 2: Bộ vi xử lý (CPU) & Cơ chế tản nhiệt" },
-    { "slug": "chuong-3-bo-mach-chu", "num": 3, "title": "Chương 3: Bo mạch chủ (Mainboard) & Socket" },
-    { "slug": "chuong-4-bo-nho-ram", "num": 4, "title": "Chương 4: Bộ nhớ trong RAM & Chuẩn DDR" },
-    { "slug": "chuong-5-o-luu-tru", "num": 5, "title": "Chương 5: Ổ cứng HDD và SSD NVMe" },
-    { "slug": "chuong-6-nguon-psu", "num": 6, "title": "Chương 6: Bộ nguồn PSU & Card đồ họa (VGA)" },
-    { "slug": "chuong-7-lap-rap-cai-dat", "num": 7, "title": "Chương 7: Quy trình lắp ráp PC & Cài đặt hệ điều hành" }
+    { "slug": "chuong-1", "num": 1, "title": "Bước 1: Tiếp nhận máy & Đọc cấu hình trong 3 phút" },
+    { "slug": "chuong-2", "num": 2, "title": "Bước 2: Luật Giữ Nồi Cơm — Cứu dữ liệu trước khi sửa máy" },
+    { "slug": "chuong-3", "num": 3, "title": "Bước 3: Tuyệt chiêu Bắt bệnh 60 giây (5 ca bệnh thực tế 85% gặp)" },
+    { "slug": "chuong-4", "num": 4, "title": "Bước 4: Vệ sinh thổi bụi, Tra keo Hạt Đậu Xanh & Lắp đồ nâng cấp" },
+    { "slug": "chuong-5", "num": 5, "title": "Bước 5: Cài Windows đúng ổ C & Sạch bóng chấm than vàng Driver" },
+    { "slug": "chuong-6", "num": 6, "title": "Bước 6: Mẹo sửa máy in 3 cú click & Kiểm tra ngoại vi" },
+    { "slug": "chuong-7", "num": 7, "title": "Bước 7: Nghiệm thu 5 điểm cuối cùng & Lập phiếu bàn giao" },
+    { "slug": "chuong-8", "num": 8, "title": "Sát hạch Tay nghề: 3 Đề thi thực hành tổng hợp & Rubric 10 điểm" }
   ]
 }

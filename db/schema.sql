@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS lessons (
   slug TEXT NOT NULL,
   title TEXT NOT NULL,
   content_markdown TEXT DEFAULT '',
-  lesson_type TEXT DEFAULT 'theory', -- theory | practice | quiz
+  lesson_type TEXT DEFAULT 'theory',
   sort_order INTEGER DEFAULT 1,
   is_published INTEGER DEFAULT 1,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -65,14 +65,13 @@ CREATE TABLE IF NOT EXISTS students (
 -- 6. BẢNG BUỔI HỌC & PIN (Sessions)
 CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY,
-  class_id TEXT NOT NULL,
+  class_id TEXT,
   session_code TEXT NOT NULL,
   session_title TEXT NOT NULL,
   class_pin TEXT DEFAULT '',
   is_open INTEGER DEFAULT 1,
   session_date TEXT DEFAULT '',
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (class_id) REFERENCES classes(id)
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 7. BẢNG KẾT QUẢ THỰC HÀNH / NỘP ĐIỂM (Submissions)
@@ -109,8 +108,8 @@ CREATE TABLE IF NOT EXISTS assessment_questions (
   id TEXT PRIMARY KEY,
   assessment_id TEXT NOT NULL,
   question_text TEXT NOT NULL,
-  options_json TEXT NOT NULL, -- JSON array ["A", "B", "C", "D"]
-  correct_option INTEGER NOT NULL, -- 0, 1, 2, 3
+  options_json TEXT NOT NULL,
+  correct_option INTEGER NOT NULL,
   explanation TEXT DEFAULT '',
   sort_order INTEGER DEFAULT 1,
   FOREIGN KEY (assessment_id) REFERENCES assessments(id)
@@ -126,7 +125,7 @@ CREATE TABLE IF NOT EXISTS assessment_results (
   score REAL NOT NULL,
   total INTEGER NOT NULL,
   percentage REAL NOT NULL,
-  status TEXT NOT NULL, -- 'Đạt' | 'Chưa đạt'
+  status TEXT NOT NULL,
   answers_json TEXT DEFAULT '{}',
   completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (assessment_id) REFERENCES assessments(id)
@@ -146,7 +145,6 @@ CREATE TABLE IF NOT EXISTS audit_logs (
 -- DỮ LIỆU MẪU BAN ĐẦU (SEED DATA)
 -- ============================================================================
 
--- Danh sách 6 môn học chuẩn chuyên ngành
 INSERT OR IGNORE INTO courses (id, slug, name, description, icon, subdomain, sort_order) VALUES
   ('crs_nls', 'nang-luc-so', 'Năng lực số', 'Trang bị kỹ năng số, an toàn thông tin và ứng dụng CNTT thời đại mới', '💻', 'nanglucso', 1),
   ('crs_ktmt', 'kien-truc-may-tinh', 'Kiến trúc máy tính và Hệ điều hành', 'Cấu tạo hệ thống máy tính, vi xử lý, quản lý bộ nhớ và hệ điều hành', '🖥️', 'kientruc', 2),
@@ -155,13 +153,11 @@ INSERT OR IGNORE INTO courses (id, slug, name, description, icon, subdomain, sor
   ('crs_lanwan', 'thiet-ke-quan-tri-lan-wan', 'Thiết kế và Quản trị mạng LAN/WAN', 'Thiết kế hệ thống mạng doanh nghiệp, Switch VLAN, Routing, NAT, VPN', '🏗️', 'lanwan', 5),
   ('crs_srvlin', 'quan-tri-windows-linux', 'Quản trị Windows Server/Linux và Ảo hóa', 'Dịch vụ mạng AD DS, DNS, DHCP trên Windows Server, cấu hình Linux và máy ảo', '🖧', 'winlinux', 6);
 
--- Lớp học mẫu
 INSERT OR IGNORE INTO classes (id, class_code, class_name, academic_year) VALUES
   ('cls_thud_k26a', 'THUD_K26A', 'Tin học ứng dụng K26A', '2026-2027'),
   ('cls_thud_k26b', 'THUD_K26B', 'Tin học ứng dụng K26B', '2026-2027'),
   ('cls_qtm_k26',   'QTM_K26',   'Quản trị mạng K26',     '2026-2027');
 
--- 2 Bộ đánh giá năng lực
 INSERT OR IGNORE INTO assessments (id, slug, title, subject, description, duration_minutes, total_questions, pass_score) VALUES
   ('asm_pc', 'phan-cung', 'Đánh giá năng lực: Phần cứng máy tính', 'Phần cứng máy tính', 'Kiểm tra năng lực nhận biết linh kiện, chẩn đoán sự cố phần cứng PC/Laptop', 45, 30, 5.0),
   ('asm_net', 'mang', 'Đánh giá năng lực: Mạng máy tính', 'Mạng căn bản & LAN/WAN', 'Kiểm tra kiến thức mô hình mạng, địa chỉ IP, chia mạng con và thiết bị mạng', 45, 30, 5.0);

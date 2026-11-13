@@ -2,6 +2,13 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
 import { COURSES } from '../../../data/courses';
+import {
+  HARDWARE_METADATA,
+  SEVEN_STEPS_WORKFLOW,
+  THREE_SURVIVAL_RULES,
+  THREE_SAFETY_CHECKPOINTS,
+  FIVE_CLASSIC_CASES,
+} from '../../../data/hardwareCurriculum';
 
 export function getStaticPaths() {
   const paths: any[] = [];
@@ -20,6 +27,12 @@ export function getStaticPaths() {
 }
 
 const { course, chapter } = Astro.props;
+const isHardware = course.slug === 'phan-cung-may-tinh';
+
+// Find matching hardware step data if applicable
+const stepData = isHardware
+  ? SEVEN_STEPS_WORKFLOW.find((s) => s.slug === chapter.slug)
+  : null;
 ---
 
 <BaseLayout title={`${chapter.title} - ${course.name}`}>
@@ -32,9 +45,10 @@ const { course, chapter } = Astro.props;
     ]} />
 
     <article class="bg-white rounded-2xl border border-gray-200 p-6 sm:p-10 shadow-sm mt-6">
+      <!-- Lesson Header -->
       <div class="border-b border-gray-200 pb-5 mb-6">
-        <div class="flex items-center justify-between gap-2 mb-3">
-          <span class="inline-block px-3 py-1 bg-primary-100 text-primary-800 text-xs font-semibold rounded-full">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <span class="inline-block px-3 py-1 bg-primary-100 text-primary-800 text-xs font-bold rounded-full">
             {course.icon} {course.name}
           </span>
           <span class="text-xs text-gray-500 font-mono">
@@ -42,33 +56,146 @@ const { course, chapter } = Astro.props;
           </span>
         </div>
         <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">{chapter.title}</h1>
-        <p class="text-gray-500 mt-2 text-sm sm:text-base">{chapter.description}</p>
+        <p class="text-gray-500 mt-2 text-sm sm:text-base leading-relaxed">{chapter.description}</p>
+        
+        {isHardware && (
+          <div class="mt-4 flex flex-wrap items-center gap-3 text-xs text-gray-500 font-mono">
+            <span class="bg-gray-100 px-2.5 py-1 rounded">Mã môn: {HARDWARE_METADATA.courseCode}</span>
+            <span class="bg-gray-100 px-2.5 py-1 rounded">GV: {HARDWARE_METADATA.teacher}</span>
+            <span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded font-bold">Thời gian khuyến nghị: {stepData?.time || '45 phút'}</span>
+          </div>
+        )}
       </div>
 
-      <div class="prose max-w-none text-gray-800 space-y-5">
-        <div class="alert-note p-4 rounded-xl bg-blue-50 border-l-4 border-blue-600 text-blue-900 text-sm">
-          💡 <strong>Hướng dẫn tự học:</strong> Học sinh nghiên cứu các mục kiến thức cốt lõi bên dưới, ghi chép tóm tắt vào vở và hoàn thành các câu hỏi luyện tập trước buổi thực hành tại phòng máy.
+      <!-- Content Area -->
+      {isHardware && stepData ? (
+        <!-- HARDWARE HANDS-ON WORKSHOP LESSON -->
+        <div class="space-y-6 text-gray-800 text-sm sm:text-base">
+          <!-- Alert Box -->
+          <div class="p-4 rounded-xl bg-amber-50 border-l-4 border-amber-500 text-amber-900 text-xs sm:text-sm">
+            <strong>🛠️ Tác phong người thợ:</strong> Đây là bài học thực hành xưởng, tuyệt đối không học vẹt lý thuyết suông. Học sinh cầm cẩm nang trên tay, đọc tới đâu tự tay làm trên máy thật tới đó. Chưa rõ thao tác nào phải báo ngay cho Giáo viên hướng dẫn.
+          </div>
+
+          <!-- Step Summary -->
+          <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+            <h2 class="text-base font-bold text-gray-900 mb-2 uppercase tracking-wide text-primary-800">
+              Mục tiêu tay nghề phải đạt được
+            </h2>
+            <p class="text-gray-700 leading-relaxed font-medium">
+              {stepData.summary}
+            </p>
+          </div>
+
+          <!-- Safety Checkpoint if exists -->
+          {stepData.checkpoint && (
+            <div class="p-4 rounded-xl bg-red-50 border-2 border-red-300 text-red-900">
+              <div class="flex items-center gap-2 font-bold text-sm mb-1 text-red-800">
+                <span>🛑</span>
+                <span>ĐIỂM DỪNG AN TOÀN BẮT BUỘC:</span>
+              </div>
+              <p class="text-xs sm:text-sm font-medium leading-relaxed">
+                {stepData.checkpoint}
+              </p>
+            </div>
+          )}
+
+          <!-- Detailed Action Steps -->
+          <div>
+            <h2 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+              <span>📋</span>
+              <span>Quy trình các thao tác tay làm mắt thấy</span>
+            </h2>
+            <div class="space-y-3">
+              {stepData.actions.map((act, aIdx) => (
+                <div class="flex items-start gap-3 p-3.5 rounded-xl border border-gray-200 bg-white hover:border-primary-400 transition-colors">
+                  <span class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-700 text-white text-xs font-bold flex items-center justify-center mt-0.5">
+                    {aIdx + 1}
+                  </span>
+                  <div class="flex-1">
+                    <p class="text-xs sm:text-sm text-gray-800 leading-relaxed">{act}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <!-- Pro-Tip Box -->
+          <div class="p-5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950">
+            <div class="flex items-center gap-2 font-bold text-sm text-emerald-900 mb-1.5">
+              <span>💡</span>
+              <span>Bí kíp 20 năm nghề truyền lại:</span>
+            </div>
+            <p class="text-xs sm:text-sm leading-relaxed italic">
+              "{stepData.proTip}"
+            </p>
+          </div>
+
+          <!-- Interactive Workshop Checklist -->
+          <div class="bg-white border border-gray-300 rounded-xl p-5 shadow-sm" x-data="{ checkedItems: {} }">
+            <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3 flex items-center justify-between">
+              <span>✅ Phiếu tự kiểm tra tại bàn máy (Học sinh tự tích khi làm xong)</span>
+              <span class="text-xs font-normal text-primary-700">Tích vào ô để kiểm tra tiến độ</span>
+            </h3>
+
+            <div class="space-y-2.5">
+              {stepData.actions.map((act, cIdx) => (
+                <label class="flex items-start gap-3 p-2.5 rounded-lg border border-gray-100 hover:bg-gray-50 cursor-pointer text-xs sm:text-sm select-none">
+                  <input
+                    type="checkbox"
+                    class="mt-1 w-4 h-4 rounded text-primary-700 accent-primary-700"
+                    x-model={`checkedItems[${cIdx}]`}
+                  />
+                  <span
+                    class="flex-1 text-gray-700"
+                    :class={`checkedItems[${cIdx}] ? 'line-through text-gray-400' : ''`}
+                  >
+                    {act}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <!-- Direct Link to Simulator -->
+          <div class="mt-8 p-6 rounded-2xl bg-gradient-to-r from-primary-900 to-primary-800 text-white text-center">
+            <h3 class="text-lg font-bold mb-1">Sát Hạch Thực Tế Tại Xưởng</h3>
+            <p class="text-xs sm:text-sm text-primary-200 mb-4 max-w-xl mx-auto">
+              Bước vào buồng mô phỏng ca bệnh thực tế (Job Ticket Simulation). Tự tay chẩn đoán ca bệnh, vượt qua 3 điểm dừng an toàn và nhận bảng điểm Rubric 10 điểm chuẩn Thông tư 55!
+            </p>
+            <a href="/assessment/phan-cung" class="inline-flex items-center gap-2 px-6 py-2.5 bg-accent-500 hover:bg-accent-600 text-white font-bold rounded-xl text-sm transition-colors shadow-lg">
+              <span>⚡ Mở Phòng Mô Phỏng Đánh Giá Tay Nghề</span>
+              <span>→</span>
+            </a>
+          </div>
         </div>
+      ) : (
+        <!-- STANDARD LESSON VIEW FOR OTHER COURSES -->
+        <div class="prose max-w-none text-gray-800 space-y-5">
+          <div class="alert-note p-4 rounded-xl bg-blue-50 border-l-4 border-blue-600 text-blue-900 text-sm">
+            💡 <strong>Hướng dẫn tự học:</strong> Học sinh nghiên cứu các mục kiến thức cốt lõi bên dưới, ghi chép tóm tắt vào vở và hoàn thành các câu hỏi luyện tập trước buổi thực hành tại phòng máy.
+          </div>
 
-        <h2 class="text-xl font-bold mt-6 mb-3 text-gray-800">1. Mục tiêu và chuẩn đầu ra bài học</h2>
-        <ul class="list-disc pl-5 space-y-1.5 text-gray-700 text-sm sm:text-base">
-          <li>Hiểu rõ nguyên lý hoạt động và các thuật ngữ kỹ thuật trong <strong>{chapter.title}</strong>.</li>
-          <li>Áp dụng vào quy trình cấu hình, cài đặt hoặc xử lý tình huống thực tế tại phòng thực hành.</li>
-          <li>Tuân thủ kỷ luật học tập, tác phong công nghiệp và nguyên tắc an toàn số / an toàn thiết bị.</li>
-        </ul>
+          <h2 class="text-xl font-bold mt-6 mb-3 text-gray-800">1. Mục tiêu và chuẩn đầu ra bài học</h2>
+          <ul class="list-disc pl-5 space-y-1.5 text-gray-700 text-sm sm:text-base">
+            <li>Hiểu rõ nguyên lý hoạt động và các thuật ngữ kỹ thuật trong <strong>{chapter.title}</strong>.</li>
+            <li>Áp dụng vào quy trình cấu hình, cài đặt hoặc xử lý tình huống thực tế tại phòng thực hành.</li>
+            <li>Tuân thủ kỷ luật học tập, tác phong công nghiệp và nguyên tắc an toàn số / an toàn thiết bị.</li>
+          </ul>
 
-        <h2 class="text-xl font-bold mt-6 mb-3 text-gray-800">2. Nội dung bài giảng trọng tâm</h2>
-        <p class="text-gray-700 leading-relaxed text-sm sm:text-base">
-          Nội dung chi tiết của bài giảng đang được đồng bộ và cập nhật từ giáo trình chuẩn. Thầy/Cô có thể chỉnh sửa nội dung bằng Markdown trong thư mục <code class="bg-gray-100 text-primary-800 px-2 py-0.5 rounded text-xs font-mono">src/content/{course.slug}/</code>.
-        </p>
+          <h2 class="text-xl font-bold mt-6 mb-3 text-gray-800">2. Nội dung bài giảng trọng tâm</h2>
+          <p class="text-gray-700 leading-relaxed text-sm sm:text-base">
+            Nội dung chi tiết của bài giảng đang được đồng bộ và cập nhật từ giáo trình chuẩn. Thầy/Cô có thể chỉnh sửa nội dung bằng Markdown trong thư mục <code class="bg-gray-100 text-primary-800 px-2 py-0.5 rounded text-xs font-mono">src/content/{course.slug}/</code>.
+          </p>
 
-        <div class="p-6 bg-gray-50 rounded-xl border border-dashed border-gray-300 text-center my-6">
-          <span class="text-3xl mb-2 block">📖</span>
-          <p class="text-sm font-semibold text-gray-800">Tài liệu học tập & Slide hướng dẫn</p>
-          <p class="text-xs text-gray-500 mt-1">Đang đồng bộ slide bài giảng và phiếu giao việc thực hành...</p>
+          <div class="p-6 bg-gray-50 rounded-xl border border-dashed border-gray-300 text-center my-6">
+            <span class="text-3xl mb-2 block">📖</span>
+            <p class="text-sm font-semibold text-gray-800">Tài liệu học tập & Slide hướng dẫn</p>
+            <p class="text-xs text-gray-500 mt-1">Đang đồng bộ slide bài giảng và phiếu giao việc thực hành...</p>
+          </div>
         </div>
-      </div>
+      )}
 
+      <!-- Bottom Navigation -->
       <div class="flex flex-wrap items-center justify-between border-t border-gray-200 pt-6 mt-8 gap-3">
         <a href={`/courses/${course.slug}`} class="btn-secondary text-sm">
           ← Danh sách chương môn {course.name}
