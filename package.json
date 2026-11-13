@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "description": "Cổng Giảng Dạy CNTT - Trường CĐ Buôn Ma Thuột",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+    "dev": "node -e \"process.env.ASTRO_TELEMETRY_DISABLED='1'; require('child_process').spawnSync('astro', ['dev'], {stdio:'inherit', shell:true})\"",
+    "build": "node -e \"process.env.ASTRO_TELEMETRY_DISABLED='1'; const res = require('child_process').spawnSync('astro', ['build'], {stdio:'inherit', shell:true}); process.exit(res.status || 0)\"",
     "preview": "astro preview",
     "astro": "astro"
   },
