@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CourseCard from '../components/CourseCard.astro';
+import { COURSES } from '../data/courses';
+
+const ASSESSMENTS = [
+  { slug: 'phan-cung', name: 'Phần cứng Máy tính', icon: '🔧', questions: 30, time: 45, subdomain: 'danhgia' },
+  { slug: 'mang', name: 'Mạng Máy tính', icon: '🌐', questions: 30, time: 45, subdomain: 'danhgia' },
+];
+---
+
+<BaseLayout title="Cổng Giảng Dạy CNTT • Trường CĐ Buôn Ma Thuột">
+  <!-- Hero Section -->
+  <section class="bg-primary-700 text-white py-12 sm:py-16">
+    <div class="max-w-5xl mx-auto px-4 text-center">
+      <p class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-primary-200 mb-2">Trường Cao đẳng Buôn Ma Thuột</p>
+      <h1 class="text-3xl sm:text-4xl font-extrabold mb-3 text-white tracking-tight">Khoa Công nghệ Thông tin</h1>
+      <p class="text-primary-100 text-base sm:text-lg max-w-2xl mx-auto font-medium">
+        Hệ thống giảng dạy trực tuyến & Đánh giá năng lực các môn chuyên ngành CNTT
+      </p>
+    </div>
+  </section>
+
+  <!-- Courses Grid -->
+  <section class="max-w-5xl mx-auto px-4 py-10">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Chương trình Môn học</h2>
+        <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Mỗi môn học được hỗ trợ một cổng tên miền phụ (subdomain) riêng biệt</p>
+      </div>
+      <a href="/courses" class="text-sm font-semibold text-primary-700 hover:underline">
+        Tất cả môn →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {COURSES.map((course) => (
+        <CourseCard
+          title={course.name}
+          slug={course.slug}
+          description={course.desc}
+          icon={course.icon}
+          chapterCount={course.chapters.length}
+          subdomain={course.subdomain}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- Assessment Section -->
+  <section class="max-w-5xl mx-auto px-4 pb-14">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Đánh giá năng lực chuyên môn</h2>
+        <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Kiểm tra trắc nghiệm kiến thức và chẩn đoán kỹ thuật theo chuẩn đầu ra</p>
+      </div>
+      <a href="/assessment" class="text-sm font-semibold text-primary-700 hover:underline">
+        Xem chi tiết →
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      {ASSESSMENTS.map((exam) => (
+        <a href={`/assessment/${exam.slug}`} class="card flex items-start gap-4 no-underline group hover:border-primary-400">
+          <span class="text-3xl shrink-0 p-2 rounded-xl bg-primary-50">{exam.icon}</span>
+          <div class="flex-1">
+            <h3 class="text-base font-bold text-gray-900 group-hover:text-primary-700 transition-colors mb-1">
+              Đánh giá năng lực: {exam.name}
+            </h3>
+            <p class="text-sm text-gray-500 mb-2">30 câu hỏi trắc nghiệm kiến thức & xử lý tình huống thực tế</p>
+            <div class="flex items-center gap-3 text-xs text-gray-500 font-medium">
+              <span>⏱️ Thời gian: {exam.time} phút</span>
+              <span>•</span>
+              <span>🎯 Điểm đạt: ≥ 5.0</span>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

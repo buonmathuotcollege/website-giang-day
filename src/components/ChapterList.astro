@@ -1,0 +1,33 @@
+---
+// ChapterList.astro — Sidebar chapter list for course pages
+interface Props {
+  chapters: Array<{ slug: string; title: string; chapterNum: number }>;
+  courseSlug: string;
+  currentSlug?: string;
+}
+
+const { chapters, courseSlug, currentSlug } = Astro.props;
+---
+
+<nav aria-label="Danh sách chương">
+  <ol class="space-y-1">
+    {chapters.map((ch) => {
+      const isActive = ch.slug === currentSlug;
+      const href = `/courses/${courseSlug}/${ch.slug}`;
+      return (
+        <li>
+          <a
+            href={href}
+            class:list={[
+              'sidebar-link',
+              isActive && 'active',
+            ]}
+          >
+            <span class="font-medium">Chương {ch.chapterNum}:</span>{' '}
+            {ch.title}
+          </a>
+        </li>
+      );
+    })}
+  </ol>
+</nav>

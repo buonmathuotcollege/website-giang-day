@@ -1,0 +1,16 @@
+{
+  "slug": "phan-cung-may-tinh",
+  "name": "Phần cứng máy tính",
+  "subdomain": "phancung",
+  "icon": "🔧",
+  "description": "Nhận biết linh kiện, nguyên lý hoạt động, kỹ năng lắp ráp, chẩn đoán sự cố và nâng cấp PC/Laptop.",
+  "chapters": [
+    { "slug": "chuong-1-tong-quan-linh-kien", "num": 1, "title": "Chương 1: Tổng quan linh kiện phần cứng PC" },
+    { "slug": "chuong-2-bo-vi-xu-ly-cpu", "num": 2, "title": "Chương 2: Bộ vi xử lý (CPU) & Cơ chế tản nhiệt" },
+    { "slug": "chuong-3-bo-mach-chu", "num": 3, "title": "Chương 3: Bo mạch chủ (Mainboard) & Socket" },
+    { "slug": "chuong-4-bo-nho-ram", "num": 4, "title": "Chương 4: Bộ nhớ trong RAM & Chuẩn DDR" },
+    { "slug": "chuong-5-o-luu-tru", "num": 5, "title": "Chương 5: Ổ cứng HDD và SSD NVMe" },
+    { "slug": "chuong-6-nguon-psu", "num": 6, "title": "Chương 6: Bộ nguồn PSU & Card đồ họa (VGA)" },
+    { "slug": "chuong-7-lap-rap-cai-dat", "num": 7, "title": "Chương 7: Quy trình lắp ráp PC & Cài đặt hệ điều hành" }
+  ]
+}

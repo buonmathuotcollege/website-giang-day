@@ -1,13 +1,11 @@
 name = "website-giang-day"
-main = "cloudflare-worker.js"
 compatibility_date = "2026-11-04"
+pages_build_output_dir = "dist"
 
-# Kết hợp phục vụ giao diện Web tĩnh VÀ chạy mã lập trình Backend tại /api/*
-[assets]
-directory = "."
-binding = "ASSETS"
-run_worker_first = true
-
-# Cấu hình biến môi trường mặc định (Thầy có thể đổi mật khẩu trực tiếp tại đây hoặc trên Dashboard)
 [vars]
 TEACHER_SECRET = "BMTC2026"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "giang-day-db"
+database_id = "placeholder-d1-id"

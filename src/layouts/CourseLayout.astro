@@ -1,0 +1,95 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Chapter {
+  slug: string;
+  title: string;
+  chapterNum: number;
+}
+
+interface Props {
+  title: string;
+  courseName: string;
+  courseSlug: string;
+  chapters: Chapter[];
+  currentChapter?: number;
+}
+
+const { title, courseName, courseSlug, chapters, currentChapter } = Astro.props;
+
+const currentChapterData = chapters.find((ch) => ch.chapterNum === currentChapter);
+---
+
+<BaseLayout title={`${title} - ${courseName}`}>
+  <div class="max-w-7xl mx-auto px-4 py-6">
+    <!-- Breadcrumb -->
+    <nav class="text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
+      <ol class="flex flex-wrap items-center gap-1">
+        <li><a href="/" class="hover:text-primary-700">Trang chủ</a></li>
+        <li class="before:content-['>'] before:mx-1">
+          <a href={`/courses/${courseSlug}`} class="hover:text-primary-700">{courseName}</a>
+        </li>
+        {currentChapterData && (
+          <li class="before:content-['>'] before:mx-1 text-gray-900 font-medium">
+            {currentChapterData.title}
+          </li>
+        )}
+      </ol>
+    </nav>
+
+    <div class="lg:flex lg:gap-8" x-data="{ sidebarOpen: false }">
+      <!-- Mobile sidebar toggle -->
+      <button
+        class="lg:hidden flex items-center gap-2 mb-4 px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50"
+        @click="sidebarOpen = !sidebarOpen"
+        aria-label="Mở menu chương"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          />
+        </svg>
+        Danh sách chương
+      </button>
+
+      <!-- Sidebar -->
+      <aside
+        class="lg:w-64 lg:flex-shrink-0 mb-6 lg:mb-0"
+        :class="sidebarOpen ? 'block' : 'hidden lg:block'"
+      >
+        <div class="border border-gray-200 rounded-lg p-4 bg-white sticky top-6">
+          <h2 class="font-bold text-gray-900 text-base mb-3 pb-2 border-b border-gray-200">
+            {courseName}
+          </h2>
+          <nav aria-label="Danh sách chương">
+            <ul class="space-y-1">
+              {chapters
+                .sort((a, b) => a.chapterNum - b.chapterNum)
+                .map((ch) => (
+                  <li>
+                    <a
+                      href={`/courses/${courseSlug}/${ch.slug}`}
+                      class:list={[
+                        'sidebar-link',
+                        { active: ch.chapterNum === currentChapter },
+                      ]}
+                    >
+                      Chương {ch.chapterNum}: {ch.title}
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <div class="flex-1 min-w-0">
+        <slot />
+      </div>
+    </div>
+  </div>
+</BaseLayout>

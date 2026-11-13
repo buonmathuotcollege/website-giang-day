@@ -1,0 +1,15 @@
+{
+  "slug": "nang-luc-so",
+  "name": "Năng lực số",
+  "subdomain": "nanglucso",
+  "icon": "💻",
+  "description": "Trang bị kỹ năng số, an toàn thông tin và ứng dụng CNTT thời đại mới.",
+  "chapters": [
+    { "slug": "chuong-1-tong-quan", "num": 1, "title": "Chương 1: Tổng quan về Năng lực số" },
+    { "slug": "chuong-2-su-dung-may-tinh", "num": 2, "title": "Chương 2: Sử dụng máy tính & Hệ điều hành" },
+    { "slug": "chuong-3-internet-email", "num": 3, "title": "Chương 3: Khai thác Internet & Thư điện tử an toàn" },
+    { "slug": "chuong-4-soan-thao", "num": 4, "title": "Chương 4: Xử lý văn bản & Trình chiếu số" },
+    { "slug": "chuong-5-bang-tinh", "num": 5, "title": "Chương 5: Bảng tính & Xử lý dữ liệu số" },
+    { "slug": "chuong-6-an-toan-thong-tin", "num": 6, "title": "Chương 6: An toàn thông tin & Đạo đức số" }
+  ]
+}

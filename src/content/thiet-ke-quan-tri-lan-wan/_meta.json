@@ -1,0 +1,17 @@
+{
+  "slug": "thiet-ke-quan-tri-lan-wan",
+  "name": "Thiết kế và Quản trị mạng LAN/WAN",
+  "subdomain": "lanwan",
+  "icon": "🏗️",
+  "description": "Thiết kế mạng phân cấp 3 lớp Cisco, cấu hình Switch VLAN, Trunking, VTP, STP, Router on a stick, NAT và VPN.",
+  "chapters": [
+    { "slug": "chuong-1-mo-hinh-thiet-ke-mang-3-lop", "num": 1, "title": "Chương 1: Mô hình thiết kế mạng phân cấp 3 lớp" },
+    { "slug": "chuong-2-vlan-trunking-8021q", "num": 2, "title": "Chương 2: Cấu hình Mạng ảo VLAN & Trunking 802.1Q" },
+    { "slug": "chuong-3-inter-vlan-routing", "num": 3, "title": "Chương 3: Định tuyến liên VLAN (Router-on-a-Stick & L3 Switch)" },
+    { "slug": "chuong-4-spanning-tree-protocol", "num": 4, "title": "Chương 4: Chống lặp vòng với Giao thức Spanning Tree (STP/RSTP)" },
+    { "slug": "chuong-5-etherchannel-link-aggregation", "num": 5, "title": "Chương 5: Gom kênh dự phòng EtherChannel (LACP/PAGP)" },
+    { "slug": "chuong-6-dinh-tuyen-dong-ospf", "num": 6, "title": "Chương 6: Giao thức định tuyến động OSPF đơn vùng" },
+    { "slug": "chuong-7-access-control-list-acl", "num": 7, "title": "Chương 7: Kiểm soát bảo mật truy cập bằng Access Control List (ACL)" },
+    { "slug": "chuong-8-nat-pat-vpn-wan", "num": 8, "title": "Chương 8: Kỹ thuật NAT/PAT và Thiết lập đường hầm VPN kết nối WAN" }
+  ]
+}

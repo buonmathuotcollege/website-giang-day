@@ -1,0 +1,57 @@
+---
+// CourseCard.astro — Card for course listing
+interface Props {
+  title: string;
+  slug: string;
+  description: string;
+  icon: string;
+  chapterCount: number;
+  status?: 'active' | 'coming-soon';
+  subdomain?: string;
+}
+
+const { title, slug, description, icon, chapterCount, status = 'active', subdomain } = Astro.props;
+const isComingSoon = status === 'coming-soon';
+---
+
+<a
+  href={isComingSoon ? undefined : `/courses/${slug}`}
+  class:list={[
+    'card block relative group',
+    isComingSoon && 'pointer-events-none',
+  ]}
+>
+  {/* Coming-soon overlay */}
+  {isComingSoon && (
+    <div class="absolute inset-0 bg-gray-100/80 rounded-xl z-10 flex items-center justify-center">
+      <span class="bg-gray-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Sắp ra mắt</span>
+    </div>
+  )}
+
+  <div class="flex items-start gap-4">
+    {/* Icon */}
+    <span class="text-3xl shrink-0 mt-0.5">{icon}</span>
+
+    <div class="min-w-0 flex-1">
+      {/* Title */}
+      <h3 class="text-base font-semibold text-gray-900 group-hover:text-primary-700 transition-colors mb-1">
+        {title}
+      </h3>
+
+      {/* Description */}
+      <p class="text-sm text-gray-600 line-clamp-2 mb-3">{description}</p>
+
+      {/* Badges */}
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="inline-flex items-center gap-1 text-xs font-medium bg-primary-50 text-primary-700 px-2 py-0.5 rounded-full">
+          📖 {chapterCount} chương
+        </span>
+        {subdomain && (
+          <span class="inline-flex items-center gap-1 text-[11px] font-mono text-gray-500 bg-gray-100 px-2 py-0.5 rounded-md" title={`Tên miền phụ: ${subdomain}.phamtiendong.name.vn`}>
+            🌐 {subdomain}
+          </span>
+        )}
+      </div>
+    </div>
+  </div>
+</a>

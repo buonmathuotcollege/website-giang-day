@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Production build output
+dist/
+
+# Astro cache
+.astro/
+
+# Environment and local configs
+.env
+.env.production
+.env.local
+
+# Cloudflare Wrangler
+.wrangler/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

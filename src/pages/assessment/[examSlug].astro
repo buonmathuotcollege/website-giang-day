@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+
+const EXAMS: Record<string, { name: string; icon: string; questions: { text: string; options: string[]; correct: number }[] }> = {
+  'phan-cung': {
+    name: 'Phần cứng Máy tính',
+    icon: '🔧',
+    questions: [
+      { text: 'CPU là viết tắt của?', options: ['Central Processing Unit', 'Computer Personal Unit', 'Central Program Utility', 'Control Process Unit'], correct: 0 },
+      { text: 'RAM thuộc loại bộ nhớ nào?', options: ['Bộ nhớ ngoài', 'Bộ nhớ trong (tạm thời)', 'Bộ nhớ chỉ đọc', 'Bộ nhớ cache'], correct: 1 },
+      { text: 'Đơn vị đo tốc độ xử lý của CPU là gì?', options: ['Byte', 'Hertz (Hz)', 'Bit', 'Pixel'], correct: 1 },
+      { text: 'BIOS được lưu trữ ở đâu?', options: ['RAM', 'Ổ cứng', 'ROM/Flash trên mainboard', 'CPU cache'], correct: 2 },
+      { text: 'Cổng nào thường dùng để kết nối màn hình hiện đại?', options: ['VGA', 'PS/2', 'HDMI', 'Serial'], correct: 2 },
+    ],
+  },
+  'mang': {
+    name: 'Mạng Máy tính',
+    icon: '🌐',
+    questions: [
+      { text: 'Mô hình OSI có bao nhiêu tầng?', options: ['4 tầng', '5 tầng', '7 tầng', '3 tầng'], correct: 2 },
+      { text: 'Thiết bị nào hoạt động ở tầng 3 (Network) của mô hình OSI?', options: ['Hub', 'Switch', 'Router', 'Repeater'], correct: 2 },
+      { text: 'Địa chỉ IP v4 có độ dài bao nhiêu bit?', options: ['16 bit', '32 bit', '64 bit', '128 bit'], correct: 1 },
+      { text: 'Giao thức nào dùng để phân giải tên miền thành địa chỉ IP?', options: ['DHCP', 'DNS', 'FTP', 'SMTP'], correct: 1 },
+      { text: 'Cáp mạng UTP Cat6 hỗ trợ tốc độ tối đa bao nhiêu?', options: ['100 Mbps', '1 Gbps', '10 Gbps', '100 Gbps'], correct: 2 },
+    ],
+  },
+};
+
+export function getStaticPaths() {
+  return [
+    { params: { examSlug: 'phan-cung' } },
+    { params: { examSlug: 'mang' } },
+  ];
+}
+
+const { examSlug } = Astro.params;
+const exam = EXAMS[examSlug!];
+---
+
+<BaseLayout title={`${exam.name} - Đánh giá năng lực`}>
+  <section class="max-w-3xl mx-auto px-4 py-8">
+    <Breadcrumb items={[
+      { label: 'Trang chủ', href: '/' },
+      { label: 'Đánh giá năng lực', href: '/assessment' },
+      { label: exam.name, href: '' },
+    ]} />
+
+    <div class="mt-6" x-data={`{
+      started: false,
+      current: 0,
+      answers: {},
+      submitted: false,
+      questions: ${JSON.stringify(exam.questions)},
+      get score() {
+        let s = 0;
+        for (let i = 0; i < this.questions.length; i++) {
+          if (this.answers[i] === this.questions[i].correct) s++;
+        }
+        return s;
+      }
+    }`}>
+      <!-- Start screen -->
+      <div x-show="!started" class="text-center py-12">
+        <span class="text-5xl mb-4 block">{exam.icon}</span>
+        <h1 class="text-2xl font-bold mb-2">{exam.name}</h1>
+        <p class="text-gray-500 mb-2">Bài kiểm tra gồm {exam.questions.length} câu hỏi trắc nghiệm</p>
+        <p class="text-sm text-gray-400 mb-6">Chọn đáp án đúng nhất cho mỗi câu hỏi</p>
+        <button @click="started = true" class="btn-primary text-lg px-8 py-3">
+          Bắt đầu làm bài
+        </button>
+      </div>
+
+      <!-- Quiz area -->
+      <div x-show="started && !submitted" x-cloak>
+        <!-- Progress bar -->
+        <div class="mb-6">
+          <div class="flex justify-between text-sm text-gray-500 mb-1">
+            <span>Câu <span x-text="current + 1"></span> / <span x-text="questions.length"></span></span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div class="bg-primary-700 h-2 rounded-full transition-all" :style="`width: ${((current + 1) / questions.length) * 100}%`"></div>
+          </div>
+        </div>
+
+        <!-- Question -->
+        <div class="card">
+          <h2 class="text-lg font-semibold mb-4" x-text="`Câu ${current + 1}: ${questions[current].text}`"></h2>
+          <div class="space-y-2">
+            <template x-for="(option, idx) in questions[current].options" :key="idx">
+              <label class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors"
+                :class="answers[current] === idx ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'">
+                <input type="radio" :name="`q-${current}`" :value="idx"
+                  @change="answers[current] = idx"
+                  :checked="answers[current] === idx"
+                  class="accent-primary-700" />
+                <span class="text-sm" x-text="`${['A', 'B', 'C', 'D'][idx]}. ${option}`"></span>
+              </label>
+            </template>
+          </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex justify-between mt-6">
+          <button @click="current = Math.max(0, current - 1)" :disabled="current === 0"
+            class="btn-secondary" :class="current === 0 && 'opacity-50 cursor-not-allowed'">
+            ← Câu trước
+          </button>
+          <template x-if="current < questions.length - 1">
+            <button @click="current++" class="btn-primary">Câu tiếp →</button>
+          </template>
+          <template x-if="current === questions.length - 1">
+            <button @click="submitted = true" class="btn-primary bg-green-600 hover:bg-green-700">Nộp bài</button>
+          </template>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div x-show="submitted" x-cloak class="text-center py-12">
+        <span class="text-5xl mb-4 block">📊</span>
+        <h2 class="text-2xl font-bold mb-2">Kết quả</h2>
+        <p class="text-lg text-gray-700 mb-1">
+          Bạn trả lời đúng <span class="font-bold text-primary-700" x-text="score"></span> / <span x-text="questions.length"></span> câu
+        </p>
+        <p class="text-sm text-gray-500 mb-6">
+          Điểm: <span class="font-bold" x-text="Math.round(score / questions.length * 10)"></span>/10
+        </p>
+        <div class="flex justify-center gap-3">
+          <button @click="started = false; submitted = false; current = 0; answers = {}" class="btn-secondary">
+            Làm lại
+          </button>
+          <a href="/assessment" class="btn-primary">Về danh sách</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

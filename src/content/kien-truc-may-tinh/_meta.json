@@ -1,0 +1,17 @@
+{
+  "slug": "kien-truc-may-tinh",
+  "name": "Kiến trúc máy tính và Hệ điều hành",
+  "subdomain": "kientruc",
+  "icon": "🖥️",
+  "description": "Cấu trúc hệ thống máy tính, bộ vi xử lý, tập lệnh và nguyên lý vận hành của hệ điều hành hiện đại.",
+  "chapters": [
+    { "slug": "chuong-1-tong-quan-kien-truc", "num": 1, "title": "Chương 1: Tổng quan Kiến trúc máy tính" },
+    { "slug": "chuong-2-bo-vi-xu-ly-cpu", "num": 2, "title": "Chương 2: Bộ vi xử lý và Tập lệnh" },
+    { "slug": "chuong-3-he-thong-bo-nho", "num": 3, "title": "Chương 3: Hệ thống phân cấp Bộ nhớ" },
+    { "slug": "chuong-4-he-thong-vao-ra", "num": 4, "title": "Chương 4: Hệ thống Vào / Ra (I/O)" },
+    { "slug": "chuong-5-tong-quan-he-dieu-hanh", "num": 5, "title": "Chương 5: Tổng quan Hệ điều hành" },
+    { "slug": "chuong-6-quan-ly-tien-trinh", "num": 6, "title": "Chương 6: Quản lý Tiến trình & Đa nhiệm" },
+    { "slug": "chuong-7-quan-ly-bo-nho-ao", "num": 7, "title": "Chương 7: Quản lý Bộ nhớ ảo" },
+    { "slug": "chuong-8-he-thong-tap-tin", "num": 8, "title": "Chương 8: Hệ thống Tập tin (File System)" }
+  ]
+}

@@ -1,0 +1,41 @@
+---
+// ScoreTable.astro — Score display table
+interface Props {
+  columns: string[];
+  rows: Record<string, any>[];
+}
+
+const { columns, rows } = Astro.props;
+---
+
+<div class="overflow-x-auto rounded-lg border border-gray-200">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="bg-gray-50 border-b border-gray-200">
+        {columns.map((col) => (
+          <th class="px-4 py-3 text-left font-semibold text-gray-700 whitespace-nowrap">{col}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {rows.length === 0 ? (
+        <tr>
+          <td colspan={columns.length} class="px-4 py-8 text-center text-gray-400">
+            Chưa có dữ liệu
+          </td>
+        </tr>
+      ) : (
+        rows.map((row, i) => (
+          <tr class:list={[
+            'border-b border-gray-100 hover:bg-gray-50 transition-colors',
+            i % 2 === 1 && 'bg-gray-50/50',
+          ]}>
+            {columns.map((col) => (
+              <td class="px-4 py-2.5 text-gray-700 whitespace-nowrap">{row[col] ?? '—'}</td>
+            ))}
+          </tr>
+        ))
+      )}
+    </tbody>
+  </table>
+</div>

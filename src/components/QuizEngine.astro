@@ -1,0 +1,156 @@
+---
+// QuizEngine.astro — Quiz/Assessment component (Alpine.js powered)
+interface Props {
+  quizId: string;
+  title: string;
+  timeLimit: number; // minutes
+  questions?: Array<{
+    id: number;
+    text: string;
+    options: string[];
+    correct?: number;
+  }>;
+}
+
+const { quizId, title, timeLimit, questions = [] } = Astro.props;
+
+// Sample placeholder questions if none provided
+const sampleQuestions = questions.length > 0
+  ? questions
+  : [
+      { id: 1, text: 'Câu hỏi mẫu sẽ được tải từ hệ thống...', options: ['Đáp án A', 'Đáp án B', 'Đáp án C', 'Đáp án D'] },
+    ];
+---
+
+<div
+  class="bg-white border border-gray-200 rounded-xl overflow-hidden"
+  x-data={`{
+    quizId: '${quizId}',
+    questions: ${JSON.stringify(sampleQuestions)},
+    currentQuestion: 0,
+    answers: {},
+    timeLeft: ${timeLimit * 60},
+    isSubmitted: false,
+    timerInterval: null,
+
+    get totalQuestions() { return this.questions.length; },
+    get currentQ() { return this.questions[this.currentQuestion]; },
+    get progress() { return ((this.currentQuestion + 1) / this.totalQuestions) * 100; },
+    get formattedTime() {
+      const m = Math.floor(this.timeLeft / 60);
+      const s = this.timeLeft % 60;
+      return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    },
+
+    startTimer() {
+      this.timerInterval = setInterval(() => {
+        if (this.timeLeft > 0 && !this.isSubmitted) {
+          this.timeLeft--;
+        } else if (this.timeLeft <= 0) {
+          this.submitQuiz();
+        }
+      }, 1000);
+    },
+    prevQuestion() {
+      if (this.currentQuestion > 0) this.currentQuestion--;
+    },
+    nextQuestion() {
+      if (this.currentQuestion < this.totalQuestions - 1) this.currentQuestion++;
+    },
+    selectAnswer(optIndex) {
+      this.answers[this.currentQ.id] = optIndex;
+    },
+    submitQuiz() {
+      this.isSubmitted = true;
+      if (this.timerInterval) clearInterval(this.timerInterval);
+    },
+    init() {
+      this.startTimer();
+    }
+  }`}
+>
+  {/* Header with title + timer */}
+  <div class="flex items-center justify-between bg-gray-50 border-b border-gray-200 px-5 py-3">
+    <h2 class="text-base font-bold text-gray-900">{title}</h2>
+    <div class="flex items-center gap-2 text-sm">
+      <span class="text-gray-500">⏱️</span>
+      <span
+        class="font-mono font-semibold"
+        :class="timeLeft < 60 ? 'text-red-600' : 'text-gray-700'"
+        x-text="formattedTime"
+      ></span>
+    </div>
+  </div>
+
+  {/* Progress bar */}
+  <div class="h-1 bg-gray-100">
+    <div
+      class="h-1 bg-primary-700 transition-all duration-300"
+      :style="`width: ${progress}%`"
+    ></div>
+  </div>
+
+  {/* Quiz body */}
+  <div class="p-5" x-show="!isSubmitted">
+    {/* Question counter */}
+    <p class="text-xs text-gray-500 mb-3">
+      Câu <span class="font-semibold" x-text="currentQuestion + 1"></span>
+      / <span x-text="totalQuestions"></span>
+    </p>
+
+    {/* Question text */}
+    <p class="text-base text-gray-900 font-medium mb-4" x-text="currentQ.text"></p>
+
+    {/* Options (A/B/C/D) */}
+    <div class="space-y-2">
+      <template x-for="(opt, idx) in currentQ.options" :key="idx">
+        <label
+          class="flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors"
+          :class="answers[currentQ.id] === idx
+            ? 'border-primary-700 bg-primary-50'
+            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'"
+        >
+          <input
+            type="radio"
+            class="w-4 h-4 text-primary-700 accent-[#1d4ed8]"
+            :name="`q-${currentQ.id}`"
+            :checked="answers[currentQ.id] === idx"
+            @change="selectAnswer(idx)"
+          />
+          <span class="text-sm text-gray-700">
+            <span class="font-semibold" x-text="String.fromCharCode(65 + idx) + '.'"></span>
+            <span x-text="opt"></span>
+          </span>
+        </label>
+      </template>
+    </div>
+
+    {/* Navigation buttons */}
+    <div class="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
+      <button
+        class="btn-secondary text-xs"
+        :disabled="currentQuestion === 0"
+        :class="currentQuestion === 0 && 'opacity-50 cursor-not-allowed'"
+        @click="prevQuestion()"
+      >← Câu trước</button>
+
+      <template x-if="currentQuestion < totalQuestions - 1">
+        <button class="btn-primary text-xs" @click="nextQuestion()">Câu tiếp →</button>
+      </template>
+      <template x-if="currentQuestion === totalQuestions - 1">
+        <button class="btn-primary text-xs" @click="submitQuiz()">Nộp bài</button>
+      </template>
+    </div>
+  </div>
+
+  {/* Submitted state */}
+  <div class="p-8 text-center" x-show="isSubmitted" x-cloak>
+    <span class="text-4xl mb-3 block">✅</span>
+    <h3 class="text-lg font-bold text-gray-900 mb-1">Đã nộp bài!</h3>
+    <p class="text-sm text-gray-600">Bài kiểm tra đã được ghi nhận. Kết quả sẽ được cập nhật sau.</p>
+  </div>
+</div>
+
+<style>
+  [x-cloak] { display: none !important; }
+</style>

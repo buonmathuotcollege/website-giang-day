@@ -1,0 +1,15 @@
+{
+  "slug": "mang-can-ban",
+  "name": "Mạng căn bản",
+  "subdomain": "mang",
+  "icon": "🌐",
+  "description": "Nền tảng mạng máy tính, mô hình truyền thông OSI / TCP-IP, địa chỉ IPv4/IPv6, phân chia mạng con (Subnetting).",
+  "chapters": [
+    { "slug": "chuong-1-tong-quan-mang", "num": 1, "title": "Chương 1: Tổng quan về Mạng máy tính" },
+    { "slug": "chuong-2-mo-hinh-osi-tcpip", "num": 2, "title": "Chương 2: Mô hình tham chiếu OSI và TCP/IP" },
+    { "slug": "chuong-3-tang-vat-ly-va-cap", "num": 3, "title": "Chương 3: Tầng Vật lý & Môi trường truyền dẫn (Cáp xoắn/Quang)" },
+    { "slug": "chuong-4-dia-chi-ipv4", "num": 4, "title": "Chương 4: Địa chỉ IPv4 & Kỹ thuật chia mạng con (FLSM/VLSM)" },
+    { "slug": "chuong-5-dinh-tuyen-co-ban", "num": 5, "title": "Chương 5: Định tuyến cơ bản & Bảng định tuyến (Routing Table)" },
+    { "slug": "chuong-6-dich-vu-mang-co-ban", "num": 6, "title": "Chương 6: Các dịch vụ mạng cốt lõi (DHCP, DNS, ARP)" }
+  ]
+}

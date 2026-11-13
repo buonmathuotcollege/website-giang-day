@@ -1,0 +1,19 @@
+{
+  "slug": "quan-tri-windows-linux",
+  "name": "Quản trị Windows Server/Linux và Ảo hóa",
+  "subdomain": "winlinux",
+  "icon": "🖧",
+  "description": "Quản trị hệ thống máy chủ mạng: Active Directory, DNS, DHCP, GPO trên Windows Server; Dịch vụ LAMP, SSH trên Linux và VMware/Proxmox.",
+  "chapters": [
+    { "slug": "chuong-1-tong-quan-he-dieu-hanh-server", "num": 1, "title": "Chương 1: Tổng quan Hệ điều hành Máy chủ & Cài đặt" },
+    { "slug": "chuong-2-active-directory-domain-services", "num": 2, "title": "Chương 2: Dịch vụ thư mục Active Directory Domain Services (AD DS)" },
+    { "slug": "chuong-3-quan-tri-user-group-ou", "num": 3, "title": "Chương 3: Quản trị Tài khoản người dùng, Nhóm và OU" },
+    { "slug": "chuong-4-chinh-sach-nhom-gpo", "num": 4, "title": "Chương 4: Triển khai Chính sách nhóm Group Policy (GPO)" },
+    { "slug": "chuong-5-dich-vu-dhcp-dns-server", "num": 5, "title": "Chương 5: Quản trị Dịch vụ mạng DHCP và DNS Server" },
+    { "slug": "chuong-6-quan-tri-linux-command-line", "num": 6, "title": "Chương 6: Quản trị Linux Ubuntu/Rocky qua giao diện CLI" },
+    { "slug": "chuong-7-dich-vu-web-lamp-ssh-linux", "num": 7, "title": "Chương 7: Triển khai Web Server Nginx/Apache và Quản trị từ xa SSH" },
+    { "slug": "chuong-8-phan-quyen-tap-tin-bao-mat-linux", "num": 8, "title": "Chương 8: Phân quyền tập tin (chmod/chown) và Tường lửa UFW/Firewalld" },
+    { "slug": "chuong-9-tong-quan-ao-hoa-hyper-v-vmware", "num": 9, "title": "Chương 9: Công nghệ Ảo hóa máy chủ Hyper-V và VMware ESXi" },
+    { "slug": "chuong-10-sao-luu-phuc-hoi-he-thong", "num": 10, "title": "Chương 10: Chiến lược Sao lưu (Backup) và Phục hồi sau thảm họa (Disaster Recovery)" }
+  ]
+}

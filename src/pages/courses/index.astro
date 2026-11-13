@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import CourseCard from '../../components/CourseCard.astro';
+import { COURSES } from '../../data/courses';
+---
+
+<BaseLayout title="Danh mục Môn học - Cổng Giảng Dạy CNTT">
+  <section class="max-w-5xl mx-auto px-4 py-8">
+    <Breadcrumb items={[
+      { label: 'Trang chủ', href: '/' },
+      { label: 'Danh mục Môn học', href: '' },
+    ]} />
+
+    <div class="mt-6 mb-8">
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Chương trình Đào tạo Chuyên ngành CNTT</h1>
+      <p class="text-gray-500 mt-2 text-sm sm:text-base">
+        Hệ thống 6 môn học cốt lõi từ cơ bản đến nâng cao, tích hợp cổng tên miền phụ (subdomain) cho từng môn.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {COURSES.map((course) => (
+        <CourseCard
+          title={course.name}
+          slug={course.slug}
+          description={course.desc}
+          icon={course.icon}
+          chapterCount={course.chapters.length}
+          subdomain={course.subdomain}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

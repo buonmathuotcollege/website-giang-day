@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import { COURSES } from '../../../data/courses';
+
+export function getStaticPaths() {
+  return COURSES.map((course) => ({
+    params: { courseSlug: course.slug },
+    props: { course },
+  }));
+}
+
+const { course } = Astro.props;
+---
+
+<BaseLayout title={`${course.name} - Cổng Giảng Dạy CNTT`}>
+  <section class="max-w-5xl mx-auto px-4 py-8">
+    <Breadcrumb items={[
+      { label: 'Trang chủ', href: '/' },
+      { label: 'Môn học', href: '/courses' },
+      { label: course.name, href: '' },
+    ]} />
+
+    <div class="mt-6 mb-8 bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="text-4xl">{course.icon}</span>
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900">{course.name}</h1>
+          <p class="text-xs text-primary-700 font-mono mt-0.5">🌐 Tên miền phụ: {course.subdomain}.phamtiendong.name.vn</p>
+        </div>
+      </div>
+      <p class="text-gray-600 text-sm sm:text-base leading-relaxed">{course.desc}</p>
+    </div>
+
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-bold text-gray-900">Nội dung chương trình ({course.chapters.length} chương)</h2>
+      <a href="/assessment" class="text-xs sm:text-sm font-semibold text-primary-700 hover:underline">
+        Làm bài kiểm tra môn này →
+      </a>
+    </div>
+
+    <ol class="space-y-3">
+      {course.chapters.map((ch, idx) => (
+        <li>
+          <a href={`/courses/${course.slug}/${ch.slug}`} class="card flex items-start gap-4 no-underline group hover:border-primary-400">
+            <span class="flex-shrink-0 w-10 h-10 rounded-xl bg-primary-100 text-primary-800 font-bold flex items-center justify-center text-sm group-hover:bg-primary-600 group-hover:text-white transition-colors">
+              {idx + 1}
+            </span>
+            <div class="flex-1">
+              <h3 class="text-base font-bold text-gray-900 group-hover:text-primary-700 transition-colors">{ch.title}</h3>
+              <p class="text-sm text-gray-500 mt-0.5">{ch.description}</p>
+            </div>
+            <span class="text-gray-400 group-hover:text-primary-600 text-sm font-semibold self-center">
+              Vào học →
+            </span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+</BaseLayout>
