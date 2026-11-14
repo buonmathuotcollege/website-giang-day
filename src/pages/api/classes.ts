@@ -1,11 +1,12 @@
 import type { APIRoute } from 'astro';
+import { checkAdminAuth } from '../../lib/auth';
 
 export const prerender = false;
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, x-admin-secret",
   "Content-Type": "application/json;charset=UTF-8"
 };
 
@@ -191,6 +192,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
         (globalThis as any).MEM_CLASSES = incomingClasses;
       }
       return new Response(JSON.stringify({ ok: true, count: incomingClasses.length }), { headers: CORS_HEADERS });
+    }
+
+    // Kiểm tra quyền Giảng viên cho mọi thao tác sửa đổi lớp và học sinh
+    if (!checkAdminAuth(request, env)) {
+      return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để thực hiện thao tác này!" }), { status: 401, headers: CORS_HEADERS });
     }
 
     // -------------------------------------------------------------
@@ -470,6 +476,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
 // 3. DELETE CLASS OR STUDENT
 export const DELETE: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
+
+  if (!checkAdminAuth(request, env)) {
+    return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để xóa dữ liệu!" }), { status: 401, headers: CORS_HEADERS });
+  }
+
   const url = new URL(request.url);
   const classId = url.searchParams.get("id");
   const studentId = url.searchParams.get("student_id");

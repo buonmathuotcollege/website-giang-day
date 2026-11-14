@@ -1,81 +1,200 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 ---
 
-<BaseLayout title="Trang quản trị - Cổng Giảng Dạy CNTT">
-  <section class="max-w-4xl mx-auto px-4 py-10" x-data="{ loggedIn: false, secret: '' }">
-    <!-- Login form -->
-    <div x-show="!loggedIn" class="max-w-sm mx-auto">
-      <div class="text-center mb-8">
-        <span class="text-5xl mb-3 block">🔐</span>
-        <h1 class="text-2xl font-bold mb-1">Trang quản trị Giảng viên</h1>
-        <p class="text-gray-500 text-sm">Nhập mã bí mật để đăng nhập</p>
-      </div>
-      <form @submit.prevent="if (secret.trim()) loggedIn = true" class="card space-y-4">
+<BaseLayout title="Trang quản trị Giảng viên - Cổng Giảng Dạy CNTT">
+  <section class="max-w-5xl mx-auto px-4 py-8">
+    <AdminAuthGuard pageTitle="Bảng điều khiển Giảng viên">
+      <div x-data="adminDashboard" class="space-y-6">
+        <!-- Tiêu đề trang -->
+        <div class="border-b border-gray-200 pb-4">
+          <h1 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight flex items-center gap-2.5">
+            <span>⚙️</span>
+            <span>Bảng Điều Khiển Giảng Viên</span>
+          </h1>
+          <p class="text-xs sm:text-sm text-gray-500 mt-1">
+            Hệ thống Quản lý Đào tạo CNTT · Khoa CNTT Trường Cao đẳng Buôn Ma Thuột
+          </p>
+        </div>
+
+        <!-- Thống kê thời gian thực -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="card p-5 border border-gray-200 rounded-2xl bg-white shadow-xs">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-2xl shrink-0">
+                🏫
+              </div>
+              <div>
+                <span class="text-xs font-bold text-gray-500 block uppercase tracking-wider">Lớp Đang Dạy</span>
+                <span class="text-2xl font-black text-gray-900 font-mono" x-text="stats.classCount"></span>
+                <span class="text-[11px] text-gray-400 block mt-0.5" x-text="stats.compositeCount + ' lớp ghép liên lớp'"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card p-5 border border-gray-200 rounded-2xl bg-white shadow-xs">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-2xl shrink-0">
+                🎓
+              </div>
+              <div>
+                <span class="text-xs font-bold text-gray-500 block uppercase tracking-wider">Tổng Học Sinh</span>
+                <span class="text-2xl font-black text-gray-900 font-mono" x-text="stats.studentCount"></span>
+                <span class="text-[11px] text-emerald-600 font-semibold block mt-0.5">Đã nạp hồ sơ chuẩn hóa</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card p-5 border border-gray-200 rounded-2xl bg-white shadow-xs">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-2xl shrink-0">
+                📝
+              </div>
+              <div>
+                <span class="text-xs font-bold text-gray-500 block uppercase tracking-wider">Lượt Làm Bài / Thi</span>
+                <span class="text-2xl font-black text-gray-900 font-mono" x-text="stats.scoreCount"></span>
+                <span class="text-[11px] text-purple-600 font-semibold block mt-0.5">Sát hạch & Thực hành</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chức năng quản trị -->
         <div>
-          <label for="secret-code" class="block text-sm font-semibold text-gray-700 mb-1">Mã bí mật</label>
-          <input id="secret-code" type="password" x-model="secret" required placeholder="Nhập mã bí mật"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500" />
-        </div>
-        <button type="submit" class="btn-primary w-full">Đăng nhập</button>
-      </form>
-    </div>
+          <h2 class="text-base font-extrabold text-gray-900 mb-3 flex items-center gap-2">
+            <span>🚀</span>
+            <span>Chức Năng Giảng Dạy & Quản Lý Đào Tạo</span>
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Quản lý lớp -->
+            <a href="/admin/classes" class="card p-5 border border-gray-200 rounded-2xl bg-white hover:border-primary-400 hover:shadow-md transition-all flex items-start gap-4 no-underline group">
+              <div class="w-12 h-12 rounded-xl bg-primary-50 text-primary-700 flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform">
+                👥
+              </div>
+              <div>
+                <h3 class="font-extrabold text-gray-900 text-sm group-hover:text-primary-700 transition-colors">
+                  Quản lý Lớp & Hồ Sơ Học Sinh
+                </h3>
+                <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+                  Tạo lớp mới, nạp học sinh 1-Click từ Excel, ghép lớp liên khóa & ca sát hạch ghép, xuất danh sách CSV UTF-8.
+                </p>
+                <span class="inline-flex items-center gap-1 text-[11px] font-bold text-primary-600 mt-2">
+                  <span>Mở giao diện quản lý</span>
+                  <span>→</span>
+                </span>
+              </div>
+            </a>
 
-    <!-- Dashboard -->
-    <div x-show="loggedIn" x-cloak>
-      <div class="flex items-center justify-between mb-8">
-        <h1 class="text-2xl font-bold">Trang quản trị Giảng viên</h1>
-        <button @click="loggedIn = false; secret = ''" class="btn-secondary text-sm">Đăng xuất</button>
-      </div>
+            <!-- Bảng điểm -->
+            <a href="/admin/scores" class="card p-5 border border-gray-200 rounded-2xl bg-white hover:border-emerald-400 hover:shadow-md transition-all flex items-start gap-4 no-underline group">
+              <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform">
+                📊
+              </div>
+              <div>
+                <h3 class="font-extrabold text-gray-900 text-sm group-hover:text-emerald-700 transition-colors">
+                  Sổ Điểm & Kết Quả Đánh Giá
+                </h3>
+                <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+                  Xem điểm trắc nghiệm và điểm danh thực hành, tự động tách điểm theo lớp gốc khi ghép ca thi, xuất Excel báo cáo.
+                </p>
+                <span class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600 mt-2">
+                  <span>Mở bảng điểm</span>
+                  <span>→</span>
+                </span>
+              </div>
+            </a>
 
-      <!-- Stats -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8">
-        <div class="card text-center">
-          <p class="text-3xl font-bold text-primary-700">4</p>
-          <p class="text-sm text-gray-500 mt-1">Số lớp</p>
-        </div>
-        <div class="card text-center">
-          <p class="text-3xl font-bold text-green-600">128</p>
-          <p class="text-sm text-gray-500 mt-1">Số học sinh</p>
-        </div>
-        <div class="card text-center">
-          <p class="text-3xl font-bold text-orange-500">15</p>
-          <p class="text-sm text-gray-500 mt-1">Bài nộp hôm nay</p>
-        </div>
-      </div>
+            <!-- Cổng sinh viên làm bài -->
+            <a href="/assessment" target="_blank" class="card p-5 border border-gray-200 rounded-2xl bg-white hover:border-amber-400 hover:shadow-md transition-all flex items-start gap-4 no-underline group">
+              <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform">
+                🎯
+              </div>
+              <div>
+                <h3 class="font-extrabold text-gray-900 text-sm group-hover:text-amber-700 transition-colors">
+                  Khu Vực Thi & Sát Hạch Nghề (Học Sinh)
+                </h3>
+                <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+                  Trang làm bài đánh giá năng lực nghề và trắc nghiệm thực chiến, có Trợ giảng AI giải thích câu sai cho học sinh 9+3.
+                </p>
+                <span class="inline-flex items-center gap-1 text-[11px] font-bold text-amber-600 mt-2">
+                  <span>Xem giao diện làm bài</span>
+                  <span>↗</span>
+                </span>
+              </div>
+            </a>
 
-      <!-- Quick links -->
-      <h2 class="mb-4">Chức năng</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <a href="/admin/classes" class="card flex items-center gap-3 no-underline">
-          <span class="text-2xl">📋</span>
-          <div>
-            <h3 class="font-semibold text-gray-900">Quản lý lớp</h3>
-            <p class="text-xs text-gray-500">Xem danh sách lớp, thêm/sửa/xóa lớp</p>
+            <!-- Xưởng thực hành -->
+            <a href="/practice" target="_blank" class="card p-5 border border-gray-200 rounded-2xl bg-white hover:border-indigo-400 hover:shadow-md transition-all flex items-start gap-4 no-underline group">
+              <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center text-2xl shrink-0 group-hover:scale-105 transition-transform">
+                🛠️
+              </div>
+              <div>
+                <h3 class="font-extrabold text-gray-900 text-sm group-hover:text-indigo-700 transition-colors">
+                  Xưởng Thực Hành Phần Cứng 7 Bước
+                </h3>
+                <p class="text-xs text-gray-500 mt-1 leading-relaxed">
+                  Cẩm nang quy trình kỹ thuật viên thực thụ từ con số 0 (Nhận máy -> Bàn giao), điểm danh thực hành tại xưởng máy.
+                </p>
+                <span class="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-600 mt-2">
+                  <span>Xem hướng dẫn thực hành</span>
+                  <span>↗</span>
+                </span>
+              </div>
+            </a>
           </div>
-        </a>
-        <a href="/admin/scores" class="card flex items-center gap-3 no-underline">
-          <span class="text-2xl">📊</span>
-          <div>
-            <h3 class="font-semibold text-gray-900">Bảng điểm</h3>
-            <p class="text-xs text-gray-500">Xem và xuất bảng điểm các lớp</p>
-          </div>
-        </a>
-        <a href="/admin/content" class="card flex items-center gap-3 no-underline">
-          <span class="text-2xl">📝</span>
-          <div>
-            <h3 class="font-semibold text-gray-900">Nội dung bài giảng</h3>
-            <p class="text-xs text-gray-500">Quản lý nội dung môn học và bài tập</p>
-          </div>
-        </a>
-        <a href="/admin/assessments" class="card flex items-center gap-3 no-underline">
-          <span class="text-2xl">✅</span>
-          <div>
-            <h3 class="font-semibold text-gray-900">Đánh giá năng lực</h3>
-            <p class="text-xs text-gray-500">Quản lý ngân hàng câu hỏi và kết quả thi</p>
-          </div>
-        </a>
+        </div>
       </div>
-    </div>
+    </AdminAuthGuard>
   </section>
 </BaseLayout>
+
+<script is:inline>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('adminDashboard', () => ({
+      stats: {
+        classCount: 0,
+        compositeCount: 0,
+        studentCount: 0,
+        scoreCount: 0
+      },
+
+      init() {
+        this.loadStats();
+      },
+
+      loadStats() {
+        // 1. Đọc số lớp từ localStorage
+        try {
+          const classes = JSON.parse(localStorage.getItem('BMTC_CLASSES') || '[]');
+          if (Array.isArray(classes)) {
+            this.stats.classCount = classes.length;
+            this.stats.compositeCount = classes.filter(c => c.is_composite).length;
+          }
+        } catch(e) {}
+
+        // 2. Đọc tổng số học sinh từ localStorage
+        try {
+          const allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+          let count = 0;
+          Object.values(allStudentsStore).forEach(list => {
+            if (Array.isArray(list)) count += list.length;
+          });
+          this.stats.studentCount = count;
+        } catch(e) {}
+
+        // 3. Đọc số bài nộp
+        try {
+          fetch('/api/scores')
+            .then(r => r.json())
+            .then(data => {
+              if (data && data.ok && Array.isArray(data.data)) {
+                this.stats.scoreCount = data.data.length;
+              }
+            })
+            .catch(() => {});
+        } catch(e) {}
+      }
+    }));
+  });
+</script>

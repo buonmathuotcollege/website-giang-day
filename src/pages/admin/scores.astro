@@ -1,10 +1,13 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 ---
 
 <BaseLayout title="Bảng điểm Thực hành & Đánh giá Năng lực - Quản trị Giảng viên">
-  <section class="max-w-6xl mx-auto px-4 py-8" x-data="scoresManager">
-    <!-- Header -->
+  <section class="max-w-6xl mx-auto px-4 py-8">
+    <AdminAuthGuard pageTitle="Bảng điểm & Đánh giá Năng lực">
+      <div x-data="scoresManager">
+        <!-- Header -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 border-b border-gray-200 pb-5">
       <div>
         <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
@@ -180,6 +183,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </tbody>
       </table>
     </div>
+      </div>
+    </AdminAuthGuard>
   </section>
 </BaseLayout>
 

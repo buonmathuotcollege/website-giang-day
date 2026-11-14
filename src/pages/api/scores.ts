@@ -1,11 +1,12 @@
 import type { APIRoute } from 'astro';
+import { checkAdminAuth } from '../../lib/auth';
 
 export const prerender = false;
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, x-admin-secret",
   "Content-Type": "application/json;charset=UTF-8"
 };
 
@@ -34,12 +35,6 @@ async function ensureTable(db: any) {
 
   try { await db.prepare("ALTER TABLE submissions ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
   try { await db.prepare("ALTER TABLE submissions ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
-}
-
-function checkAuth(request: Request, env: any) {
-  const secret = (env && (env.TEACHER_SECRET || env.ADMIN_TOKEN) ? (env.TEACHER_SECRET || env.ADMIN_TOKEN) : "BMTC2026").trim();
-  const auth = request.headers.get("Authorization") || "";
-  return auth === `Bearer ${secret}`;
 }
 
 export const OPTIONS: APIRoute = async () => {
@@ -96,9 +91,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 };
 
-// 2. GET SCORES
+// 2. GET SCORES (Chỉ Giảng viên mới được xem bảng điểm)
 export const GET: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
+
+  if (!checkAdminAuth(request, env)) {
+    return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để xem toàn bộ bảng điểm!" }), { status: 401, headers: CORS_HEADERS });
+  }
+
   const url = new URL(request.url);
   const className = url.searchParams.get("class");
   const originalClass = url.searchParams.get("original_class");
@@ -146,7 +146,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
 // 3. DELETE SCORE
 export const DELETE: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
-  if (!checkAuth(request, env)) {
+  if (!checkAdminAuth(request, env)) {
     return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên" }), { status: 401, headers: CORS_HEADERS });
   }
 
