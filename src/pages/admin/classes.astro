@@ -2,48 +2,663 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Quản lý Lớp học - Quản trị Giảng viên">
-  <section class="max-w-5xl mx-auto px-4 py-8" x-data="{
-    classes: [],
-    loading: true,
-    async fetchClasses() {
-      this.loading = true;
-      try {
-        const res = await fetch('/api/classes');
-        const data = await res.json();
-        this.classes = data.data || [];
-      } catch (e) {
-        this.classes = [];
-      } finally {
-        this.loading = false;
-      }
-    }
-  }" x-init="fetchClasses()">
-    <div class="flex items-center justify-between mb-6">
-      <div>
-        <div class="flex items-center gap-2 text-sm text-gray-500 mb-1">
-          <a href="/admin" class="hover:underline">Quản trị</a>
-          <span>/</span>
-          <span class="text-gray-900 font-medium">Lớp học</span>
-        </div>
-        <h1 class="text-2xl font-bold text-gray-900">Danh sách Lớp học</h1>
-      </div>
-      <a href="/admin" class="btn-secondary text-sm">← Về Dashboard</a>
+<BaseLayout title="Quản lý Lớp học & Học sinh - Cổng Giảng Dạy CNTT">
+  <section class="max-w-6xl mx-auto px-4 py-8" x-data="classesManager">
+    <!-- Toast Notification -->
+    <div
+      x-show="toast.show"
+      x-cloak
+      x-transition
+      class="fixed bottom-5 right-5 z-50 px-4 py-3 rounded-2xl shadow-xl border text-xs sm:text-sm font-semibold flex items-center gap-2"
+      :class="toast.isError ? 'bg-rose-50 border-rose-200 text-rose-800' : 'bg-emerald-50 border-emerald-200 text-emerald-800'"
+    >
+      <span x-text="toast.message"></span>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <template x-for="c in classes" :key="c.id || c.class_code">
-        <div class="card flex items-start justify-between">
-          <div>
-            <span class="text-xs font-semibold px-2 py-0.5 rounded bg-primary-100 text-primary-800" x-text="c.class_code"></span>
-            <h3 class="text-base font-bold text-gray-900 mt-2" x-text="c.class_name"></h3>
-            <p class="text-xs text-gray-500 mt-1" x-text="`Niên khóa: ${c.academic_year || '2026-2027'}`"></p>
-          </div>
-          <a :href="`/admin/scores?class=${encodeURIComponent(c.class_name)}`" class="text-xs font-semibold text-primary-700 hover:underline">
-            Xem điểm →
-          </a>
+    <!-- Header bar -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 border-b border-gray-200 pb-5">
+      <div>
+        <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+          <a href="/admin" class="hover:underline text-primary-700 font-semibold">Bảng điều khiển Giảng viên</a>
+          <span>/</span>
+          <span class="text-gray-900 font-medium">Quản lý Lớp học & Học sinh</span>
         </div>
-      </template>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight flex items-center gap-2.5">
+          <span>👥</span>
+          <span>Quản Lý Lớp Học & Học Sinh</span>
+        </h1>
+        <p class="text-xs sm:text-sm text-gray-500 mt-1">
+          Hệ cơ sở dữ liệu Cloudflare D1 (SQLite Edge) · Nhập nhanh danh sách học sinh 1-Click từ Excel
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2.5 self-end sm:self-center">
+        <button
+          type="button"
+          @click="showCreateClassModal = true"
+          class="btn-primary text-xs sm:text-sm px-4 py-2.5 font-bold flex items-center gap-1.5 shadow-sm"
+        >
+          <span>➕</span>
+          <span>Tạo Lớp Mới</span>
+        </button>
+
+        <button
+          type="button"
+          @click="openImportModal()"
+          class="btn-secondary text-xs sm:text-sm px-4 py-2.5 font-bold flex items-center gap-1.5 shadow-sm border-gray-300 hover:bg-gray-50"
+        >
+          <span>📋</span>
+          <span>Dán Học Sinh từ Excel</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div class="card p-4 flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-xl shrink-0">
+          🏫
+        </div>
+        <div>
+          <span class="text-xs text-gray-500 block">Tổng số lớp giảng dạy</span>
+          <strong class="text-xl font-bold text-gray-900 font-mono" x-text="classes.length"></strong>
+        </div>
+      </div>
+
+      <div class="card p-4 flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl shrink-0">
+          🎓
+        </div>
+        <div>
+          <span class="text-xs text-gray-500 block">Tổng số học sinh đã nạp</span>
+          <strong class="text-xl font-bold text-emerald-800 font-mono" x-text="classes.reduce((sum, c) => sum + (c.student_count || 0), 0)"></strong>
+        </div>
+      </div>
+
+      <div class="card p-4 flex items-center gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-xl shrink-0">
+          📅
+        </div>
+        <div>
+          <span class="text-xs text-gray-500 block">Niên khóa đào tạo</span>
+          <strong class="text-sm font-bold text-gray-800">2026 - 2027 (Hệ 9+3)</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Class Grid -->
+    <div class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-base font-bold text-gray-900">Danh Sách Lớp Chuyên Ngành</h2>
+        <span class="text-xs text-gray-500" x-text="'Hiển thị ' + classes.length + ' lớp học'"></span>
+      </div>
+
+      <!-- Loading skeleton -->
+      <div x-show="loading" class="text-center py-10 text-gray-400 text-sm">
+        Đang tải dữ liệu lớp học từ Cloudflare D1...
+      </div>
+
+      <!-- Empty state -->
+      <div x-show="!loading && classes.length === 0" class="card text-center py-12 space-y-3">
+        <span class="text-4xl block">📂</span>
+        <h3 class="text-base font-bold text-gray-800">Chưa có lớp học nào</h3>
+        <p class="text-xs text-gray-500 max-w-sm mx-auto">Thầy bấm vào nút "Tạo Lớp Mới" ở góc trên để tạo lớp đầu tiên nhé!</p>
+      </div>
+
+      <!-- Classes cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" x-show="!loading && classes.length > 0">
+        <template x-for="c in classes" :key="c.id || c.class_code">
+          <div class="card p-5 flex flex-col justify-between space-y-4 hover:border-primary-400 transition-all shadow-xs">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-primary-100 text-primary-800" x-text="c.class_code"></span>
+                <span
+                  class="text-[11px] font-mono px-2 py-0.5 rounded-full font-bold"
+                  :class="c.student_count > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-500'"
+                  x-text="c.student_count > 0 ? (c.student_count + ' Học sinh') : 'Chưa có HS'"
+                ></span>
+              </div>
+
+              <h3 class="text-base font-bold text-gray-900 leading-snug" x-text="c.class_name"></h3>
+              <p class="text-xs text-gray-500 mt-1" x-text="'Niên khóa: ' + (c.academic_year || '2026-2027')"></p>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div class="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  @click="viewClassStudents(c)"
+                  class="px-2.5 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold transition-colors"
+                  title="Xem và chỉnh sửa danh sách học sinh"
+                >
+                  👥 DS Lớp
+                </button>
+
+                <button
+                  type="button"
+                  @click="openImportModal(c)"
+                  class="px-2.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold transition-colors"
+                  title="Dán nhanh danh sách học sinh từ Excel vào lớp này"
+                >
+                  📥 Nạp Excel
+                </button>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <a
+                  :href="'/admin/scores?class=' + encodeURIComponent(c.class_name)"
+                  class="text-primary-700 hover:underline font-bold"
+                >
+                  Bảng điểm →
+                </a>
+
+                <button
+                  type="button"
+                  @click="deleteClass(c)"
+                  class="text-gray-400 hover:text-rose-600 p-1 rounded"
+                  title="Xóa lớp học"
+                >
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- MODAL 1: TẠO LỚP HỌC MỚI                                       -->
+    <!-- ============================================================== -->
+    <div
+      x-show="showCreateClassModal"
+      x-cloak
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4"
+    >
+      <div
+        class="bg-white rounded-3xl p-6 sm:p-7 max-w-md w-full shadow-2xl border border-gray-200 space-y-4"
+        @click.away="showCreateClassModal = false"
+      >
+        <div class="flex items-center justify-between border-b pb-3">
+          <h3 class="font-extrabold text-gray-900 text-base flex items-center gap-2">
+            <span>🏫</span>
+            <span>Tạo Lớp Học Mới</span>
+          </h3>
+          <button @click="showCreateClassModal = false" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+        </div>
+
+        <form @submit.prevent="createClass()" class="space-y-3.5 text-xs sm:text-sm">
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Mã lớp viết tắt (*)</label>
+            <input
+              type="text"
+              x-model="newClass.code"
+              required
+              placeholder="Ví dụ: THUD_K26A, OTO_93..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 font-mono text-sm"
+            />
+            <span class="text-[11px] text-gray-500 mt-0.5 block">Nên viết hoa liền không dấu</span>
+          </div>
+
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Tên lớp đầy đủ (*)</label>
+            <input
+              type="text"
+              x-model="newClass.name"
+              required
+              placeholder="Ví dụ: Tin học ứng dụng K26A"
+              class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 text-sm"
+            />
+          </div>
+
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Niên khóa đào tạo</label>
+            <input
+              type="text"
+              x-model="newClass.academicYear"
+              placeholder="2026-2027"
+              class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 text-sm"
+            />
+          </div>
+
+          <div class="flex justify-end gap-2 pt-3 border-t">
+            <button
+              type="button"
+              @click="showCreateClassModal = false"
+              class="btn-secondary text-xs px-4 py-2"
+            >
+              Hủy
+            </button>
+            <button
+              type="submit"
+              class="btn-primary text-xs px-5 py-2 font-bold shadow"
+            >
+              Xác Nhận Tạo Lớp
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- MODAL 2: NHẬP HỌC SINH TỪ EXCEL (1-CLICK PASTE)                -->
+    <!-- ============================================================== -->
+    <div
+      x-show="showImportModal"
+      x-cloak
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4"
+    >
+      <div
+        class="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl border border-gray-200 space-y-4 max-h-[90vh] overflow-y-auto"
+        @click.away="showImportModal = false"
+      >
+        <div class="flex items-center justify-between border-b pb-3">
+          <div>
+            <h3 class="font-extrabold text-gray-900 text-base sm:text-lg flex items-center gap-2">
+              <span>📋</span>
+              <span>Dán Danh Sách Học Sinh Từ Excel</span>
+            </h3>
+            <p class="text-xs text-gray-500 mt-0.5">Sao chép 2 cột STT và Họ Tên trong Excel rồi dán vào đây</p>
+          </div>
+          <button @click="showImportModal = false" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+        </div>
+
+        <div class="space-y-4 text-xs sm:text-sm">
+          <!-- Chọn lớp nhận danh sách -->
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Nạp vào Lớp học:</label>
+            <select
+              x-model="importData.classId"
+              class="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 font-semibold"
+            >
+              <template x-for="c in classes" :key="c.id">
+                <option :value="c.id" x-text="c.class_code + ' - ' + c.class_name"></option>
+              </template>
+            </select>
+          </div>
+
+          <!-- Textarea dán từ excel -->
+          <div>
+            <label class="block font-bold text-gray-700 mb-1">Dán dữ liệu từ file Excel vào đây:</label>
+            <textarea
+              x-model="importData.rawText"
+              @input="parseExcelText()"
+              rows="6"
+              placeholder="Ví dụ dán từ Excel:&#10;1&#9;Nguyễn Văn An&#10;2&#9;Trần Quốc Bảo&#10;3&#9;Lê Thị Cúc&#10;4&#9;Phạm Hoàng Đạt&#10;..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-xl font-mono text-xs focus:ring-2 focus:ring-primary-500 leading-relaxed"
+            ></textarea>
+            <span class="text-[11px] text-gray-500 block mt-1">
+              💡 Thầy mở Excel của trường -&gt; Quét chọn 2 cột (STT và Họ tên) -&gt; Nhấn Ctrl+C -&gt; Bấm vào ô này và nhấn Ctrl+V.
+            </span>
+          </div>
+
+          <!-- Tùy chọn ghi đè -->
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" x-model="importData.overwrite" class="rounded text-primary-700 w-4 h-4" />
+            <span class="text-xs text-gray-700 font-medium">Ghi đè (Xóa sạch danh sách cũ của lớp này trước khi nạp mới)</span>
+          </label>
+
+          <!-- Live Preview Table -->
+          <div x-show="importData.parsedStudents.length > 0" class="border border-gray-200 rounded-2xl p-4 bg-gray-50 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-gray-800 text-xs">
+                Xem trước kết quả nhận diện:
+                <span class="text-emerald-700 font-extrabold" x-text="importData.parsedStudents.length + ' học sinh'"></span>
+              </span>
+              <span class="text-[11px] text-gray-500 font-mono">Chuẩn bị nạp vào CSDL</span>
+            </div>
+
+            <div class="max-h-40 overflow-y-auto border border-gray-200 rounded-xl bg-white">
+              <table class="w-full text-xs text-left">
+                <thead class="bg-gray-100 text-gray-600 font-mono sticky top-0">
+                  <tr>
+                    <th class="py-1.5 px-3 w-16">STT</th>
+                    <th class="py-1.5 px-3">Họ và tên học sinh</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                  <template x-for="st in importData.parsedStudents.slice(0, 15)" :key="st.student_number">
+                    <tr>
+                      <td class="py-1.5 px-3 font-mono text-gray-500" x-text="st.student_number"></td>
+                      <td class="py-1.5 px-3 font-semibold text-gray-900" x-text="st.full_name"></td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+
+            <p x-show="importData.parsedStudents.length > 15" class="text-[11px] text-gray-500 italic text-center">
+              ... và <span x-text="importData.parsedStudents.length - 15"></span> học sinh nữa tiếp theo.
+            </p>
+          </div>
+
+          <!-- Submit Buttons -->
+          <div class="flex justify-end gap-2.5 pt-3 border-t">
+            <button
+              type="button"
+              @click="showImportModal = false"
+              class="btn-secondary text-xs px-4 py-2"
+            >
+              Đóng
+            </button>
+
+            <button
+              type="button"
+              @click="submitImport()"
+              :disabled="importData.parsedStudents.length === 0"
+              class="btn-primary text-xs px-5 py-2.5 font-bold shadow-md bg-emerald-600 hover:bg-emerald-700"
+              :class="importData.parsedStudents.length === 0 ? 'opacity-50 cursor-not-allowed' : ''"
+            >
+              <span>💾 Lưu vào CSDL Cloudflare D1</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================== -->
+    <!-- MODAL 3: XEM VÀ QUẢN LÝ HỌC SINH CỦA LỚP                      -->
+    <!-- ============================================================== -->
+    <div
+      x-show="showStudentListModal"
+      x-cloak
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4"
+    >
+      <div
+        class="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl border border-gray-200 space-y-4 max-h-[90vh] overflow-y-auto"
+        @click.away="showStudentListModal = false"
+      >
+        <div class="flex items-center justify-between border-b pb-3">
+          <div>
+            <h3 class="font-extrabold text-gray-900 text-base sm:text-lg flex items-center gap-2">
+              <span>👥</span>
+              <span x-text="selectedClass ? ('Danh Sách: ' + selectedClass.class_name) : 'Danh Sách Học Sinh'"></span>
+            </h3>
+            <span class="text-xs text-gray-500 font-mono" x-text="selectedClass ? ('Mã lớp: ' + selectedClass.class_code) : ''"></span>
+          </div>
+          <button @click="showStudentListModal = false" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+        </div>
+
+        <div class="space-y-4 text-xs sm:text-sm">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-600 font-medium">
+              Sĩ số: <strong class="text-primary-800" x-text="selectedClassStudents.length"></strong> học sinh
+            </span>
+
+            <button
+              type="button"
+              @click="showStudentListModal = false; openImportModal(selectedClass);"
+              class="btn-secondary text-xs px-3 py-1.5 font-bold"
+            >
+              + Nạp thêm học sinh từ Excel
+            </button>
+          </div>
+
+          <!-- Student table -->
+          <div x-show="loadingStudents" class="text-center py-8 text-gray-400 text-xs">
+            Đang tải danh sách học sinh...
+          </div>
+
+          <div x-show="!loadingStudents && selectedClassStudents.length === 0" class="p-6 text-center text-gray-500 border border-dashed rounded-xl">
+            Lớp này chưa có học sinh nào. Thầy bấm nút "Nạp thêm học sinh từ Excel" để dán danh sách nhé!
+          </div>
+
+          <div x-show="!loadingStudents && selectedClassStudents.length > 0" class="border border-gray-200 rounded-2xl overflow-hidden">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-gray-100 text-gray-700 uppercase font-mono">
+                <tr>
+                  <th class="py-2.5 px-3 w-14 text-center">STT</th>
+                  <th class="py-2.5 px-4">Họ và tên học sinh</th>
+                  <th class="py-2.5 px-3 text-right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                <template x-for="(stu, idx) in selectedClassStudents" :key="stu.id">
+                  <tr class="hover:bg-gray-50">
+                    <td class="py-2 px-3 text-center font-mono text-gray-500" x-text="stu.student_number || (idx + 1)"></td>
+                    <td class="py-2 px-4 font-semibold text-gray-900" x-text="stu.full_name"></td>
+                    <td class="py-2 px-3 text-right">
+                      <button
+                        type="button"
+                        @click="deleteStudent(stu.id)"
+                        class="text-rose-500 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50"
+                        title="Xóa học sinh này"
+                      >
+                        ✕ Xóa
+                      </button>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="flex justify-end pt-2 border-t">
+            <button
+              type="button"
+              @click="showStudentListModal = false"
+              class="btn-secondary text-xs px-4 py-2"
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </BaseLayout>
+
+<script is:inline>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('classesManager', () => ({
+      classes: [],
+      loading: true,
+
+      showCreateClassModal: false,
+      showImportModal: false,
+      showStudentListModal: false,
+
+      newClass: {
+        code: '',
+        name: '',
+        academicYear: '2026-2027'
+      },
+
+      importData: {
+        classId: '',
+        rawText: '',
+        overwrite: true,
+        parsedStudents: []
+      },
+
+      selectedClass: null,
+      selectedClassStudents: [],
+      loadingStudents: false,
+
+      toast: { show: false, message: '', isError: false },
+      showToast(msg, isErr = false) {
+        this.toast = { show: true, message: msg, isError: isErr };
+        setTimeout(() => { this.toast.show = false; }, 4000);
+      },
+
+      init() {
+        this.fetchClasses();
+      },
+
+      async fetchClasses() {
+        this.loading = true;
+        try {
+          const res = await fetch('/api/classes');
+          const data = await res.json();
+          this.classes = data.data || [];
+        } catch (e) {
+          this.classes = [];
+        } finally {
+          this.loading = false;
+        }
+      },
+
+      async createClass() {
+        if (!this.newClass.code.trim() || !this.newClass.name.trim()) {
+          alert('Vui lòng nhập đầy đủ Mã lớp và Tên lớp!');
+          return;
+        }
+        try {
+          const res = await fetch('/api/classes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'create_class',
+              class_code: this.newClass.code,
+              class_name: this.newClass.name,
+              academic_year: this.newClass.academicYear
+            })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            this.showToast('✅ Đã tạo lớp học mới thành công!');
+            this.showCreateClassModal = false;
+            this.newClass = { code: '', name: '', academicYear: '2026-2027' };
+            await this.fetchClasses();
+          } else {
+            alert('Lỗi: ' + data.error);
+          }
+        } catch (err) {
+          alert('Lỗi kết nối máy chủ!');
+        }
+      },
+
+      openImportModal(cls = null) {
+        if (cls) {
+          this.importData.classId = cls.id;
+        } else if (this.classes.length > 0 && !this.importData.classId) {
+          this.importData.classId = this.classes[0].id;
+        }
+        this.importData.rawText = '';
+        this.importData.parsedStudents = [];
+        this.showImportModal = true;
+      },
+
+      parseExcelText() {
+        const text = this.importData.rawText.trim();
+        if (!text) {
+          this.importData.parsedStudents = [];
+          return;
+        }
+
+        const lines = text.split(/\r?\n/);
+        const results = [];
+        let autoIndex = 1;
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+
+          // 1\tNguyễn Văn An
+          const tabParts = trimmed.split(/\t+/);
+          if (tabParts.length >= 2) {
+            const num = parseInt(tabParts[0].replace(/[^0-9]/g, '')) || autoIndex++;
+            const name = tabParts.slice(1).join(' ').trim();
+            if (name) results.push({ student_number: num, full_name: name });
+            continue;
+          }
+
+          // 1. Nguyễn Văn An
+          const dotMatch = trimmed.match(/^(\d+)[\.\s\-\:]+(.+)$/);
+          if (dotMatch) {
+            const num = parseInt(dotMatch[1]) || autoIndex++;
+            const name = dotMatch[2].trim();
+            if (name) results.push({ student_number: num, full_name: name });
+            continue;
+          }
+
+          // Chỉ có tên
+          results.push({ student_number: autoIndex++, full_name: trimmed });
+        }
+
+        this.importData.parsedStudents = results;
+      },
+
+      async submitImport() {
+        if (!this.importData.classId) {
+          alert('Vui lòng chọn lớp học để nạp danh sách!');
+          return;
+        }
+        if (this.importData.parsedStudents.length === 0) {
+          alert('Chưa có học sinh nào được nhận diện. Vui lòng dán danh sách từ Excel!');
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/classes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'import_students',
+              class_id: this.importData.classId,
+              students: this.importData.parsedStudents,
+              overwrite: this.importData.overwrite
+            })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            this.showToast('✅ ' + data.message);
+            this.showImportModal = false;
+            await this.fetchClasses();
+          } else {
+            alert('Lỗi: ' + data.error);
+          }
+        } catch (err) {
+          alert('Lỗi kết nối khi lưu học sinh!');
+        }
+      },
+
+      async viewClassStudents(cls) {
+        this.selectedClass = cls;
+        this.loadingStudents = true;
+        this.showStudentListModal = true;
+        try {
+          const res = await fetch('/api/classes?id=' + encodeURIComponent(cls.id));
+          const data = await res.json();
+          this.selectedClassStudents = data.data || [];
+        } catch (err) {
+          this.selectedClassStudents = [];
+        } finally {
+          this.loadingStudents = false;
+        }
+      },
+
+      async deleteStudent(stuId) {
+        if (!confirm('Thầy có chắc chắn muốn xóa học sinh này khỏi lớp?')) return;
+        try {
+          const res = await fetch('/api/classes?student_id=' + encodeURIComponent(stuId), { method: 'DELETE' });
+          const data = await res.json();
+          if (data.ok) {
+            this.selectedClassStudents = this.selectedClassStudents.filter(s => s.id !== stuId);
+            this.showToast('Đã xóa học sinh khỏi danh sách');
+            await this.fetchClasses();
+          }
+        } catch (e) {
+          alert('Lỗi xóa học sinh');
+        }
+      },
+
+      async deleteClass(cls) {
+        if (!confirm('Thầy có chắc chắn muốn xóa lớp ' + cls.class_name + '? Toàn bộ danh sách học sinh của lớp này sẽ bị xóa!')) return;
+        try {
+          const res = await fetch('/api/classes?id=' + encodeURIComponent(cls.id), { method: 'DELETE' });
+          const data = await res.json();
+          if (data.ok) {
+            this.showToast('Đã xóa lớp học');
+            await this.fetchClasses();
+          } else {
+            alert('Lỗi: ' + data.error);
+          }
+        } catch (e) {
+          alert('Lỗi xóa lớp');
+        }
+      }
+    }));
+  });
+</script>

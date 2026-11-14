@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- Graduation Cap -->
+  <path d="M256 120 L432 200 L256 280 L80 200 Z" fill="url(#gold)"/>
+  <path d="M140 227 L140 310 C140 360 256 390 256 390 C256 390 372 360 372 310 L372 227 L256 280 Z" fill="#ffffff" opacity="0.95"/>
+  <path d="M432 200 L432 320" stroke="#f59e0b" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="432" cy="330" r="16" fill="#f59e0b"/>
+  <!-- Wrench and Chip motif -->
+  <circle cx="256" cy="310" r="28" fill="#1e3a8a"/>
+  <!-- Text -->
+  <text x="256" y="450" font-family="system-ui, -apple-system, sans-serif" font-size="44" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="2">CĐ BMT</text>
+</svg>

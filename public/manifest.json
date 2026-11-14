@@ -1,0 +1,18 @@
+{
+  "name": "Cổng Giảng Dạy & Đánh Giá Năng Lực CNTT - CĐ BMT",
+  "short_name": "CĐ BMT CNTT",
+  "description": "Hệ thống giảng dạy trực tuyến, xưởng thực hành 7 bước và đánh giá năng lực nghề - Trường Cao đẳng Buôn Ma Thuột",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e3a8a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
