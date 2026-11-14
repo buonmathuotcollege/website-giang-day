@@ -52,15 +52,22 @@ CREATE TABLE IF NOT EXISTS classes (
   FOREIGN KEY (course_id) REFERENCES courses(id)
 );
 
--- 5. BẢNG HỌC SINH (Students)
+-- 5. BẢNG HỌC SINH / SINH VIÊN (Students) - Chuẩn Đại học & Cao đẳng
 CREATE TABLE IF NOT EXISTS students (
   id TEXT PRIMARY KEY,
   class_id TEXT NOT NULL,
-  student_number INTEGER NOT NULL,
-  full_name TEXT NOT NULL,
+  student_number INTEGER NOT NULL,          -- Số thứ tự trong sổ điểm (1, 2, 3...)
+  student_code TEXT NOT NULL DEFAULT '',   -- Mã số học sinh / sinh viên (MSHS, e.g. 24TH0101, BMT26-001)
+  full_name TEXT NOT NULL,                  -- Họ và tên đầy đủ
+  date_of_birth TEXT DEFAULT '',            -- Ngày tháng năm sinh (DD/MM/YYYY)
+  gender TEXT DEFAULT 'Nam',                -- Giới tính (Nam / Nữ)
+  phone TEXT DEFAULT '',                    -- Số điện thoại học sinh / phụ huynh
+  status TEXT DEFAULT 'Đang học',           -- Trạng thái: Đang học / Bảo lưu / Nghỉ học
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (class_id) REFERENCES classes(id)
+  FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE
 );
+CREATE INDEX IF NOT EXISTS idx_students_class ON students(class_id);
+CREATE INDEX IF NOT EXISTS idx_students_code ON students(student_code);
 
 -- 6. BẢNG BUỔI HỌC & PIN (Sessions)
 CREATE TABLE IF NOT EXISTS sessions (

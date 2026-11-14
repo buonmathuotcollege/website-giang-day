@@ -1,16 +1,17 @@
 // ============================================================================
 // API QUẢN LÝ LỚP HỌC & HỌC SINH (/api/classes)
+// Chuẩn thông tin Đại học / Cao đẳng: MSHS, Họ tên, Ngày sinh, Giới tính, SĐT
 // Tối ưu cho Cloudflare D1 (SQLite on Edge)
 // ============================================================================
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
   "Content-Type": "application/json;charset=UTF-8"
 };
 
-// Đảm bảo cấu trúc bảng và chỉ mục luôn tồn tại (Tự khởi tạo tự động)
+// Đảm bảo cấu trúc bảng và chỉ mục luôn tồn tại (Tự migrate an toàn)
 async function ensureTables(db) {
   if (!db) return;
   await db.batch([
@@ -29,15 +30,40 @@ async function ensureTables(db) {
         id TEXT PRIMARY KEY,
         class_id TEXT NOT NULL,
         student_number INTEGER NOT NULL,
+        student_code TEXT NOT NULL DEFAULT '',
         full_name TEXT NOT NULL,
+        date_of_birth TEXT DEFAULT '',
+        gender TEXT DEFAULT 'Nam',
+        phone TEXT DEFAULT '',
+        status TEXT DEFAULT 'Đang học',
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE
       );
     `),
     db.prepare(`
       CREATE INDEX IF NOT EXISTS idx_students_class ON students(class_id);
+    `),
+    db.prepare(`
+      CREATE INDEX IF NOT EXISTS idx_students_code ON students(student_code);
     `)
   ]);
+
+  // Migration an toàn cho database đã khởi tạo từ trước (SQLite idempotent)
+  const columnsToAdd = [
+    "ALTER TABLE students ADD COLUMN student_code TEXT DEFAULT ''",
+    "ALTER TABLE students ADD COLUMN date_of_birth TEXT DEFAULT ''",
+    "ALTER TABLE students ADD COLUMN gender TEXT DEFAULT 'Nam'",
+    "ALTER TABLE students ADD COLUMN phone TEXT DEFAULT ''",
+    "ALTER TABLE students ADD COLUMN status TEXT DEFAULT 'Đang học'"
+  ];
+
+  for (const alterSql of columnsToAdd) {
+    try {
+      await db.prepare(alterSql).run();
+    } catch (e) {
+      // Bỏ qua nếu cột đã tồn tại trong SQLite
+    }
+  }
 }
 
 const DEFAULT_CLASSES = [
@@ -63,7 +89,7 @@ export async function onRequestGet(context) {
     try {
       await ensureTables(env.DB);
 
-      // Nếu truyền id hoặc code: Lấy danh sách học sinh của lớp
+      // Nếu truyền id hoặc code: Lấy danh sách học sinh đầy đủ của lớp
       if (classId || classCode) {
         let targetId = classId;
         if (!targetId && classCode) {
@@ -74,7 +100,10 @@ export async function onRequestGet(context) {
 
         if (targetId) {
           const students = await env.DB.prepare(
-            "SELECT * FROM students WHERE class_id = ? ORDER BY student_number ASC, full_name ASC"
+            `SELECT id, class_id, student_number, student_code, full_name, date_of_birth, gender, phone, status, created_at
+             FROM students 
+             WHERE class_id = ? 
+             ORDER BY student_number ASC, student_code ASC, full_name ASC`
           ).bind(targetId).all();
           return new Response(JSON.stringify({ ok: true, data: students.results || [] }), { headers: CORS_HEADERS });
         }
@@ -101,7 +130,7 @@ export async function onRequestGet(context) {
   return new Response(JSON.stringify({ ok: true, data: DEFAULT_CLASSES }), { headers: CORS_HEADERS });
 }
 
-// 2. TẠO LỚP MỚI HOẶC NHẬP HỌC SINH TỪ EXCEL (POST)
+// 2. TẠO LỚP MỚI / NHẬP HỌC SINH / THÊM-SỬA HỌC SINH (POST)
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -118,7 +147,9 @@ export async function onRequestPost(context) {
 
     await ensureTables(env.DB);
 
+    // =========================================================================
     // ACTION A: NHẬP DANH SÁCH HỌC SINH HÀNG LOẠT TỪ EXCEL
+    // =========================================================================
     if (action === "import_students") {
       const classId = String(body.class_id || "").trim();
       const studentList = body.students || [];
@@ -131,31 +162,89 @@ export async function onRequestPost(context) {
         return new Response(JSON.stringify({ ok: false, error: "Danh sách học sinh trống" }), { status: 400, headers: CORS_HEADERS });
       }
 
-      // Nếu có cờ overwrite, xóa danh sách cũ trước
+      // Nếu có cờ overwrite, xóa danh sách cũ của lớp này trước
       if (body.overwrite) {
         await env.DB.prepare("DELETE FROM students WHERE class_id = ?").bind(classId).run();
       }
 
-      // Chuẩn bị batch insert để tối ưu 1 transaction duy nhất
+      // Chuẩn bị batch insert tối ưu thành 1 transaction duy nhất
       const statements = studentList.map((stu, idx) => {
-        const stuId = "stu_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 6);
+        const stuId = "stu_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 6) + "_" + idx;
         const stuNum = Number(stu.student_number || idx + 1);
+        const stuCode = String(stu.student_code || "").trim();
         const fullName = String(stu.full_name || "").trim();
-        return env.DB.prepare(
-          "INSERT INTO students (id, class_id, student_number, full_name) VALUES (?, ?, ?, ?)"
-        ).bind(stuId, classId, stuNum, fullName);
+        const dob = String(stu.date_of_birth || "").trim();
+        const gender = String(stu.gender || "Nam").trim();
+        const phone = String(stu.phone || "").trim();
+        const status = String(stu.status || "Đang học").trim();
+
+        return env.DB.prepare(`
+          INSERT INTO students (id, class_id, student_number, student_code, full_name, date_of_birth, gender, phone, status)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(stuId, classId, stuNum, stuCode, fullName, dob, gender, phone, status);
       });
 
       await env.DB.batch(statements);
 
       return new Response(JSON.stringify({
         ok: true,
-        message: `Đã nạp thành công ${statements.length} học sinh vào lớp!`,
+        message: `Đã nạp thành công ${statements.length} học sinh chuẩn hóa vào lớp!`,
         count: statements.length
       }), { headers: CORS_HEADERS });
     }
 
-    // ACTION B: TẠO LỚP HỌC MỚI
+    // =========================================================================
+    // ACTION B: THÊM HOẶC CẬP NHẬT 1 HỌC SINH ĐƠN LẺ
+    // =========================================================================
+    if (action === "save_student") {
+      const studentId = body.id;
+      const classId = String(body.class_id || "").trim();
+      const stuNum = Number(body.student_number || 1);
+      const stuCode = String(body.student_code || "").trim();
+      const fullName = String(body.full_name || "").trim();
+      const dob = String(body.date_of_birth || "").trim();
+      const gender = String(body.gender || "Nam").trim();
+      const phone = String(body.phone || "").trim();
+      const status = String(body.status || "Đang học").trim();
+
+      if (!fullName) {
+        return new Response(JSON.stringify({ ok: false, error: "Họ và tên học sinh không được để trống" }), { status: 400, headers: CORS_HEADERS });
+      }
+
+      if (studentId) {
+        // Cập nhật thông tin học sinh hiện có
+        await env.DB.prepare(`
+          UPDATE students 
+          SET student_number = ?, student_code = ?, full_name = ?, date_of_birth = ?, gender = ?, phone = ?, status = ?
+          WHERE id = ?
+        `).bind(stuNum, stuCode, fullName, dob, gender, phone, status, studentId).run();
+
+        return new Response(JSON.stringify({
+          ok: true,
+          message: "Cập nhật thông tin học sinh thành công!"
+        }), { headers: CORS_HEADERS });
+      } else {
+        // Thêm học sinh mới vào lớp
+        if (!classId) {
+          return new Response(JSON.stringify({ ok: false, error: "Thiếu class_id khi thêm học sinh" }), { status: 400, headers: CORS_HEADERS });
+        }
+        const newStuId = "stu_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 6);
+        await env.DB.prepare(`
+          INSERT INTO students (id, class_id, student_number, student_code, full_name, date_of_birth, gender, phone, status)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(newStuId, classId, stuNum, stuCode, fullName, dob, gender, phone, status).run();
+
+        return new Response(JSON.stringify({
+          ok: true,
+          message: "Thêm học sinh mới vào lớp thành công!",
+          data: { id: newStuId }
+        }), { headers: CORS_HEADERS });
+      }
+    }
+
+    // =========================================================================
+    // ACTION C: TẠO LỚP HỌC MỚI
+    // =========================================================================
     const classCode = String(body.class_code || "").trim().toUpperCase();
     const className = String(body.class_name || "").trim();
     const academicYear = String(body.academic_year || "2026-2027").trim();

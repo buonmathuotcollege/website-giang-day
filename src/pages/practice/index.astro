@@ -89,7 +89,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           />
           <datalist id="student-picker-list">
             <template x-for="st in studentsList" :key="st.id || st.full_name">
-              <option :value="st.full_name" x-text="(st.student_number ? (st.student_number + '. ') : '') + st.full_name"></option>
+              <option :value="st.full_name" :label="(st.student_code ? ('[' + st.student_code + '] ') : '') + st.full_name + (st.date_of_birth ? (' · ' + st.date_of_birth) : '')"></option>
             </template>
           </datalist>
           <span class="text-[11px] text-gray-500 mt-1 block">💡 Khi chọn lớp, danh sách học sinh của lớp sẽ tự động hiện ra gợi ý để em chọn nhanh.</span>
@@ -162,15 +162,24 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
       async startPractice() {
         this.started = true;
-        // Ghi nhận điểm danh thực hành vào D1
+        // Ghi nhận điểm danh thực hành vào D1 kèm MSHS nếu có
         try {
+          const rawName = (this.studentName || '').trim();
+          const matched = this.studentsList.find(st =>
+            (st.full_name && st.full_name.toLowerCase() === rawName.toLowerCase()) ||
+            (st.student_code && st.student_code.toLowerCase() === rawName.toLowerCase())
+          );
+          const finalName = matched && matched.student_code
+            ? `[${matched.student_code}] ${matched.full_name}`
+            : rawName;
+
           fetch('/api/scores', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               className: this.selectedClassName,
               sessionName: this.selectedSession,
-              studentName: this.studentName,
+              studentName: finalName,
               score: 10.0,
               details: { type: 'DiemDanhThucHanh', timestamp: new Date().toISOString() }
             })
