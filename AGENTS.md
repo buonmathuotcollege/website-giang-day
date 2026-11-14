@@ -62,3 +62,23 @@ Mọi giải thích kỹ thuật phải quy về các hình ảnh đời thườ
 3. ❌ **KHÔNG** để lộ mật khẩu, khóa bí mật hoặc token ra mã HTML/JS phía máy khách (F12).
 4. ❌ **KHÔNG** cho phép Trợ Giảng AI trả lời các chủ đề ngoài ngành (tình cảm yêu đương, thơ văn, giải trí, chơi game, giải bài tập Toán/Lý/Hóa ngoài ngành CNTT). Khi gặp các câu hỏi này, AI phải từ chối khéo léo và hướng học sinh quay lại bài học.
 5. ❌ **KHÔNG** tự ý sửa đổi hoặc xóa bỏ các cấu trúc dữ liệu đã được Thầy chuẩn hóa (`03THA8`, `03THA9`, chuẩn đánh giá Thông tư 55).
+6. ❌ **KHÔNG** thiết kế giao diện màu mè loè loẹt (gradient tím/vàng/cam chói lọi), không nhồi nhét quá nhiều khối thông tin vào một màn hình gây rối mắt và khó sử dụng.
+
+---
+
+## 5. QUY CHUẨN GIAO DIỆN TỐI GIẢN & DI ĐỘNG (SHADCN/UI & CARD WIZARD STANDARD)
+> **Đúc kết từ các Repo GitHub hàng đầu (`shadcn/ui`, `dub.co`, `cal.com`, `quiz-app`):**
+
+1. **Phong Cách Tối Giản Cực Hạn (Minimalist Slate/Zinc Palette - shadcn/ui):**
+   - Loại bỏ hoàn toàn các màu nền gradient loè loẹt gây nhức mắt trên điện thoại.
+   - Bảng màu chuẩn: Nền trắng tuyết hoặc xám nhạt (`bg-slate-50`), khung viền mảnh tinh tế (`border-slate-200`), chữ đen đậm (`text-slate-900`) và xám trung tính (`text-slate-500`). Màu nhấn là xanh navy (`bg-slate-900` hoặc `bg-indigo-600`).
+   - Ưu tiên khoảng trắng (White Space) thoáng đãng, các góc bo chuẩn (`rounded-2xl`, `rounded-xl`).
+2. **Phân Tầng Nhiệm Vụ & Tách Biệt Vai Trò (Progressive Disclosure - dub.co / cal.com):**
+   - **Giao diện Học sinh (Student View):** Mặc định mở ra phải cực kỳ đơn giản (tối đa 2-3 nút to bản). Học sinh chỉ thấy đúng việc của mình (Chọn bàn máy ➔ Tick an toàn ➔ Luyện trắc nghiệm).
+   - **Khu Vực Giảng Viên (Teacher Cockpit):** Toàn bộ các công cụ quản lý phức tạp (chia kíp, xoay trạm, chấm điểm, nạp danh sách) được gom gọn gàng sau nút **[🔐 Khu Vực Giảng Viên]** hoặc cửa sổ trượt (Sheet/Modal), không phơi bày làm rối mắt học sinh.
+3. **Trải Nghiệm Thẻ Trượt 1-Chạm Trên Điện Thoại (Mobile Card Wizard - Duolingo style):**
+   - 1 Màn hình = 1 Nhiệm vụ duy nhất (Single-purpose Screen).
+   - Nút bấm to, dạng xúc giác (chống bấm trượt): Chiều cao tối thiểu 48px – 56px, chạm ngón tay cái là phản hồi ngay.
+   - Trắc nghiệm hiển thị dạng thẻ bài: 1 câu hỏi nổi bật ở trung tâm, 4 đáp án dạng nút bấm to bản, thanh tiến độ mảnh ở trên, giải thích AI siêu ngắn gọn khi làm sai.
+4. **Không Cuộn Trang Dài Dằng Dặc:** Thay vì 1 trang cuộn 1000 dòng, chia thành các tab hoặc bước (Step 1 ➔ Step 2) để học sinh bấm chuyển mượt mà.
+
