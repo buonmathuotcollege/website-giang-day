@@ -96,12 +96,12 @@
           🤖
         </div>
         <div class="max-w-[85%] bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-gray-800 space-y-2">
-          <p>Xin chào bạn! Mình là <strong>Trợ giảng AI</strong> của khoa CNTT.</p>
-          <p class="text-xs text-gray-600">Bạn đang thắc mắc kiến thức nào về <em>Mạng máy tính, Phần cứng, Quản trị Windows/Linux...</em>? Cứ nhắn cho mình nhé!</p>
+          <p>Xin chào em! Thầy là <strong>Trợ giảng AI</strong> khoa CNTT.</p>
+          <p class="text-xs text-gray-600">Em đang gặp khó ở bài học nào? Cứ hỏi thầy nhé, thầy giải thích <strong>siêu ngắn gọn, dễ hiểu</strong> ngay!</p>
           
           <!-- Gợi ý câu hỏi -->
           <div class="pt-2 border-t border-gray-100">
-            <div class="text-[11px] font-semibold text-gray-500 mb-1.5">Gợi ý câu hỏi:</div>
+            <div class="text-[11px] font-semibold text-gray-500 mb-1.5">Gợi ý câu hỏi nhanh:</div>
             <div class="flex flex-wrap gap-1.5">
               <template x-for="q in quickQuestions" :key="q">
                 <button
@@ -201,10 +201,10 @@
       inputMessage: '',
       messages: [],
       quickQuestions: [
-        'Mô hình OSI 7 tầng hoạt động ra sao?',
-        'Bấm cáp mạng T568A và T568B khác gì nhau?',
-        'Phân biệt giữa bộ nhớ RAM và ROM?',
-        'Các lệnh quản trị mạng Linux hay dùng?'
+        'RAM và ổ cứng khác nhau thế nào?',
+        'Địa chỉ IP là gì, có giống số nhà không?',
+        'Cách bấm dây mạng chuẩn B dễ nhớ',
+        'Vì sao máy tính bị đơ, giật lag?'
       ],
 
       openChat() {
