@@ -9,6 +9,73 @@ const CORS_HEADERS = {
   "Content-Type": "application/json;charset=UTF-8"
 };
 
+// Rate limiter: 30 requests per minute per IP
+const assessmentRateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
+function checkAssessmentRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const record = assessmentRateLimitMap.get(ip);
+  if (!record || now > record.resetAt) {
+    assessmentRateLimitMap.set(ip, { count: 1, resetAt: now + 60000 });
+    return true;
+  }
+  if (record.count >= 30) {
+    return false;
+  }
+  record.count += 1;
+  return true;
+}
+
+// Global cache flag for D1 tables
+async function ensureAssessmentTables(db: any) {
+  if ((globalThis as any)._assessmentsTablesEnsured) return;
+  try {
+    await db.prepare(`
+      CREATE TABLE IF NOT EXISTS assessment_results (
+        id TEXT PRIMARY KEY,
+        assessment_id TEXT NOT NULL,
+        student_name TEXT NOT NULL,
+        student_code TEXT DEFAULT '',
+        original_class TEXT DEFAULT '',
+        class_name TEXT NOT NULL,
+        station TEXT DEFAULT '',
+        score REAL NOT NULL,
+        total INTEGER NOT NULL,
+        percentage REAL NOT NULL,
+        status TEXT NOT NULL,
+        answers_json TEXT DEFAULT '{}',
+        completed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run();
+    try { await db.prepare("ALTER TABLE assessment_results ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
+    try { await db.prepare("ALTER TABLE assessment_results ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
+
+    await db.prepare(`
+      CREATE TABLE IF NOT EXISTS submissions (
+        id TEXT PRIMARY KEY,
+        session_id TEXT,
+        class_name TEXT NOT NULL,
+        session_name TEXT NOT NULL,
+        student_name TEXT NOT NULL,
+        student_code TEXT DEFAULT '',
+        original_class TEXT DEFAULT '',
+        station TEXT DEFAULT '',
+        date_only TEXT NOT NULL,
+        score REAL DEFAULT 0.0,
+        details_json TEXT DEFAULT '{}',
+        status TEXT DEFAULT 'Đạt',
+        submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run();
+    try { await db.prepare("ALTER TABLE submissions ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
+    try { await db.prepare("ALTER TABLE submissions ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
+
+    (globalThis as any)._assessmentsTablesEnsured = true;
+  } catch (err) {
+    console.error("ensureAssessmentTables error:", err);
+  }
+}
+
 const QUESTION_BANKS: Record<string, any[]> = {
   "phan-cung": [
     {
@@ -115,6 +182,18 @@ export const GET: APIRoute = async ({ request }) => {
 export const POST: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
 
+  // Rate Limiting
+  const clientIp = request.headers.get("cf-connecting-ip") || 
+                   request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
+                   "127.0.0.1";
+
+  if (!checkAssessmentRateLimit(clientIp)) {
+    return new Response(JSON.stringify({ 
+      ok: false, 
+      error: "Tần suất nộp bài quá cao. Vui lòng thử lại sau 1 phút." 
+    }), { status: 429, headers: CORS_HEADERS });
+  }
+
   try {
     const body = await request.json();
     const slug = body.slug || "phan-cung";
@@ -130,68 +209,30 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // KIỂM TRA NẾU ĐÂY LÀ BÀI THI MÔ PHỎNG TAY NGHỀ THỰC TẾ (JOB TICKET SIMULATION)
     if (userAnswers && userAnswers.rubric) {
       const rubric = userAnswers.rubric;
-      const score10 = Number(rubric.total || 0);
+      const rawScore = Number(rubric.total || 0);
+      const score10 = Number(Math.min(10.0, Math.max(0.0, isNaN(rawScore) ? 0 : rawScore)).toFixed(1));
       const total = 10;
       const percentage = Math.round((score10 / 10) * 100);
       const status = rubric.isPass ? "ĐẠT" : "CHƯA ĐẠT";
 
       if (env && env.DB) {
         try {
+          await ensureAssessmentTables(env.DB);
           const resId = "sim_res_" + Date.now();
-          await env.DB.prepare(`
-            CREATE TABLE IF NOT EXISTS assessment_results (
-              id TEXT PRIMARY KEY,
-              assessment_id TEXT NOT NULL,
-              student_name TEXT NOT NULL,
-              student_code TEXT DEFAULT '',
-              original_class TEXT DEFAULT '',
-              class_name TEXT NOT NULL,
-              station TEXT DEFAULT '',
-              score REAL NOT NULL,
-              total INTEGER NOT NULL,
-              percentage REAL NOT NULL,
-              status TEXT NOT NULL,
-              answers_json TEXT DEFAULT '{}',
-              completed_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-          `).run();
-
-          try { await env.DB.prepare("ALTER TABLE assessment_results ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
-          try { await env.DB.prepare("ALTER TABLE assessment_results ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
-
           await env.DB.prepare(`
             INSERT INTO assessment_results (id, assessment_id, student_name, student_code, original_class, class_name, station, score, total, percentage, status, answers_json)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           `).bind(resId, slug, studentName, studentCode, originalClass, className, station, score10, total, percentage, status, JSON.stringify(userAnswers)).run();
 
-          await env.DB.prepare(`
-            CREATE TABLE IF NOT EXISTS submissions (
-              id TEXT PRIMARY KEY,
-              session_id TEXT,
-              class_name TEXT NOT NULL,
-              session_name TEXT NOT NULL,
-              student_name TEXT NOT NULL,
-              student_code TEXT DEFAULT '',
-              original_class TEXT DEFAULT '',
-              station TEXT DEFAULT '',
-              date_only TEXT NOT NULL,
-              score REAL DEFAULT 0.0,
-              details_json TEXT DEFAULT '{}',
-              status TEXT DEFAULT 'Đạt',
-              submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
-            )
-          `).run();
-
-          try { await env.DB.prepare("ALTER TABLE submissions ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
-          try { await env.DB.prepare("ALTER TABLE submissions ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
-
-          const dateOnly = new Date().toISOString().slice(0, 10);
+          const dateOnly = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());
           const sessionName = `Sát hạch: ${userAnswers.ticketTitle || 'Phần cứng PC (OL-01)'}`;
           await env.DB.prepare(`
             INSERT INTO submissions (id, class_name, session_name, student_name, student_code, original_class, station, date_only, score, details_json, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           `).bind(resId, className, sessionName, studentName, studentCode, originalClass, station, dateOnly, score10, JSON.stringify(userAnswers), status).run();
-        } catch (err) {}
+        } catch (err) {
+          console.error("D1 assessment write error:", err);
+        }
       }
 
       return new Response(JSON.stringify({
@@ -236,33 +277,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     if (env && env.DB) {
       try {
+        await ensureAssessmentTables(env.DB);
         const resId = "asm_res_" + Date.now();
-        await env.DB.prepare(`
-          CREATE TABLE IF NOT EXISTS assessment_results (
-            id TEXT PRIMARY KEY,
-            assessment_id TEXT NOT NULL,
-            student_name TEXT NOT NULL,
-            student_code TEXT DEFAULT '',
-            original_class TEXT DEFAULT '',
-            class_name TEXT NOT NULL,
-            station TEXT DEFAULT '',
-            score REAL NOT NULL,
-            total INTEGER NOT NULL,
-            percentage REAL NOT NULL,
-            status TEXT NOT NULL,
-            answers_json TEXT DEFAULT '{}',
-            completed_at DATETIME DEFAULT CURRENT_TIMESTAMP
-          )
-        `).run();
-
-        try { await env.DB.prepare("ALTER TABLE assessment_results ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
-        try { await env.DB.prepare("ALTER TABLE assessment_results ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
-
         await env.DB.prepare(`
           INSERT INTO assessment_results (id, assessment_id, student_name, student_code, original_class, class_name, station, score, total, percentage, status, answers_json)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).bind(resId, slug, studentName, studentCode, originalClass, className, station, score10, total, percentage, status, JSON.stringify(userAnswers)).run();
-      } catch (err) {}
+      } catch (err) {
+        console.error("D1 assessment MCQ write error:", err);
+      }
     }
 
     return new Response(JSON.stringify({
@@ -279,6 +302,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       review: reviewDetails
     }), { headers: CORS_HEADERS });
   } catch (e: any) {
-    return new Response(JSON.stringify({ ok: false, error: e.message || "Lỗi nộp bài" }), { status: 500, headers: CORS_HEADERS });
+    console.error("Assessment error:", e);
+    return new Response(JSON.stringify({ ok: false, error: "Đã có sự cố khi xử lý bài thi. Vui lòng thử lại." }), { status: 500, headers: CORS_HEADERS });
   }
 };

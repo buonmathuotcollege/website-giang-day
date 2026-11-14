@@ -5,10 +5,8 @@ import { COURSES } from '../../../data/courses';
 import {
   HARDWARE_METADATA,
   SEVEN_STEPS_WORKFLOW,
-  THREE_SURVIVAL_RULES,
-  THREE_SAFETY_CHECKPOINTS,
-  FIVE_CLASSIC_CASES,
 } from '../../../data/hardwareCurriculum';
+import { ALL_COURSES_CURRICULUM } from '../../../data/curriculumData';
 
 export const prerender = true;
 
@@ -35,6 +33,17 @@ const isHardware = course.slug === 'phan-cung-may-tinh';
 const stepData = isHardware
   ? SEVEN_STEPS_WORKFLOW.find((s) => s.slug === chapter.slug)
   : null;
+
+// Find matching structured curriculum lesson data
+const curriculumLesson = ALL_COURSES_CURRICULUM[course.slug]?.[chapter.slug];
+
+// Pagination: Previous & Next Chapter
+const chapterIndex = course.chapters.findIndex((c: any) => c.slug === chapter.slug);
+const prevChapter = chapterIndex > 0 ? course.chapters[chapterIndex - 1] : null;
+const nextChapter = chapterIndex < course.chapters.length - 1 ? course.chapters[chapterIndex + 1] : null;
+
+// Determine matching assessment slug
+const assessmentSlug = course.slug.includes('mang') || course.slug.includes('lan-wan') ? 'mang' : 'phan-cung';
 ---
 
 <BaseLayout title={`${chapter.title} - ${course.name}`}>
@@ -64,21 +73,18 @@ const stepData = isHardware
           <div class="mt-4 flex flex-wrap items-center gap-3 text-xs text-gray-500 font-mono">
             <span class="bg-gray-100 px-2.5 py-1 rounded">Mã môn: {HARDWARE_METADATA.courseCode}</span>
             <span class="bg-gray-100 px-2.5 py-1 rounded">GV: {HARDWARE_METADATA.teacher}</span>
-            <span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded font-bold">Thời gian khuyến nghị: {stepData?.time || '45 phút'}</span>
+            <span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded font-bold">Thời gian: {stepData?.time || '45 phút'}</span>
           </div>
         )}
       </div>
 
-      <!-- Content Area -->
-      {isHardware && stepData ? (
-        <!-- HARDWARE HANDS-ON WORKSHOP LESSON -->
+      <!-- 1. HARDWARE WORKSHOP LESSON (OL-01) -->
+      {isHardware && stepData && (
         <div class="space-y-6 text-gray-800 text-sm sm:text-base">
-          <!-- Alert Box -->
           <div class="p-4 rounded-xl bg-amber-50 border-l-4 border-amber-500 text-amber-900 text-xs sm:text-sm">
             <strong>🛠️ Tác phong kỹ thuật viên:</strong> Đây là bài học thực hành xưởng, tuyệt đối không học vẹt lý thuyết suông. Học sinh cầm cẩm nang trên tay, đọc tới đâu tự tay làm trên máy thật tới đó. Chưa rõ thao tác nào phải báo ngay cho Giáo viên hướng dẫn.
           </div>
 
-          <!-- Step Summary -->
           <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
             <h2 class="text-base font-bold text-gray-900 mb-2 uppercase tracking-wide text-primary-800">
               Mục tiêu tay nghề phải đạt được
@@ -88,7 +94,6 @@ const stepData = isHardware
             </p>
           </div>
 
-          <!-- Safety Checkpoint if exists -->
           {stepData.checkpoint && (
             <div class="p-4 rounded-xl bg-red-50 border-2 border-red-300 text-red-900">
               <div class="flex items-center gap-2 font-bold text-sm mb-1 text-red-800">
@@ -101,7 +106,6 @@ const stepData = isHardware
             </div>
           )}
 
-          <!-- Detailed Action Steps -->
           <div>
             <h2 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <span>📋</span>
@@ -121,7 +125,6 @@ const stepData = isHardware
             </div>
           </div>
 
-          <!-- Pro-Tip Box -->
           <div class="p-5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950">
             <div class="flex items-center gap-2 font-bold text-sm text-emerald-900 mb-1.5">
               <span>💡</span>
@@ -132,7 +135,6 @@ const stepData = isHardware
             </p>
           </div>
 
-          <!-- Interactive Workshop Checklist -->
           <div class="bg-white border border-gray-300 rounded-xl p-5 shadow-sm" x-data="{ checkedItems: {} }">
             <h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3 flex items-center justify-between">
               <span>✅ Phiếu tự kiểm tra tại bàn máy (Học sinh tự tích khi làm xong)</span>
@@ -158,53 +160,307 @@ const stepData = isHardware
             </div>
           </div>
 
-          <!-- Direct Link to Simulator -->
           <div class="mt-8 p-6 rounded-2xl bg-gradient-to-r from-primary-900 to-primary-800 text-white text-center">
             <h3 class="text-lg font-bold mb-1">Sát Hạch Thực Tế Tại Xưởng</h3>
             <p class="text-xs sm:text-sm text-primary-200 mb-4 max-w-xl mx-auto">
               Bước vào buồng mô phỏng ca bệnh thực tế (Job Ticket Simulation). Tự tay chẩn đoán ca bệnh, vượt qua 3 điểm dừng an toàn và nhận bảng điểm Rubric 10 điểm chuẩn Thông tư 55!
             </p>
-            <a href="/assessment/phan-cung" class="inline-flex items-center gap-2 px-6 py-2.5 bg-accent-500 hover:bg-accent-600 text-white font-bold rounded-xl text-sm transition-colors shadow-lg">
+            <a href="/assessment/phan-cung" class="inline-flex items-center gap-2 px-6 py-2.5 bg-accent-500 hover:bg-accent-600 text-white font-bold rounded-xl text-sm transition-colors shadow-lg no-underline">
               <span>⚡ Mở Phòng Mô Phỏng Đánh Giá Tay Nghề</span>
               <span>→</span>
             </a>
           </div>
         </div>
-      ) : (
-        <!-- STANDARD LESSON VIEW FOR OTHER COURSES -->
-        <div class="prose max-w-none text-gray-800 space-y-5">
-          <div class="alert-note p-4 rounded-xl bg-blue-50 border-l-4 border-blue-600 text-blue-900 text-sm">
-            💡 <strong>Hướng dẫn tự học:</strong> Học sinh nghiên cứu các mục kiến thức cốt lõi bên dưới, ghi chép tóm tắt vào vở và hoàn thành các câu hỏi luyện tập trước buổi thực hành tại phòng máy.
+      )}
+
+      <!-- 2. STRUCTURED CURRICULUM LESSON FOR OTHER COURSES -->
+      {!isHardware && curriculumLesson && (
+        <div class="space-y-6 text-gray-800 text-sm sm:text-base">
+          <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200">
+            <div class="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">
+              <span>🎯</span>
+              <span>Mục tiêu & Chuẩn đầu ra bài học</span>
+            </div>
+            <p class="text-slate-900 font-semibold text-sm sm:text-base leading-relaxed">
+              {curriculumLesson.summary}
+            </p>
           </div>
 
-          <h2 class="text-xl font-bold mt-6 mb-3 text-gray-800">1. Mục tiêu và chuẩn đầu ra bài học</h2>
-          <ul class="list-disc pl-5 space-y-1.5 text-gray-700 text-sm sm:text-base">
-            <li>Hiểu rõ nguyên lý hoạt động và các thuật ngữ kỹ thuật trong <strong>{chapter.title}</strong>.</li>
-            <li>Áp dụng vào quy trình cấu hình, cài đặt hoặc xử lý tình huống thực tế tại phòng thực hành.</li>
-            <li>Tuân thủ kỷ luật học tập, tác phong công nghiệp và nguyên tắc an toàn số / an toàn thiết bị.</li>
-          </ul>
+          <div class="p-5 rounded-2xl bg-blue-50/80 border border-blue-200/80 text-blue-950">
+            <div class="flex items-center gap-2 font-bold text-sm text-blue-900 mb-2">
+              <span class="text-base">🧠</span>
+              <span>Hình tượng hóa đời thường dễ hiểu:</span>
+            </div>
+            <p class="text-xs sm:text-sm leading-relaxed text-blue-900 font-medium italic">
+              "{curriculumLesson.analogy}"
+            </p>
+          </div>
 
-          <h2 class="text-xl font-bold mt-6 mb-3 text-gray-800">2. Nội dung bài giảng trọng tâm</h2>
-          <p class="text-gray-700 leading-relaxed text-sm sm:text-base">
-            Nội dung chi tiết của bài giảng đang được đồng bộ và cập nhật từ giáo trình chuẩn. Thầy/Cô có thể chỉnh sửa nội dung bằng Markdown trong thư mục <code class="bg-gray-100 text-primary-800 px-2 py-0.5 rounded text-xs font-mono">src/content/{course.slug}/</code>.
-          </p>
+          <div>
+            <h2 class="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <span>📋</span>
+              <span>Quy trình các thao tác tay làm mắt thấy</span>
+            </h2>
+            <div class="space-y-3">
+              {curriculumLesson.actions.map((act, aIdx) => (
+                <div class="flex items-start gap-3 p-3.5 rounded-xl border border-slate-200 bg-white hover:border-blue-400 transition-colors shadow-xs">
+                  <span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-bold flex items-center justify-center mt-0.5">
+                    {aIdx + 1}
+                  </span>
+                  <div class="flex-1">
+                    <p class="text-xs sm:text-sm text-slate-800 leading-relaxed font-normal">{act}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          <div class="p-6 bg-gray-50 rounded-xl border border-dashed border-gray-300 text-center my-6">
-            <span class="text-3xl mb-2 block">📖</span>
-            <p class="text-sm font-semibold text-gray-800">Tài liệu học tập & Slide hướng dẫn</p>
-            <p class="text-xs text-gray-500 mt-1">Đang đồng bộ slide bài giảng và phiếu giao việc thực hành...</p>
+          <div class="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-950">
+            <div class="flex items-center gap-2 font-bold text-sm text-emerald-900 mb-1.5">
+              <span>💡</span>
+              <span>Kinh nghiệm kỹ thuật thực chiến:</span>
+            </div>
+            <p class="text-xs sm:text-sm leading-relaxed text-emerald-900 font-medium">
+              "{curriculumLesson.proTip}"
+            </p>
+          </div>
+
+          {curriculumLesson.pitfalls && curriculumLesson.pitfalls.length > 0 && (
+            <div class="p-5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-950">
+              <div class="flex items-center gap-2 font-bold text-sm text-amber-900 mb-2">
+                <span>⚠️</span>
+                <span>Lỗi thường gặp & Cách phòng tránh (Poka-Yoke):</span>
+              </div>
+              <ul class="space-y-1.5 text-xs sm:text-sm list-disc pl-5 text-amber-900 font-medium">
+                {curriculumLesson.pitfalls.map((pf) => (
+                  <li>{pf}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {course.slug === 'nang-luc-so' && chapter.slug === 'chuong-5' && (
+            <div class="bg-white rounded-2xl border-2 border-emerald-300 p-5 space-y-4 shadow-sm" x-data="{
+              sumInput: '',
+              avgInput: '',
+              maxInput: '',
+              ifInput: '',
+              isSumCorrect: null,
+              isAvgCorrect: null,
+              isMaxCorrect: null,
+              isIfCorrect: null,
+              checkFormulas() {
+                const s = (this.sumInput || '').trim().toUpperCase().replace(/\s+/g, '');
+                this.isSumCorrect = (s === '=SUM(C2:C4)' || s === '=SUM(C2,C3,C4)');
+                const a = (this.avgInput || '').trim().toUpperCase().replace(/\s+/g, '');
+                this.isAvgCorrect = (a === '=AVERAGE(C2:C4)' || a === '=AVERAGE(C2,C3,C4)');
+                const m = (this.maxInput || '').trim().toUpperCase().replace(/\s+/g, '');
+                this.isMaxCorrect = (m === '=MAX(C2:C4)' || m === '=MAX(C2,C3,C4)');
+                const f = (this.ifInput || '').trim().toUpperCase().replace(/\s+/g, '');
+                this.isIfCorrect = (f.indexOf('=IF(C2>=5') !== -1);
+              }
+            }">
+              <div class="flex items-center justify-between border-b border-emerald-100 pb-3">
+                <div class="flex items-center gap-2 font-bold text-emerald-950 text-sm sm:text-base">
+                  <span>📊</span>
+                  <span>Thực hành gõ công thức Excel trực tiếp trên web</span>
+                </div>
+                <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full">Tương tác</span>
+              </div>
+              <p class="text-xs text-slate-600">
+                Cho bảng điểm thực hành dưới đây. Em hãy gõ công thức Excel (bắt đầu bằng dấu <code>=</code>) vào các ô bên dưới rồi bấm <strong>Kiểm tra công thức</strong>.
+              </p>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-xs sm:text-sm border-collapse text-center">
+                  <thead>
+                    <tr class="bg-slate-100 font-bold text-slate-700">
+                      <th class="border border-slate-300 p-1.5 w-12">Hàng</th>
+                      <th class="border border-slate-300 p-1.5 text-left pl-3">A (Họ tên)</th>
+                      <th class="border border-slate-300 p-1.5">B (Lớp)</th>
+                      <th class="border border-slate-300 p-1.5">C (Điểm số)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td class="border p-1.5 bg-slate-50 font-bold">2</td><td class="border p-1.5 text-left pl-3">Nguyễn Văn An</td><td class="border p-1.5">Tin học 9+3</td><td class="border p-1.5 font-bold">8</td></tr>
+                    <tr><td class="border p-1.5 bg-slate-50 font-bold">3</td><td class="border p-1.5 text-left pl-3">Trần Văn Ba</td><td class="border p-1.5">Tin học 9+3</td><td class="border p-1.5 font-bold">7</td></tr>
+                    <tr><td class="border p-1.5 bg-slate-50 font-bold">4</td><td class="border p-1.5 text-left pl-3">Lê Thị Cúc</td><td class="border p-1.5">Tin học 9+3</td><td class="border p-1.5 font-bold">5</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">1. Tính TỔNG điểm (ô C2 đến C4):</label>
+                  <input type="text" x-model="sumInput" placeholder="Ví dụ: =SUM(C2:C4)" class="w-full px-3 py-2 border rounded-xl font-mono text-xs focus:ring-2 focus:ring-emerald-500" :class="isSumCorrect === true ? 'border-emerald-500 bg-emerald-50' : (isSumCorrect === false ? 'border-red-500 bg-red-50' : 'border-slate-300')" />
+                  <span x-show="isSumCorrect === true" class="text-[11px] text-emerald-600 font-bold mt-0.5 block">✓ Chính xác! =SUM(C2:C4)</span>
+                  <span x-show="isSumCorrect === false" class="text-[11px] text-red-600 font-bold mt-0.5 block">✗ Chưa đúng, thử lại: =SUM(C2:C4)</span>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">2. Tính TRUNG BÌNH (ô C2 đến C4):</label>
+                  <input type="text" x-model="avgInput" placeholder="Ví dụ: =AVERAGE(C2:C4)" class="w-full px-3 py-2 border rounded-xl font-mono text-xs focus:ring-2 focus:ring-emerald-500" :class="isAvgCorrect === true ? 'border-emerald-500 bg-emerald-50' : (isAvgCorrect === false ? 'border-red-500 bg-red-50' : 'border-slate-300')" />
+                  <span x-show="isAvgCorrect === true" class="text-[11px] text-emerald-600 font-bold mt-0.5 block">✓ Chính xác! =AVERAGE(C2:C4)</span>
+                  <span x-show="isAvgCorrect === false" class="text-[11px] text-red-600 font-bold mt-0.5 block">✗ Chưa đúng, thử lại: =AVERAGE(C2:C4)</span>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">3. Tìm điểm CAO NHẤT (MAX):</label>
+                  <input type="text" x-model="maxInput" placeholder="Ví dụ: =MAX(C2:C4)" class="w-full px-3 py-2 border rounded-xl font-mono text-xs focus:ring-2 focus:ring-emerald-500" :class="isMaxCorrect === true ? 'border-emerald-500 bg-emerald-50' : (isMaxCorrect === false ? 'border-red-500 bg-red-50' : 'border-slate-300')" />
+                  <span x-show="isMaxCorrect === true" class="text-[11px] text-emerald-600 font-bold mt-0.5 block">✓ Chính xác! =MAX(C2:C4)</span>
+                  <span x-show="isMaxCorrect === false" class="text-[11px] text-red-600 font-bold mt-0.5 block">✗ Chưa đúng, thử lại: =MAX(C2:C4)</span>
+                </div>
+                <div>
+                  <label class="block font-bold text-slate-700 mb-1">4. Hàm IF xét Đậu/Rớt (C2&gt;=5):</label>
+                  <input type="text" x-model="ifInput" placeholder='=IF(C2>=5,"Đậu","Rớt")' class="w-full px-3 py-2 border rounded-xl font-mono text-xs focus:ring-2 focus:ring-emerald-500" :class="isIfCorrect === true ? 'border-emerald-500 bg-emerald-50' : (isIfCorrect === false ? 'border-red-500 bg-red-50' : 'border-slate-300')" />
+                  <span x-show="isIfCorrect === true" class="text-[11px] text-emerald-600 font-bold mt-0.5 block">✓ Chính xác! =IF(C2>=5,"Đậu","Rớt")</span>
+                  <span x-show="isIfCorrect === false" class="text-[11px] text-red-600 font-bold mt-0.5 block">✗ Chưa đúng, thử lại: =IF(C2>=5,"Đậu","Rớt")</span>
+                </div>
+              </div>
+
+              <div class="pt-2 text-right">
+                <button type="button" @click="checkFormulas()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer">
+                  ✓ Kiểm tra kết quả công thức
+                </button>
+              </div>
+            </div>
+          )}
+
+          {course.slug === 'nang-luc-so' && chapter.slug === 'chuong-3' && (
+            <div class="bg-white rounded-2xl border-2 border-blue-300 p-5 space-y-4 shadow-sm" x-data="{
+              targetText: 'An toàn thông tin là trách nhiệm của mọi công dân số.',
+              userInput: '',
+              isFinished: false,
+              checkTyping() {
+                if (this.userInput.trim() === this.targetText) {
+                  this.isFinished = true;
+                }
+              }
+            }">
+              <div class="flex items-center justify-between border-b border-blue-100 pb-3">
+                <div class="flex items-center gap-2 font-bold text-blue-950 text-sm sm:text-base">
+                  <span>⌨️</span>
+                  <span>Thử thách gõ tiếng Việt Telex chuẩn công nghệ</span>
+                </div>
+                <span class="text-xs bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded-full">Luyện gõ</span>
+              </div>
+              <p class="text-xs text-slate-600">
+                Hãy luyện gõ chính xác từng từ câu khẩu hiệu bên dưới bằng bảng mã <strong>Unicode</strong> và kiểu gõ <strong>Telex</strong>:
+              </p>
+
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-sm sm:text-base font-bold text-slate-900 font-mono tracking-tight select-none">
+                <span x-text="targetText"></span>
+              </div>
+
+              <div class="space-y-1">
+                <input
+                  type="text"
+                  x-model="userInput"
+                  @input="checkTyping()"
+                  placeholder="Gõ lại câu tiếng Việt trên vào đây..."
+                  class="w-full px-3.5 py-2.5 border rounded-xl text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-blue-500"
+                  :class="isFinished ? 'border-emerald-500 bg-emerald-50' : 'border-slate-300'"
+                />
+                <div class="flex items-center justify-between text-xs text-slate-500 pt-1">
+                  <span>Tiến độ: <strong class="text-slate-900" x-text="userInput.length"></strong> / <span x-text="targetText.length"></span> ký tự</span>
+                  <span x-show="isFinished" class="text-emerald-600 font-bold">✓ Hoàn thành chính xác 100%!</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs" x-data="{ checkedItems: {} }">
+            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-3 flex items-center justify-between">
+              <span>✅ Phiếu tự kiểm tra kiến thức tại bàn học</span>
+              <span class="text-xs font-normal text-slate-500">Tích vào ô sau khi đã hiểu rõ</span>
+            </h3>
+
+            <div class="space-y-2.5">
+              {curriculumLesson.checklist.map((item, cIdx) => (
+                <label class="flex items-start gap-3 p-2.5 rounded-xl border border-slate-100 hover:bg-slate-50 cursor-pointer text-xs sm:text-sm select-none transition-colors">
+                  <input
+                    type="checkbox"
+                    class="mt-1 w-4 h-4 rounded text-slate-900 accent-slate-900"
+                    x-model={`checkedItems[${cIdx}]`}
+                  />
+                  <span
+                    class="flex-1 text-slate-700"
+                    :class={`checkedItems[${cIdx}] ? 'line-through text-slate-400 font-normal' : 'font-medium'`}
+                  >
+                    {item}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div class="mt-8 p-6 rounded-2xl bg-slate-900 text-white text-center shadow-sm">
+            <h3 class="text-base sm:text-lg font-bold mb-1">Sát Hạch Năng Lực Trực Tuyến</h3>
+            <p class="text-xs sm:text-sm text-slate-300 mb-4 max-w-xl mx-auto">
+              Làm bài thi trắc nghiệm tình huống và câu hỏi kỹ thuật viên có Trợ lý AI giải thích trực tiếp theo thời gian thực!
+            </p>
+            <a
+              href={`/assessment/${assessmentSlug}?mode=mcq`}
+              class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-slate-900 font-bold rounded-xl text-xs sm:text-sm hover:bg-slate-100 transition-colors no-underline shadow-sm"
+            >
+              <span>⚡ Vào Phòng Thi Sát Hạch AI</span>
+              <span>→</span>
+            </a>
           </div>
         </div>
       )}
 
-      <!-- Bottom Navigation -->
-      <div class="flex flex-wrap items-center justify-between border-t border-gray-200 pt-6 mt-8 gap-3">
-        <a href={`/courses/${course.slug}`} class="btn-secondary text-sm">
-          ← Danh sách chương môn {course.name}
+      <!-- 3. FALLBACK VIEW IF NO DATA AVAILABLE -->
+      {!isHardware && !curriculumLesson && (
+        <div class="prose max-w-none text-gray-800 space-y-5">
+          <div class="alert-note p-4 rounded-xl bg-blue-50 border-l-4 border-blue-600 text-blue-900 text-sm">
+            💡 <strong>Hướng dẫn tự học:</strong> Học sinh nghiên cứu các mục kiến thức cốt lõi, ghi chép tóm tắt vào vở và hoàn thành các câu hỏi luyện tập trước buổi thực hành tại phòng máy.
+          </div>
+          <h2 class="text-xl font-bold mt-6 mb-3 text-gray-800">1. Mục tiêu bài học</h2>
+          <p class="text-gray-700 text-sm sm:text-base leading-relaxed">{chapter.description}</p>
+        </div>
+      )}
+
+      <!-- BOTTOM NAVIGATION: PREVIOUS / NEXT CHAPTER -->
+      <div class="flex flex-col sm:flex-row items-center justify-between border-t border-slate-200 pt-6 mt-8 gap-3">
+        {prevChapter ? (
+          <a
+            href={`/courses/${course.slug}/${prevChapter.slug}`}
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors no-underline"
+          >
+            <span>←</span>
+            <span class="truncate max-w-[200px]">{prevChapter.title}</span>
+          </a>
+        ) : (
+          <a
+            href={`/courses/${course.slug}`}
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors no-underline"
+          >
+            ← Danh sách chương
+          </a>
+        )}
+
+        <a
+          href={`/courses/${course.slug}`}
+          class="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors no-underline hidden sm:inline-block"
+        >
+          {course.icon} {course.name}
         </a>
-        <a href="/assessment" class="btn-primary text-sm">
-          Làm bài đánh giá năng lực →
-        </a>
+
+        {nextChapter ? (
+          <a
+            href={`/courses/${course.slug}/${nextChapter.slug}`}
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors no-underline"
+          >
+            <span class="truncate max-w-[200px]">{nextChapter.title}</span>
+            <span>→</span>
+          </a>
+        ) : (
+          <a
+            href={`/assessment/${assessmentSlug}`}
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors no-underline"
+          >
+            <span>Làm bài sát hạch →</span>
+          </a>
+        )}
       </div>
     </article>
   </section>

@@ -106,7 +106,7 @@ export const THREE_SAFETY_CHECKPOINTS: StopPoint[] = [
     name: 'ĐIỂM DỪNG AN TOÀN 2: KIỂM TRA TRƯỚC KHI CẮM ĐIỆN',
     rule: 'Trước khi cắm dây nguồn và bật điện thử máy',
     condition: 'RAM đã sập khóa 2 tai nhựa; quạt CPU_FAN đã cắm đúng chân trên bo mạch; không có ốc vít hay vật kim loại rơi bên trong thùng máy; 4 sợi dây nguồn cắm chắc chắn.',
-    signoff: 'Thầy kiểm tra thùng máy bằng mắt trong 10 giây và ký xác nhận cho phép cắm điện.',
+    signoff: 'Giáo viên kiểm tra thùng máy bằng mắt trong 10 giây và ký xác nhận cho phép cắm điện.',
   },
   {
     step: 7,
@@ -209,7 +209,7 @@ export const SEVEN_STEPS_WORKFLOW = [
       'Đối chiếu kiểm tra chéo: Click chuột phải thư mục gốc -> Properties -> Đếm số file và số MB. Thư mục đã sao lưu phải KHỚP 100%!',
       'Mở thử ngẫu nhiên 2 tệp tài liệu Word/Excel để đảm bảo file không bị hỏng.',
     ],
-    checkpoint: 'ĐIỂM DỪNG AN TOÀN 1: Thầy giáo / Trưởng xưởng kiểm tra thư mục backup đã khớp 100% thì mới ký duyệt cho mổ máy hoặc format!',
+    checkpoint: 'ĐIỂM DỪNG AN TOÀN 1: Giáo viên hướng dẫn kiểm tra thư mục backup đã khớp 100% thì mới ký duyệt cho mổ máy hoặc format!',
     proTip: 'Dùng lệnh COPY, không bao giờ dùng CUT. Nếu cúp điện hoặc treo máy giữa chừng khi CUT, file gốc sẽ biến mất vĩnh viễn!',
   },
   {
@@ -241,7 +241,7 @@ export const SEVEN_STEPS_WORKFLOW = [
       'Lắp linh kiện nâng cấp (RAM / SSD): Lắp thêm RAM sập khóa; lắp thêm ổ SSD SATA cắm đủ 1 dây nguồn + 1 cáp SATA dữ liệu.',
       'Kích hoạt SSD mới trong Windows: Nhấp chuột phải nút Start -> Chọn "Disk Management" -> Khởi tạo đĩa Initialize GPT -> Nhấp chuột phải vùng Unallocated chọn "New Simple Volume" -> Next -> Format NTFS -> Ổ đĩa mới hiện ra trong This PC!',
     ],
-    checkpoint: 'ĐIỂM DỪNG AN TOÀN 2: Thầy kiểm tra RAM đã khóa 2 tai, CPU_FAN đã cắm, thùng máy không còn ốc rơi vãi -> Ký duyệt cho phép cắm điện thử máy!',
+    checkpoint: 'ĐIỂM DỪNG AN TOÀN 2: Giáo viên kiểm tra RAM đã khóa 2 tai, CPU_FAN đã cắm, thùng máy không còn ốc rơi vãi -> Ký duyệt cho phép cắm điện thử máy!',
     proTip: 'Nhiều bạn lắp SSD mới xong mở My Computer không thấy ổ đâu tưởng SSD hỏng! Ổ đĩa mới xuất xưởng chưa phân vùng nên bắt buộc phải vào Disk Management để tạo ổ.',
   },
   {
@@ -306,7 +306,7 @@ export const SEVEN_STEPS_WORKFLOW = [
       'Đề mẫu 3: Nâng cấp ổ cứng SSD 240GB mới + Kích hoạt Disk Management + Cứu dữ liệu sang SSD + Sửa lỗi kẹt lệnh in máy in Canon 2900 + In Test Page.',
       'Áp dụng thang điểm 10 Thông tư 55: An toàn (2.0đ) + Chẩn đoán (2.5đ) + Thao tác (3.0đ) + Kiểm tra (1.5đ) + Bàn giao (1.0đ). Đạt từ 5.0đ trở lên.',
     ],
-    proTip: 'Vào phòng thi: Bình tĩnh đọc kỹ đề, làm tuần tự từ Bước 1 đến Bước 7, bí chỗ nào ghi chú lại báo thầy, điền phiếu ngay sau mỗi bước.',
+    proTip: 'Vào phòng thi: Bình tĩnh đọc kỹ đề, làm tuần tự từ Bước 1 đến Bước 7, bí chỗ nào ghi chú lại báo giáo viên hướng dẫn, điền phiếu ngay sau mỗi bước.',
   },
 ];
 

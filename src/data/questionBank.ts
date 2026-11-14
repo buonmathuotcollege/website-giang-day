@@ -33,7 +33,7 @@ export interface PracticalMCQ {
 }
 
 // ----------------------------------------------------------------------------
-// 1. NGÂN HÀNG CÂU HỎI VẤN ĐÁP TẠI BÀN MÁY (20 CÂU HỎI KINH ĐIỂN CỦA THẦY ĐỒNG)
+// 1. NGÂN HÀNG CÂU HỎI VẤN ĐÁP TẠI BÀN MÁY (20 CÂU HỎI CHUYÊN NGÀNH CNTT)
 // ----------------------------------------------------------------------------
 export const ORAL_QUESTIONS: OralQuestion[] = [
   {
@@ -710,8 +710,8 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_48',
     category: 'ngoai-vi',
-    question: 'Hành động nào sau đây thể hiện rõ nhất tác phong công nghiệp chuyên nghiệp của một kỹ thuật viên kỹ thuật viên tại bàn máy?',
-    options: ['Để ốc vít và tua-vít vương vãi trên bàn để thể hiện mình đang bận rộn', 'Lau chùi thùng máy sạch bụi, xếp gọn dụng cụ đồ nghề vào hộp, dọn sạch rác và bàn làm việc trước khi mời thầy/khách đến nghiệm thu', 'Bật nhạc thật to trong xưởng thực hành', 'Vừa làm vừa ăn uống tại bàn kỹ thuật'],
+    question: 'Hành động nào sau đây thể hiện rõ nhất tác phong công nghiệp chuyên nghiệp của một kỹ thuật viên tại bàn máy?',
+    options: ['Để ốc vít và tua-vít vương vãi trên bàn để thể hiện mình đang bận rộn', 'Lau chùi thùng máy sạch bụi, xếp gọn dụng cụ đồ nghề vào hộp, dọn sạch rác và bàn làm việc trước khi mời giáo viên / khách hàng đến nghiệm thu', 'Bật nhạc thật to trong xưởng thực hành', 'Vừa làm vừa ăn uống tại bàn kỹ thuật'],
     correctIndex: 1,
     explanation: 'Tác phong 5S: Sàng lọc, Sắp xếp, Sạch sẽ, Săn sóc, Sẵn sàng. Khách hàng và giáo viên đánh giá trình độ kỹ thuật viên qua sự ngăn nắp và sạch sẽ.',
   },

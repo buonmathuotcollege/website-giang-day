@@ -35,8 +35,12 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
-  // Skip caching for API requests and non-GET
-  if (event.request.method !== 'GET' || url.pathname.startsWith('/api/')) {
+  // Skip caching for non-GET, API requests, and admin portal
+  if (
+    event.request.method !== 'GET' || 
+    url.pathname.startsWith('/api/') || 
+    url.pathname.startsWith('/admin/')
+  ) {
     return;
   }
 

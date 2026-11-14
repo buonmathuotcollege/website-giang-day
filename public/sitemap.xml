@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core Pages -->
+  <url>
+    <loc>https://phamtiendong.name.vn/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://phamtiendong.name.vn/courses</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://phamtiendong.name.vn/practice</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://phamtiendong.name.vn/assessment</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://phamtiendong.name.vn/assessment/phan-cung</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://phamtiendong.name.vn/assessment/mang</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Courses: Năng lực số -->
+  <url><loc>https://phamtiendong.name.vn/courses/nang-luc-so</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/nang-luc-so/chuong-1</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/nang-luc-so/chuong-2</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/nang-luc-so/chuong-3</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/nang-luc-so/chuong-4</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/nang-luc-so/chuong-5</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/nang-luc-so/chuong-6</loc><priority>0.7</priority></url>
+
+  <!-- Courses: Kiến trúc máy tính -->
+  <url><loc>https://phamtiendong.name.vn/courses/kien-truc-may-tinh</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/kien-truc-may-tinh/chuong-1</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/kien-truc-may-tinh/chuong-2</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/kien-truc-may-tinh/chuong-3</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/kien-truc-may-tinh/chuong-4</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/kien-truc-may-tinh/chuong-5</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/kien-truc-may-tinh/chuong-6</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/kien-truc-may-tinh/chuong-7</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/kien-truc-may-tinh/chuong-8</loc><priority>0.7</priority></url>
+
+  <!-- Courses: Phần cứng máy tính -->
+  <url><loc>https://phamtiendong.name.vn/courses/phan-cung-may-tinh</loc><priority>0.9</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/phan-cung-may-tinh/chuong-1</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/phan-cung-may-tinh/chuong-2</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/phan-cung-may-tinh/chuong-3</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/phan-cung-may-tinh/chuong-4</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/phan-cung-may-tinh/chuong-5</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/phan-cung-may-tinh/chuong-6</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/phan-cung-may-tinh/chuong-7</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/phan-cung-may-tinh/chuong-8</loc><priority>0.8</priority></url>
+
+  <!-- Courses: Mạng căn bản -->
+  <url><loc>https://phamtiendong.name.vn/courses/mang-can-ban</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/mang-can-ban/chuong-1</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/mang-can-ban/chuong-2</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/mang-can-ban/chuong-3</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/mang-can-ban/chuong-4</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/mang-can-ban/chuong-5</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/mang-can-ban/chuong-6</loc><priority>0.7</priority></url>
+
+  <!-- Courses: Thiết kế LAN/WAN -->
+  <url><loc>https://phamtiendong.name.vn/courses/thiet-ke-quan-tri-lan-wan</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/thiet-ke-quan-tri-lan-wan/chuong-1</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/thiet-ke-quan-tri-lan-wan/chuong-2</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/thiet-ke-quan-tri-lan-wan/chuong-3</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/thiet-ke-quan-tri-lan-wan/chuong-4</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/thiet-ke-quan-tri-lan-wan/chuong-5</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/thiet-ke-quan-tri-lan-wan/chuong-6</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/thiet-ke-quan-tri-lan-wan/chuong-7</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/thiet-ke-quan-tri-lan-wan/chuong-8</loc><priority>0.7</priority></url>
+
+  <!-- Courses: Quản trị Windows Server/Linux -->
+  <url><loc>https://phamtiendong.name.vn/courses/quan-tri-windows-linux</loc><priority>0.8</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/quan-tri-windows-linux/chuong-1</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/quan-tri-windows-linux/chuong-2</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/quan-tri-windows-linux/chuong-3</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/quan-tri-windows-linux/chuong-4</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/quan-tri-windows-linux/chuong-5</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/quan-tri-windows-linux/chuong-6</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/quan-tri-windows-linux/chuong-7</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/quan-tri-windows-linux/chuong-8</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/quan-tri-windows-linux/chuong-9</loc><priority>0.7</priority></url>
+  <url><loc>https://phamtiendong.name.vn/courses/quan-tri-windows-linux/chuong-10</loc><priority>0.7</priority></url>
+</urlset>
