@@ -50,7 +50,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
     if (typeof Buffer !== 'undefined') {
       b64 = Buffer.from(rawSecret, 'utf-8').toString('base64');
     } else {
-      b64 = btoa(unescape(encodeURIComponent(rawSecret)));
+      const bytes = new TextEncoder().encode(rawSecret);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      b64 = btoa(binary);
     }
     const token = "cntt_sec_" + b64;
 
@@ -96,7 +99,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
         if (typeof Buffer !== 'undefined') {
           decoded = Buffer.from(rawPayload, 'base64').toString('utf-8');
         } else {
-          decoded = decodeURIComponent(escape(atob(rawPayload)));
+          const bytes = Uint8Array.from(atob(rawPayload), c => c.charCodeAt(0));
+          decoded = new TextDecoder().decode(bytes);
         }
         const [tokenSecret, timestampStr] = decoded.split(":");
         if (tokenSecret === validSecret) {

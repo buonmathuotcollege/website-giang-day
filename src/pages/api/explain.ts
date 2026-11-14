@@ -19,15 +19,11 @@ YÊU CẦU BẮT BUỘC:
 3. VÍ VON ĐỜI THƯỜNG: Dùng hình ảnh cục tẩy, hạt đậu xanh, xe đạp vs xe hơi, tủ đựng đồ, rãnh khuyết... Tuyệt đối không dùng từ ngữ hàn lâm khó hiểu.`;
 
 function getGeminiKey(env: any): string {
-  const direct = env?.GEMINI_API_KEY || (typeof process !== 'undefined' ? (process as any).env?.GEMINI_API_KEY : '');
-  if (direct && direct.trim()) return direct.trim();
-  try {
-    const b64 = "QVEuQWI4Uk42S1FGZWhUczBPWHBROXBUUEdtQy1vS2tZOFQ0Yjhha2RsNXEwd2NlNFVRWWc=";
-    return typeof Buffer !== 'undefined' ? Buffer.from(b64, 'base64').toString('utf-8') : atob(b64);
-  } catch (e) {
-    return "";
-  }
+  return (env?.GEMINI_API_KEY || (typeof process !== 'undefined' ? (process as any).env?.GEMINI_API_KEY : '') || '').trim();
 }
+
+// In-memory cache for explanations by (question + selectedOption + correctOption)
+const EXPLANATION_CACHE = new Map<string, string>();
 
 // Simple in-memory rate limiter
 const EXPLAIN_RATE_MAP = new Map<string, { count: number; resetAt: number }>();
@@ -60,6 +56,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const body = await request.json();
     const { question = '', options = [], selectedOption = '', correctOption = '', fallbackExplanation = '' } = body;
 
+    // Cache key
+    const cacheKey = `${question}::${selectedOption}::${correctOption}`;
+    if (EXPLANATION_CACHE.has(cacheKey)) {
+      return new Response(JSON.stringify({
+        ok: true,
+        explanation: EXPLANATION_CACHE.get(cacheKey),
+        fromCache: true
+      }), { headers: CORS_HEADERS });
+    }
+
     // Nếu bị rate limit hoặc câu hỏi rỗng, trả fallback trực tiếp không gọi Gemini
     if (isExplainRateLimited(clientIp) || !question) {
       return new Response(JSON.stringify({
@@ -69,7 +75,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     const apiKey = getGeminiKey(env);
-
     if (!apiKey) {
       return new Response(JSON.stringify({
         ok: true,
@@ -86,24 +91,24 @@ Người học chọn: "${String(selectedOption).slice(0, 100)}"
 Đáp án đúng là: "${String(correctOption).slice(0, 100)}"
 Hãy giải thích ngắn gọn 1-2 câu đời thường dễ hiểu vì sao chọn như vậy.`;
 
+    const modelName = env?.GEMINI_MODEL || 'gemini-2.5-flash';
     let reply = '';
     try {
-      const interaction = await ai.interactions.create({
-        model: 'gemini-3.5-flash-lite',
-        input: prompt,
-        system_instruction: SYSTEM_INSTRUCTION,
-      });
-      reply = (interaction as any).output_text?.trim() || '';
-    } catch (e) {
       const res = await ai.models.generateContent({
-        model: 'gemini-3.5-flash-lite',
+        model: modelName,
         contents: prompt,
         config: { systemInstruction: SYSTEM_INSTRUCTION },
       });
       reply = res.text?.trim() || '';
+    } catch (e) {
+      // Fallback
     }
 
     reply = reply || fallbackExplanation || "Bạn chú ý đối chiếu lại quy tắc kỹ thuật thực hành nhé!";
+    if (reply) {
+      EXPLANATION_CACHE.set(cacheKey, reply);
+    }
+
     return new Response(JSON.stringify({ ok: true, explanation: reply }), { headers: CORS_HEADERS });
   } catch (err: any) {
     return new Response(JSON.stringify({

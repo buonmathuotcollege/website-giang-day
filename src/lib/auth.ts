@@ -36,7 +36,8 @@ export function checkAdminAuth(request: Request, env: any): boolean {
           if (typeof Buffer !== 'undefined') {
             decoded = Buffer.from(rawPayload, 'base64').toString('utf-8');
           } else if (typeof atob !== 'undefined') {
-            decoded = decodeURIComponent(escape(atob(rawPayload)));
+            const bytes = Uint8Array.from(atob(rawPayload), c => c.charCodeAt(0));
+            decoded = new TextDecoder().decode(bytes);
           }
           const [tokenSecret, timestampStr] = decoded.split(":");
           

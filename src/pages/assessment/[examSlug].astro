@@ -54,10 +54,7 @@ const exam = isHardware
       { label: exam.name, href: '' },
     ]} />
 
-    {isHardware ? (
-      <!-- ==================================================================== -->
-      <!-- HARDWARE COMPETENCY SUITE (TỔNG HỢP ĐÁNH GIÁ NĂNG LỰC NGHỀ PC)       -->
-      <!-- ==================================================================== -->
+    {isHardware && (
       <div class="mt-6" x-data="hardwareMasterEngine">
         <!-- Poka-Yoke Auto-Recovery Notification Banner -->
         <div
@@ -1558,9 +1555,10 @@ const exam = isHardware
           </div>
         </div>
       </div>
-    ) : (
-      <!-- Fallback quiz for other subjects -->
-      <div class="card p-6 text-center">
+    )}
+
+    {!isHardware && (
+      <div class="card p-6 text-center mt-6">
         <h2 class="text-xl font-bold mb-2">{exam.name}</h2>
         <p class="text-sm text-gray-500">Môn học đang được chuẩn hóa ngân hàng câu hỏi.</p>
       </div>
@@ -1568,8 +1566,7 @@ const exam = isHardware
   </section>
 </BaseLayout>
 
-{isHardware && (
-  <script is:inline define:vars={{
+<script is:inline define:vars={{
     initialTickets: FULL_EXAM_TICKETS,
     initialOral: ORAL_QUESTIONS,
     initialAssembly: ASSEMBLY_SCENARIOS,
@@ -2275,4 +2272,3 @@ const exam = isHardware
       }));
     });
   </script>
-)}

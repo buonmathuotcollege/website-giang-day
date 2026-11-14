@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "description": "Cổng Giảng Dạy & Thực Hành Kỹ Thuật CNTT - CN. Phạm Tiến Đông",
   "scripts": {
-    "dev": "node -e \"process.env.ASTRO_TELEMETRY_DISABLED='1'; require('child_process').spawnSync('astro', ['dev'], {stdio:'inherit', shell:true})\"",
-    "build": "node -e \"process.env.ASTRO_TELEMETRY_DISABLED='1'; const res = require('child_process').spawnSync('astro', ['build'], {stdio:'inherit', shell:true}); process.exit(res.status || 0)\"",
+    "dev": "astro dev",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -16,5 +16,9 @@
     "@google/genai": "^3.3.0",
     "astro": "^5.8.0",
     "tailwindcss": "^3.4.17"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "typescript": "^5.9.3"
   }
 }

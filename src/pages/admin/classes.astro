@@ -1091,7 +1091,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
         // 3. Quét tất cả các key xem có key nào chứa mã lớp (ví dụ cls_03tha9_xyz)
         const cleanTarget = (cls.class_code || '').toLowerCase().replace(/[^a-z0-9]/g, '');
         if (cleanTarget) {
-          for (const [key, val] of Object.entries(store)) {
+          for (const val of Object.values(store)) {
             const cleanKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
             if (cleanKey.includes(cleanTarget) && Array.isArray(val) && val.length > 0) {
               return val;
@@ -1099,7 +1099,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
           }
         }
         // 4. Quét từng học sinh trong tất cả các danh sách
-        for (const [key, val] of Object.entries(store)) {
+        for (const val of Object.values(store)) {
           if (Array.isArray(val) && val.length > 0) {
             const matched = val.filter(s => 
               (s.original_class && s.original_class.toUpperCase() === (cls.class_code || '').toUpperCase()) ||

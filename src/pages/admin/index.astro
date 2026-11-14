@@ -163,36 +163,48 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
         this.loadStats();
       },
 
-      loadStats() {
-        // 1. Đọc số lớp từ localStorage
+      async loadStats() {
+        const token = localStorage.getItem('CNTT_ADMIN_TOKEN') || sessionStorage.getItem('CNTT_ADMIN_TOKEN') || '';
+        const authHeaders = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+        // 1. Tải số liệu Lớp & Học sinh từ CSDL Cloudflare D1
         try {
-          const classes = JSON.parse((localStorage.getItem('CNTT_CLASSES') || localStorage.getItem('CNTT_CLASSES')) || '[]');
-          if (Array.isArray(classes)) {
+          const res = await fetch('/api/classes', { headers: authHeaders });
+          const json = await res.json();
+          if (json && json.ok && Array.isArray(json.data)) {
+            this.stats.classCount = json.data.length;
+            this.stats.compositeCount = json.data.filter(c => c.is_composite).length;
+            this.stats.studentCount = json.data.reduce((sum, c) => sum + (Number(c.student_count) || 0), 0);
+          } else {
+            this.fallbackLocalStats();
+          }
+        } catch (e) {
+          this.fallbackLocalStats();
+        }
+
+        // 2. Tải số lượt làm bài / thi từ CSDL D1
+        try {
+          const sRes = await fetch('/api/scores', { headers: authHeaders });
+          const sJson = await sRes.json();
+          if (sJson && sJson.ok && Array.isArray(sJson.data)) {
+            this.stats.scoreCount = sJson.data.length;
+          }
+        } catch (e) {}
+      },
+
+      fallbackLocalStats() {
+        try {
+          const classes = JSON.parse(localStorage.getItem('CNTT_CLASSES') || '[]');
+          if (Array.isArray(classes) && classes.length > 0) {
             this.stats.classCount = classes.length;
             this.stats.compositeCount = classes.filter(c => c.is_composite).length;
           }
-        } catch(e) {}
-
-        // 2. Đọc tổng số học sinh từ localStorage
-        try {
-          const allStudentsStore = JSON.parse((localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('CNTT_STUDENTS')) || '{}');
+          const allStudentsStore = JSON.parse(localStorage.getItem('CNTT_STUDENTS') || '{}');
           let count = 0;
           Object.values(allStudentsStore).forEach(list => {
             if (Array.isArray(list)) count += list.length;
           });
-          this.stats.studentCount = count;
-        } catch(e) {}
-
-        // 3. Đọc số bài nộp
-        try {
-          fetch('/api/scores')
-            .then(r => r.json())
-            .then(data => {
-              if (data && data.ok && Array.isArray(data.data)) {
-                this.stats.scoreCount = data.data.length;
-              }
-            })
-            .catch(() => {});
+          if (count > 0) this.stats.studentCount = count;
         } catch(e) {}
       }
     }));

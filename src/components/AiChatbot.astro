@@ -61,11 +61,6 @@
           </p>
         </div>
       </div>
-            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            Hỗ Trợ Học Tập
-          </p>
-        </div>
-      </div>
       <div class="flex items-center gap-1">
         <button
           @click="resetChat()"
@@ -158,18 +153,18 @@
                 <div class="flex items-center gap-1.5">
                   <button
                     type="button"
-                    @click="msg.feedback = (msg.feedback === 'like' ? null : 'like')"
+                    @click="sendFeedback(msg, 'like')"
                     class="p-0.5 rounded hover:bg-gray-100 transition-colors cursor-pointer"
-                    :class="msg.feedback === 'like' ? 'scale-110' : 'opacity-60 hover:opacity-100'"
+                    :class="msg.feedback === 'like' ? 'scale-110 text-emerald-600' : 'opacity-60 hover:opacity-100'"
                     title="Hữu ích"
                   >
                     👍
                   </button>
                   <button
                     type="button"
-                    @click="msg.feedback = (msg.feedback === 'dislike' ? null : 'dislike')"
+                    @click="sendFeedback(msg, 'dislike')"
                     class="p-0.5 rounded hover:bg-gray-100 transition-colors cursor-pointer"
-                    :class="msg.feedback === 'dislike' ? 'scale-110' : 'opacity-60 hover:opacity-100'"
+                    :class="msg.feedback === 'dislike' ? 'scale-110 text-rose-600' : 'opacity-60 hover:opacity-100'"
                     title="Chưa rõ"
                   >
                     👎
@@ -355,6 +350,19 @@
             if (this.$refs.inputField) this.$refs.inputField.focus();
           });
         }
+      },
+
+      sendFeedback(msg, rating) {
+        if (msg.feedback === rating) {
+          msg.feedback = null;
+          return;
+        }
+        msg.feedback = rating;
+        fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'feedback', rating: rating, message: msg.content })
+        }).catch(() => {});
       }
     };
   }

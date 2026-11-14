@@ -29,14 +29,7 @@ RANH GIỚI PHẠM VI (GUARDRAILS) - BẮT BUỘC TUÂN THỦ 100%:
    - Tự xưng là "mình" hoặc "Trợ lý AI", gọi người học là "bạn", thân thiện, khách quan, khích lệ tinh thần học tập. TUYỆT ĐỐI KHÔNG đóng vai hay xưng là "Thầy Đồng" hoặc "thầy".`;
 
 function getGeminiKey(env: any): string {
-  const direct = env?.GEMINI_API_KEY || (typeof process !== 'undefined' ? (process as any).env?.GEMINI_API_KEY : '');
-  if (direct && direct.trim()) return direct.trim();
-  try {
-    const b64 = "QVEuQWI4Uk42S1FGZWhUczBPWHBROXBUUEdtQy1vS2tZOFQ0Yjhha2RsNXEwd2NlNFVRWWc=";
-    return typeof Buffer !== 'undefined' ? Buffer.from(b64, 'base64').toString('utf-8') : atob(b64);
-  } catch (e) {
-    return "";
-  }
+  return (env?.GEMINI_API_KEY || (typeof process !== 'undefined' ? (process as any).env?.GEMINI_API_KEY : '') || '').trim();
 }
 
 // Simple in-memory rate limiter per worker instance (chống spam cạn hạn ngạch)
@@ -70,7 +63,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     const env = (locals as any)?.runtime?.env || (typeof process !== 'undefined' ? (process as any).env : {}) || {};
     const body = await request.json();
-    const { message, courseContext = '', history = [] } = body;
+    const { message, courseContext = '', history = [], action, rating } = body;
+
+    // Handle feedback rating (thumbs up / down)
+    if (action === 'feedback') {
+      console.log(`[Chat Feedback] rating=${rating}`);
+      return new Response(
+        JSON.stringify({ ok: true, message: 'Cảm ơn bạn đã gửi phản hồi giúp Trợ lý AI học tốt hơn!' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     if (!message || typeof message !== 'string' || message.trim() === '') {
       return new Response(
@@ -112,22 +114,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
     promptText += `Câu hỏi của người học: ${cleanMsg}`;
 
-    // Dùng gemini-3.5-flash-lite: siêu nhanh, siêu tiết kiệm hạn mức, phản hồi tức thì
+    const modelName = env?.GEMINI_MODEL || 'gemini-2.5-flash';
     let reply = '';
     try {
-      const interaction = await ai.interactions.create({
-        model: 'gemini-3.5-flash-lite',
-        input: promptText,
-        system_instruction: SYSTEM_INSTRUCTION,
-      });
-      reply = interaction.output_text?.trim() || '';
-    } catch (interError) {
       const res = await ai.models.generateContent({
-        model: 'gemini-3.5-flash-lite',
+        model: modelName,
         contents: promptText,
         config: { systemInstruction: SYSTEM_INSTRUCTION },
       });
       reply = res.text?.trim() || '';
+    } catch (e) {
+      // Fallback
     }
 
     if (!reply) {
