@@ -40,13 +40,15 @@ CREATE TABLE IF NOT EXISTS lessons (
   FOREIGN KEY (chapter_id) REFERENCES chapters(id)
 );
 
--- 4. BẢNG LỚP HỌC (Classes)
+-- 4. BẢNG LỚP HỌC (Classes) - Hỗ trợ Lớp chính khóa & Lớp ghép liên lớp
 CREATE TABLE IF NOT EXISTS classes (
   id TEXT PRIMARY KEY,
   course_id TEXT,
   class_code TEXT UNIQUE NOT NULL,
   class_name TEXT NOT NULL,
   academic_year TEXT DEFAULT '2026-2027',
+  is_composite INTEGER DEFAULT 0,          -- 0: Lớp chính khóa, 1: Lớp ghép / Ca thi liên lớp
+  source_classes TEXT DEFAULT '',          -- Danh sách mã lớp nguồn khi ghép: ["THUD_K26A", "QTM_K26"]
   is_active INTEGER DEFAULT 1,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (course_id) REFERENCES courses(id)
@@ -63,6 +65,7 @@ CREATE TABLE IF NOT EXISTS students (
   gender TEXT DEFAULT 'Nam',                -- Giới tính (Nam / Nữ)
   phone TEXT DEFAULT '',                    -- Số điện thoại học sinh / phụ huynh
   status TEXT DEFAULT 'Đang học',           -- Trạng thái: Đang học / Bảo lưu / Nghỉ học
+  original_class TEXT DEFAULT '',           -- Lớp gốc / Lớp sinh hoạt (dành cho Lớp ghép liên lớp)
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE
 );
@@ -88,6 +91,8 @@ CREATE TABLE IF NOT EXISTS submissions (
   class_name TEXT NOT NULL,
   session_name TEXT NOT NULL,
   student_name TEXT NOT NULL,
+  student_code TEXT DEFAULT '',
+  original_class TEXT DEFAULT '',           -- Lớp gốc của học sinh nếu làm bài trong Lớp ghép / Ca thi ghép
   station TEXT DEFAULT '',
   date_only TEXT NOT NULL,
   score REAL DEFAULT 0.0,

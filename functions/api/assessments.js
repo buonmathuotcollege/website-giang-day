@@ -123,6 +123,8 @@ export async function onRequestPost(context) {
     const body = await request.json();
     const slug = body.slug || "phan-cung";
     const studentName = String(body.studentName || "Học sinh").trim();
+    const studentCode = String(body.studentCode || body.student_code || "").trim();
+    const originalClass = String(body.originalClass || body.original_class || "").trim();
     const className = String(body.className || "Lớp").trim();
     const station = String(body.station || "").trim();
     const userAnswers = body.answers || {}; // Object dạng: { pc_01: 1, pc_02: 2 }
@@ -145,6 +147,8 @@ export async function onRequestPost(context) {
               id TEXT PRIMARY KEY,
               assessment_id TEXT NOT NULL,
               student_name TEXT NOT NULL,
+              student_code TEXT DEFAULT '',
+              original_class TEXT DEFAULT '',
               class_name TEXT NOT NULL,
               station TEXT DEFAULT '',
               score REAL NOT NULL,
@@ -156,10 +160,13 @@ export async function onRequestPost(context) {
             )
           `).run();
 
+          try { await env.DB.prepare("ALTER TABLE assessment_results ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
+          try { await env.DB.prepare("ALTER TABLE assessment_results ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
+
           await env.DB.prepare(`
-            INSERT INTO assessment_results (id, assessment_id, student_name, class_name, station, score, total, percentage, status, answers_json)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-          `).bind(resId, slug, studentName, className, station, score10, total, percentage, status, JSON.stringify(userAnswers)).run();
+            INSERT INTO assessment_results (id, assessment_id, student_name, student_code, original_class, class_name, station, score, total, percentage, status, answers_json)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `).bind(resId, slug, studentName, studentCode, originalClass, className, station, score10, total, percentage, status, JSON.stringify(userAnswers)).run();
 
           // Đồng bộ sang bảng submissions để giảng viên xem và xuất CSV ngay tại trang /admin/scores
           await env.DB.prepare(`
@@ -169,6 +176,8 @@ export async function onRequestPost(context) {
               class_name TEXT NOT NULL,
               session_name TEXT NOT NULL,
               student_name TEXT NOT NULL,
+              student_code TEXT DEFAULT '',
+              original_class TEXT DEFAULT '',
               station TEXT DEFAULT '',
               date_only TEXT NOT NULL,
               score REAL DEFAULT 0.0,
@@ -178,12 +187,15 @@ export async function onRequestPost(context) {
             )
           `).run();
 
+          try { await env.DB.prepare("ALTER TABLE submissions ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
+          try { await env.DB.prepare("ALTER TABLE submissions ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
+
           const dateOnly = new Date().toISOString().slice(0, 10);
           const sessionName = `Sát hạch: ${userAnswers.ticketTitle || 'Phần cứng PC (OL-01)'}`;
           await env.DB.prepare(`
-            INSERT INTO submissions (id, class_name, session_name, student_name, station, date_only, score, details_json, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-          `).bind(resId, className, sessionName, studentName, station, dateOnly, score10, JSON.stringify(userAnswers), status).run();
+            INSERT INTO submissions (id, class_name, session_name, student_name, student_code, original_class, station, date_only, score, details_json, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `).bind(resId, className, sessionName, studentName, studentCode, originalClass, station, dateOnly, score10, JSON.stringify(userAnswers), status).run();
         } catch (err) {}
       }
 
@@ -234,6 +246,8 @@ export async function onRequestPost(context) {
             id TEXT PRIMARY KEY,
             assessment_id TEXT NOT NULL,
             student_name TEXT NOT NULL,
+            student_code TEXT DEFAULT '',
+            original_class TEXT DEFAULT '',
             class_name TEXT NOT NULL,
             station TEXT DEFAULT '',
             score REAL NOT NULL,
@@ -245,10 +259,13 @@ export async function onRequestPost(context) {
           )
         `).run();
 
+        try { await env.DB.prepare("ALTER TABLE assessment_results ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
+        try { await env.DB.prepare("ALTER TABLE assessment_results ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
+
         await env.DB.prepare(`
-          INSERT INTO assessment_results (id, assessment_id, student_name, class_name, station, score, total, percentage, status, answers_json)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).bind(resId, slug, studentName, className, station, score10, total, percentage, status, JSON.stringify(userAnswers)).run();
+          INSERT INTO assessment_results (id, assessment_id, student_name, student_code, original_class, class_name, station, score, total, percentage, status, answers_json)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(resId, slug, studentName, studentCode, originalClass, className, station, score10, total, percentage, status, JSON.stringify(userAnswers)).run();
       } catch (err) {}
     }
 

@@ -51,7 +51,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           >
             <option value="">-- Chọn lớp của bạn --</option>
             <template x-for="c in classes" :key="c.id || c.class_code">
-              <option :value="c.class_name" x-text="c.class_code + ' - ' + c.class_name"></option>
+              <option :value="c.class_name" x-text="(c.is_composite ? '🔗 [Lớp ghép] ' : '🏫 ') + c.class_code + ' - ' + c.class_name"></option>
             </template>
           </select>
         </div>
@@ -180,6 +180,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               className: this.selectedClassName,
               sessionName: this.selectedSession,
               studentName: finalName,
+              studentCode: matched ? (matched.student_code || '') : '',
+              originalClass: matched ? (matched.original_class || this.selectedClassName) : this.selectedClassName,
               score: 10.0,
               details: { type: 'DiemDanhThucHanh', timestamp: new Date().toISOString() }
             })

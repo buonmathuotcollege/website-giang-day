@@ -1,5 +1,6 @@
 // ============================================================================
 // API BẢNG ĐIỂM & NỘP BÀI THỰC HÀNH (/api/scores)
+// Hỗ trợ đầy đủ: MSHS, Lớp thi / Lớp ghép, Lớp gốc (cho lớp ghép liên lớp)
 // ============================================================================
 
 const CORS_HEADERS = {
@@ -18,6 +19,8 @@ async function ensureTable(db) {
       class_name TEXT NOT NULL,
       session_name TEXT NOT NULL,
       student_name TEXT NOT NULL,
+      student_code TEXT DEFAULT '',
+      original_class TEXT DEFAULT '',
       station TEXT DEFAULT '',
       date_only TEXT NOT NULL,
       score REAL DEFAULT 0.0,
@@ -26,6 +29,10 @@ async function ensureTable(db) {
       submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `).run();
+
+  // Migration an toàn cho SQLite
+  try { await db.prepare("ALTER TABLE submissions ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
+  try { await db.prepare("ALTER TABLE submissions ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
 }
 
 function checkAuth(request, env) {
@@ -49,6 +56,8 @@ export async function onRequestPost(context) {
     const className = String(data.className || data.class_name || "Lớp chung").trim();
     const sessionName = String(data.sessionName || data.session_name || "Buổi thực hành").trim();
     const studentName = String(data.studentName || data.student_name || "").trim();
+    const studentCode = String(data.studentCode || data.student_code || "").trim();
+    const originalClass = String(data.originalClass || data.original_class || "").trim();
     const station = String(data.station || "").trim();
     const score = Number(data.score || data.grade10 || 10.0);
     const details = JSON.stringify(data.details || {});
@@ -61,13 +70,13 @@ export async function onRequestPost(context) {
     if (env && env.DB) {
       await ensureTable(env.DB);
       await env.DB.prepare(`
-        INSERT INTO submissions (id, class_name, session_name, student_name, station, date_only, score, details_json, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `).bind(id, className, sessionName, studentName, station, dateOnly, score, details, status).run();
+        INSERT INTO submissions (id, class_name, session_name, student_name, student_code, original_class, station, date_only, score, details_json, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).bind(id, className, sessionName, studentName, studentCode, originalClass, station, dateOnly, score, details, status).run();
     } else {
       // Memory store fallback
       globalThis.MEM_SCORES = globalThis.MEM_SCORES || [];
-      globalThis.MEM_SCORES.unshift({ id, className, sessionName, studentName, station, dateOnly, score, status, submittedAt: new Date().toISOString() });
+      globalThis.MEM_SCORES.unshift({ id, className, sessionName, studentName, studentCode, originalClass, station, dateOnly, score, status, submittedAt: new Date().toISOString() });
     }
 
     return new Response(JSON.stringify({ ok: true, id, message: "Nộp bài thành công!" }), { headers: CORS_HEADERS });
@@ -81,19 +90,27 @@ export async function onRequestGet(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   const className = url.searchParams.get("class");
-  const limit = Math.min(Number(url.searchParams.get("limit") || 100), 200);
+  const originalClass = url.searchParams.get("original_class");
+  const limit = Math.min(Number(url.searchParams.get("limit") || 200), 500);
 
   let list = [];
 
   if (env && env.DB) {
     try {
       await ensureTable(env.DB);
-      let query = "SELECT * FROM submissions";
+      let query = "SELECT * FROM submissions WHERE 1=1";
       const params = [];
+
       if (className) {
-        query += " WHERE class_name = ?";
-        params.push(className);
+        query += " AND (class_name = ? OR class_name LIKE ?)";
+        params.push(className, `%${className}%`);
       }
+
+      if (originalClass) {
+        query += " AND (original_class = ? OR original_class LIKE ?)";
+        params.push(originalClass, `%${originalClass}%`);
+      }
+
       query += " ORDER BY submitted_at DESC LIMIT ?";
       params.push(limit);
 
@@ -105,7 +122,10 @@ export async function onRequestGet(context) {
   } else {
     list = (globalThis.MEM_SCORES || []).slice(0, limit);
     if (className) {
-      list = list.filter(item => item.className === className);
+      list = list.filter(item => (item.className || item.class_name) === className);
+    }
+    if (originalClass) {
+      list = list.filter(item => (item.originalClass || item.original_class) === originalClass);
     }
   }
 
@@ -128,9 +148,8 @@ export async function onRequestDelete(context) {
 
   if (env && env.DB) {
     await env.DB.prepare("DELETE FROM submissions WHERE id = ?").bind(id).run();
-  } else if (globalThis.MEM_SCORES) {
-    globalThis.MEM_SCORES = globalThis.MEM_SCORES.filter(item => item.id !== id);
+    return new Response(JSON.stringify({ ok: true, message: "Đã xóa bản ghi bảng điểm" }), { headers: CORS_HEADERS });
   }
 
-  return new Response(JSON.stringify({ ok: true, message: "Đã xóa bản ghi" }), { headers: CORS_HEADERS });
+  return new Response(JSON.stringify({ ok: false, error: "Chưa cấu hình CSDL" }), { status: 500, headers: CORS_HEADERS });
 }

@@ -223,7 +223,7 @@ const exam = isHardware
                   >
                     <option value="">-- Chọn lớp học --</option>
                     <template x-for="c in availableClasses" :key="c.id || c.class_code">
-                      <option :value="c.class_name" x-text="c.class_code + ' - ' + c.class_name"></option>
+                      <option :value="c.class_name" x-text="(c.is_composite ? '🔗 [Lớp ghép] ' : '🏫 ') + c.class_code + ' - ' + c.class_name"></option>
                     </template>
                   </select>
                 </div>
@@ -239,16 +239,17 @@ const exam = isHardware
                     placeholder="Chọn hoặc nhập họ tên..."
                     class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:outline-none font-semibold"
                   />
-                  <!-- Danh sách gợi ý họ tên học sinh đã nạp từ Excel (Kèm MSHS và Ngày sinh) -->
+                  <!-- Danh sách gợi ý họ tên học sinh đã nạp từ Excel (Kèm MSHS, Lớp gốc và Ngày sinh) -->
                   <datalist id="student-names-list">
                     <template x-for="st in classStudentsList" :key="st.id || st.full_name">
-                      <option :value="st.full_name" :label="(st.student_code ? ('[' + st.student_code + '] ') : '') + st.full_name + (st.date_of_birth ? (' · ' + st.date_of_birth) : '')"></option>
+                      <option :value="st.full_name" :label="(st.student_code ? ('[' + st.student_code + '] ') : '') + st.full_name + (st.original_class ? (' (Lớp gốc: ' + st.original_class + ')') : '') + (st.date_of_birth ? (' · ' + st.date_of_birth) : '')"></option>
                     </template>
                   </datalist>
 
                   <!-- Badge thông tin học sinh chuẩn đại học khi được nhận diện -->
-                  <div x-show="student.code || student.dob" class="mt-1 flex flex-wrap items-center gap-1.5 text-[11px]">
+                  <div x-show="student.code || student.dob || student.originalClass" class="mt-1 flex flex-wrap items-center gap-1.5 text-[11px]">
                     <span x-show="student.code" class="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-mono font-bold" x-text="'MSHS: ' + student.code"></span>
+                    <span x-show="student.originalClass" class="px-2 py-0.5 rounded bg-purple-100 text-purple-900 font-mono font-bold border border-purple-200" x-text="'🏫 Lớp gốc: ' + student.originalClass"></span>
                     <span x-show="student.dob" class="px-2 py-0.5 rounded bg-gray-100 text-gray-700 font-mono" x-text="'🎂 ' + student.dob"></span>
                     <span x-show="student.gender" class="px-1.5 py-0.5 rounded font-bold" :class="student.gender === 'Nữ' ? 'bg-pink-100 text-pink-700' : 'bg-blue-50 text-blue-700'" x-text="student.gender"></span>
                   </div>
@@ -1608,6 +1609,7 @@ const exam = isHardware
           dob: '',
           gender: 'Nam',
           className: '',
+          originalClass: '',
           station: 'Bàn kỹ thuật 01',
           partner: '',
         },
@@ -1934,9 +1936,11 @@ const exam = isHardware
               this.student.code = matched.student_code || '';
               this.student.dob = matched.date_of_birth || '';
               this.student.gender = matched.gender || 'Nam';
+              this.student.originalClass = matched.original_class || this.student.className;
             } else {
               this.student.code = '';
               this.student.dob = '';
+              this.student.originalClass = '';
             }
 
             let hash = 0;
@@ -2106,6 +2110,7 @@ const exam = isHardware
                 slug: 'phan-cung',
                 studentName: this.student.code ? ('[' + this.student.code + '] ' + this.student.name) : this.student.name,
                 studentCode: this.student.code || '',
+                originalClass: this.student.originalClass || this.student.className,
                 className: this.student.className,
                 station: this.student.station,
                 answers: {
@@ -2192,6 +2197,7 @@ const exam = isHardware
                 slug: 'phan-cung',
                 studentName: this.student.code ? ('[' + this.student.code + '] ' + this.student.name) : this.student.name,
                 studentCode: this.student.code || '',
+                originalClass: this.student.originalClass || this.student.className,
                 className: this.student.className,
                 station: this.student.station,
                 answers: {
