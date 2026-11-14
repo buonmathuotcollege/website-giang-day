@@ -1,0 +1,22 @@
+# Cổng Giảng Dạy & Đánh Giá Năng Lực CNTT - Trường Cao đẳng Buôn Ma Thuột
+> Hệ thống đào tạo nghề CNTT thực chiến, sát hạch năng lực chuẩn Thông tư 55 và quản lý học sinh do Giảng viên Phạm Tiến Đông biên soạn và phụ trách.
+
+Website chính thức: https://phamtiendong.name.vn  
+Đơn vị: Khoa Công nghệ Thông tin - Trường Cao đẳng Buôn Ma Thuột (BMTC)  
+Giảng viên phụ trách: CN. Phạm Tiến Đông  
+Đối tượng đào tạo chính: Học sinh hệ Trung cấp 9+3 (15 - 18 tuổi) & Sinh viên Cao đẳng nghề CNTT.
+
+## 1. Chương Trình Đào Tạo Chuyên Ngành
+- [Phần cứng Máy tính](https://phamtiendong.name.vn/courses/phan-cung-may-tinh): Cẩm nang 6 khối linh kiện PC, 7 bước quy trình kỹ thuật viên (từ tiếp nhận đến bàn giao), kỹ thuật tra keo hạt đậu xanh, an toàn chống tĩnh điện ESD.
+- [Mạng Máy tính Căn bản](https://phamtiendong.name.vn/courses/mang-can-ban): Mô hình OSI 7 tầng, phân lớp địa chỉ IPv4/Subnetting, bấm cáp mạng RJ45 chuẩn T568B, cấu hình DHCP/DNS/Router.
+- [Thiết kế & Quản trị Mạng LAN/WAN](https://phamtiendong.name.vn/courses/thiet-ke-quan-tri-lan-wan): Thiết kế sơ đồ mạng doanh nghiệp, VLAN, định tuyến OSPF/RIP, bảo mật tường lửa.
+- [Quản trị Windows Server & Linux](https://phamtiendong.name.vn/courses/quan-tri-windows-linux): Quản trị Active Directory, Domain Controller, Group Policy, quản trị máy chủ Ubuntu/CentOS, ảo hóa VMware/Proxmox.
+- [Kiến trúc Máy tính & Hệ điều hành](https://phamtiendong.name.vn/courses/kien-truc-may-tinh): Tập lệnh CPU, cấu trúc bộ nhớ Cache/RAM/Bus, nguyên lý đa nhiệm của hệ điều hành.
+- [Năng lực số & Kỹ năng văn phòng](https://phamtiendong.name.vn/courses/nang-luc-so): Soạn thảo văn bản hành chính Word, xử lý dữ liệu và hàm logic Excel, gõ 10 ngón Telex chuẩn.
+
+## 2. Xưởng Thực Hành & Sát Hạch Nghề (OL-01)
+- [Xưởng Thực Hành 7 Bước](https://phamtiendong.name.vn/practice): Bàn kỹ thuật mô phỏng thực tế, tuân thủ 3 Luật sống còn, 3 Điểm dừng an toàn Poka-Yoke và xuất Phiếu dịch vụ kỹ thuật A4 chuẩn công nghiệp.
+- [Sát Hạch Đánh Giá Năng Lực](https://phamtiendong.name.vn/assessment/phan-cung): Ngân hàng 100 câu trắc nghiệm tình huống xưởng thực hành, bốc thăm 6 ca thi tổng hợp (Job Tickets), có Trợ Giảng AI giải thích ngắn gọn bằng ví dụ đời thường.
+
+## 3. Bản Đầy Đủ Dành Cho AI Agents
+- [llms-full.txt](https://phamtiendong.name.vn/llms-full.txt): Toàn văn giáo trình 7 bước, 3 luật sống còn, bảng tiêu chí đánh giá Rubric Thông tư 55 và ngân hàng tình huống kỹ thuật chi tiết.

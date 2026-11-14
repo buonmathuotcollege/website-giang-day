@@ -135,9 +135,46 @@
             class="max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed"
             :class="msg.role === 'user' 
               ? 'bg-blue-600 text-white rounded-tr-none shadow-md' 
-              : 'bg-white text-gray-800 rounded-tl-none shadow-sm border border-gray-100 whitespace-pre-wrap'"
-            x-html="formatMessage(msg.content)"
-          ></div>
+              : 'bg-white text-gray-800 rounded-tl-none shadow-sm border border-gray-100'"
+          >
+            <div x-html="formatMessage(msg.content)"></div>
+
+            <!-- Footer tiện ích cho tin nhắn của AI (Sao chép, Đánh giá) -->
+            <template x-if="msg.role === 'assistant' && !msg.content.startsWith('⚠️')">
+              <div class="mt-2.5 pt-2 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-500 select-none">
+                <button
+                  type="button"
+                  @click="copyText(msg)"
+                  class="hover:text-blue-600 transition-colors flex items-center gap-1 cursor-pointer font-medium"
+                  title="Sao chép câu trả lời"
+                >
+                  <span x-text="msg.copied ? '✓' : '📋'"></span>
+                  <span x-text="msg.copied ? 'Đã sao chép' : 'Sao chép'"></span>
+                </button>
+
+                <div class="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    @click="msg.feedback = (msg.feedback === 'like' ? null : 'like')"
+                    class="p-0.5 rounded hover:bg-gray-100 transition-colors cursor-pointer"
+                    :class="msg.feedback === 'like' ? 'scale-110' : 'opacity-60 hover:opacity-100'"
+                    title="Hữu ích"
+                  >
+                    👍
+                  </button>
+                  <button
+                    type="button"
+                    @click="msg.feedback = (msg.feedback === 'dislike' ? null : 'dislike')"
+                    class="p-0.5 rounded hover:bg-gray-100 transition-colors cursor-pointer"
+                    :class="msg.feedback === 'dislike' ? 'scale-110' : 'opacity-60 hover:opacity-100'"
+                    title="Chưa rõ"
+                  >
+                    👎
+                  </button>
+                </div>
+              </div>
+            </template>
+          </div>
 
           <!-- Avatar User -->
           <div
@@ -228,6 +265,14 @@
         this.sendMessage();
       },
 
+      copyText(msg) {
+        if (!navigator.clipboard) return;
+        navigator.clipboard.writeText(msg.content).then(() => {
+          msg.copied = true;
+          setTimeout(() => { msg.copied = false; }, 2000);
+        });
+      },
+
       scrollToBottom() {
         this.$nextTick(() => {
           if (this.$refs.messageBox) {
@@ -282,7 +327,7 @@
 
           const data = await res.json();
           if (res.ok && data.reply) {
-            this.messages.push({ role: 'assistant', content: data.reply });
+            this.messages.push({ role: 'assistant', content: data.reply, copied: false, feedback: null });
           } else {
             this.messages.push({
               role: 'assistant',

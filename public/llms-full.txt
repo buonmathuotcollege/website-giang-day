@@ -1,0 +1,40 @@
+# GIÁO TRÌNH ĐÀO TẠO THỰC HÀNH CNTT TOÀN DIỆN
+Trường Cao đẳng Buôn Ma Thuột - Giảng viên: CN. Phạm Tiến Đông
+Website: https://phamtiendong.name.vn
+
+---
+
+## I. BA LUẬT SỐNG CÒN TẠI BÀN MÁY THỰC HÀNH (SURVIVAL RULES)
+1. LUẬT 1 - NGẮT NGUỒN VÀ TIẾP ĐẤT (ISOLATE & GROUND):
+   - Tuyệt đối rút phích cắm điện 220V và gạt công tắc nguồn PSU về O (OFF) trước khi mở nắp thùng máy.
+   - Luôn chạm tay vào khung kim loại trần hoặc đeo vòng chống tĩnh điện ESD để xả điện tích cơ thể trước khi chạm vào bo mạch chủ, CPU hoặc RAM.
+2. LUẬT 2 - ĐỐI XỬ NHẸ NHÀNG (ZERO FORCE INSERTION):
+   - Mọi linh kiện PC (CPU socket, RAM, Card đồ họa, cáp M.2) đều có khớp định vị và rãnh khuyết chống cắm ngược (Poka-Yoke).
+   - Nếu cắm thấy nặng tay, phải dừng lại ngay lập tức và kiểm tra chiều chân cắm, tuyệt đối không dùng lực đè bẻ gãy chân tiếp xúc.
+3. LUẬT 3 - BẢO MẬT DỮ LIỆU & ĐẠO ĐỨC NGHỀ NGHIỆP:
+   - Tuyệt đối không sao chép, mở xem, phát tán dữ liệu cá nhân của khách hàng lưu trữ trên ổ đĩa.
+   - Luôn hỏi ý kiến khách hàng và sao lưu dữ liệu quan trọng sang ổ D hoặc ổ ngoài trước khi cài đặt lại Windows.
+
+---
+
+## II. BA ĐIỂM DỪNG AN TOÀN TRƯỚC KHI BẬT ĐIỆN (SAFETY CHECKPOINTS)
+1. ĐIỂM DỪNG 1: Kiểm tra ốc chân đồng (Standoff) giữa mainboard và vỏ case xem có bị thiếu hoặc chạm mát không.
+2. ĐIỂM DỪNG 2: Kiểm tra đế tản nhiệt CPU đã bóc lớp nilon bảo vệ và tra lượng keo tản nhiệt bằng hạt đậu xanh chưa.
+3. ĐIỂM DỪNG 3: Kiểm tra đủ 4 đường dây nguồn chính: 24-pin Mainboard, 4/8-pin CPU, PCIe 6+2 pin VGA, và cáp nguồn SATA ổ đĩa.
+
+---
+
+## III. QUY TRÌNH KỸ THUẬT VIÊN 7 BƯỚC CHUẨN (WORKSHOP WORKFLOW)
+- BƯỚC 1: Tiếp nhận máy, kiểm tra ngoại quan và lắng nghe mô tả triệu chứng lỗi từ khách hàng.
+- BƯỚC 2: Kiểm tra chẩn đoán ban đầu bằng còi beep, đo điện áp bộ nguồn và đọc tình trạng SMART ổ đĩa.
+- BƯỚC 3: Tháo rời, vệ sinh sạch bụi các linh kiện bằng chổi lông mềm, cồn IPA 90 độ và máy thổi bụi (giữ cánh quạt).
+- BƯỚC 4: Lắp ráp phần cứng chuẩn xác: CPU -> Tra keo -> Tản nhiệt -> RAM kênh đôi (khe 2-4) -> Cố định Main -> Đi dây nguồn.
+- BƯỚC 5: Thiết lập BIOS/UEFI: Chỉnh giờ hệ thống, kích hoạt XMP, bật TPM 2.0 & Secure Boot, chọn thứ tự khởi động USB.
+- BƯỚC 6: Cài đặt hệ điều hành Windows PE / Windows 11, chia ổ C/D hợp lý, cài đặt đủ bộ Driver chuẩn từ nhà sản xuất.
+- BƯỚC 7: Nghiệm thu toàn diện: Đo nhiệt độ dưới 75°C bằng HWMonitor, test bàn phím/chuột/âm thanh/mạng, lập Phiếu Dịch Vụ Kỹ Thuật A-Z có chữ ký hai bên và bàn giao máy.
+
+---
+
+## IV. ĐÁNH GIÁ NĂNG LỰC THEO THÔNG TƯ 55
+- Điểm đánh giá gồm 2 phần: Trắc nghiệm tình huống kỹ thuật (100 câu) và Thao tác tại xưởng thực hành.
+- Tiêu chuẩn ĐẠT: Tổng điểm >= 5.0, không có tiêu chí nào bị điểm liệt (0 điểm) và không vi phạm bất kỳ Điểm dừng an toàn nào.
