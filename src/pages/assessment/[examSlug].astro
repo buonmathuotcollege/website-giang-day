@@ -1885,6 +1885,28 @@ const exam = isHardware
 
         // --- KEYBOARD SHORTCUTS (KANSO DESIGN) ---
         setupKeyboardListeners() {
+          // Chống mở DevTools / F12 / Xem mã nguồn trong lúc làm bài thi trắc nghiệm
+          window.addEventListener('keydown', (e) => {
+            if (this.activeMode === 'mcq' && !this.mcqSubmitted) {
+              if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) ||
+                (e.ctrlKey && ['u', 's'].includes(e.key.toLowerCase()))
+              ) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+              }
+            }
+          });
+
+          // Chống nhấp chuột phải soi mã nguồn khi làm bài thi
+          window.addEventListener('contextmenu', (e) => {
+            if (this.activeMode === 'mcq' && !this.mcqSubmitted) {
+              e.preventDefault();
+            }
+          });
+
           window.addEventListener('keydown', (e) => {
             // Ignore if active in input/textarea/select
             const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';

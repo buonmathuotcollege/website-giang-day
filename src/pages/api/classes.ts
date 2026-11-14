@@ -94,8 +94,11 @@ export const GET: APIRoute = async ({ request, locals }) => {
     try {
       await ensureTables(env.DB);
 
-      // Tra cứu tất cả học sinh toàn trường
+      // Tra cứu tất cả học sinh toàn trường (Bảo mật: Chỉ Giảng viên mới được xem)
       if (action === "all_students") {
+        if (!checkAdminAuth(request, env)) {
+          return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để truy xuất danh sách toàn trường!" }), { status: 401, headers: CORS_HEADERS });
+        }
         const query = `
           SELECT s.id, s.class_id, s.student_number, s.student_code, s.full_name, s.date_of_birth, s.gender, s.original_class, c.class_name, c.class_code, c.is_composite
           FROM students s
@@ -150,6 +153,9 @@ export const GET: APIRoute = async ({ request, locals }) => {
   const memStudents = (globalThis as any).MEM_STUDENTS;
 
   if (action === "all_students") {
+    if (!checkAdminAuth(request, env)) {
+      return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để truy xuất danh sách toàn trường!" }), { status: 401, headers: CORS_HEADERS });
+    }
     return new Response(JSON.stringify({ ok: true, data: memStudents, from_d1: false }), { headers: CORS_HEADERS });
   }
 

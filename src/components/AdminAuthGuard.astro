@@ -53,9 +53,13 @@ const { pageTitle = "Bảng điều khiển Giảng viên" } = Astro.props;
               <span x-text="showPassword ? 'Ẩn' : 'Hiện'"></span>
             </button>
           </div>
-          <span class="text-[11px] text-gray-400 mt-1 block">
-            Mã bảo mật chống học sinh và truy cập trái phép.
-          </span>
+          <div class="flex items-center justify-between text-xs text-gray-600 mt-2">
+            <label class="flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" x-model="rememberMe" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+              <span>Ghi nhớ trên máy tính này</span>
+            </label>
+            <span class="text-[11px] text-gray-400">(Tự xóa khi đóng tab nếu không chọn)</span>
+          </div>
         </div>
 
         <button 
@@ -148,6 +152,7 @@ const { pageTitle = "Bảng điều khiển Giảng viên" } = Astro.props;
       secretInput: '',
       showPassword: false,
       isSubmitting: false,
+      rememberMe: false,
       errorMessage: '',
       teacherInfo: {
         name: 'Thầy Phạm Tiến Đông',
@@ -186,9 +191,13 @@ const { pageTitle = "Bảng điều khiển Giảng viên" } = Astro.props;
             this.teacherInfo = data.teacher || this.teacherInfo;
             sessionStorage.setItem('BMTC_ADMIN_TOKEN', data.token);
             sessionStorage.setItem('BMTC_TEACHER_INFO', JSON.stringify(this.teacherInfo));
-            // Lưu nhẹ vào localStorage để giữ phiên trên trình duyệt máy tính của Thầy
-            localStorage.setItem('BMTC_ADMIN_TOKEN', data.token);
-            localStorage.setItem('BMTC_TEACHER_INFO', JSON.stringify(this.teacherInfo));
+            if (this.rememberMe) {
+              localStorage.setItem('BMTC_ADMIN_TOKEN', data.token);
+              localStorage.setItem('BMTC_TEACHER_INFO', JSON.stringify(this.teacherInfo));
+            } else {
+              localStorage.removeItem('BMTC_ADMIN_TOKEN');
+              localStorage.removeItem('BMTC_TEACHER_INFO');
+            }
             this.secretInput = '';
           } else {
             this.errorMessage = data.error || 'Mã bí mật không chính xác. Quyền truy cập bị từ chối!';
