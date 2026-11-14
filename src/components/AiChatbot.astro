@@ -16,21 +16,19 @@
     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
     @click="openChat()"
     type="button"
-    class="group flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-primary-700 text-white rounded-full shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-white/20"
-    aria-label="Mở Trợ giảng AI"
+    class="group flex items-center gap-2.5 px-4 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-slate-700 cursor-pointer"
+    aria-label="Mở Trợ lý AI"
   >
-    <div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-white/20">
-      <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-      </svg>
-      <span class="absolute -top-1 -right-1 flex h-3 w-3">
+    <div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-slate-800 border border-slate-700">
+      <span class="text-base">🤖</span>
+      <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
       </span>
     </div>
     <div class="text-left pr-1">
-      <div class="text-xs font-medium text-blue-100 leading-tight">Hỏi đáp học tập</div>
-      <div class="text-sm font-bold tracking-wide">Trợ Giảng AI</div>
+      <div class="text-[11px] font-medium text-slate-400 leading-tight">Hỏi đáp học tập</div>
+      <div class="text-xs font-bold tracking-wide text-white">Trợ Lý AI</div>
     </div>
   </button>
 
@@ -43,21 +41,26 @@
     x-transition:leave="transition ease-in duration-200 transform"
     x-transition:leave-start="opacity-100 scale-100 translate-y-0"
     x-transition:leave-end="opacity-0 scale-90 translate-y-6"
-    class="flex flex-col w-[92vw] sm:w-[410px] h-[580px] max-h-[85vh] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
+    class="flex flex-col w-[92vw] sm:w-[410px] h-[580px] max-h-[85vh] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden"
   >
-    <!-- Header -->
-    <div class="flex items-center justify-between px-4 py-3.5 bg-gradient-to-r from-blue-700 via-indigo-700 to-primary-800 text-white shrink-0">
+    <!-- Header Minimalist Slate -->
+    <div class="flex items-center justify-between px-4 py-3.5 bg-slate-900 text-white shrink-0 border-b border-slate-800">
       <div class="flex items-center gap-3">
-        <div class="relative w-9 h-9 rounded-full bg-white/15 flex items-center justify-center border border-white/25">
+        <div class="relative w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center border border-slate-700">
           <span class="text-lg">🤖</span>
-          <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-indigo-700 rounded-full"></span>
+          <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
         </div>
         <div>
-          <h3 class="text-sm font-bold flex items-center gap-1.5">
+          <h3 class="text-xs font-bold flex items-center gap-1.5 text-white">
             Trợ Lý AI CNTT
-            <span class="text-[10px] font-semibold uppercase tracking-wider bg-white/20 text-blue-100 px-1.5 py-0.5 rounded">Gemini</span>
+            <span class="text-[10px] font-mono font-semibold uppercase tracking-wider bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded border border-slate-700">Gemini</span>
           </h3>
-          <p class="text-xs text-blue-100/80 flex items-center gap-1">
+          <p class="text-[11px] text-slate-400 flex items-center gap-1">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            Hỗ Trợ Học Tập Trực Tuyến
+          </p>
+        </div>
+      </div>
             <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
             Hỗ Trợ Học Tập
           </p>
@@ -214,7 +217,7 @@
         <button
           type="submit"
           :disabled="isLoading || !inputMessage.trim()"
-          class="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 text-white disabled:text-gray-400 rounded-xl transition-colors shadow-sm disabled:shadow-none shrink-0"
+          class="flex items-center justify-center w-10 h-10 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-200 text-white disabled:text-slate-400 rounded-xl transition-colors shadow-sm disabled:shadow-none shrink-0 cursor-pointer"
           aria-label="Gửi tin nhắn"
         >
           <svg class="w-4 h-4 transform rotate-90" fill="currentColor" viewBox="0 0 20 20">
@@ -316,12 +319,18 @@
         else if (path.includes('winlinux') || path.includes('windows-linux')) courseContext += ' [Môn: Quản trị Windows/Linux]';
 
         try {
+          const historyPayload = this.messages.slice(-4).map(m => ({
+            role: m.role === 'user' ? 'user' : 'model',
+            text: m.content
+          }));
+
           const res = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               message: text,
-              courseContext: courseContext
+              courseContext: courseContext,
+              history: historyPayload
             })
           });
 

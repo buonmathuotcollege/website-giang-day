@@ -39,15 +39,50 @@ function getGeminiKey(env: any): string {
   }
 }
 
+// Simple in-memory rate limiter per worker instance (chống spam cạn hạn ngạch)
+const RATE_LIMIT_MAP = new Map<string, { count: number; resetAt: number }>();
+
+function isRateLimited(clientIp: string): boolean {
+  const now = Date.now();
+  const client = RATE_LIMIT_MAP.get(clientIp);
+
+  if (!client || now > client.resetAt) {
+    RATE_LIMIT_MAP.set(clientIp, { count: 1, resetAt: now + 60000 }); // 1 phút
+    return false;
+  }
+
+  client.count++;
+  if (client.count > 25) {
+    return true; // Quá 25 request / phút
+  }
+  return false;
+}
+
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
+    const clientIp = request.headers.get('cf-connecting-ip') || '127.0.0.1';
+    if (isRateLimited(clientIp)) {
+      return new Response(
+        JSON.stringify({ error: 'Bạn đang gửi câu hỏi quá nhanh. Vui lòng đợi 1 phút trước khi hỏi tiếp nhé!' }),
+        { status: 429, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
     const env = (locals as any)?.runtime?.env || (typeof process !== 'undefined' ? (process as any).env : {}) || {};
     const body = await request.json();
-    const { message, courseContext = '' } = body;
+    const { message, courseContext = '', history = [] } = body;
 
     if (!message || typeof message !== 'string' || message.trim() === '') {
       return new Response(
         JSON.stringify({ error: 'Nội dung tin nhắn không được để trống.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const cleanMsg = message.trim();
+    if (cleanMsg.length > 800) {
+      return new Response(
+        JSON.stringify({ error: 'Câu hỏi quá dài (tối đa 800 ký tự). Bạn hãy rút gọn câu hỏi nhé!' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -57,7 +92,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     if (!apiKey) {
       return new Response(
         JSON.stringify({
-          error: 'Chưa cấu hình GEMINI_API_KEY trên máy chủ. Vui lòng kiểm tra file .env hoặc Cloudflare secrets!',
+          error: 'Chưa cấu hình GEMINI_API_KEY trên máy chủ. Vui lòng kiểm tra cài đặt biến môi trường!',
         }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
@@ -65,10 +100,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     const ai = new GoogleGenAI({ apiKey });
 
-    let promptText = message.trim();
-    if (courseContext) {
-      promptText = `[Môn học: ${courseContext}]\nCâu hỏi của học sinh: ${promptText}`;
+    // Xây dựng prompt có ngữ cảnh lịch sử hội thoại gần nhất
+    let promptText = '';
+    if (Array.isArray(history) && history.length > 0) {
+      const recent = history.slice(-3).map((h: any) => `${h.role === 'user' ? 'Người học' : 'Trợ lý'}: ${String(h.text || '').slice(0, 200)}`).join('\n');
+      promptText += `[Ngữ cảnh hội thoại trước đó]:\n${recent}\n\n`;
     }
+
+    if (courseContext) {
+      promptText += `[Môn học: ${courseContext}]\n`;
+    }
+    promptText += `Câu hỏi của người học: ${cleanMsg}`;
 
     // Dùng gemini-3.5-flash-lite: siêu nhanh, siêu tiết kiệm hạn mức, phản hồi tức thì
     let reply = '';
@@ -89,7 +131,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     if (!reply) {
-      reply = 'Chào em, thầy chưa nhận được câu hỏi rõ ràng. Em hỏi lại câu ngắn hơn nhé!';
+      reply = 'Chào bạn, mình chưa nhận được câu hỏi rõ ràng. Bạn hỏi lại câu ngắn hơn để mình giải thích nhé!';
     }
 
     return new Response(
@@ -103,10 +145,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
       }
     );
   } catch (error: any) {
-    console.error('Lỗi khi gọi Gemini API:', error);
     return new Response(
       JSON.stringify({
-        error: error?.message || 'Có lỗi xảy ra khi xử lý phản hồi từ Gemini AI.',
+        error: 'Trợ lý AI đang có chút gián đoạn kết nối. Bạn vui lòng thử lại sau ít giây nhé!',
       }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );

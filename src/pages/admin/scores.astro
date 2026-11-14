@@ -60,7 +60,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 
     <!-- Filter & Stats Bar -->
     <div class="card p-4 mb-6 space-y-3">
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
         <!-- Lọc theo Lớp thi / Ca ghép -->
         <div>
           <label class="block text-xs font-bold text-gray-700 mb-1">Lớp thi / Ca sát hạch:</label>
@@ -90,6 +90,19 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
           </select>
         </div>
 
+        <!-- Phân loại bài nộp -->
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Loại bản ghi:</label>
+          <select
+            x-model="filterType"
+            class="w-full border border-gray-300 rounded-xl px-3 py-1.5 text-xs font-semibold focus:ring-2 focus:ring-primary-500 bg-white"
+          >
+            <option value="all">Tất cả bài nộp & Điểm danh</option>
+            <option value="exam">Chỉ bài thi / Sát hạch xưởng</option>
+            <option value="attendance">Chỉ lượt điểm danh buổi</option>
+          </select>
+        </div>
+
         <!-- Tìm kiếm theo MSHS hoặc Họ tên -->
         <div>
           <label class="block text-xs font-bold text-gray-700 mb-1">Tìm MSHS hoặc Họ tên:</label>
@@ -105,11 +118,13 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
       <!-- Quick Summary Badges -->
       <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-gray-100 text-xs">
         <div class="flex items-center gap-3 text-gray-600">
-          <span>Tổng số bài nộp: <strong class="text-gray-900 font-mono" x-text="filteredScores.length"></strong></span>
+          <span>Tổng bản ghi: <strong class="text-gray-900 font-mono" x-text="filteredScores.length"></strong></span>
           <span>·</span>
-          <span>Đạt: <strong class="text-emerald-700 font-mono" x-text="filteredScores.filter(s => (s.score || 0) >= 5.0).length"></strong></span>
+          <span>Bài thi đạt: <strong class="text-emerald-700 font-mono" x-text="examScoresOnly.filter(s => (s.score || 0) >= 5.0).length"></strong></span>
           <span>·</span>
-          <span>Cần rèn luyện: <strong class="text-rose-700 font-mono" x-text="filteredScores.filter(s => (s.score || 0) < 5.0).length"></strong></span>
+          <span>Cần rèn luyện: <strong class="text-rose-700 font-mono" x-text="examScoresOnly.filter(s => (s.score || 0) < 5.0).length"></strong></span>
+          <span>·</span>
+          <span>Điểm danh: <strong class="text-blue-700 font-mono" x-text="filteredScores.filter(s => s.status === 'Đã điểm danh' || s.session_name?.toLowerCase().includes('điểm danh')).length"></strong></span>
         </div>
 
         <span class="text-[11px] text-gray-400 font-mono">Dữ liệu thời gian thực Cloudflare D1</span>
@@ -196,6 +211,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
       loading: true,
       filterClass: '',
       filterOriginalClass: '',
+      filterType: 'all',
       searchQuery: '',
 
       init() {
@@ -253,11 +269,20 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
         return Array.from(set);
       },
 
+      get examScoresOnly() {
+        return this.filteredScores.filter(s => s.status !== 'Đã điểm danh' && !s.session_name?.toLowerCase().includes('điểm danh'));
+      },
+
       get filteredScores() {
         const q = (this.searchQuery || '').trim().toLowerCase();
         const origFilter = (this.filterOriginalClass || '').trim();
+        const typeFilter = this.filterType;
 
         return this.scores.filter(item => {
+          const isAtt = item.status === 'Đã điểm danh' || (item.session_name || '').toLowerCase().includes('điểm danh');
+          if (typeFilter === 'exam' && isAtt) return false;
+          if (typeFilter === 'attendance' && !isAtt) return false;
+
           const orig = item.original_class || this.extractOriginalClass(item) || '';
           if (origFilter && orig !== origFilter) {
             return false;

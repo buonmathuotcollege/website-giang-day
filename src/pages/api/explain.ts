@@ -29,16 +29,44 @@ function getGeminiKey(env: any): string {
   }
 }
 
+// Simple in-memory rate limiter
+const EXPLAIN_RATE_MAP = new Map<string, { count: number; resetAt: number }>();
+
+function isExplainRateLimited(clientIp: string): boolean {
+  const now = Date.now();
+  const client = EXPLAIN_RATE_MAP.get(clientIp);
+
+  if (!client || now > client.resetAt) {
+    EXPLAIN_RATE_MAP.set(clientIp, { count: 1, resetAt: now + 60000 });
+    return false;
+  }
+
+  client.count++;
+  if (client.count > 30) {
+    return true; // Quá 30 câu / phút
+  }
+  return false;
+}
+
 export const OPTIONS: APIRoute = async () => {
   return new Response(null, { headers: CORS_HEADERS });
 };
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
+  const clientIp = request.headers.get('cf-connecting-ip') || '127.0.0.1';
 
   try {
     const body = await request.json();
-    const { question, options = [], selectedOption = '', correctOption = '', fallbackExplanation = '' } = body;
+    const { question = '', options = [], selectedOption = '', correctOption = '', fallbackExplanation = '' } = body;
+
+    // Nếu bị rate limit hoặc câu hỏi rỗng, trả fallback trực tiếp không gọi Gemini
+    if (isExplainRateLimited(clientIp) || !question) {
+      return new Response(JSON.stringify({
+        ok: true,
+        explanation: fallbackExplanation || "Bạn chú ý đối chiếu lại quy tắc kỹ thuật thực hành nhé!"
+      }), { headers: CORS_HEADERS });
+    }
 
     const apiKey = getGeminiKey(env);
 
@@ -50,10 +78,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     const ai = new GoogleGenAI({ apiKey });
-    const prompt = `Câu hỏi trắc nghiệm: "${question}"
-Các lựa chọn: ${options.join(' | ')}
-Người học chọn: "${selectedOption}"
-Đáp án đúng là: "${correctOption}"
+    const cleanQuestion = String(question).slice(0, 300);
+    const cleanOptions = Array.isArray(options) ? options.slice(0, 5).map(o => String(o).slice(0, 100)) : [];
+    const prompt = `Câu hỏi trắc nghiệm: "${cleanQuestion}"
+Các lựa chọn: ${cleanOptions.join(' | ')}
+Người học chọn: "${String(selectedOption).slice(0, 100)}"
+Đáp án đúng là: "${String(correctOption).slice(0, 100)}"
 Hãy giải thích ngắn gọn 1-2 câu đời thường dễ hiểu vì sao chọn như vậy.`;
 
     let reply = '';

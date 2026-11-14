@@ -15,26 +15,31 @@ const CORS_HEADERS = {
 
 async function ensureTable(db: any) {
   if (!db) return;
-  await db.prepare(`
-    CREATE TABLE IF NOT EXISTS submissions (
-      id TEXT PRIMARY KEY,
-      session_id TEXT,
-      class_name TEXT NOT NULL,
-      session_name TEXT NOT NULL,
-      student_name TEXT NOT NULL,
-      student_code TEXT DEFAULT '',
-      original_class TEXT DEFAULT '',
-      station TEXT DEFAULT '',
-      date_only TEXT NOT NULL,
-      score REAL DEFAULT 0.0,
-      details_json TEXT DEFAULT '{}',
-      status TEXT DEFAULT 'Đạt',
-      submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
+  if ((globalThis as any)._scoresTableEnsured) return;
 
-  try { await db.prepare("ALTER TABLE submissions ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
-  try { await db.prepare("ALTER TABLE submissions ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
+  try {
+    await db.prepare(`
+      CREATE TABLE IF NOT EXISTS submissions (
+        id TEXT PRIMARY KEY,
+        session_id TEXT,
+        class_name TEXT NOT NULL,
+        session_name TEXT NOT NULL,
+        student_name TEXT NOT NULL,
+        student_code TEXT DEFAULT '',
+        original_class TEXT DEFAULT '',
+        station TEXT DEFAULT '',
+        date_only TEXT NOT NULL,
+        score REAL DEFAULT 0.0,
+        details_json TEXT DEFAULT '{}',
+        status TEXT DEFAULT 'Đạt',
+        submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `).run();
+
+    try { await db.prepare("ALTER TABLE submissions ADD COLUMN student_code TEXT DEFAULT ''").run(); } catch(e){}
+    try { await db.prepare("ALTER TABLE submissions ADD COLUMN original_class TEXT DEFAULT ''").run(); } catch(e){}
+    (globalThis as any)._scoresTableEnsured = true;
+  } catch(e) {}
 }
 
 export const OPTIONS: APIRoute = async () => {
@@ -48,7 +53,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const data = await request.json();
     const id = "sub_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
-    const dateOnly = new Date().toISOString().slice(0, 10);
+    // Tính đúng ngày theo múi giờ Việt Nam (GMT+7)
+    const dateOnly = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());
     const className = String(data.className || data.class_name || "Lớp chung").trim();
     const sessionName = String(data.sessionName || data.session_name || "Buổi thực hành").trim();
     const studentName = String(data.studentName || data.student_name || "").trim();
@@ -56,13 +62,19 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const originalClass = String(data.originalClass || data.original_class || "").trim();
     const station = String(data.station || "").trim();
     
-    // Giới hạn điểm hợp lệ trong khoảng [0, 10], không mặc định 10.0
+    // Nhận diện nếu là lượt điểm danh đơn thuần (không phải bài thi đánh giá năng lực)
+    const isAttendance = Boolean(data.isAttendance || data.details?.type === 'DiemDanhBuoi' || sessionName.toLowerCase().includes('điểm danh'));
+
+    // Giới hạn điểm hợp lệ trong khoảng [0, 10]
     const rawScore = data.score !== undefined ? data.score : (data.grade10 !== undefined ? data.grade10 : 0);
     const numScore = Number(rawScore);
-    const score = isNaN(numScore) ? 0 : Math.max(0, Math.min(10, Math.round(numScore * 10) / 10));
+    const score = isAttendance ? 0.0 : (isNaN(numScore) ? 0 : Math.max(0, Math.min(10, Math.round(numScore * 10) / 10)));
 
-    const details = JSON.stringify(data.details || {});
-    const status = score >= 5.0 ? "Đạt" : "Cần rèn luyện";
+    const details = JSON.stringify({
+      ...(data.details || {}),
+      isAttendance: isAttendance
+    });
+    const status = isAttendance ? "Đã điểm danh" : (score >= 5.0 ? "Đạt" : "Cần rèn luyện");
 
     if (!studentName) {
       return new Response(JSON.stringify({ ok: false, error: "Họ tên học sinh không được để trống" }), { status: 400, headers: CORS_HEADERS });

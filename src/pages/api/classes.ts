@@ -21,60 +21,69 @@ const DEFAULT_CLASSES = [
 
 async function ensureTables(db: any) {
   if (!db) return;
-  await db.batch([
-    db.prepare(`
-      CREATE TABLE IF NOT EXISTS classes (
-        id TEXT PRIMARY KEY,
-        class_code TEXT UNIQUE NOT NULL,
-        class_name TEXT NOT NULL,
-        academic_year TEXT DEFAULT '2026-2027',
-        is_composite INTEGER DEFAULT 0,
-        source_classes TEXT DEFAULT '',
-        is_active INTEGER DEFAULT 1,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      );
-    `),
-    db.prepare(`
-      CREATE TABLE IF NOT EXISTS students (
-        id TEXT PRIMARY KEY,
-        class_id TEXT NOT NULL,
-        student_number INTEGER NOT NULL,
-        student_code TEXT NOT NULL DEFAULT '',
-        full_name TEXT NOT NULL,
-        date_of_birth TEXT DEFAULT '',
-        gender TEXT DEFAULT 'Nam',
-        phone TEXT DEFAULT '',
-        status TEXT DEFAULT 'Đang học',
-        original_class TEXT DEFAULT '',
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE
-      );
-    `),
-    db.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_students_class ON students(class_id);
-    `),
-    db.prepare(`
-      CREATE INDEX IF NOT EXISTS idx_students_code ON students(student_code);
-    `)
-  ]);
+  // Tránh chạy lại CREATE TABLE và chuỗi ALTER lặp đi lặp lại ở mỗi request
+  if ((globalThis as any)._classesTablesEnsured) return;
 
-  const columnsToAdd = [
-    "ALTER TABLE classes ADD COLUMN is_composite INTEGER DEFAULT 0",
-    "ALTER TABLE classes ADD COLUMN source_classes TEXT DEFAULT ''",
-    "ALTER TABLE students ADD COLUMN student_code TEXT DEFAULT ''",
-    "ALTER TABLE students ADD COLUMN date_of_birth TEXT DEFAULT ''",
-    "ALTER TABLE students ADD COLUMN gender TEXT DEFAULT 'Nam'",
-    "ALTER TABLE students ADD COLUMN phone TEXT DEFAULT ''",
-    "ALTER TABLE students ADD COLUMN status TEXT DEFAULT 'Đang học'",
-    "ALTER TABLE students ADD COLUMN original_class TEXT DEFAULT ''"
-  ];
+  try {
+    await db.batch([
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS classes (
+          id TEXT PRIMARY KEY,
+          class_code TEXT UNIQUE NOT NULL,
+          class_name TEXT NOT NULL,
+          academic_year TEXT DEFAULT '2026-2027',
+          is_composite INTEGER DEFAULT 0,
+          source_classes TEXT DEFAULT '',
+          is_active INTEGER DEFAULT 1,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+      `),
+      db.prepare(`
+        CREATE TABLE IF NOT EXISTS students (
+          id TEXT PRIMARY KEY,
+          class_id TEXT NOT NULL,
+          student_number INTEGER NOT NULL,
+          student_code TEXT NOT NULL DEFAULT '',
+          full_name TEXT NOT NULL,
+          date_of_birth TEXT DEFAULT '',
+          gender TEXT DEFAULT 'Nam',
+          phone TEXT DEFAULT '',
+          status TEXT DEFAULT 'Đang học',
+          original_class TEXT DEFAULT '',
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE
+        );
+      `),
+      db.prepare(`
+        CREATE INDEX IF NOT EXISTS idx_students_class ON students(class_id);
+      `),
+      db.prepare(`
+        CREATE INDEX IF NOT EXISTS idx_students_code ON students(student_code);
+      `)
+    ]);
 
-  for (const alterSql of columnsToAdd) {
-    try {
-      await db.prepare(alterSql).run();
-    } catch (e) {
-      // Column exists
+    const columnsToAdd = [
+      "ALTER TABLE classes ADD COLUMN is_composite INTEGER DEFAULT 0",
+      "ALTER TABLE classes ADD COLUMN source_classes TEXT DEFAULT ''",
+      "ALTER TABLE students ADD COLUMN student_code TEXT DEFAULT ''",
+      "ALTER TABLE students ADD COLUMN date_of_birth TEXT DEFAULT ''",
+      "ALTER TABLE students ADD COLUMN gender TEXT DEFAULT 'Nam'",
+      "ALTER TABLE students ADD COLUMN phone TEXT DEFAULT ''",
+      "ALTER TABLE students ADD COLUMN status TEXT DEFAULT 'Đang học'",
+      "ALTER TABLE students ADD COLUMN original_class TEXT DEFAULT ''"
+    ];
+
+    for (const alterSql of columnsToAdd) {
+      try {
+        await db.prepare(alterSql).run();
+      } catch (e) {
+        // Cột đã tồn tại
+      }
     }
+
+    (globalThis as any)._classesTablesEnsured = true;
+  } catch (err) {
+    // Bỏ qua lỗi nhẹ nếu cấu trúc đã sẵn sàng
   }
 }
 

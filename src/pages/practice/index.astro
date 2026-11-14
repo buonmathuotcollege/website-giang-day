@@ -834,12 +834,18 @@ export const prerender = false;
         const list = [...this.studentsInClass];
         for (let i = 0; i < 10; i++) {
           const c = this.crews[i];
-          c.members.operator.name = list[i * 3]?.full_name || `Học sinh ${i * 3 + 1}`;
-          c.members.safety.name = list[i * 3 + 1]?.full_name || `Học sinh ${i * 3 + 2}`;
-          c.members.recorder.name = list[i * 3 + 2]?.full_name || `Học sinh ${i * 3 + 3}`;
+          c.members.operator.name = list[i * 3]?.full_name || '';
+          c.members.safety.name = list[i * 3 + 1]?.full_name || '';
+          c.members.recorder.name = list[i * 3 + 2]?.full_name || '';
         }
         this.autoSave();
-        this.showMsg('Đã tự động chia 30 học sinh vào 10 nhóm KTV!');
+        if (list.length > 30) {
+          alert(`Lớp có ${list.length} học sinh. Đã xếp 30 học sinh vào 10 bàn (3 KTV/bàn). Còn ${list.length - 30} học sinh chưa có bàn, thầy vui lòng phân công làm KTV hỗ trợ!`);
+        } else if (list.length < 30) {
+          this.showMsg(`Đã phân bổ ${list.length} học sinh vào các bàn máy. Các vị trí trống thầy có thể bổ sung.`);
+        } else {
+          this.showMsg('Đã tự động chia đủ 30 học sinh vào 10 nhóm KTV!');
+        }
       },
 
       async saveGradeForBench() {
@@ -987,19 +993,28 @@ export const prerender = false;
 
       async submitAttendance() {
         if (!this.attendanceStudentName.trim()) return;
-        await fetch('/api/scores', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            className: this.selectedClassName,
-            sessionName: this.attendanceSession,
-            studentName: this.attendanceStudentName.trim(),
-            score: 10.0,
-            details: { type: 'DiemDanhBuoi' }
-          })
-        }).catch(() => {});
-        this.showMsg('Đã ghi nhận điểm danh thành công!');
-        this.attendanceStudentName = '';
+        try {
+          const res = await fetch('/api/scores', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              className: this.selectedClassName,
+              sessionName: this.attendanceSession,
+              studentName: this.attendanceStudentName.trim(),
+              isAttendance: true,
+              details: { type: 'DiemDanhBuoi' }
+            })
+          });
+          const data = await res.json();
+          if (data && data.ok) {
+            this.showMsg('Đã ghi nhận điểm danh thành công!');
+            this.attendanceStudentName = '';
+          } else {
+            alert('Lỗi ghi nhận điểm danh: ' + (data?.error || 'Không thể lưu'));
+          }
+        } catch(e) {
+          alert('Lỗi kết nối máy chủ khi gửi điểm danh!');
+        }
       }
     }));
   });
