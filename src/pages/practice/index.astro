@@ -1,189 +1,1362 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  HARDWARE_METADATA,
+  THREE_SURVIVAL_RULES,
+  THREE_SAFETY_CHECKPOINTS,
+} from '../../data/hardwareCurriculum';
+
+export const prerender = false;
 ---
 
-<BaseLayout title="Khu vực thực hành - Cổng Giảng Dạy CNTT">
-  <section class="max-w-4xl mx-auto px-4 py-10" x-data="practiceManager">
-    <div class="mb-8">
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Khu Vực Thực Hành Kỹ Thuật</h1>
-      <p class="text-gray-500 text-sm mt-1">Cổng thực hành tại xưởng máy tính & nộp bài tập theo từng buổi học</p>
-    </div>
-
-    <!-- Featured Workshop Workbench Card -->
-    <div class="bg-gradient-to-r from-primary-800 to-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-md mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="space-y-1.5 max-w-xl">
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-400 text-amber-950 font-bold text-xs uppercase tracking-wide">
-          ⭐ XƯỞNG THỰC HÀNH CHUYÊN SÂU
-        </span>
-        <h2 class="text-xl sm:text-2xl font-extrabold text-white">
-          Bàn Kỹ Thuật Phần Cứng 7 Bước (OL-01)
-        </h2>
-        <p class="text-primary-100 text-xs sm:text-sm leading-relaxed">
-          Tiếp nhận ca bệnh máy tính thực tế, tuân thủ 3 Luật sống còn, 3 Điểm dừng an toàn và xuất phiếu dịch vụ kỹ thuật A4 chuẩn Nhật.
+<BaseLayout title="Xưởng Thực Hành Kỹ Thuật - Mô Hình Kíp Thợ 3 Người & Xoay Vòng 2 Trạm">
+  <section class="max-w-6xl mx-auto px-3 sm:px-4 py-6 sm:py-10" x-data="workshopMasterEngine">
+    <!-- TOP HEADER -->
+    <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-5">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-1.5">
+          <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-indigo-100 text-indigo-900 font-extrabold text-xs uppercase tracking-wide border border-indigo-200">
+            ⚡ MÔ HÌNH HUẤN LUYỆN 9+3 THỰC CHIẾN
+          </span>
+          <span class="text-xs text-gray-500 font-mono">
+            Chuẩn ĐGNL Thông tư 55/2026/TT-BGDĐT
+          </span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">
+          Xưởng Huấn Luyện Kíp Thợ & Xoay Vòng 2 Trạm
+        </h1>
+        <p class="text-gray-600 text-xs sm:text-sm mt-1 max-w-2xl">
+          Giải pháp chia nhóm nhỏ cho lớp 30 học sinh: 10 Kíp thợ 3 người · Xoay vòng Trạm cơ khí & Trạm cài Win · Luyện trắc nghiệm AI lúc chờ bàn máy.
         </p>
       </div>
 
-      <a
-        href="/assessment/phan-cung"
-        class="btn-primary bg-white text-primary-900 hover:bg-primary-50 font-extrabold text-xs sm:text-sm px-5 py-3 rounded-xl whitespace-nowrap shadow shrink-0"
-      >
-        Vào Bàn Máy Sát Hạch →
-      </a>
+      <div class="flex items-center gap-3 shrink-0">
+        <a
+          href="/assessment/phan-cung"
+          class="btn-secondary text-xs font-bold px-4 py-2.5 rounded-xl border border-gray-300 shadow-sm flex items-center gap-1.5"
+        >
+          <span>🎯</span>
+          <span>100 Câu Sát Hạch AI</span>
+        </a>
+        <button
+          type="button"
+          @click="openPrintJobTicket()"
+          class="btn-primary text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white"
+        >
+          <span>🖨️</span>
+          <span>In Phiếu A4 Kíp Thợ</span>
+        </button>
+      </div>
     </div>
 
-    <!-- Practice session form -->
-    <div class="card">
-      <div class="border-b border-gray-100 pb-3 mb-5">
-        <h2 class="text-base font-bold text-gray-900">Điểm danh & Nộp bài thực hành theo buổi</h2>
-        <p class="text-xs text-gray-500">Dành cho sinh viên các lớp Tin học ứng dụng & Mạng máy tính</p>
+    <!-- MAIN VIEW MODE TABS -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button
+        type="button"
+        @click="activeViewTab = 'crews'"
+        class="px-4 py-3 rounded-2xl text-xs sm:text-sm font-extrabold transition-all flex items-center gap-2 border shadow-sm"
+        :class="activeViewTab === 'crews'
+          ? 'bg-indigo-700 text-white border-indigo-700 shadow-md ring-2 ring-indigo-200'
+          : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'"
+      >
+        <span>👥</span>
+        <span>Mô Hình 10 Kíp Thợ (Lớp 30 Học Sinh)</span>
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" :class="activeViewTab === 'crews' ? 'bg-indigo-500 text-white' : 'bg-indigo-100 text-indigo-800'">
+          Trọng Tâm
+        </span>
+      </button>
+
+      <button
+        type="button"
+        @click="activeViewTab = 'attendance'"
+        class="px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border shadow-sm"
+        :class="activeViewTab === 'attendance'
+          ? 'bg-indigo-700 text-white border-indigo-700 shadow-md'
+          : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'"
+      >
+        <span>📝</span>
+        <span>Điểm Danh & Nộp Bài Thực Hành Buổi (Thường)</span>
+      </button>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- VIEW 1: MÔ HÌNH 10 KÍP THỢ & XOAY VÒNG 2 TRẠM (30 HỌC SINH)         -->
+    <!-- ==================================================================== -->
+    <div x-show="activeViewTab === 'crews'" class="space-y-6">
+
+      <!-- SƠ ĐỒ VẬN HÀNH TRỰC QUAN (FLOW DIAGRAM CARD) -->
+      <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-5 sm:p-7 shadow-xl border border-indigo-500/20">
+        <div class="flex items-center justify-between gap-4 mb-4 border-b border-white/10 pb-3">
+          <div class="flex items-center gap-2.5">
+            <span class="text-2xl">🗺️</span>
+            <div>
+              <h2 class="text-base sm:text-lg font-black text-white tracking-wide">
+                Quy Trình Tác Chiến Xưởng: 30 Học Sinh → 10 Kíp Thợ
+              </h2>
+              <p class="text-indigo-200 text-xs mt-0.5">
+                Mỗi bàn máy 3 em: Thợ chính thao tác · Thợ phụ kiểm soát an toàn Poka-Yoke · Thư ký ghi chép
+              </p>
+            </div>
+          </div>
+          <span class="hidden sm:inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-xs font-bold border border-emerald-500/30">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            100% HOẠT ĐỘNG
+          </span>
+        </div>
+
+        <!-- 4-Stage Visual Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+          <!-- Step 1: 30 Học sinh -->
+          <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-extrabold text-amber-300">BƯỚC 1: TỔ CHỨC</span>
+                <span class="text-base">👨‍🎓</span>
+              </div>
+              <p class="font-bold text-white text-sm">Lớp 30 Học Sinh 9+3</p>
+              <p class="text-slate-300 text-[11px] mt-1 leading-relaxed">
+                Chia làm 10 Kíp thợ độc lập (3 học sinh / kíp). Mỗi em giữ 1 vai trò rõ ràng, không em nào ngồi chơi.
+              </p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-white/10 text-[11px] text-amber-200 font-medium">
+              ✓ 10 Kíp thợ đánh số 1 đến 10
+            </div>
+          </div>
+
+          <!-- Step 2: Trạm 1 -->
+          <div class="bg-amber-500/15 backdrop-blur rounded-2xl p-4 border border-amber-400/30 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-extrabold text-amber-300">TRẠM 1: 5 KÍP ĐẦU</span>
+                <span class="text-base">🔧</span>
+              </div>
+              <p class="font-bold text-white text-sm">Tháo Lắp & An Toàn Cơ Khí</p>
+              <p class="text-slate-300 text-[11px] mt-1 leading-relaxed">
+                Áp dụng 3 Điểm dừng Poka-Yoke: Rút điện xả tụ, tra keo hạt đậu xanh, kiểm tra lẫy RAM & nguồn CPU trước khi cấp điện.
+              </p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-amber-400/20 text-[11px] text-amber-300 font-bold">
+              🛠️ 5 Bàn máy tháo lắp phần cứng
+            </div>
+          </div>
+
+          <!-- Step 3: Trạm 2 -->
+          <div class="bg-blue-500/15 backdrop-blur rounded-2xl p-4 border border-blue-400/30 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-extrabold text-blue-300">TRẠM 2: 5 KÍP SAU</span>
+                <span class="text-base">💻</span>
+              </div>
+              <p class="font-bold text-white text-sm">WinPE, Driver & Bắt Bệnh</p>
+              <p class="text-slate-300 text-[11px] mt-1 leading-relaxed">
+                Boot USB WinPE, phân vùng GPT/UEFI ổ C/D, bung Windows 10/11, cài sạch Driver và test tải HWMonitor nhiệt độ &lt; 75°C.
+              </p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-blue-400/20 text-[11px] text-blue-300 font-bold">
+              ⚡ 5 Bàn máy cứu hộ & hệ điều hành
+            </div>
+          </div>
+
+          <!-- Step 4: Vùng Đệm -->
+          <div class="bg-purple-500/15 backdrop-blur rounded-2xl p-4 border border-purple-400/30 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-extrabold text-purple-300">VÙNG ĐỆM: SMARTPHONE</span>
+                <span class="text-base">📱</span>
+              </div>
+              <p class="font-bold text-white text-sm">Luyện 100 Câu Có AI Hỗ Trợ</p>
+              <p class="text-slate-300 text-[11px] mt-1 leading-relaxed">
+                Lúc chờ xoay trạm hoặc hoàn thành sớm: Học sinh mở điện thoại làm 100 câu trắc nghiệm thực tế, AI giải thích ví von đời thường.
+              </p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-purple-400/20 text-[11px] text-purple-300 font-bold">
+              ⭐ Tận dụng 100% thời gian xưởng
+            </div>
+          </div>
+        </div>
       </div>
 
-      <form @submit.prevent="startPractice()" x-show="!started" class="space-y-5">
-        <!-- Chọn lớp -->
-        <div>
-          <label for="class-select" class="block text-xs font-bold text-gray-700 mb-1">Lớp chuyên ngành (*)</label>
-          <select
-            id="class-select"
-            x-model="selectedClassName"
-            @change="onClassChange()"
-            required
-            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 font-medium"
-          >
-            <option value="">-- Chọn lớp của bạn --</option>
-            <template x-for="c in classes" :key="c.id || c.class_code">
-              <option :value="c.class_name" x-text="(c.is_composite ? '🔗 [Lớp ghép] ' : '🏫 ') + c.class_code + ' - ' + c.class_name"></option>
-            </template>
-          </select>
-        </div>
-
-        <!-- Chọn buổi học -->
-        <div>
-          <label for="session-select" class="block text-xs font-bold text-gray-700 mb-1">Buổi thực hành (*)</label>
-          <select
-            id="session-select"
-            x-model="selectedSession"
-            required
-            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-          >
-            <option value="">-- Chọn buổi học --</option>
-            <option value="Buổi 1: Thao tác chuột, bàn phím & gõ Telex 10 ngón">Buổi 1: Thao tác chuột, bàn phím & gõ Telex 10 ngón</option>
-            <option value="Buổi 2: Soạn thảo văn bản hành chính & Đơn từ">Buổi 2: Soạn thảo văn bản hành chính & Đơn từ</option>
-            <option value="Buổi 3: Bảng biểu & Biểu mẫu quản lý">Buổi 3: Bảng biểu & Biểu mẫu quản lý</option>
-            <option value="Buổi 4: Bảng tính Excel & Hàm thống kê căn bản">Buổi 4: Bảng tính Excel & Hàm thống kê căn bản</option>
-            <option value="Buổi 5: Xử lý logic hàm điều kiện IF/VLOOKUP">Buổi 5: Xử lý logic hàm điều kiện IF/VLOOKUP</option>
-            <option value="Buổi 6: Thực hành Phần cứng máy tính">Buổi 6: Thực hành Phần cứng máy tính</option>
-          </select>
-        </div>
-
-        <!-- Nhập tên -->
-        <div>
-          <label for="student-name" class="block text-xs font-bold text-gray-700 mb-1">Họ và tên sinh viên (*)</label>
-          <input
-            id="student-name"
-            type="text"
-            list="student-picker-list"
-            x-model="studentName"
-            required
-            placeholder="Chọn hoặc nhập họ tên của bạn..."
-            class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-          />
-          <datalist id="student-picker-list">
-            <template x-for="st in studentsList" :key="st.id || st.full_name">
-              <option :value="st.full_name" :label="(st.student_code ? ('[' + st.student_code + '] ') : '') + st.full_name + (st.date_of_birth ? (' · ' + st.date_of_birth) : '')"></option>
-            </template>
-          </datalist>
-          <span class="text-[11px] text-gray-500 mt-1 block">💡 Khi chọn lớp, danh sách học sinh của lớp sẽ tự động hiện ra gợi ý để em chọn nhanh.</span>
-        </div>
-
-        <button type="submit" class="btn-primary w-full py-3 text-sm font-bold shadow">
-          Bắt Đầu Buổi Thực Hành
-        </button>
-      </form>
-
-      <!-- Practice content area -->
-      <div x-show="started" x-cloak>
-        <div class="text-center py-10 space-y-3">
-          <span class="text-5xl block mb-2">💻</span>
-          <h2 class="text-lg font-bold text-gray-800">Đã Vào Buổi Thực Hành Thành Công</h2>
-          <div class="inline-block p-3 rounded-2xl bg-gray-50 border border-gray-200 text-xs text-left max-w-sm w-full space-y-1 my-2">
-            <p><strong>Sinh viên:</strong> <span x-text="studentName"></span></p>
-            <p><strong>Lớp:</strong> <span x-text="selectedClassName"></span></p>
-            <p><strong>Buổi học:</strong> <span x-text="selectedSession"></span></p>
+      <!-- ĐIỀU PHỐI LỚP & CHIA KÍP TỰ ĐỘNG -->
+      <div class="bg-white border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-4 mb-5">
+          <div>
+            <h2 class="text-base font-extrabold text-gray-900 flex items-center gap-2">
+              <span>📋</span>
+              <span>Bảng Điều Phối Lớp Học & Phân Bổ 10 Kíp Thợ</span>
+            </h2>
+            <p class="text-xs text-gray-500 mt-0.5">
+              Chọn lớp học để tự động tải danh sách 30 học sinh và phân bổ đều vào 10 bàn máy
+            </p>
           </div>
-          <p class="text-gray-500 text-xs max-w-md mx-auto leading-relaxed">
-            Hệ thống đã ghi nhận thông tin điểm danh của em vào CSDL Cloudflare D1. Vui lòng làm theo hướng dẫn bài tập trên máy hoặc tại phiếu giao việc của giảng viên.
+
+          <!-- Class Selector and Auto-assign buttons -->
+          <div class="flex flex-wrap items-center gap-2.5">
+            <div class="w-full sm:w-auto min-w-[200px]">
+              <select
+                x-model="selectedClassCode"
+                @change="onClassSelectChange()"
+                class="w-full px-3 py-2 border border-gray-300 rounded-xl text-xs sm:text-sm font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              >
+                <option value="">-- Chọn lớp chuyên ngành --</option>
+                <template x-for="c in availableClasses" :key="c.id || c.class_code">
+                  <option :value="c.class_name" x-text="(c.is_composite ? '🔗 [Lớp ghép] ' : '🏫 ') + c.class_code + ' - ' + c.class_name"></option>
+                </template>
+              </select>
+            </div>
+
+            <button
+              type="button"
+              @click="autoDistributeCrews()"
+              class="btn-primary text-xs font-bold px-3.5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-1.5 shadow"
+              title="Phân đều 30 học sinh vào 10 Kíp thợ (mỗi kíp 3 em: Thợ chính, Thợ phụ, Thư ký)"
+            >
+              <span>🎲</span>
+              <span>Tự Động Chia 10 Kíp</span>
+            </button>
+
+            <button
+              type="button"
+              @click="rotateAllStations()"
+              class="btn-secondary text-xs font-bold px-3.5 py-2.5 rounded-xl border border-gray-300 hover:bg-gray-100 flex items-center gap-1.5"
+              title="Đảo vị trí xoay vòng: Kíp 1-5 chuyển sang Trạm 2, Kíp 6-10 chuyển sang Trạm 1"
+            >
+              <span>🔄</span>
+              <span>Xoay Vòng 2 Trạm</span>
+            </button>
+
+            <button
+              type="button"
+              @click="saveCrewsToStorage()"
+              class="text-xs font-bold px-3 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100 flex items-center gap-1"
+            >
+              <span>💾</span>
+              <span>Lưu Cấu Hình</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Student Count & Status Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 text-xs bg-gray-50 px-4 py-2.5 rounded-2xl border border-gray-200">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-gray-700">Học sinh nạp vào xưởng:</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-indigo-100 text-indigo-900 font-mono font-extrabold" x-text="studentsInClass.length + ' học sinh'"></span>
+            <span x-show="studentsInClass.length > 0" class="text-emerald-600 font-medium">✓ Đã sẵn sàng phân công</span>
+          </div>
+
+          <div class="flex items-center gap-4 text-gray-500 font-medium">
+            <span class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-md bg-amber-500 inline-block"></span>
+              <span>Trạm 1: Tháo Lắp (<strong class="text-gray-900" x-text="countStation(1)"></strong> Kíp)</span>
+            </span>
+            <span class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-md bg-indigo-600 inline-block"></span>
+              <span>Trạm 2: Cài Win (<strong class="text-gray-900" x-text="countStation(2)"></strong> Kíp)</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LƯỚI 10 BÀN MÁY / 10 KÍP THỢ (10 WORKBENCHES GRID) -->
+      <div>
+        <div class="flex items-center justify-between mb-3 px-1">
+          <h3 class="text-sm font-extrabold text-gray-900 flex items-center gap-2">
+            <span>🎛️</span>
+            <span>Danh Sách 10 Bàn Máy Kỹ Thuật (Bấm để chọn bàn thao tác & chấm điểm)</span>
+          </h3>
+          <span class="text-xs text-gray-500">Chạm vào Kíp thợ bất kỳ để vào bàn máy</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          <template x-for="crew in crews" :key="crew.id">
+            <div
+              @click="selectCrew(crew.id)"
+              class="cursor-pointer rounded-2xl p-3.5 transition-all border-2 text-left relative flex flex-col justify-between min-h-[145px]"
+              :class="selectedCrewId === crew.id
+                ? 'ring-4 ring-indigo-400 border-indigo-700 bg-white shadow-lg scale-[1.02]'
+                : (crew.station === 1
+                    ? 'bg-amber-50/60 border-amber-200 hover:border-amber-400 hover:bg-amber-50'
+                    : 'bg-indigo-50/60 border-indigo-200 hover:border-indigo-400 hover:bg-indigo-50')"
+            >
+              <!-- Top Card Info -->
+              <div>
+                <div class="flex items-center justify-between gap-1 mb-1.5">
+                  <span
+                    class="font-black text-xs px-2 py-0.5 rounded-lg text-white"
+                    :class="crew.station === 1 ? 'bg-amber-600' : 'bg-indigo-700'"
+                    x-text="'BÀN ' + crew.id"
+                  ></span>
+                  
+                  <span
+                    class="text-[10px] font-bold px-1.5 py-0.5 rounded"
+                    :class="crew.station === 1 ? 'bg-amber-100 text-amber-800' : 'bg-indigo-100 text-indigo-800'"
+                    x-text="crew.station === 1 ? '🔧 Trạm 1' : '💻 Trạm 2'"
+                  ></span>
+                </div>
+
+                <!-- 3 Members mini list -->
+                <div class="space-y-1 text-[11px] text-gray-700 mt-2">
+                  <div class="truncate font-semibold flex items-center gap-1">
+                    <span class="text-[10px] text-gray-400">1.</span>
+                    <span x-text="crew.members.operator.name || 'Chưa gán thợ chính'"></span>
+                  </div>
+                  <div class="truncate text-gray-500 flex items-center gap-1">
+                    <span class="text-[10px] text-gray-400">2.</span>
+                    <span x-text="crew.members.safety.name || 'Chưa gán an toàn'"></span>
+                  </div>
+                  <div class="truncate text-gray-500 flex items-center gap-1">
+                    <span class="text-[10px] text-gray-400">3.</span>
+                    <span x-text="crew.members.recorder.name || 'Chưa gán thư ký'"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Status Indicators -->
+              <div class="mt-3 pt-2 border-t border-gray-200/60 flex items-center justify-between text-[11px]">
+                <!-- Poka Yoke Status -->
+                <span
+                  class="font-bold flex items-center gap-1"
+                  :class="isPokaYokePassed(crew) ? 'text-emerald-700' : 'text-rose-600'"
+                >
+                  <span x-text="isPokaYokePassed(crew) ? '✓ An toàn' : '⚠️ Cần kiểm tra'"></span>
+                </span>
+
+                <!-- Teacher Grade badge if any -->
+                <template x-if="crew.teacherGrade && crew.teacherGrade.total > 0">
+                  <span class="px-1.5 py-0.2 rounded bg-amber-400 text-amber-950 font-black font-mono" x-text="crew.teacherGrade.total + 'đ'"></span>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- BÀN MÁY CHI TIẾT ĐANG CHỌN (SELECTED WORKBENCH COCKPIT)            -->
+      <!-- ================================================================== -->
+      <template x-if="currentCrew">
+        <div class="bg-white border-2 border-indigo-200 rounded-3xl p-5 sm:p-7 shadow-lg space-y-6">
+          
+          <!-- Cockpit Top Bar -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-5">
+            <div class="flex items-center gap-3.5">
+              <div
+                class="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl font-black text-white shrink-0 shadow-md"
+                :class="currentCrew.station === 1 ? 'bg-amber-600' : 'bg-indigo-700'"
+                x-text="currentCrew.id"
+              ></div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h2 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight" x-text="'Bàn Máy Số ' + currentCrew.id + ' — ' + currentCrew.name"></h2>
+                  <span
+                    class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider text-white"
+                    :class="currentCrew.station === 1 ? 'bg-amber-600' : 'bg-indigo-700'"
+                    x-text="currentCrew.station === 1 ? 'Trạm 1: Tháo Lắp Cơ Khí' : 'Trạm 2: Cài Win PE & Bắt Bệnh'"
+                  ></span>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">
+                  Đang thao tác tại xưởng thực hành · Nhấn nút bên phải để hoán đổi trạm xoay vòng
+                </p>
+              </div>
+            </div>
+
+            <!-- Station Switcher Button -->
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                @click="toggleCrewStation(currentCrew.id)"
+                class="btn-secondary text-xs font-extrabold px-4 py-2.5 rounded-xl border border-indigo-300 text-indigo-800 bg-indigo-50 hover:bg-indigo-100 flex items-center gap-1.5 shadow-sm"
+              >
+                <span>🔄</span>
+                <span x-text="currentCrew.station === 1 ? 'Chuyển Sang Trạm 2 (Cài Win)' : 'Chuyển Sang Trạm 1 (Tháo Lắp)'"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- THÀNH VIÊN KÍP THỢ (3 EM / KÍP) -->
+          <div>
+            <h3 class="text-xs font-black uppercase tracking-wider text-gray-500 mb-3 flex items-center gap-1.5">
+              <span>👥</span>
+              <span>Phân Công 3 Thành Viên Kíp Thợ (Có Thể Chỉnh Sửa Trực Tiếp)</span>
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <!-- Member 1: Thợ chính -->
+              <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3.5 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="inline-flex items-center gap-1 text-xs font-extrabold text-indigo-900">
+                    <span>🛠️</span>
+                    <span>Thợ Chính (Operator)</span>
+                  </span>
+                  <span class="text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full font-bold">Thao tác máy</span>
+                </div>
+                <input
+                  type="text"
+                  list="workshop-students-list"
+                  x-model="currentCrew.members.operator.name"
+                  placeholder="Chọn họ tên học sinh 1..."
+                  class="w-full px-3 py-2 border border-gray-300 rounded-xl text-xs sm:text-sm font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white"
+                />
+                <p class="text-[11px] text-gray-500">Cầm tua-vít tháo lắp ốc chéo, cắm linh kiện hoặc trực tiếp cài Win.</p>
+              </div>
+
+              <!-- Member 2: Thợ phụ / An toàn -->
+              <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3.5 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="inline-flex items-center gap-1 text-xs font-extrabold text-amber-900">
+                    <span>🛡️</span>
+                    <span>Thợ Phụ / An Toàn</span>
+                  </span>
+                  <span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full font-bold">Poka-Yoke</span>
+                </div>
+                <input
+                  type="text"
+                  list="workshop-students-list"
+                  x-model="currentCrew.members.safety.name"
+                  placeholder="Chọn họ tên học sinh 2..."
+                  class="w-full px-3 py-2 border border-gray-300 rounded-xl text-xs sm:text-sm font-bold focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white"
+                />
+                <p class="text-[11px] text-gray-500">Cầm điện thoại kiểm tra 3 Điểm dừng an toàn, lột nilon & tra keo hạt đậu.</p>
+              </div>
+
+              <!-- Member 3: Thư ký -->
+              <div class="bg-gray-50 border border-gray-200 rounded-2xl p-3.5 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="inline-flex items-center gap-1 text-xs font-extrabold text-purple-900">
+                    <span>📝</span>
+                    <span>Thư Ký Kỹ Thuật</span>
+                  </span>
+                  <span class="text-[10px] bg-purple-100 text-purple-900 px-2 py-0.5 rounded-full font-bold">Ghi chép</span>
+                </div>
+                <input
+                  type="text"
+                  list="workshop-students-list"
+                  x-model="currentCrew.members.recorder.name"
+                  placeholder="Chọn họ tên học sinh 3..."
+                  class="w-full px-3 py-2 border border-gray-300 rounded-xl text-xs sm:text-sm font-bold focus:ring-2 focus:ring-purple-500 focus:outline-none bg-white"
+                />
+                <p class="text-[11px] text-gray-500">Ghi chép thông số CPU, RAM, nhiệt độ tải và xuất biên bản giao việc A4.</p>
+              </div>
+            </div>
+
+            <!-- Datalist gợi ý học sinh -->
+            <datalist id="workshop-students-list">
+              <template x-for="st in studentsInClass" :key="st.id || st.full_name">
+                <option :value="st.full_name" :label="(st.student_code ? ('[' + st.student_code + '] ') : '') + st.full_name + (st.date_of_birth ? (' · ' + st.date_of_birth) : '')"></option>
+              </template>
+            </datalist>
+          </div>
+
+          <!-- ============================================================== -->
+          <!-- NỘI DUNG THAO TÁC THEO TRẠM                                   -->
+          <!-- ============================================================== -->
+          
+          <!-- NẾU ĐANG Ở TRẠM 1: THÁO LẮP & VỆ SINH PHẦN CỨNG -->
+          <div x-show="currentCrew.station === 1" class="space-y-6">
+            
+            <!-- HỘP POKA-YOKE: 3 ĐIỂM DỪNG AN TOÀN BẮT BUỘC -->
+            <div class="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-3xl p-5 sm:p-6 shadow-sm">
+              <div class="flex items-center justify-between gap-3 mb-4">
+                <div class="flex items-center gap-2.5">
+                  <span class="text-3xl">🛑</span>
+                  <div>
+                    <h4 class="text-sm sm:text-base font-black text-amber-950">
+                      POKA-YOKE: 3 ĐIỂM DỪNG AN TOÀN TRƯỚC KHI CẮM ĐIỆN
+                    </h4>
+                    <p class="text-xs text-amber-800 mt-0.5">
+                      Thợ phụ bắt buộc phải kiểm tra và xác nhận trên điện thoại mới được phép bật nguồn máy tính!
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Live Safe Status Badge -->
+                <div
+                  class="px-3 py-1.5 rounded-xl font-black text-xs shrink-0 flex items-center gap-1.5 shadow-sm"
+                  :class="isPokaYokePassed(currentCrew)
+                    ? 'bg-emerald-600 text-white animate-pulse'
+                    : 'bg-rose-600 text-white'"
+                >
+                  <span x-text="isPokaYokePassed(currentCrew) ? '🟢 ĐÃ PHÊ DUYỆT BẬT NGUỒN' : '🔴 CẤM CẮM ĐIỆN'"></span>
+                </div>
+              </div>
+
+              <!-- 3 Interactive Checkboxes -->
+              <div class="space-y-3">
+                <!-- Checkpoint 1 -->
+                <label class="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-amber-200 cursor-pointer hover:bg-amber-50/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    x-model="currentCrew.safetyChecks.rule1_power_discharge"
+                    class="mt-1 w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 shrink-0"
+                  />
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-extrabold text-xs text-gray-900">Điểm Dừng 1: RÚT — BẤM — KHAY</span>
+                      <span class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">Luật Sống Còn 1</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-0.5">
+                      Đã rút phích điện 220V, bấm nút Power trên case 3 lần để xả sạch điện tích trong tụ điện và chạm tay vào vỏ kim loại để xả tĩnh điện? Mọi con ốc tháo ra đã đặt gọn trong khay từ tính?
+                    </p>
+                  </div>
+                </label>
+
+                <!-- Checkpoint 2 -->
+                <label class="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-amber-200 cursor-pointer hover:bg-amber-50/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    x-model="currentCrew.safetyChecks.rule2_thermal_paste"
+                    class="mt-1 w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 shrink-0"
+                  />
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-extrabold text-xs text-gray-900">Điểm Dừng 2: BÓC NILON & TRA KEO "HẠT ĐẬU XANH"</span>
+                      <span class="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full font-bold">Chống Cháy CPU</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-0.5">
+                      Đã kiểm tra bóc sạch miếng dán nilon dưới đáy tản nhiệt? Tra keo tản nhiệt liều lượng chuẩn đúng <strong>1 hạt đậu xanh</strong> (hoặc hạt gạo) ngay chính giữa lưng CPU, không bôi tràn lan ra viền socket?
+                    </p>
+                  </div>
+                </label>
+
+                <!-- Checkpoint 3 -->
+                <label class="flex items-start gap-3 p-3.5 rounded-2xl bg-white border border-amber-200 cursor-pointer hover:bg-amber-50/50 transition-colors">
+                  <input
+                    type="checkbox"
+                    x-model="currentCrew.safetyChecks.rule3_cable_ram_seated"
+                    class="mt-1 w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 shrink-0"
+                  />
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-extrabold text-xs text-gray-900">Điểm Dừng 3: KHÔNG ÉP CẮM — LẪY RAM & NGUỒN CPU</span>
+                      <span class="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">Poka-Yoke Khớp Nối</span>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-0.5">
+                      Đã cắm chốt nguồn phụ CPU (4-pin hoặc 8-pin)? Thanh RAM đã cắm đúng rãnh khuyết, ấn đều 2 đầu kêu "tách" sập ngàm khóa? Bắt ốc tản nhiệt chéo góc hình chữ X với lực đều tay?
+                    </p>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- QUY TRÌNH 7 BƯỚC THÁO LẮP THỰC CHIẾN -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-sm">
+              <h4 class="text-sm font-extrabold text-gray-900 mb-4 flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                  <span>🛠️</span>
+                  <span>Quy Trình 7 Bước Tháo Lắp Chuẩn Kỹ Thuật Viên Nhật Bản</span>
+                </span>
+                <span class="text-xs text-indigo-600 font-bold" x-text="'Tiến độ: ' + countCompletedSteps(currentCrew) + '/7 bước'"></span>
+              </h4>
+
+              <div class="space-y-2.5">
+                <template x-for="(step, idx) in hardwareSteps" :key="idx">
+                  <label class="flex items-start gap-3 p-3 rounded-2xl border transition-all cursor-pointer"
+                    :class="currentCrew.stepsCompleted[idx] ? 'bg-indigo-50/40 border-indigo-200 text-gray-900' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100/50'"
+                  >
+                    <input
+                      type="checkbox"
+                      x-model="currentCrew.stepsCompleted[idx]"
+                      class="mt-1 w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 shrink-0"
+                    />
+                    <div class="text-xs">
+                      <span class="font-bold text-gray-900" x-text="'Bước ' + (idx + 1) + ': ' + step.title"></span>
+                      <p class="text-gray-500 mt-0.5" x-text="step.desc"></p>
+                    </div>
+                  </label>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- NẾU ĐANG Ở TRẠM 2: WINPE, CÀI WIN, DRIVER & ĐO NHIỆT ĐỘ -->
+          <div x-show="currentCrew.station === 2" class="space-y-6">
+            
+            <!-- BẢNG TRA CỨU PHÍM TẮT BOOT MENU CÁC HÃNG -->
+            <div class="bg-indigo-900 text-white rounded-3xl p-5 sm:p-6 shadow-md">
+              <div class="flex items-center gap-2.5 mb-3">
+                <span class="text-2xl">🗝️</span>
+                <div>
+                  <h4 class="text-sm sm:text-base font-black text-white">
+                    Bảng Phím Nóng Boot Menu & Vào BIOS Nhanh Tại Xưởng
+                  </h4>
+                  <p class="text-indigo-200 text-xs">
+                    Bật máy và nhấp liên tục phím nóng tương ứng với hãng mainboard của bàn máy
+                  </p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs text-center font-bold">
+                <div class="bg-white/10 rounded-2xl p-2.5 border border-white/15">
+                  <p class="text-indigo-300 text-[10px]">GIGABYTE / DELL</p>
+                  <p class="text-lg font-mono text-amber-300 font-black mt-0.5">F12</p>
+                </div>
+                <div class="bg-white/10 rounded-2xl p-2.5 border border-white/15">
+                  <p class="text-indigo-300 text-[10px]">MSI</p>
+                  <p class="text-lg font-mono text-emerald-300 font-black mt-0.5">F11</p>
+                </div>
+                <div class="bg-white/10 rounded-2xl p-2.5 border border-white/15">
+                  <p class="text-indigo-300 text-[10px]">ASUS</p>
+                  <p class="text-lg font-mono text-sky-300 font-black mt-0.5">F8 <span class="text-xs font-normal">/ Esc</span></p>
+                </div>
+                <div class="bg-white/10 rounded-2xl p-2.5 border border-white/15">
+                  <p class="text-indigo-300 text-[10px]">HP (HEWLETT PACKARD)</p>
+                  <p class="text-lg font-mono text-rose-300 font-black mt-0.5">Esc → F9</p>
+                </div>
+              </div>
+
+              <div class="mt-3 text-[11px] text-indigo-200 flex items-center justify-between border-t border-white/10 pt-2">
+                <span>💡 Phím vào BIOS Setup phổ biến: <strong class="text-white font-mono">DEL</strong> hoặc <strong class="text-white font-mono">F2</strong></span>
+                <span class="text-amber-300 font-bold">Chuẩn khởi động ưu tiên: UEFI (GPT)</span>
+              </div>
+            </div>
+
+            <!-- CHECKLIST 5 BƯỚC CÀI WIN & TEST TẢI -->
+            <div class="bg-white border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-sm">
+              <h4 class="text-sm font-extrabold text-gray-900 mb-4 flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                  <span>⚡</span>
+                  <span>Quy Trình 5 Bước Cài Hệ Điều Hành, Driver & Test Tải Nhiệt Độ</span>
+                </span>
+                <span class="text-xs text-indigo-600 font-bold" x-text="'Tiến độ: ' + countCompletedWinSteps(currentCrew) + '/5 bước'"></span>
+              </h4>
+
+              <div class="space-y-2.5">
+                <template x-for="(wstep, widx) in winSteps" :key="widx">
+                  <label class="flex items-start gap-3 p-3 rounded-2xl border transition-all cursor-pointer"
+                    :class="currentCrew.stepsCompleted[widx] ? 'bg-indigo-50/40 border-indigo-200 text-gray-900' : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100/50'"
+                  >
+                    <input
+                      type="checkbox"
+                      x-model="currentCrew.stepsCompleted[widx]"
+                      class="mt-1 w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 shrink-0"
+                    />
+                    <div class="text-xs">
+                      <span class="font-bold text-gray-900" x-text="'Bước ' + (widx + 1) + ': ' + wstep.title"></span>
+                      <p class="text-gray-500 mt-0.5" x-text="wstep.desc"></p>
+                    </div>
+                  </label>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- GÓC THƯ KÝ: GHI CHÉP THÔNG SỐ BÀN MÁY -->
+          <div class="bg-gray-50 border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-sm">
+            <h4 class="text-xs font-black uppercase tracking-wider text-gray-600 mb-3 flex items-center justify-between">
+              <span class="flex items-center gap-1.5">
+                <span>📝</span>
+                <span>Góc Thư Ký: Ghi Chép Thông Số Kỹ Thuật (Dành Cho Phiếu Nghiệm Thu A4)</span>
+              </span>
+              <span class="text-[11px] text-indigo-600 font-bold">Thư ký nhập trực tiếp</span>
+            </h4>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+              <div>
+                <label class="block font-bold text-gray-700 mb-1">Tên Mainboard & CPU (*)</label>
+                <input
+                  type="text"
+                  x-model="currentCrew.specs.cpu"
+                  placeholder="VD: MSI H510M / Core i3-10100"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-xl bg-white font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label class="block font-bold text-gray-700 mb-1">Dung lượng RAM nhận diện (*)</label>
+                <input
+                  type="text"
+                  x-model="currentCrew.specs.ram"
+                  placeholder="VD: 8GB DDR4 2666MHz (Dual/Single)"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-xl bg-white font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label class="block font-bold text-gray-700 mb-1">Ổ đĩa & Phân vùng (*)</label>
+                <input
+                  type="text"
+                  x-model="currentCrew.specs.storage"
+                  placeholder="VD: SSD NVMe 256GB (Ổ C: 120GB, Ổ D: 136GB)"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-xl bg-white font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label class="block font-bold text-gray-700 mb-1">Nhiệt độ CPU khi test tải (*)</label>
+                <input
+                  type="text"
+                  x-model="currentCrew.specs.temperature"
+                  placeholder="VD: 48°C - 55°C (Dưới 75°C)"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-xl bg-white font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- ============================================================== -->
+          <!-- BẢNG CHẤM ĐIỂM 1-CHẠM CỦA GIẢNG VIÊN (TEACHER SCORECARD)       -->
+          <!-- ============================================================== -->
+          <div class="bg-gradient-to-br from-indigo-50 via-white to-amber-50 border-2 border-indigo-300 rounded-3xl p-5 sm:p-7 shadow-sm space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-indigo-100 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">👨‍🏫</span>
+                <div>
+                  <h4 class="text-sm sm:text-base font-black text-indigo-950">
+                    Bảng Chấm Điểm 1-Chạm Giảng Viên (Chuẩn Thông Tư 55)
+                  </h4>
+                  <p class="text-xs text-indigo-700">
+                    Thầy chấm điểm trực tiếp tại bàn máy · Lưu đồng bộ điểm cho cả 3 học sinh trong kíp vào CSDL
+                  </p>
+                </div>
+              </div>
+
+              <!-- Live Total Grade -->
+              <div class="flex items-center gap-2">
+                <div class="px-4 py-2 rounded-2xl bg-indigo-900 text-white font-black text-sm sm:text-base font-mono shadow">
+                  <span x-text="'Điểm: ' + calcCurrentCrewTotal() + ' / 10.0'"></span>
+                </div>
+                <span
+                  class="px-2.5 py-1 rounded-xl text-xs font-extrabold"
+                  :class="calcCurrentCrewTotal() >= 8.5 ? 'bg-emerald-100 text-emerald-800' : (calcCurrentCrewTotal() >= 5.0 ? 'bg-blue-100 text-blue-800' : 'bg-rose-100 text-rose-800')"
+                  x-text="calcCurrentCrewTotal() >= 8.5 ? 'Xuất Sắc' : (calcCurrentCrewTotal() >= 5.0 ? 'Đạt Yêu Cầu' : 'Cần Rèn Luyện')"
+                ></span>
+              </div>
+            </div>
+
+            <!-- 5 Quick Rubric Criteria Buttons -->
+            <div class="grid grid-cols-1 sm:grid-cols-5 gap-3 text-xs">
+              <!-- Criterion 1: Safety & 5S (2đ) -->
+              <div class="bg-white border border-gray-200 rounded-2xl p-3 space-y-2">
+                <div class="font-extrabold text-gray-800 flex items-center justify-between">
+                  <span>1. 5S & Poka-Yoke</span>
+                  <span class="text-indigo-600 font-mono font-bold" x-text="currentCrew.teacherGrade.safety + '/2đ'"></span>
+                </div>
+                <div class="grid grid-cols-3 gap-1">
+                  <button type="button" @click="currentCrew.teacherGrade.safety = 1.0" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.safety === 1.0 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">1.0</button>
+                  <button type="button" @click="currentCrew.teacherGrade.safety = 1.5" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.safety === 1.5 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">1.5</button>
+                  <button type="button" @click="currentCrew.teacherGrade.safety = 2.0" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.safety === 2.0 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">2.0</button>
+                </div>
+              </div>
+
+              <!-- Criterion 2: Assembly & Paste (2đ) -->
+              <div class="bg-white border border-gray-200 rounded-2xl p-3 space-y-2">
+                <div class="font-extrabold text-gray-800 flex items-center justify-between">
+                  <span>2. Tháo Lắp & Keo</span>
+                  <span class="text-indigo-600 font-mono font-bold" x-text="currentCrew.teacherGrade.assembly + '/2đ'"></span>
+                </div>
+                <div class="grid grid-cols-3 gap-1">
+                  <button type="button" @click="currentCrew.teacherGrade.assembly = 1.0" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.assembly === 1.0 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">1.0</button>
+                  <button type="button" @click="currentCrew.teacherGrade.assembly = 1.5" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.assembly === 1.5 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">1.5</button>
+                  <button type="button" @click="currentCrew.teacherGrade.assembly = 2.0" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.assembly === 2.0 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">2.0</button>
+                </div>
+              </div>
+
+              <!-- Criterion 3: WinPE & Diskpart (3đ) -->
+              <div class="bg-white border border-gray-200 rounded-2xl p-3 space-y-2">
+                <div class="font-extrabold text-gray-800 flex items-center justify-between">
+                  <span>3. WinPE & Ổ Đĩa</span>
+                  <span class="text-indigo-600 font-mono font-bold" x-text="currentCrew.teacherGrade.winInstall + '/3đ'"></span>
+                </div>
+                <div class="grid grid-cols-3 gap-1">
+                  <button type="button" @click="currentCrew.teacherGrade.winInstall = 1.5" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.winInstall === 1.5 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">1.5</button>
+                  <button type="button" @click="currentCrew.teacherGrade.winInstall = 2.5" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.winInstall === 2.5 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">2.5</button>
+                  <button type="button" @click="currentCrew.teacherGrade.winInstall = 3.0" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.winInstall === 3.0 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">3.0</button>
+                </div>
+              </div>
+
+              <!-- Criterion 4: Driver & Temp (2đ) -->
+              <div class="bg-white border border-gray-200 rounded-2xl p-3 space-y-2">
+                <div class="font-extrabold text-gray-800 flex items-center justify-between">
+                  <span>4. Driver & Tải</span>
+                  <span class="text-indigo-600 font-mono font-bold" x-text="currentCrew.teacherGrade.driverTemp + '/2đ'"></span>
+                </div>
+                <div class="grid grid-cols-3 gap-1">
+                  <button type="button" @click="currentCrew.teacherGrade.driverTemp = 1.0" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.driverTemp === 1.0 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">1.0</button>
+                  <button type="button" @click="currentCrew.teacherGrade.driverTemp = 1.5" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.driverTemp === 1.5 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">1.5</button>
+                  <button type="button" @click="currentCrew.teacherGrade.driverTemp = 2.0" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.driverTemp === 2.0 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">2.0</button>
+                </div>
+              </div>
+
+              <!-- Criterion 5: Handover & Report (1đ) -->
+              <div class="bg-white border border-gray-200 rounded-2xl p-3 space-y-2">
+                <div class="font-extrabold text-gray-800 flex items-center justify-between">
+                  <span>5. Tác Phong A4</span>
+                  <span class="text-indigo-600 font-mono font-bold" x-text="currentCrew.teacherGrade.workplace5s + '/1đ'"></span>
+                </div>
+                <div class="grid grid-cols-2 gap-1">
+                  <button type="button" @click="currentCrew.teacherGrade.workplace5s = 0.5" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.workplace5s === 0.5 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">0.5</button>
+                  <button type="button" @click="currentCrew.teacherGrade.workplace5s = 1.0" class="py-1.5 rounded-lg font-bold border text-[11px]" :class="currentCrew.teacherGrade.workplace5s === 1.0 ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-gray-50 text-gray-700'">1.0</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Grade Button -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+              <div class="text-xs text-gray-500">
+                <span x-show="currentCrew.teacherGrade.gradedAt" class="text-emerald-700 font-bold" x-text="'✓ Đã chấm lúc: ' + currentCrew.teacherGrade.gradedAt"></span>
+                <span x-show="!currentCrew.teacherGrade.gradedAt">Chưa gửi kết quả lên hệ thống CSDL</span>
+              </div>
+
+              <button
+                type="button"
+                @click="submitTeacherGradeForCrew()"
+                :disabled="isSubmittingGrade"
+                class="btn-primary w-full sm:w-auto px-6 py-3 rounded-2xl bg-indigo-700 hover:bg-indigo-800 text-white font-extrabold text-xs sm:text-sm shadow-md flex items-center justify-center gap-2"
+              >
+                <span>💾</span>
+                <span x-text="isSubmittingGrade ? 'Đang lưu CSDL...' : 'Lưu Điểm Kíp Thợ (Cho Cả 3 Học Sinh)'"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- ================================================================== -->
+      <!-- VÙNG ĐỆM: LUYỆN TRẮC NGHIỆM AI LÚC CHỜ XOAY TRẠM                   -->
+      <!-- ================================================================== -->
+      <div class="bg-gradient-to-r from-purple-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-7 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-5 border border-purple-500/30">
+        <div class="space-y-1.5 text-center sm:text-left">
+          <div class="flex items-center justify-center sm:justify-start gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-purple-400 text-purple-950 font-black text-xs uppercase tracking-wide">
+              📱 VÙNG ĐỆM THỜI GIAN THỰC HÀNH
+            </span>
+            <span class="text-xs text-purple-200">100 Câu Sát Hạch Thực Tế</span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-black text-white">
+            Kíp Đang Chờ Bàn Máy Hoặc Đã Xong Sớm?
+          </h3>
+          <p class="text-xs sm:text-sm text-purple-200 max-w-xl leading-relaxed">
+            Mở điện thoại làm ngay 100 câu trắc nghiệm tình huống kỹ thuật. Mỗi câu làm sai đều có Trợ giảng AI phân tích lý do bằng hình ảnh đời thường!
           </p>
-          <div class="pt-3">
-            <button @click="started = false" class="btn-secondary text-xs px-4 py-2 font-bold">← Quay lại danh sách buổi</button>
+        </div>
+
+        <a
+          href="/assessment/phan-cung"
+          class="btn-primary px-6 py-3.5 rounded-2xl bg-white text-indigo-950 hover:bg-purple-50 font-black text-xs sm:text-sm shadow-lg shrink-0 flex items-center gap-2 no-underline"
+        >
+          <span>🎯</span>
+          <span>Luyện Trắc Nghiệm AI Ngay →</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- VIEW 2: ĐIỂM DANH & NỘP BÀI THỰC HÀNH BUỔI HỌC (TRUYỀN THỐNG)        -->
+    <!-- ==================================================================== -->
+    <div x-show="activeViewTab === 'attendance'" class="space-y-6">
+      <div class="bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <div class="border-b border-gray-100 pb-3 mb-5">
+          <h2 class="text-base font-bold text-gray-900">Điểm danh & Nộp bài thực hành theo buổi</h2>
+          <p class="text-xs text-gray-500">Dành cho sinh viên các lớp Tin học ứng dụng & Mạng máy tính</p>
+        </div>
+
+        <form @submit.prevent="startPractice()" x-show="!started" class="space-y-5">
+          <!-- Chọn lớp -->
+          <div>
+            <label for="class-select" class="block text-xs font-bold text-gray-700 mb-1">Lớp chuyên ngành (*)</label>
+            <select
+              id="class-select"
+              x-model="selectedClassName"
+              @change="onClassChange()"
+              required
+              class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 font-medium"
+            >
+              <option value="">-- Chọn lớp của bạn --</option>
+              <template x-for="c in availableClasses" :key="c.id || c.class_code">
+                <option :value="c.class_name" x-text="(c.is_composite ? '🔗 [Lớp ghép] ' : '🏫 ') + c.class_code + ' - ' + c.class_name"></option>
+              </template>
+            </select>
+          </div>
+
+          <!-- Chọn buổi học -->
+          <div>
+            <label for="session-select" class="block text-xs font-bold text-gray-700 mb-1">Buổi thực hành (*)</label>
+            <select
+              id="session-select"
+              x-model="selectedSession"
+              required
+              class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            >
+              <option value="">-- Chọn buổi học --</option>
+              <option value="Buổi 1: Thao tác chuột, bàn phím & gõ Telex 10 ngón">Buổi 1: Thao tác chuột, bàn phím & gõ Telex 10 ngón</option>
+              <option value="Buổi 2: Soạn thảo văn bản hành chính & Đơn từ">Buổi 2: Soạn thảo văn bản hành chính & Đơn từ</option>
+              <option value="Buổi 3: Bảng biểu & Biểu mẫu quản lý">Buổi 3: Bảng biểu & Biểu mẫu quản lý</option>
+              <option value="Buổi 4: Bảng tính Excel & Hàm thống kê căn bản">Buổi 4: Bảng tính Excel & Hàm thống kê căn bản</option>
+              <option value="Buổi 5: Xử lý logic hàm điều kiện IF/VLOOKUP">Buổi 5: Xử lý logic hàm điều kiện IF/VLOOKUP</option>
+              <option value="Buổi 6: Thực hành Phần cứng máy tính">Buổi 6: Thực hành Phần cứng máy tính</option>
+            </select>
+          </div>
+
+          <!-- Nhập tên -->
+          <div>
+            <label for="student-name" class="block text-xs font-bold text-gray-700 mb-1">Họ và tên sinh viên (*)</label>
+            <input
+              id="student-name"
+              type="text"
+              list="student-picker-list"
+              x-model="studentName"
+              required
+              placeholder="Chọn hoặc nhập họ tên của bạn..."
+              class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            />
+            <datalist id="student-picker-list">
+              <template x-for="st in studentsInClass" :key="st.id || st.full_name">
+                <option :value="st.full_name" :label="(st.student_code ? ('[' + st.student_code + '] ') : '') + st.full_name + (st.date_of_birth ? (' · ' + st.date_of_birth) : '')"></option>
+              </template>
+            </datalist>
+            <span class="text-[11px] text-gray-500 mt-1 block">💡 Khi chọn lớp, danh sách học sinh của lớp sẽ tự động hiện ra gợi ý để em chọn nhanh.</span>
+          </div>
+
+          <button type="submit" class="btn-primary w-full py-3 text-sm font-bold shadow">
+            Bắt Đầu Buổi Thực Hành
+          </button>
+        </form>
+
+        <!-- Practice content area -->
+        <div x-show="started" x-cloak>
+          <div class="text-center py-10 space-y-3">
+            <span class="text-5xl block mb-2">💻</span>
+            <h2 class="text-lg font-bold text-gray-800">Đã Vào Buổi Thực Hành Thành Công</h2>
+            <div class="inline-block p-3 rounded-2xl bg-gray-50 border border-gray-200 text-xs text-left max-w-sm w-full space-y-1 my-2">
+              <p><strong>Sinh viên:</strong> <span x-text="studentName"></span></p>
+              <p><strong>Lớp:</strong> <span x-text="selectedClassName"></span></p>
+              <p><strong>Buổi học:</strong> <span x-text="selectedSession"></span></p>
+            </div>
+            <p class="text-gray-500 text-xs max-w-md mx-auto leading-relaxed">
+              Hệ thống đã ghi nhận thông tin điểm danh của em vào CSDL Cloudflare D1. Vui lòng làm theo hướng dẫn bài tập trên máy hoặc tại phiếu giao việc của giảng viên.
+            </p>
+            <div class="pt-3">
+              <button @click="started = false" class="btn-secondary text-xs px-4 py-2 font-bold">← Quay lại danh sách buổi</button>
+            </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div
+      x-show="toastMessage"
+      x-cloak
+      x-transition
+      class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-slate-700 text-xs font-bold"
+    >
+      <span class="text-emerald-400 text-base">✓</span>
+      <span x-text="toastMessage"></span>
     </div>
   </section>
 </BaseLayout>
 
 <script is:inline>
   document.addEventListener('alpine:init', () => {
-    Alpine.data('practiceManager', () => ({
+    Alpine.data('workshopMasterEngine', () => ({
+      activeViewTab: 'crews',
+      availableClasses: [],
+      selectedClassCode: '',
+      studentsInClass: [],
+      selectedCrewId: 1,
+      isSubmittingGrade: false,
+      toastMessage: '',
+
+      // View 2 traditional state
       started: false,
-      classes: [],
       selectedClassName: '',
       selectedSession: '',
       studentName: '',
-      studentsList: [],
+
+      // 7 Hardware Steps
+      hardwareSteps: [
+        { title: 'Chẩn đoán & Tháo vỏ case', desc: 'Tiếp nhận máy, quan sát dấu hiệu chập cháy, tháo nắp hông case cẩn thận.' },
+        { title: 'Tháo Bộ nguồn (PSU)', desc: 'Rút đầu cắm 24-pin mainboard và 4/8-pin CPU (bóp lẫy khóa, không giật dây).' },
+        { title: 'Tháo Card VGA & Ổ đĩa', desc: 'Mở ốc chặn khe PCIe, gạt lẫy socket rồi rút card thẳng đứng. Tháo SSD/HDD.' },
+        { title: 'Tháo Thanh RAM & Vệ sinh', desc: 'Bóp 2 đầu lẫy khe RAM nhẹ nhàng. Dùng gôm tẩy vệ sinh chân tiếp xúc màu vàng.' },
+        { title: 'Tháo Tản nhiệt & CPU', desc: 'Tháo ốc tản nhiệt chéo hình chữ X đều lực. Gạt thanh khóa socket nâng nhẹ CPU.' },
+        { title: 'Vệ sinh 5S & Tra keo tản nhiệt', desc: 'Lau sạch keo cũ, bóc seal nilon, tra keo chuẩn 1 hạt đậu xanh ngay giữa CPU.' },
+        { title: 'Lắp ráp ngược lại & Vào BIOS', desc: 'Lắp đúng khớp Poka-Yoke, lẫy RAM kêu tách, cắm nguồn phụ CPU và kích nguồn vào BIOS.' },
+      ],
+
+      // 5 WinPE Steps
+      winSteps: [
+        { title: 'Boot vào USB WinPE Cứu hộ', desc: 'Bấm phím tắt Boot Menu (F12/F11/F8/Esc) khởi động vào môi trường Mini Windows.' },
+        { title: 'Kiểm tra ổ đĩa & Phân vùng GPT/UEFI', desc: 'Mở Partition Wizard: Chia ổ C hệ điều hành >= 60GB và ổ D chứa dữ liệu học tập.' },
+        { title: 'Bung file Windows 10/11 sạch', desc: 'Cài đặt hệ điều hành sạch không kèm mã độc hoặc phần mềm rác theo yêu cầu khách.' },
+        { title: 'Cài đặt Driver chuẩn', desc: 'Mở Device Manager kiểm tra không còn bất kỳ dấu chấm than màu vàng (⚠️).' },
+        { title: 'Đo nhiệt độ test tải CPU với HWMonitor', desc: 'Chạy thử tải máy hoạt động êm ái, nhiệt độ CPU ổn định dưới 75°C.' },
+      ],
+
+      // 10 Kíp thợ ban đầu
+      crews: [],
 
       init() {
+        this.initDefaultCrews();
         this.loadClasses();
+        this.loadSavedCrews();
+      },
+
+      initDefaultCrews() {
+        const initial = [];
+        for (let i = 1; i <= 10; i++) {
+          initial.push({
+            id: i,
+            name: 'Kíp ' + i,
+            station: i <= 5 ? 1 : 2, // 1-5 Trạm 1; 6-10 Trạm 2
+            members: {
+              operator: { name: '', code: '', role: 'Thợ chính' },
+              safety: { name: '', code: '', role: 'Thợ phụ / An toàn' },
+              recorder: { name: '', code: '', role: 'Thư ký kỹ thuật' },
+            },
+            safetyChecks: {
+              rule1_power_discharge: false,
+              rule2_thermal_paste: false,
+              rule3_cable_ram_seated: false,
+            },
+            stepsCompleted: [false, false, false, false, false, false, false],
+            specs: {
+              cpu: '',
+              ram: '',
+              storage: '',
+              temperature: '',
+            },
+            teacherGrade: {
+              safety: 2.0,
+              assembly: 2.0,
+              winInstall: 3.0,
+              driverTemp: 2.0,
+              workplace5s: 1.0,
+              total: 10.0,
+              gradedAt: '',
+            },
+          });
+        }
+        this.crews = initial;
+      },
+
+      get currentCrew() {
+        return this.crews.find(c => c.id === this.selectedCrewId) || this.crews[0];
+      },
+
+      selectCrew(id) {
+        this.selectedCrewId = id;
+      },
+
+      countStation(stationNum) {
+        return this.crews.filter(c => c.station === stationNum).length;
+      },
+
+      isPokaYokePassed(crew) {
+        if (!crew || !crew.safetyChecks) return false;
+        return crew.safetyChecks.rule1_power_discharge &&
+               crew.safetyChecks.rule2_thermal_paste &&
+               crew.safetyChecks.rule3_cable_ram_seated;
+      },
+
+      countCompletedSteps(crew) {
+        if (!crew || !crew.stepsCompleted) return 0;
+        return crew.stepsCompleted.filter(Boolean).length;
+      },
+
+      countCompletedWinSteps(crew) {
+        if (!crew || !crew.stepsCompleted) return 0;
+        return crew.stepsCompleted.slice(0, 5).filter(Boolean).length;
+      },
+
+      calcCurrentCrewTotal() {
+        const c = this.currentCrew;
+        if (!c || !c.teacherGrade) return 0;
+        const g = c.teacherGrade;
+        const total = (Number(g.safety) || 0) + (Number(g.assembly) || 0) + (Number(g.winInstall) || 0) + (Number(g.driverTemp) || 0) + (Number(g.workplace5s) || 0);
+        return Math.round(total * 10) / 10;
+      },
+
+      toggleCrewStation(crewId) {
+        const crew = this.crews.find(c => c.id === crewId);
+        if (crew) {
+          crew.station = crew.station === 1 ? 2 : 1;
+          this.showToast(`Đã chuyển Bàn ${crew.id} sang Trạm ${crew.station}!`);
+          this.saveCrewsToStorage();
+        }
+      },
+
+      rotateAllStations() {
+        this.crews.forEach(c => {
+          c.station = c.station === 1 ? 2 : 1;
+        });
+        this.showToast('Đã xoay vòng toàn bộ 10 bàn máy!');
+        this.saveCrewsToStorage();
       },
 
       async loadClasses() {
         const localClasses = localStorage.getItem('BMTC_CLASSES');
         if (localClasses) {
           try {
-            this.classes = JSON.parse(localClasses);
+            this.availableClasses = JSON.parse(localClasses);
           } catch(e){}
         }
         try {
           const res = await fetch('/api/classes');
           const data = await res.json();
           if (data && data.ok && Array.isArray(data.data) && data.data.length > 0) {
-            if (!localClasses || data.from_d1) {
-              this.classes = data.data;
-            }
+            this.availableClasses = data.data;
           }
-        } catch (e) {}
+        } catch(e){}
+
+        // Tự động chọn lớp 03THA9 hoặc lớp đầu tiên nếu có
+        if (this.availableClasses.length > 0 && !this.selectedClassCode) {
+          const target = this.availableClasses.find(c => c.class_code === '03THA9' || c.class_name?.includes('03THA9')) || this.availableClasses[0];
+          this.selectedClassCode = target.class_name;
+          this.onClassSelectChange();
+        }
       },
 
-      async onClassChange() {
-        if (!this.selectedClassName) {
-          this.studentsList = [];
+      async onClassSelectChange() {
+        if (!this.selectedClassCode) {
+          this.studentsInClass = [];
           return;
         }
+
         let foundLocal = false;
         try {
           const allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
-          const targetCls = (this.classes || []).find(c => c.class_name === this.selectedClassName || c.class_code === this.selectedClassName);
+          const targetCls = (this.availableClasses || []).find(c => c.class_name === this.selectedClassCode || c.class_code === this.selectedClassCode);
           if (targetCls && allStudentsStore[targetCls.id]) {
-            this.studentsList = allStudentsStore[targetCls.id];
+            this.studentsInClass = allStudentsStore[targetCls.id];
             foundLocal = true;
           }
         } catch(e){}
 
         try {
-          const res = await fetch('/api/classes?code=' + encodeURIComponent(this.selectedClassName));
+          const res = await fetch('/api/classes?code=' + encodeURIComponent(this.selectedClassCode));
           const data = await res.json();
           if (data && data.ok && Array.isArray(data.data) && (data.from_d1 || !foundLocal)) {
-            this.studentsList = data.data;
+            this.studentsInClass = data.data;
           }
-        } catch (e) {}
+        } catch(e){}
+      },
+
+      autoDistributeCrews() {
+        if (!this.studentsInClass || this.studentsInClass.length === 0) {
+          alert('Chưa có danh sách học sinh cho lớp này. Vui lòng chọn lớp đã nạp học sinh!');
+          return;
+        }
+
+        const pool = [...this.studentsInClass];
+        for (let i = 0; i < 10; i++) {
+          const c = this.crews[i];
+          const st1 = pool[i * 3] || { full_name: `Học sinh ${i * 3 + 1}` };
+          const st2 = pool[i * 3 + 1] || { full_name: `Học sinh ${i * 3 + 2}` };
+          const st3 = pool[i * 3 + 2] || { full_name: `Học sinh ${i * 3 + 3}` };
+
+          c.members.operator.name = st1.full_name;
+          c.members.operator.code = st1.student_code || '';
+          c.members.safety.name = st2.full_name;
+          c.members.safety.code = st2.student_code || '';
+          c.members.recorder.name = st3.full_name;
+          c.members.recorder.code = st3.student_code || '';
+        }
+
+        this.showToast('Đã tự động phân bổ 30 học sinh vào 10 Kíp thợ!');
+        this.saveCrewsToStorage();
+      },
+
+      saveCrewsToStorage() {
+        try {
+          localStorage.setItem('BMTC_WORKSHOP_CREWS', JSON.stringify({
+            className: this.selectedClassCode,
+            crews: this.crews,
+            savedAt: new Date().toISOString()
+          }));
+          this.showToast('Đã lưu cấu hình 10 Kíp thợ vào máy!');
+        } catch(e){}
+      },
+
+      loadSavedCrews() {
+        try {
+          const raw = localStorage.getItem('BMTC_WORKSHOP_CREWS');
+          if (raw) {
+            const data = JSON.parse(raw);
+            if (data && Array.isArray(data.crews) && data.crews.length === 10) {
+              this.crews = data.crews;
+              if (data.className) this.selectedClassCode = data.className;
+            }
+          }
+        } catch(e){}
+      },
+
+      async submitTeacherGradeForCrew() {
+        const c = this.currentCrew;
+        if (!c) return;
+
+        const totalScore = this.calcCurrentCrewTotal();
+        c.teacherGrade.total = totalScore;
+        c.teacherGrade.gradedAt = new Date().toLocaleTimeString('vi-VN');
+
+        const members = [c.members.operator, c.members.safety, c.members.recorder].filter(m => m && m.name && m.name.trim());
+        if (members.length === 0) {
+          alert('Kíp thợ này chưa có tên học sinh nào!');
+          return;
+        }
+
+        this.isSubmittingGrade = true;
+
+        try {
+          // Lưu đồng bộ cho cả 3 học sinh trong kíp lên CSDL Cloudflare
+          const sessionName = `Ôn thi ĐGNL - Kíp ${c.id} (${c.station === 1 ? 'Trạm 1: Tháo lắp' : 'Trạm 2: Cài Win'})`;
+          
+          for (const m of members) {
+            await fetch('/api/scores', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                className: this.selectedClassCode || '03THA9',
+                sessionName: sessionName,
+                studentName: m.name,
+                studentCode: m.code || '',
+                originalClass: this.selectedClassCode || '03THA9',
+                station: c.station === 1 ? 'Trạm 1: Tháo lắp cơ khí' : 'Trạm 2: Cài Win PE & Driver',
+                score: totalScore,
+                details: {
+                  crewId: c.id,
+                  crewRole: m.role || '',
+                  rubric: c.teacherGrade,
+                  pokaYokePassed: this.isPokaYokePassed(c),
+                  specs: c.specs,
+                  submittedAt: new Date().toISOString()
+                }
+              })
+            }).catch(() => {});
+          }
+
+          this.saveCrewsToStorage();
+          this.showToast(`Đã lưu điểm ${totalScore}đ cho Kíp ${c.id} (3 học sinh) thành công!`);
+        } catch(e) {
+          alert('Lỗi khi lưu điểm: ' + (e.message || 'Vui lòng thử lại'));
+        } finally {
+          this.isSubmittingGrade = false;
+        }
+      },
+
+      showToast(msg) {
+        this.toastMessage = msg;
+        setTimeout(() => {
+          this.toastMessage = '';
+        }, 3000);
+      },
+
+      openPrintJobTicket() {
+        const c = this.currentCrew;
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+
+        const html = `
+          <!DOCTYPE html>
+          <html lang="vi">
+          <head>
+            <meta charset="utf-8">
+            <title>Phiếu Giao Việc Kíp Thợ A4 - Bàn ${c.id}</title>
+            <style>
+              body { font-family: 'Times New Roman', serif; margin: 25mm 20mm; color: #000; line-height: 1.4; font-size: 13pt; }
+              .header { text-align: center; margin-bottom: 20px; }
+              .header h3 { margin: 0; font-size: 13pt; font-weight: normal; }
+              .header h2 { margin: 5px 0; font-size: 14pt; font-weight: bold; }
+              .line { width: 150px; height: 1px; background: #000; margin: 5px auto; }
+              .title { text-align: center; margin: 25px 0 15px; }
+              .title h1 { margin: 0; font-size: 16pt; font-weight: bold; }
+              .title p { margin: 5px 0; font-style: italic; font-size: 11pt; }
+              .box { border: 1px solid #000; padding: 10px; margin: 15px 0; border-radius: 4px; }
+              table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 12pt; }
+              th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+              th { background: #f0f0f0; text-align: center; }
+              .signatures { display: flex; justify-content: space-between; margin-top: 40px; text-align: center; }
+              .signatures div { width: 45%; }
+              @media print {
+                body { margin: 10mm; }
+                .no-print { display: none; }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h3>TRƯỜNG CAO ĐẲNG BUÔN MA THUỘT — KHOA CNTT</h3>
+              <h2>BỘ MÔN: ÔN LUYỆN NĂNG LỰC NGHỀ PHẦN CỨNG MÁY TÍNH</h2>
+              <div class="line"></div>
+            </div>
+
+            <div class="title">
+              <h1>PHIẾU GIAO VIỆC & NGHIỆM THU TAY NGHỀ KÍP THỢ</h1>
+              <p>(Theo chuẩn Phụ lục II, Thông tư 55/2026/TT-BGDĐT)</p>
+            </div>
+
+            <div class="box">
+              <p><strong>Lớp chuyên ngành:</strong> ${this.selectedClassCode || '03THA9'} &nbsp;&nbsp;&nbsp;&nbsp; <strong>Bàn máy số:</strong> ${c.id} (${c.name})</p>
+              <p><strong>Trạm thực hành:</strong> ${c.station === 1 ? 'Trạm 1: Tháo Lắp Cơ Khí & Vệ Sinh 5S' : 'Trạm 2: Cài Đặt WinPE, Driver & Test Tải'}</p>
+              <p><strong>Thợ chính (Operator):</strong> ${c.members.operator.name || '................................................'}</p>
+              <p><strong>Thợ phụ / An toàn (Poka-Yoke):</strong> ${c.members.safety.name || '................................................'}</p>
+              <p><strong>Thư ký kỹ thuật (Recorder):</strong> ${c.members.recorder.name || '................................................'}</p>
+            </div>
+
+            <h3>I. THÔNG SỐ BÀN GIAO THIẾT BỊ</h3>
+            <table>
+              <tr><td width="35%"><strong>CPU & Bo mạch chủ:</strong></td><td>${c.specs.cpu || 'Chưa ghi chép'}</td></tr>
+              <tr><td><strong>Dung lượng RAM nhận diện:</strong></td><td>${c.specs.ram || 'Chưa ghi chép'}</td></tr>
+              <tr><td><strong>Ổ đĩa & Phân vùng:</strong></td><td>${c.specs.storage || 'Chưa ghi chép'}</td></tr>
+              <tr><td><strong>Nhiệt độ đo được (HWMonitor):</strong></td><td>${c.specs.temperature || 'Chưa ghi chép'}</td></tr>
+              <tr><td><strong>An toàn điện Poka-Yoke:</strong></td><td>${this.isPokaYokePassed(c) ? 'ĐÃ ĐẠT 3 ĐIỂM DỪNG AN TOÀN' : 'CHƯA ĐẠT ĐỦ 3 ĐIỂM DỪNG'}</td></tr>
+            </table>
+
+            <h3>II. KẾT QUẢ ĐÁNH GIÁ CỦA GIẢNG VIÊN</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Tiêu chí đánh giá</th>
+                  <th>Điểm tối đa</th>
+                  <th>Điểm đạt được</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td align="center">1</td><td>Kỷ luật 5S & Tuân thủ Poka-Yoke 3 điểm dừng</td><td align="center">2.0</td><td align="center"><strong>${c.teacherGrade.safety}</strong></td></tr>
+                <tr><td align="center">2</td><td>Kỹ thuật tháo lắp & Tra keo tản nhiệt hạt đậu xanh</td><td align="center">2.0</td><td align="center"><strong>${c.teacherGrade.assembly}</strong></td></tr>
+                <tr><td align="center">3</td><td>Cài đặt WinPE, phân vùng GPT/UEFI sạch</td><td align="center">3.0</td><td align="center"><strong>${c.teacherGrade.winInstall}</strong></td></tr>
+                <tr><td align="center">4</td><td>Cài đặt Driver sạch & Đo nhiệt độ test tải &lt; 75°C</td><td align="center">2.0</td><td align="center"><strong>${c.teacherGrade.driverTemp}</strong></td></tr>
+                <tr><td align="center">5</td><td>Tác phong công nghiệp & Biên bản bàn giao</td><td align="center">1.0</td><td align="center"><strong>${c.teacherGrade.workplace5s}</strong></td></tr>
+                <tr><td colspan="2" align="right"><strong>TỔNG ĐIỂM THỰC HÀNH KÍP THỢ:</strong></td><td align="center"><strong>10.0</strong></td><td align="center"><strong style="font-size:14pt; color:#b91c1c;">${this.calcCurrentCrewTotal()}</strong></td></tr>
+              </tbody>
+            </table>
+
+            <div class="signatures">
+              <div>
+                <p><strong>ĐẠI DIỆN KÍP THỢ</strong><br><i>(Ký và ghi rõ họ tên)</i></p>
+                <br><br><br>
+                <p>${c.members.operator.name || 'Thợ chính'}</p>
+              </div>
+              <div>
+                <p><strong>GIẢNG VIÊN HƯỚNG DẪN</strong><br><i>(Ký và ghi rõ họ tên)</i></p>
+                <br><br><br>
+                <p><strong>CN. Phạm Tiến Đồng</strong></p>
+              </div>
+            </div>
+
+            <div class="no-print" style="margin-top:30px; text-align:center;">
+              <button onclick="window.print()" style="padding:10px 20px; font-size:14pt; font-weight:bold; cursor:pointer;">IN PHIẾU NGAY (CTRL+P)</button>
+            </div>
+          </body>
+          </html>
+        `;
+
+        printWindow.document.write(html);
+        printWindow.document.close();
+      },
+
+      // View 2 Traditional Handlers
+      async onClassChange() {
+        if (!this.selectedClassName) return;
+        this.selectedClassCode = this.selectedClassName;
+        await this.onClassSelectChange();
       },
 
       async startPractice() {
         this.started = true;
-        // Ghi nhận điểm danh thực hành vào D1 kèm MSHS nếu có
         try {
           const rawName = (this.studentName || '').trim();
-          const matched = this.studentsList.find(st =>
+          const matched = this.studentsInClass.find(st =>
             (st.full_name && st.full_name.toLowerCase() === rawName.toLowerCase()) ||
             (st.student_code && st.student_code.toLowerCase() === rawName.toLowerCase())
           );
