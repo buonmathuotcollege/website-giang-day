@@ -2,7 +2,7 @@
 // CHƯƠNG TRÌNH & NỘI DUNG HUẤN LUYỆN KỸ THUẬT VIÊN THỰC CHIẾN
 // MÔN: ÔN LUYỆN NĂNG LỰC NGHỀ - PHẦN CỨNG MÁY TÍNH (MÃ: OL-01_PHAN_CUNG)
 // Theo chuẩn Phụ lục II, Thông tư 55/2026/TT-BGDĐT
-// Biên soạn: CN. Phạm Tiến Đồng - Trường Cao đẳng Buôn Ma Thuột
+// Biên soạn: CN. Phạm Tiến Đồng
 // ============================================================================
 
 export interface RuleItem {
@@ -63,9 +63,9 @@ export const HARDWARE_METADATA = {
   courseCode: 'OL-01_PHAN_CUNG',
   courseName: 'Ôn luyện Năng lực Nghề: Phần cứng Máy tính',
   teacher: 'CN. Phạm Tiến Đồng',
-  institution: 'Trường Cao đẳng Buôn Ma Thuột',
+  institution: 'Cổng Giảng Dạy & Thực Hành CNTT',
   standard: 'Phụ lục II, Thông tư số 55/2026/TT-BGDĐT ngày 30/6/2026 của Bộ trưởng Bộ GD&ĐT',
-  slogan: 'Bí kíp 20 năm nghề Kỹ thuật viên: Cầm tay chỉ việc từ số 0 — Thực chiến A-Z',
+  slogan: 'Kỹ năng Kỹ thuật viên chuẩn hóa: Thực chiến từ số 0 — Quy trình A-Z',
   philosophy: 'Đọc tới đâu, tay làm được ngay tới đó. Không học vẹt lý thuyết suông — Thùng máy tính như bộ Lego 5 món lớn và 4 sợi dây nguồn.',
 };
 

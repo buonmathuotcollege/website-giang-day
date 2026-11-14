@@ -1,6 +1,6 @@
 // ============================================================================
 // NGÂN HÀNG ĐỀ THI & CÂU HỎI THỰC CHIẾN NĂNG LỰC NGHỀ PHẦN CỨNG (OL-01)
-// Biên soạn: CN. Phạm Tiến Đồng - Trường Cao đẳng Buôn Ma Thuột
+// Biên soạn: CN. Phạm Tiến Đồng
 // Theo chuẩn Thông tư 55/2026/TT-BGDĐT
 // ============================================================================
 

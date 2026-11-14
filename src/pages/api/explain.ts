@@ -10,13 +10,13 @@ const CORS_HEADERS = {
   "Content-Type": "application/json;charset=UTF-8"
 };
 
-const SYSTEM_INSTRUCTION = `Bạn là Thầy giáo dạy thực hành phần cứng CNTT tại Trường Cao đẳng Buôn Ma Thuột.
+const SYSTEM_INSTRUCTION = `Bạn là Trợ Lý AI Học Tập chuyên môn Phần cứng & CNTT (website: phamtiendong.name.vn).
 Đối tượng học sinh: Học sinh hệ Trung cấp 9+3 (15-18 tuổi, lực học trung bình, rất ngại đọc chữ dài).
-Nhiệm vụ: Giải thích vì sao học sinh chọn sai hoặc giải thích bản chất câu hỏi trắc nghiệm kỹ thuật.
+Nhiệm vụ: Giải thích vì sao người học chọn sai hoặc giải thích bản chất câu hỏi trắc nghiệm kỹ thuật.
 YÊU CẦU BẮT BUỘC:
-1. ĐỘ DÀI: Tối đa đúng 2 đến 3 câu văn (dưới 50 từ).
-2. PHONG CÁCH: Thân mật như người thầy đang đứng bên cạnh bàn máy: "Em chọn câu đó chưa đúng rồi...", "Em nhớ quy tắc này: ...".
-3. VÍ VON ĐỜI THƯỜNG: Dùng hình ảnh cục tẩy, hạt đậu xanh, xe đạp vs xe hơi, tủ đựng đồ, rãnh khuyết... Tuyệt đối không dùng từ ngữ hàn lâm tiếng Anh khó hiểu.`;
+1. ĐỘ DÀI: Tối đa đúng 1 đến 2 câu văn (dưới 45 từ).
+2. PHONG CÁCH: Thân thiện, khách quan, xưng "mình" hoặc "Trợ lý AI", gọi "bạn". TUYỆT ĐỐI KHÔNG đóng vai hay xưng là "Thầy" hoặc "Thầy Đồng".
+3. VÍ VON ĐỜI THƯỜNG: Dùng hình ảnh cục tẩy, hạt đậu xanh, xe đạp vs xe hơi, tủ đựng đồ, rãnh khuyết... Tuyệt đối không dùng từ ngữ hàn lâm khó hiểu.`;
 
 function getGeminiKey(env: any): string {
   const direct = env?.GEMINI_API_KEY || (typeof process !== 'undefined' ? (process as any).env?.GEMINI_API_KEY : '');
@@ -45,16 +45,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
     if (!apiKey) {
       return new Response(JSON.stringify({
         ok: true,
-        explanation: fallbackExplanation || "Em chú ý đối chiếu lại kiến thức thực tế trên bàn máy nhé!"
+        explanation: fallbackExplanation || "Bạn chú ý đối chiếu lại kiến thức thực tế trên bàn máy nhé!"
       }), { headers: CORS_HEADERS });
     }
 
     const ai = new GoogleGenAI({ apiKey });
     const prompt = `Câu hỏi trắc nghiệm: "${question}"
 Các lựa chọn: ${options.join(' | ')}
-Học sinh chọn: "${selectedOption}"
+Người học chọn: "${selectedOption}"
 Đáp án đúng là: "${correctOption}"
-Thầy hãy giải thích cho học sinh 9+3 hiểu vì sao chọn như vậy bằng 2 câu đời thường ngắn nhất.`;
+Hãy giải thích ngắn gọn 1-2 câu đời thường dễ hiểu vì sao chọn như vậy.`;
 
     let reply = '';
     try {
@@ -73,12 +73,12 @@ Thầy hãy giải thích cho học sinh 9+3 hiểu vì sao chọn như vậy b�
       reply = res.text?.trim() || '';
     }
 
-    reply = reply || fallbackExplanation || "Em chú ý đối chiếu lại kiến thức thực tế trên bàn máy nhé!";
+    reply = reply || fallbackExplanation || "Bạn chú ý đối chiếu lại quy tắc kỹ thuật thực hành nhé!";
     return new Response(JSON.stringify({ ok: true, explanation: reply }), { headers: CORS_HEADERS });
   } catch (err: any) {
     return new Response(JSON.stringify({
       ok: true,
-      explanation: "Em xem lại mẹo của người thợ 20 năm nghề trên lớp nhé!"
+      explanation: "Bạn xem lại quy tắc kỹ thuật thực hành nhé!"
     }), { headers: CORS_HEADERS });
   }
 };

@@ -50,7 +50,7 @@ export const COURSES: Course[] = [
     slug: 'phan-cung-may-tinh',
     name: 'Ôn luyện Nghề: Phần cứng máy tính (OL-01)',
     icon: '🔧',
-    desc: 'Bí kíp thực chiến 20 năm nghề: Cầm tay chỉ việc từ số 0, quy trình 7 bước Nhận - Cứu - Bắt - Sạch - Cài - Thử - Giao',
+    desc: 'Quy trình Kỹ thuật viên chuẩn hóa: Cầm tay chỉ việc từ số 0, quy trình 7 bước Nhận - Cứu - Bắt - Sạch - Cài - Thử - Giao',
     subdomain: 'phancung',
     chapters: [
       { slug: 'chuong-1', title: 'Bước 1: Tiếp nhận máy & Đọc cấu hình trong 3 phút', description: 'Khám vỏ ngoài, phân loại 4 trạng thái khởi động A/B/C/D và kiểm tra tương thích linh kiện' },

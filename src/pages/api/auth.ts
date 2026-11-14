@@ -52,9 +52,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
       message: "Xác thực Giảng viên thành công!",
       token: token,
       teacher: {
-        name: "Thầy Phạm Tiến Đông",
+        name: "CN. Phạm Tiến Đông",
         role: "Giảng viên CNTT",
-        school: "Trường Cao đẳng Buôn Ma Thuột",
         authenticated_at: new Date().toISOString()
       }
     }), { headers: CORS_HEADERS });

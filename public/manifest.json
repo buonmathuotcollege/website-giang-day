@@ -1,7 +1,7 @@
 {
-  "name": "Cổng Giảng Dạy & Đánh Giá Năng Lực CNTT - CĐ BMT",
-  "short_name": "CĐ BMT CNTT",
-  "description": "Hệ thống giảng dạy trực tuyến, xưởng thực hành 7 bước và đánh giá năng lực nghề - Trường Cao đẳng Buôn Ma Thuột",
+  "name": "Cổng Giảng Dạy & Đánh Giá Năng Lực CNTT - CN. Phạm Tiến Đông",
+  "short_name": "CNTT PhamTienDong",
+  "description": "Hệ thống giảng dạy trực tuyến, thực hành kỹ thuật và đánh giá năng lực nghề - CN. Phạm Tiến Đông",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

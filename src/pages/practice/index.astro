@@ -22,10 +22,10 @@ export const prerender = false;
           <span class="text-xs text-slate-500 font-medium">Chuẩn TT55 · 30 Học sinh 9+3</span>
         </div>
         <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-          Xưởng Huấn Luyện Kíp Thợ & 10 Bàn Máy
+          Phòng Huấn Luyện Kỹ Thuật Viên & 10 Bàn Máy
         </h1>
         <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
-          10 Kíp thợ 3 người · 2 Trạm xoay vòng · Kiểm soát an toàn Poka-Yoke
+          10 Nhóm KTV (3 KTV / Bàn) · 2 Trạm xoay vòng · Kiểm soát an toàn Poka-Yoke
         </p>
       </div>
 
@@ -119,9 +119,9 @@ export const prerender = false;
 
                 <!-- 3 Names mini -->
                 <div class="text-[11px] text-slate-600 space-y-1">
-                  <p class="truncate font-semibold text-slate-800" x-text="c.members.operator.name || 'Thợ chính'"></p>
-                  <p class="truncate text-slate-500 text-[10px]" x-text="c.members.safety.name || 'Thợ phụ an toàn'"></p>
-                  <p class="truncate text-slate-400 text-[10px]" x-text="c.members.recorder.name || 'Thư ký'"></p>
+                  <p class="truncate font-semibold text-slate-800" x-text="c.members.operator.name || 'KTV 1 (Thao tác)'"></p>
+                  <p class="truncate text-slate-500 text-[10px]" x-text="c.members.safety.name || 'KTV 2 (An toàn)'"></p>
+                  <p class="truncate text-slate-400 text-[10px]" x-text="c.members.recorder.name || 'KTV 3 (Báo cáo)'"></p>
                 </div>
               </div>
 
@@ -177,9 +177,9 @@ export const prerender = false;
                   ></span>
                 </div>
                 <p class="text-xs text-slate-500 mt-0.5">
-                  Thợ chính: <strong class="text-slate-800" x-text="activeCrewDetail.members.operator.name || 'Chưa gán'"></strong> · 
-                  An toàn: <strong class="text-slate-800" x-text="activeCrewDetail.members.safety.name || 'Chưa gán'"></strong> · 
-                  Thư ký: <strong class="text-slate-800" x-text="activeCrewDetail.members.recorder.name || 'Chưa gán'"></strong>
+                  KTV 1 (Thao tác): <strong class="text-slate-800" x-text="activeCrewDetail.members.operator.name || 'Chưa gán'"></strong> · 
+                  KTV 2 (An toàn): <strong class="text-slate-800" x-text="activeCrewDetail.members.safety.name || 'Chưa gán'"></strong> · 
+                  KTV 3 (Báo cáo): <strong class="text-slate-800" x-text="activeCrewDetail.members.recorder.name || 'Chưa gán'"></strong>
                 </p>
               </div>
             </div>
@@ -202,7 +202,7 @@ export const prerender = false;
                   <span>🛑</span>
                   <span>Poka-Yoke: 3 Điểm Dừng An Toàn Bắt Buộc</span>
                 </h3>
-                <p class="text-xs text-slate-500 mt-0.5">Thợ phụ kiểm tra và chạm tick xác nhận trên điện thoại trước khi cắm điện</p>
+                <p class="text-xs text-slate-500 mt-0.5">KTV 2 kiểm tra và chạm tick xác nhận trên điện thoại trước khi cắm điện</p>
               </div>
 
               <!-- Status Badge -->
@@ -479,7 +479,7 @@ export const prerender = false;
             class="px-3.5 py-2.5 rounded-xl bg-slate-100 text-slate-800 border border-slate-300 font-bold text-xs hover:bg-slate-200 flex items-center justify-center gap-1.5 transition-colors"
           >
             <span>🖨️</span>
-            <span>In Phiếu A4 Kíp Thợ</span>
+            <span>In Phiếu A4 Bàn Máy</span>
           </button>
         </div>
 
@@ -641,12 +641,12 @@ export const prerender = false;
         for (let i = 1; i <= 10; i++) {
           arr.push({
             id: i,
-            name: 'Kíp ' + i,
+            name: 'Nhóm KTV ' + i,
             station: i <= 5 ? 1 : 2,
             members: {
-              operator: { name: '', role: 'Thợ chính' },
-              safety: { name: '', role: 'Thợ phụ / An toàn' },
-              recorder: { name: '', role: 'Thư ký kỹ thuật' },
+              operator: { name: '', role: 'KTV 1 (Thao tác)' },
+              safety: { name: '', role: 'KTV 2 (An toàn)' },
+              recorder: { name: '', role: 'KTV 3 (Báo cáo)' },
             },
             safetyChecks: {
               rule1_power_discharge: false,
@@ -757,7 +757,7 @@ export const prerender = false;
           c.members.recorder.name = list[i * 3 + 2]?.full_name || `Học sinh ${i * 3 + 3}`;
         }
         this.autoSave();
-        this.showMsg('Đã tự động chia 30 học sinh vào 10 kíp thợ!');
+        this.showMsg('Đã tự động chia 30 học sinh vào 10 nhóm KTV!');
       },
 
       async saveGradeForBench() {
@@ -827,7 +827,7 @@ export const prerender = false;
           <html>
           <head>
             <meta charset="utf-8">
-            <title>Phiếu Nghiệm Thu Tay Nghề Kíp Thợ - Bàn ${c.id}</title>
+            <title>Phiếu Nghiệm Thu Kỹ Thuật Viên - Bàn ${c.id}</title>
             <style>
               body { font-family: 'Times New Roman', serif; margin: 25mm 20mm; color: #000; font-size: 13pt; line-height: 1.4; }
               .center { text-align: center; }
@@ -838,15 +838,15 @@ export const prerender = false;
           </head>
           <body>
             <div class="center">
-              <h3>TRƯỜNG CAO ĐẲNG BUÔN MA THUỘT — KHOA CNTT</h3>
-              <h2>PHIẾU NGHIỆM THU TAY NGHỀ KÍP THỢ (CHUẨN TT55)</h2>
+              <h3>BỘ MÔN: ÔN LUYỆN NĂNG LỰC NGHỀ PHẦN CỨNG MÁY TÍNH</h3>
+              <h2>PHIẾU NGHIỆM THU KỸ THUẬT VIÊN (CHUẨN TT55)</h2>
               <hr style="width: 200px; margin: 5px auto;">
             </div>
             <p><strong>Lớp:</strong> ${this.selectedClassName || '03THA9'} &nbsp;&nbsp;&nbsp;&nbsp; <strong>Bàn máy:</strong> Số ${c.id} (${c.name})</p>
             <p><strong>Trạm thực hành:</strong> ${c.station === 1 ? 'Trạm 1: Tháo Lắp Cơ Khí' : 'Trạm 2: Cài Win PE & Driver'}</p>
-            <p><strong>1. Thợ chính:</strong> ${c.members.operator.name || '................................'}</p>
-            <p><strong>2. Thợ phụ an toàn:</strong> ${c.members.safety.name || '................................'}</p>
-            <p><strong>3. Thư ký:</strong> ${c.members.recorder.name || '................................'}</p>
+            <p><strong>1. KTV 1 (Thao tác chính):</strong> ${c.members.operator.name || '................................'}</p>
+            <p><strong>2. KTV 2 (Kiểm soát an toàn):</strong> ${c.members.safety.name || '................................'}</p>
+            <p><strong>3. KTV 3 (Báo cáo kỹ thuật):</strong> ${c.members.recorder.name || '................................'}</p>
             <table>
               <tr><th>Tiêu chí đánh giá</th><th>Điểm tối đa</th><th>Điểm đạt</th></tr>
               <tr><td>5S & An toàn Poka-Yoke 3 điểm dừng</td><td align="center">2.0</td><td align="center">${this.tempGrade.safety}</td></tr>
@@ -854,10 +854,10 @@ export const prerender = false;
               <tr><td>Cài WinPE, phân vùng GPT/UEFI sạch</td><td align="center">3.0</td><td align="center">${this.tempGrade.winInstall}</td></tr>
               <tr><td>Driver sạch & Đo nhiệt độ test tải &lt; 75°C</td><td align="center">2.0</td><td align="center">${this.tempGrade.driverTemp}</td></tr>
               <tr><td>Tác phong công nghiệp & Biên bản bàn giao</td><td align="center">1.0</td><td align="center">${this.tempGrade.workplace5s}</td></tr>
-              <tr><td align="right"><strong>TỔNG ĐIỂM KÍP THỢ:</strong></td><td align="center"><strong>10.0</strong></td><td align="center"><strong style="font-size:14pt;">${this.calcGradeTotal()}</strong></td></tr>
+              <tr><td align="right"><strong>TỔNG ĐIỂM ĐÁNH GIÁ:</strong></td><td align="center"><strong>10.0</strong></td><td align="center"><strong style="font-size:14pt;">${this.calcGradeTotal()}</strong></td></tr>
             </table>
             <div style="display:flex; justify-content:space-between; margin-top:40px; text-align:center;">
-              <div style="width:45%;"><p><strong>ĐẠI DIỆN KÍP THỢ</strong><br><br><br><br>${c.members.operator.name || 'Thợ chính'}</p></div>
+              <div style="width:45%;"><p><strong>ĐẠI DIỆN NHÓM KTV</strong><br><br><br><br>${c.members.operator.name || 'KTV 1'}</p></div>
               <div style="width:45%;"><p><strong>GIẢNG VIÊN HƯỚNG DẪN</strong><br><br><br><br><strong>CN. Phạm Tiến Đồng</strong></p></div>
             </div>
             <div style="text-align:center; margin-top:30px;"><button onclick="window.print()" style="padding:8px 16px; font-weight:bold; cursor:pointer;">IN PHIẾU (CTRL+P)</button></div>

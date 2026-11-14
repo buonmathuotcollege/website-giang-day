@@ -1,5 +1,5 @@
 // ============================================================================
-// SERVICE WORKER - CỔNG GIẢNG DẠY CNTT TRƯỜNG CAO ĐẲNG BUÔN MA THUỘT (PWA)
+// SERVICE WORKER - CỔNG GIẢNG DẠY CNTT (PWA)
 // ============================================================================
 
 const CACHE_NAME = 'bmtc-edu-v1';

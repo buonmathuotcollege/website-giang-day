@@ -4,81 +4,58 @@
 
 ---
 
-## 1. THÔNG TIN DỰ ÁN & CHÂN DUNG NGƯỜI DÙNG
-* **Chủ sở hữu & Giảng viên phụ trách:** CN. Phạm Tiến Đông
-* **Đơn vị công tác:** Khoa Công nghệ Thông tin - Trường Cao đẳng Buôn Ma Thuột
-* **Domain sản xuất:** `https://phamtiendong.name.vn` (Astro 5 + Cloudflare Pages SSR Edge)
+## 1. BẢN CHẤT DỰ ÁN & ĐỊNH VỊ THƯƠNG HIỆU
+* **Chủ sở hữu:** CN. Phạm Tiến Đông (Giảng viên / Kỹ sư CNTT)
+* **Bản chất website:** Đây là **WEBSITE CÁ NHÂN** (`https://phamtiendong.name.vn`), phục vụ công tác giảng dạy, huấn luyện kỹ năng nghề và chia sẻ kiến thức chuyên ngành CNTT.
+* ❌ **TUYỆT ĐỐI KHÔNG ĐƯỢC ĐƯA TÊN TRƯỜNG CỦA TÁC GIẢ VÀO:** Không đề cập tên trường cụ thể (như "Trường Cao đẳng Buôn Ma Thuột", "CĐ Buôn Ma Thuột", "BMTC") trên bất kỳ giao diện, tài liệu, tiêu đề hay mã nguồn nào. Sử dụng định danh trung tính: *"Cổng Học Tập & Giảng Dạy CNTT"* hoặc *"Website Giảng Dạy CNTT - CN. Phạm Tiến Đông"*.
 * **Đối tượng học sinh trọng tâm:** Học sinh hệ **Trung cấp 9+3 (15 - 18 tuổi)**
-  - Vừa tốt nghiệp THCS đi học nghề, khả năng tiếp thu lý thuyết ở mức trung bình.
+  - Học sinh học nghề, khả năng tiếp thu lý thuyết ở mức trung bình.
   - Rất ngại đọc những bức tường chữ dài, trừu tượng.
   - Học tốt nhất qua **thực hành trực quan, "mắt thấy - tay làm", ví von đời thường**.
   - Phần lớn các em truy cập và làm bài bằng **điện thoại di động (Smartphone)**.
 
 ---
 
-## 2. TRIẾT LÝ SƯ PHẠM & TINH THẦN THIẾT KẾ CỐT LÕI
-
-### A. Tinh Thần Đời Thường & Trực Quan Hóa (No Academic Jargon)
-Mọi giải thích kỹ thuật phải quy về các hình ảnh đời thường quen thuộc mà học sinh 15-18 tuổi đều biết:
-* **RAM:** Giống cái *"Mặt bàn học"* (bày sách vở ra làm việc, mặt bàn càng rộng mở được càng nhiều việc cùng lúc, dọn bàn/tắt máy là hết).
-* **Ổ cứng (SSD/HDD):** Giống cái *"Tủ sách / Cặp tài liệu"* (cất giữ lâu dài, tắt máy không mất).
-* **Địa chỉ IP:** Giống *"Số nhà, tên đường"* để bưu tá chuyển phát thư đúng nơi.
-* **Băng thông mạng (Bandwidth):** Giống *"Độ rộng ống nước"* (ống càng to nước chảy càng nhanh).
-* **CPU:** Giống *"Bộ não của người thợ tính toán"*.
-* **Tra keo tản nhiệt:** Luôn nhấn mạnh liều lượng chuẩn bằng *"Hạt đậu xanh / Hạt gạo"*.
-
-### B. Triết Lý Kỹ Thuật Nhật Bản (5S & Poka-Yoke Chống Lỗi)
-* **Poka-Yoke (Chống cắm ngược / Chống thao tác nhầm):** Mọi khe cắm, nút bấm, biểu mẫu phải có gờ định vị hoặc thông báo ngăn chặn học sinh làm sai trước khi xảy ra hậu quả.
-* **3 Luật sống còn & 3 Điểm dừng an toàn:** Đưa vào quy trình thực hành như phản xạ tự nhiên của người thợ lành nghề.
-* **Tác phong sư phạm:** Luôn xưng *"thầy"*, gọi *"em"*, động viên, ân cần và kiên nhẫn.
+## 2. CHUẨN MỰC TỪ NGỮ CHUYÊN NGHIỆP (NO WORKSHOP SLANG)
+* ❌ **TUYỆT ĐỐI KHÔNG DÙNG TIẾNG LÓNG BÌNH DÂN:**
+  - Không dùng các từ như: *"bí kíp thợ"*, *"người thợ 20 năm nghề"*, *"thợ chính"*, *"thợ phụ"*, *"kíp thợ"*, *"xưởng huấn luyện thợ"*. Những từ này nghe dân dã, thiếu tính chuyên nghiệp sư phạm.
+* ✅ **THAY BẰNG THUẬT NGỮ KỸ THUẬT TIÊU CHUẨN (KTV):**
+  - **Nhóm KTV / Bàn Kỹ Thuật:** Thay cho "Kíp thợ".
+  - **KTV 1 (Thao tác chính / Operator):** Chịu trách nhiệm tháo lắp cơ khí, cắm linh kiện, phân vùng cài hệ điều hành.
+  - **KTV 2 (Kiểm soát an toàn & Poka-Yoke):** Kiểm tra 3 điểm dừng an toàn, bóc nilon, tra keo tản nhiệt, chống cắm ngược.
+  - **KTV 3 (Ghi chép & Báo cáo kỹ thuật):** Ghi chép thông số cấu hình, nhiệt độ test tải, lập phiếu nghiệm thu bàn giao.
+  - **Quy trình tiêu chuẩn / Kinh nghiệm thực chiến:** Thay cho "Bí kíp 20 năm".
 
 ---
 
-## 3. NHỮNG ĐIỀU BẮT BUỘC PHẢI TẬP TRUNG (DOs)
-
-1. **Mobile-First & 1-Chạm:**
-   - Mọi nút bấm, thẻ lựa chọn phải có chiều cao tối thiểu 44px, độ tương phản cao, dễ bấm bằng ngón tay cái trên màn hình cảm ứng.
-   - Ưu tiên thẻ hành động nhanh (Quick Action Cards), tự động gợi ý danh sách học sinh (Datalist Autocomplete).
-2. **An Toàn Dữ Liệu Hai Lớp (Dual-Layer Persistence - Zero Data Loss):**
-   - Dữ liệu lớp học và học sinh phải được lưu song song ở `localStorage` của máy Thầy và đồng bộ lên Cloudflare.
-   - **Quy tắc vàng:** ID lớp học luôn mang tính đơn định (`cls_03tha9`, `cls_03tha8`), không bao giờ dùng ID ngẫu nhiên có đuôi thời gian.
-   - **Tuyệt đối không bao giờ** để mảng rỗng `[]` từ máy chủ ghi đè làm mất danh sách học sinh Thầy đã nạp trên máy tính.
-3. **Bảo Mật Nghiêm Ngặt Khu Vực Giảng Viên:**
-   - Mọi trang `/admin/*` và API chỉnh sửa (`POST/DELETE`) phải kiểm tra `checkAdminAuth`.
-   - Mật mã giáo viên (`TEACHER_SECRET`) phải được bảo mật, nhập sai phải từ chối ngay (HTTP 401).
-   - Có tùy chọn tự hủy phiên đăng nhập khi đóng tab trên máy tính công cộng.
-4. **Hiệu Năng Cực Hạn (Edge & CDN Speed):**
-   - Các trang nội dung bài giảng, thi sát hạch phải được khai báo `export const prerender = true;` để Cloudflare CDN phục vụ với độ trễ 0ms.
-   - Chatbot AI sử dụng dòng mô hình siêu nhẹ, tốc độ cao (`gemini-3.5-flash-lite`).
-5. **Tiêu Chuẩn Code:**
-   - Kiểm tra `npm run build` trước khi hoàn tất: Đảm bảo **0 lỗi (0 errors)** và **0 cảnh báo (0 warnings)**.
+## 3. VAI TRÒ & PHONG CÁCH CỦA TRỢ LÝ AI (CHATBOT GUARDRAILS)
+* ❌ **BOT TUYỆT ĐỐI KHÔNG ĐÓNG VAI HOẶC XƯNG LÀ "THẦY ĐỒNG":**
+  - Bot là **Trợ Lý AI Học Tập CNTT (AI Teaching Assistant)**, một công cụ công nghệ độc lập hỗ trợ sinh viên học tập.
+  - Xưng hô chuẩn mực: Tự xưng là *"mình"* hoặc *"Trợ lý AI"*, gọi người học là *"bạn"*.
+  - Giữ thái độ hỗ trợ khách quan, kiên nhẫn, khuyến khích học tập.
+* **Nguyên tắc giải thích:**
+  - Ngắn gọn từ 2 đến 4 gạch đầu dòng (dưới 80 từ).
+  - Dùng hình ảnh đời thường dễ hiểu: RAM = *mặt bàn học*, Ổ cứng = *tủ cất sách*, Địa chỉ IP = *số nhà*, Keo tản nhiệt = *hạt đậu xanh*.
+* **Ranh giới nội dung (Strict Scope):**
+  - Chỉ trả lời về CNTT, phần cứng, mạng, Windows/Linux, tin học ứng dụng.
+  - Từ chối lịch sự các chủ đề ngoài ngành (tình cảm, giải trí, làm thơ, giải bài tập Toán/Lý/Hóa ngoài ngành).
 
 ---
 
-## 4. NHỮNG ĐIỀU TUYỆT ĐỐI KHÔNG ĐƯỢC TRIỂN KHAI (DON'Ts)
-
-1. ❌ **KHÔNG** viết những đoạn văn lý thuyết hàn lâm, dài dằng dặc, mang nặng tính học thuật đại học khiến học sinh 9+3 bị ngợp và nản chí.
-2. ❌ **KHÔNG** hiển thị các cửa sổ popup kỹ thuật rối rắm (như yêu cầu vào Cloudflare dashboard binding, hướng dẫn D1 thủ công) gây cảm giác thiếu chuyên nghiệp.
-3. ❌ **KHÔNG** để lộ mật khẩu, khóa bí mật hoặc token ra mã HTML/JS phía máy khách (F12).
-4. ❌ **KHÔNG** cho phép Trợ Giảng AI trả lời các chủ đề ngoài ngành (tình cảm yêu đương, thơ văn, giải trí, chơi game, giải bài tập Toán/Lý/Hóa ngoài ngành CNTT). Khi gặp các câu hỏi này, AI phải từ chối khéo léo và hướng học sinh quay lại bài học.
-5. ❌ **KHÔNG** tự ý sửa đổi hoặc xóa bỏ các cấu trúc dữ liệu đã được Thầy chuẩn hóa (`03THA8`, `03THA9`, chuẩn đánh giá Thông tư 55).
-6. ❌ **KHÔNG** thiết kế giao diện màu mè loè loẹt (gradient tím/vàng/cam chói lọi), không nhồi nhét quá nhiều khối thông tin vào một màn hình gây rối mắt và khó sử dụng.
-
----
-
-## 5. QUY CHUẨN GIAO DIỆN TỐI GIẢN & DI ĐỘNG (SHADCN/UI & CARD WIZARD STANDARD)
-> **Đúc kết từ các Repo GitHub hàng đầu (`shadcn/ui`, `dub.co`, `cal.com`, `quiz-app`):**
-
+## 4. QUY CHUẨN GIAO DIỆN TỐI GIẢN (SHADCN/UI & PROGRESSIVE DISCLOSURE)
 1. **Phong Cách Tối Giản Cực Hạn (Minimalist Slate/Zinc Palette - shadcn/ui):**
-   - Loại bỏ hoàn toàn các màu nền gradient loè loẹt gây nhức mắt trên điện thoại.
-   - Bảng màu chuẩn: Nền trắng tuyết hoặc xám nhạt (`bg-slate-50`), khung viền mảnh tinh tế (`border-slate-200`), chữ đen đậm (`text-slate-900`) và xám trung tính (`text-slate-500`). Màu nhấn là xanh navy (`bg-slate-900` hoặc `bg-indigo-600`).
-   - Ưu tiên khoảng trắng (White Space) thoáng đãng, các góc bo chuẩn (`rounded-2xl`, `rounded-xl`).
-2. **Phân Tầng Nhiệm Vụ & Tách Biệt Vai Trò (Progressive Disclosure - dub.co / cal.com):**
-   - **Giao diện Học sinh (Student View):** Mặc định mở ra phải cực kỳ đơn giản (tối đa 2-3 nút to bản). Học sinh chỉ thấy đúng việc của mình (Chọn bàn máy ➔ Tick an toàn ➔ Luyện trắc nghiệm).
-   - **Khu Vực Giảng Viên (Teacher Cockpit):** Toàn bộ các công cụ quản lý phức tạp (chia kíp, xoay trạm, chấm điểm, nạp danh sách) được gom gọn gàng sau nút **[🔐 Khu Vực Giảng Viên]** hoặc cửa sổ trượt (Sheet/Modal), không phơi bày làm rối mắt học sinh.
-3. **Trải Nghiệm Thẻ Trượt 1-Chạm Trên Điện Thoại (Mobile Card Wizard - Duolingo style):**
-   - 1 Màn hình = 1 Nhiệm vụ duy nhất (Single-purpose Screen).
-   - Nút bấm to, dạng xúc giác (chống bấm trượt): Chiều cao tối thiểu 48px – 56px, chạm ngón tay cái là phản hồi ngay.
-   - Trắc nghiệm hiển thị dạng thẻ bài: 1 câu hỏi nổi bật ở trung tâm, 4 đáp án dạng nút bấm to bản, thanh tiến độ mảnh ở trên, giải thích AI siêu ngắn gọn khi làm sai.
-4. **Không Cuộn Trang Dài Dằng Dặc:** Thay vì 1 trang cuộn 1000 dòng, chia thành các tab hoặc bước (Step 1 ➔ Step 2) để học sinh bấm chuyển mượt mà.
+   - Không dùng gradient màu mè cầu vồng gây nhức mắt trên điện thoại.
+   - Bảng màu: Nền xám nhạt (`bg-slate-50`), thẻ trắng (`bg-white border-slate-200`), chữ đậm (`text-slate-900`), màu nhấn xanh navy / đen sâu.
+2. **Phân Tầng Nhiệm Vụ (Progressive Disclosure - dub.co / cal.com):**
+   - **Giao diện Học sinh (Student View):** Mặc định cực kỳ đơn giản (Chọn Bàn ➔ Tick 3 điểm an toàn ➔ Luyện trắc nghiệm).
+   - **Bảng Điều Khiển Của Thầy (Teacher Cockpit):** Gom gọn gàng trong nút **[ 🔐 Bảng Của Thầy ]** (Modal/Drawer), không phơi bày làm rối mắt học sinh.
+3. **Thẻ Trượt 1-Chạm (Card Wizard / Duolingo style):**
+   - 1 Màn hình = 1 Nhiệm vụ duy nhất.
+   - Nút bấm to xúc giác (chiều cao tối thiểu 48px), chống bấm nhầm trên màn hình cảm ứng.
 
+---
+
+## 5. BẢO MẬT & KỸ THUẬT HỆ THỐNG
+* **An Toàn Dữ Liệu Hai Lớp (Dual-Layer Persistence - Zero Data Loss):** Lưu đồng thời `localStorage` và Cloudflare D1.
+* **Bảo mật:** Mật mã `TEACHER_SECRET` bảo vệ các API quản trị và trang `/admin/*`. Tuyệt đối không để lộ khóa bí mật ra HTML/JS client.
+* **Tiêu chuẩn Code:** Kiểm tra `npm run build` trước khi hoàn tất: Đảm bảo **0 lỗi (0 errors)** và **0 cảnh báo (0 warnings)**.

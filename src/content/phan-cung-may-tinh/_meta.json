@@ -3,7 +3,7 @@
   "name": "Ôn luyện Nghề: Phần cứng máy tính (OL-01)",
   "subdomain": "phancung",
   "icon": "🔧",
-  "description": "Bí kíp 20 năm nghề Kỹ thuật viên máy tính: Cầm tay chỉ việc từ số 0, quy trình 7 bước Nhận - Cứu - Bắt - Sạch - Cài - Thử - Giao và Rubric 10 điểm sát hạch.",
+  "description": "Kỹ năng Kỹ thuật viên máy tính thực chiến: Cầm tay chỉ việc từ số 0, quy trình 7 bước Nhận - Cứu - Bắt - Sạch - Cài - Thử - Giao và Rubric 10 điểm sát hạch.",
   "chapters": [
     { "slug": "chuong-1", "num": 1, "title": "Bước 1: Tiếp nhận máy & Đọc cấu hình trong 3 phút" },
     { "slug": "chuong-2", "num": 2, "title": "Bước 2: Luật Giữ Nồi Cơm — Cứu dữ liệu trước khi sửa máy" },
