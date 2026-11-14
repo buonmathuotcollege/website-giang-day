@@ -1073,13 +1073,69 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         return sum;
       },
 
+      findStudentsForClass(store, cls) {
+        if (!store || !cls) return [];
+        // 1. Kiểm tra chính xác store[cls.id]
+        if (Array.isArray(store[cls.id]) && store[cls.id].length > 0) {
+          return store[cls.id];
+        }
+        // 2. Kiểm tra theo mã lớp (ví dụ: '03THA9')
+        if (cls.class_code && Array.isArray(store[cls.class_code]) && store[cls.class_code].length > 0) {
+          return store[cls.class_code];
+        }
+        // 3. Quét tất cả các key xem có key nào chứa mã lớp (ví dụ cls_03tha9_xyz)
+        const cleanTarget = (cls.class_code || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (cleanTarget) {
+          for (const [key, val] of Object.entries(store)) {
+            const cleanKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if (cleanKey.includes(cleanTarget) && Array.isArray(val) && val.length > 0) {
+              return val;
+            }
+          }
+        }
+        // 4. Quét từng học sinh trong tất cả các danh sách
+        for (const [key, val] of Object.entries(store)) {
+          if (Array.isArray(val) && val.length > 0) {
+            const matched = val.filter(s => 
+              (s.original_class && s.original_class.toUpperCase() === (cls.class_code || '').toUpperCase()) ||
+              (s.class_id && s.class_id.toLowerCase().replace(/[^a-z0-9]/g, '').includes(cleanTarget))
+            );
+            if (matched.length > 0) {
+              return matched;
+            }
+          }
+        }
+        return [];
+      },
+
       async fetchClasses() {
         this.loading = true;
-        // 1. Tải tức thì từ localStorage để đảm bảo mọi lớp thầy tạo hay xóa được giữ nguyên 100%
+        // 1. Tải tức thì từ localStorage
         const localClasses = localStorage.getItem('BMTC_CLASSES');
         if (localClasses) {
           try {
             this.classes = JSON.parse(localClasses);
+          } catch(e){}
+        }
+
+        // Tự động quét và phục hồi học sinh cho từng lớp
+        let allStudentsStore = {};
+        try {
+          allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+        } catch(e){}
+
+        if (Array.isArray(this.classes)) {
+          this.classes.forEach(c => {
+            const stus = this.findStudentsForClass(allStudentsStore, c);
+            c.student_count = stus.length;
+            if (stus.length > 0) {
+              allStudentsStore[c.id] = stus;
+              allStudentsStore[c.class_code] = stus;
+            }
+          });
+          try {
+            localStorage.setItem('BMTC_STUDENTS', JSON.stringify(allStudentsStore));
+            localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
           } catch(e){}
         }
 
@@ -1088,13 +1144,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           const res = await fetch('/api/classes');
           const data = await res.json();
           if (data && data.ok && Array.isArray(data.data)) {
-            this.isCloudD1Connected = Boolean(data.from_d1);
-            // Nếu chưa có trong localStorage hoặc danh sách rỗng, dùng dữ liệu khởi tạo
             if (!localClasses || (Array.isArray(this.classes) && this.classes.length === 0)) {
               this.classes = data.data;
               localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
             } else if (data.from_d1) {
-              // Nếu server kết nối D1 thật, đồng bộ
               this.classes = data.data;
               localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
             } else {
@@ -1205,7 +1258,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         const academicYear = this.newClass.academicYear.trim() || '2026-2027';
         const isComposite = this.newClass.isComposite ? 1 : 0;
         const newClassId = (isComposite ? 'cls_ghep_' : 'cls_') + 
-          classCode.toLowerCase().replace(/[^a-z0-9]/g, '_') + '_' + Date.now().toString(36).slice(-4);
+          classCode.toLowerCase().replace(/[^a-z0-9]/g, '_');
 
         const newClassObj = {
           id: newClassId,
@@ -1415,24 +1468,34 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         }
 
         const classId = this.importData.classId;
+        const targetClass = this.classes.find(c => c.id === classId);
+        const classCode = targetClass ? targetClass.class_code : classId;
         const students = [...this.importData.parsedStudents];
 
-        // 1. Lưu học sinh vào localStorage theo classId
+        // 1. Lưu học sinh vào localStorage theo CẢ classId VÀ classCode
         let allStudentsStore = {};
         try {
           allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
         } catch(e){}
 
+        const mappedStudents = students.map((s, idx) => ({
+          ...s,
+          id: s.id || ('stu_' + Date.now() + '_' + idx),
+          class_id: classId,
+          original_class: s.original_class || classCode
+        }));
+
         if (this.importData.overwrite) {
-          allStudentsStore[classId] = students.map((s, idx) => ({ ...s, id: 'stu_' + Date.now() + '_' + idx, class_id: classId }));
+          allStudentsStore[classId] = mappedStudents;
+          allStudentsStore[classCode] = mappedStudents;
         } else {
-          const current = allStudentsStore[classId] || [];
-          allStudentsStore[classId] = [...current, ...students.map((s, idx) => ({ ...s, id: 'stu_' + Date.now() + '_' + idx, class_id: classId }))];
+          const current = this.findStudentsForClass(allStudentsStore, targetClass);
+          allStudentsStore[classId] = [...current, ...mappedStudents];
+          allStudentsStore[classCode] = allStudentsStore[classId];
         }
         localStorage.setItem('BMTC_STUDENTS', JSON.stringify(allStudentsStore));
 
         // 2. Cập nhật sĩ số trong this.classes và localStorage
-        const targetClass = this.classes.find(c => c.id === classId);
         if (targetClass) {
           targetClass.student_count = allStudentsStore[classId].length;
           localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
@@ -1453,7 +1516,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             body: JSON.stringify({
               action: 'import_students',
               class_id: classId,
-              students: students,
+              class_code: classCode,
+              students: mappedStudents,
               overwrite: this.importData.overwrite
             })
           }).catch(() => {});
@@ -1467,24 +1531,41 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         this.filterOriginalClass = '';
         this.showStudentListModal = true;
 
-        // 1. Đọc từ localStorage trước để không bao giờ bị trắng trang
-        let localStudents = [];
+        let allStudentsStore = {};
         try {
-          const allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
-          localStudents = allStudentsStore[cls.id] || [];
+          allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
         } catch(e){}
 
+        // Tìm kiếm thông minh qua id, mã lớp hoặc quét mờ (cứu dữ liệu nếu lệch key)
+        let localStudents = this.findStudentsForClass(allStudentsStore, cls);
         this.selectedClassStudents = localStudents;
 
-        // 2. Thử đồng bộ từ Server nếu server có dữ liệu
+        if (cls) cls.student_count = localStudents.length;
+
+        // Chỉ đồng bộ nếu server có dữ liệu thật sự (data.length > 0)
+        // TUYỆT ĐỐI KHÔNG BAO GIỜ lấy [] từ server đè lên dữ liệu của Thầy!
         try {
-          const res = await fetch('/api/classes?id=' + encodeURIComponent(cls.id));
+          const res = await fetch('/api/classes?id=' + encodeURIComponent(cls.id) + '&code=' + encodeURIComponent(cls.class_code));
           const data = await res.json();
-          if (data && data.ok && Array.isArray(data.data) && (data.from_d1 || localStudents.length === 0)) {
+          if (data && data.ok && Array.isArray(data.data) && data.data.length > 0) {
             this.selectedClassStudents = data.data;
-            const allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
             allStudentsStore[cls.id] = data.data;
+            allStudentsStore[cls.class_code] = data.data;
             localStorage.setItem('BMTC_STUDENTS', JSON.stringify(allStudentsStore));
+            if (cls) cls.student_count = data.data.length;
+          } else if (localStudents.length > 0) {
+            // Đẩy dữ liệu học sinh của Thầy từ localStorage lên server
+            fetch('/api/classes', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                action: 'import_students',
+                class_id: cls.id,
+                class_code: cls.class_code,
+                students: localStudents,
+                overwrite: true
+              })
+            }).catch(() => {});
           }
         } catch (err) {
         } finally {

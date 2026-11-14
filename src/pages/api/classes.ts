@@ -153,7 +153,16 @@ export const GET: APIRoute = async ({ request, locals }) => {
   }
 
   if (classId || classCode) {
-    const list = memStudents.filter((s: any) => s.class_id === classId || s.class_code === classCode);
+    const targetCode = (classCode || "").toUpperCase();
+    const cleanTarget = (classCode || classId || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    const list = memStudents.filter((s: any) => 
+      (classId && s.class_id === classId) || 
+      (classCode && (
+        (s.class_code && s.class_code.toUpperCase() === targetCode) ||
+        (s.original_class && s.original_class.toUpperCase() === targetCode) ||
+        (s.class_id && s.class_id.toLowerCase().replace(/[^a-z0-9]/g, "").includes(cleanTarget))
+      ))
+    );
     return new Response(JSON.stringify({ ok: true, data: list, from_d1: false }), { headers: CORS_HEADERS });
   }
 
@@ -274,10 +283,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // -------------------------------------------------------------
     if (action === "import_students") {
       const classId = String(body.class_id || "").trim();
+      const classCode = String(body.class_code || "").trim();
       const studentList = body.students || [];
 
-      if (!classId) {
-        return new Response(JSON.stringify({ ok: false, error: "Thiếu class_id của lớp học" }), { status: 400, headers: CORS_HEADERS });
+      if (!classId && !classCode) {
+        return new Response(JSON.stringify({ ok: false, error: "Thiếu class_id hoặc class_code của lớp học" }), { status: 400, headers: CORS_HEADERS });
       }
 
       if (!Array.isArray(studentList) || studentList.length === 0) {
@@ -286,11 +296,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
       if (env && env.DB) {
         await ensureTables(env.DB);
-        const targetClass = await env.DB.prepare("SELECT class_code, is_composite FROM classes WHERE id = ?").bind(classId).first();
-        const defaultOriginal = targetClass ? targetClass.class_code : "";
+        const targetClass = await env.DB.prepare("SELECT id, class_code, is_composite FROM classes WHERE id = ? OR class_code = ?").bind(classId, classCode).first();
+        const defaultOriginal = targetClass ? targetClass.class_code : (classCode || classId);
+        const realClassId = targetClass ? targetClass.id : classId;
 
         if (body.overwrite) {
-          await env.DB.prepare("DELETE FROM students WHERE class_id = ?").bind(classId).run();
+          await env.DB.prepare("DELETE FROM students WHERE class_id = ?").bind(realClassId).run();
         }
 
         const statements = studentList.map((stu: any, idx: number) => {
@@ -300,7 +311,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             INSERT INTO students (id, class_id, student_number, student_code, full_name, date_of_birth, gender, phone, status, original_class)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           `).bind(
-            stuId, classId, Number(stu.student_number || idx + 1),
+            stuId, realClassId, Number(stu.student_number || idx + 1),
             String(stu.student_code || "").trim(),
             String(stu.full_name || "").trim(),
             String(stu.date_of_birth || "").trim(),
@@ -321,12 +332,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
       } else {
         // In-memory fallback
         if (body.overwrite) {
-          (globalThis as any).MEM_STUDENTS = (globalThis as any).MEM_STUDENTS.filter((s: any) => s.class_id !== classId);
+          (globalThis as any).MEM_STUDENTS = (globalThis as any).MEM_STUDENTS.filter(
+            (s: any) => s.class_id !== classId && s.class_code !== classCode
+          );
         }
         studentList.forEach((stu: any, idx: number) => {
           (globalThis as any).MEM_STUDENTS.push({
-            id: "stu_" + Date.now() + "_" + idx,
+            id: stu.id || ("stu_" + Date.now() + "_" + idx),
             class_id: classId,
+            class_code: classCode,
             student_number: idx + 1,
             student_code: stu.student_code || "",
             full_name: stu.full_name || "",
@@ -334,13 +348,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
             gender: stu.gender || "Nam",
             phone: stu.phone || "",
             status: stu.status || "Đang học",
-            original_class: stu.original_class || ""
+            original_class: stu.original_class || classCode || "Gốc"
           });
         });
 
         return new Response(JSON.stringify({
           ok: true,
-          message: `Đã nạp thành công ${studentList.length} học sinh vào bộ nhớ tạm!`,
+          message: `Đã nạp thành công ${studentList.length} học sinh vào bộ nhớ!`,
           count: studentList.length
         }), { headers: CORS_HEADERS });
       }
