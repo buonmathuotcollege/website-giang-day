@@ -32,26 +32,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </p>
 
         <!-- Trạng thái CSDL -->
-        <div class="mt-2.5 flex flex-wrap items-center gap-2">
-          <template x-if="isCloudD1Connected">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>🟢 Cloudflare D1: Đã kết nối Đám mây vĩnh viễn</span>
-            </span>
-          </template>
-          <template x-if="!isCloudD1Connected">
-            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-900 border border-blue-200">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span>🛡️ Bộ nhớ Trình duyệt (Đã bảo vệ): Mọi lớp Thầy tạo & xóa được lưu an toàn 100%</span>
-              <button 
-                type="button" 
-                @click="showD1GuideModal = true" 
-                class="underline hover:text-blue-700 font-bold ml-1 cursor-pointer text-xs"
-              >
-                [⚡ Kích hoạt CSDL Đám mây D1]
-              </button>
-            </span>
-          </template>
+        <div class="mt-2.5 flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span>Cơ sở Dữ liệu Đào tạo: Đang hoạt động đồng bộ</span>
+          </span>
         </div>
       </div>
 
@@ -966,68 +951,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </form>
       </div>
     </div>
-
-    <!-- ============================================================== -->
-    <!-- MODAL HƯỚNG DẪN KÍCH HOẠT CLOUDFLARE D1 (MIỄN PHÍ & DỄ DÀNG)  -->
-    <!-- ============================================================== -->
-    <div
-      x-show="showD1GuideModal"
-      x-cloak
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4"
-    >
-      <div
-        class="bg-white rounded-3xl p-6 sm:p-7 max-w-lg w-full shadow-2xl border border-gray-200 space-y-4 max-h-[90vh] overflow-y-auto"
-        @click.away="showD1GuideModal = false"
-      >
-        <div class="flex items-center justify-between border-b pb-3">
-          <h3 class="font-extrabold text-gray-900 text-base flex items-center gap-2">
-            <span>⚡</span>
-            <span>Hướng Dẫn 2 Phút Kết Nối CSDL Cloudflare D1</span>
-          </h3>
-          <button @click="showD1GuideModal = false" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
-        </div>
-
-        <div class="space-y-3.5 text-xs sm:text-sm text-gray-700">
-          <div class="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-900 text-xs leading-relaxed">
-            <strong>Hiện tại:</strong> Website đã kích hoạt <em>Bộ nhớ Trình duyệt an toàn (Dual-Layer)</em>. Mọi lớp Thầy tạo (03THA8, 03THA9...), danh sách học sinh và điểm số đều được lưu giữ 100% trên máy Thầy, không bao giờ bị xóa mất khi tải lại trang!
-          </div>
-
-          <p class="font-bold text-gray-900">Để kết nối CSDL Đám mây Cloudflare D1 (lưu trữ tập trung mọi thiết bị):</p>
-
-          <ol class="list-decimal pl-5 space-y-2.5 font-medium text-xs leading-relaxed">
-            <li>
-              Đăng nhập vào <a href="https://dash.cloudflare.com" target="_blank" class="text-primary-600 underline font-bold">dash.cloudflare.com</a>.
-            </li>
-            <li>
-              Vào mục <strong>Storage & Databases</strong> → Chọn <strong>D1 SQL Database</strong> → Bấm <strong>Create database</strong> → Đặt tên là <code class="bg-gray-100 px-1 py-0.5 rounded font-mono text-purple-700 font-bold">giang-day-db</code> → Bấm <em>Create</em>.
-            </li>
-            <li>
-              Vào mục <strong>Workers & Pages</strong> → Bấm chọn dự án website của Thầy.
-            </li>
-            <li>
-              Vào tab <strong>Settings</strong> → Chọn <strong>Bindings</strong> (hoặc <em>Functions</em>) → Bấm <strong>Add</strong> → Chọn <strong>D1 database binding</strong>:
-              <div class="mt-1 p-2 bg-gray-50 rounded-lg border text-xs font-mono space-y-1">
-                <div>Variable name: <strong class="text-blue-700">DB</strong></div>
-                <div>D1 database: Chọn <strong class="text-purple-700">giang-day-db</strong></div>
-              </div>
-            </li>
-            <li>
-              Bấm <strong>Save and Deploy</strong>. Xong! Hệ thống sẽ tự động kích hoạt CSDL Đám mây!
-            </li>
-          </ol>
-        </div>
-
-        <div class="pt-3 border-t flex justify-end">
-          <button
-            type="button"
-            @click="showD1GuideModal = false"
-            class="btn-primary text-xs px-5 py-2 font-bold"
-          >
-            Đã Hiểu, Đóng Lại
-          </button>
-        </div>
-      </div>
-    </div>
   </section>
 </BaseLayout>
 
@@ -1037,8 +960,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       classes: [],
       loading: true,
       classFilterTab: 'all', // 'all', 'standard', 'composite'
-      isCloudD1Connected: false,
-      showD1GuideModal: false,
 
       showCreateClassModal: false,
       showMergeModal: false,
