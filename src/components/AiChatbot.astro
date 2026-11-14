@@ -1,0 +1,307 @@
+---
+// AiChatbot.astro — Widget Trợ giảng AI Gemini
+---
+
+<div
+  x-data="aiChatbot()"
+  x-cloak
+  class="fixed bottom-5 right-5 z-50 font-sans"
+  @keydown.escape.window="isOpen = false"
+>
+  <!-- Nút mở chat nổi ở góc màn hình -->
+  <button
+    x-show="!isOpen"
+    x-transition:enter="transition ease-out duration-300 transform"
+    x-transition:enter-start="opacity-0 scale-75 translate-y-4"
+    x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+    @click="openChat()"
+    type="button"
+    class="group flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-primary-700 text-white rounded-full shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 transition-all duration-200 border-2 border-white/20"
+    aria-label="Mở Trợ giảng AI"
+  >
+    <div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-white/20">
+      <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+      <span class="absolute -top-1 -right-1 flex h-3 w-3">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+      </span>
+    </div>
+    <div class="text-left pr-1">
+      <div class="text-xs font-medium text-blue-100 leading-tight">Hỏi đáp học tập</div>
+      <div class="text-sm font-bold tracking-wide">Trợ Giảng AI</div>
+    </div>
+  </button>
+
+  <!-- Khung cửa sổ chat -->
+  <div
+    x-show="isOpen"
+    x-transition:enter="transition ease-out duration-300 transform"
+    x-transition:enter-start="opacity-0 scale-90 translate-y-6"
+    x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-200 transform"
+    x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+    x-transition:leave-end="opacity-0 scale-90 translate-y-6"
+    class="flex flex-col w-[92vw] sm:w-[410px] h-[580px] max-h-[85vh] bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden"
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between px-4 py-3.5 bg-gradient-to-r from-blue-700 via-indigo-700 to-primary-800 text-white shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="relative w-9 h-9 rounded-full bg-white/15 flex items-center justify-center border border-white/25">
+          <span class="text-lg">🤖</span>
+          <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-indigo-700 rounded-full"></span>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold flex items-center gap-1.5">
+            Trợ Giảng AI CNTT
+            <span class="text-[10px] font-semibold uppercase tracking-wider bg-white/20 text-blue-100 px-1.5 py-0.5 rounded">Gemini</span>
+          </h3>
+          <p class="text-xs text-blue-100/80 flex items-center gap-1">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            CĐ Buôn Ma Thuột
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-1">
+        <button
+          @click="resetChat()"
+          title="Xóa hội thoại"
+          class="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+        </button>
+        <button
+          @click="isOpen = false"
+          title="Thu nhỏ"
+          class="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Hộp tin nhắn -->
+    <div
+      x-ref="messageBox"
+      class="flex-1 p-4 overflow-y-auto space-y-3.5 bg-gray-50/70 text-sm"
+    >
+      <!-- Tin nhắn chào mặc định -->
+      <div class="flex items-start gap-2.5">
+        <div class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-xs shrink-0 mt-0.5">
+          🤖
+        </div>
+        <div class="max-w-[85%] bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 text-gray-800 space-y-2">
+          <p>Xin chào bạn! Mình là <strong>Trợ giảng AI</strong> của khoa CNTT.</p>
+          <p class="text-xs text-gray-600">Bạn đang thắc mắc kiến thức nào về <em>Mạng máy tính, Phần cứng, Quản trị Windows/Linux...</em>? Cứ nhắn cho mình nhé!</p>
+          
+          <!-- Gợi ý câu hỏi -->
+          <div class="pt-2 border-t border-gray-100">
+            <div class="text-[11px] font-semibold text-gray-500 mb-1.5">Gợi ý câu hỏi:</div>
+            <div class="flex flex-wrap gap-1.5">
+              <template x-for="q in quickQuestions" :key="q">
+                <button
+                  type="button"
+                  @click="sendQuick(q)"
+                  class="text-xs text-left px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition-colors border border-blue-100"
+                  x-text="q"
+                ></button>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Danh sách tin nhắn qua lại -->
+      <template x-for="(msg, index) in messages" :key="index">
+        <div
+          class="flex items-start gap-2.5"
+          :class="msg.role === 'user' ? 'justify-end' : 'justify-start'"
+        >
+          <!-- Avatar AI -->
+          <div
+            x-show="msg.role === 'assistant'"
+            class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-xs shrink-0 mt-0.5"
+          >
+            🤖
+          </div>
+
+          <!-- Nội dung tin nhắn -->
+          <div
+            class="max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed"
+            :class="msg.role === 'user' 
+              ? 'bg-blue-600 text-white rounded-tr-none shadow-md' 
+              : 'bg-white text-gray-800 rounded-tl-none shadow-sm border border-gray-100 whitespace-pre-wrap'"
+            x-html="formatMessage(msg.content)"
+          ></div>
+
+          <!-- Avatar User -->
+          <div
+            x-show="msg.role === 'user'"
+            class="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-semibold shrink-0 mt-0.5"
+          >
+            Bạn
+          </div>
+        </div>
+      </template>
+
+      <!-- Đang phản hồi (Loading animation) -->
+      <div x-show="isLoading" class="flex items-start gap-2.5">
+        <div class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-xs shrink-0 mt-0.5">
+          🤖
+        </div>
+        <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 flex items-center gap-1.5">
+          <span class="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+          <span class="w-2 h-2 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+          <span class="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></span>
+          <span class="text-xs text-gray-400 ml-1.5">Trợ giảng đang suy nghĩ...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input footer -->
+    <div class="p-3 bg-white border-t border-gray-100 shrink-0">
+      <form @submit.prevent="sendMessage()" class="flex items-center gap-2">
+        <input
+          x-ref="inputField"
+          x-model="inputMessage"
+          type="text"
+          placeholder="Nhập câu hỏi học tập..."
+          :disabled="isLoading"
+          class="flex-1 px-3.5 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 disabled:opacity-60 transition-all"
+        />
+        <button
+          type="submit"
+          :disabled="isLoading || !inputMessage.trim()"
+          class="flex items-center justify-center w-10 h-10 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-200 text-white disabled:text-gray-400 rounded-xl transition-colors shadow-sm disabled:shadow-none shrink-0"
+          aria-label="Gửi tin nhắn"
+        >
+          <svg class="w-4 h-4 transform rotate-90" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+          </svg>
+        </button>
+      </form>
+      <div class="mt-1.5 flex items-center justify-between text-[10px] text-gray-400 px-1">
+        <span>Hỗ trợ môn học CNTT</span>
+        <span>Powered by Gemini</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  function aiChatbot() {
+    return {
+      isOpen: false,
+      isLoading: false,
+      inputMessage: '',
+      messages: [],
+      quickQuestions: [
+        'Mô hình OSI 7 tầng hoạt động ra sao?',
+        'Bấm cáp mạng T568A và T568B khác gì nhau?',
+        'Phân biệt giữa bộ nhớ RAM và ROM?',
+        'Các lệnh quản trị mạng Linux hay dùng?'
+      ],
+
+      openChat() {
+        this.isOpen = true;
+        this.$nextTick(() => {
+          this.scrollToBottom();
+          if (this.$refs.inputField) {
+            this.$refs.inputField.focus();
+          }
+        });
+      },
+
+      resetChat() {
+        if (confirm('Bạn có muốn xóa cuộc trò chuyện này và bắt đầu lại?')) {
+          this.messages = [];
+        }
+      },
+
+      sendQuick(question) {
+        this.inputMessage = question;
+        this.sendMessage();
+      },
+
+      scrollToBottom() {
+        this.$nextTick(() => {
+          if (this.$refs.messageBox) {
+            this.$refs.messageBox.scrollTop = this.$refs.messageBox.scrollHeight;
+          }
+        });
+      },
+
+      formatMessage(text) {
+        if (!text) return '';
+        // Escape HTML cơ bản để an toàn
+        let safe = text
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+        
+        // Định dạng in đậm **text**
+        safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        // Định dạng inline code `code`
+        safe = safe.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 bg-gray-100 text-pink-600 rounded text-xs font-mono">$1</code>');
+        // Xuống dòng
+        safe = safe.replace(/\n/g, '<br/>');
+        return safe;
+      },
+
+      async sendMessage() {
+        const text = this.inputMessage.trim();
+        if (!text || this.isLoading) return;
+
+        // Thêm câu hỏi của user
+        this.messages.push({ role: 'user', content: text });
+        this.inputMessage = '';
+        this.isLoading = true;
+        this.scrollToBottom();
+
+        // Nhận diện bối cảnh môn học từ URL
+        const path = window.location.pathname;
+        let courseContext = document.title || '';
+        if (path.includes('mang')) courseContext += ' [Môn: Mạng máy tính]';
+        else if (path.includes('phan-cung') || path.includes('kien-truc')) courseContext += ' [Môn: Phần cứng & Kiến trúc máy tính]';
+        else if (path.includes('winlinux') || path.includes('windows-linux')) courseContext += ' [Môn: Quản trị Windows/Linux]';
+
+        try {
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              message: text,
+              courseContext: courseContext
+            })
+          });
+
+          const data = await res.json();
+          if (res.ok && data.reply) {
+            this.messages.push({ role: 'assistant', content: data.reply });
+          } else {
+            this.messages.push({
+              role: 'assistant',
+              content: '⚠️ ' + (data.error || 'Có lỗi khi kết nối với Trợ giảng AI. Vui lòng thử lại sau!')
+            });
+          }
+        } catch (err) {
+          this.messages.push({
+            role: 'assistant',
+            content: '⚠️ Không thể gửi tin nhắn. Vui lòng kiểm tra lại kết nối mạng!'
+          });
+        } finally {
+          this.isLoading = false;
+          this.scrollToBottom();
+          this.$nextTick(() => {
+            if (this.$refs.inputField) this.$refs.inputField.focus();
+          });
+        }
+      }
+    };
+  }
+</script>
