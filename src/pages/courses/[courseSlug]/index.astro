@@ -11,6 +11,8 @@ import {
   FOUR_WIRES,
 } from '../../../data/hardwareCurriculum';
 
+export const prerender = true;
+
 export function getStaticPaths() {
   return COURSES.map((course) => ({
     params: { courseSlug: course.slug },

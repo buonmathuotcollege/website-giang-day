@@ -1243,6 +1243,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               action: 'merge_classes',
+              id: compClassId,
               composite_code: this.mergeForm.compositeCode,
               composite_name: this.mergeForm.compositeName,
               academic_year: this.mergeForm.academicYear,
@@ -1289,6 +1290,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               action: 'create_class',
+              id: newClassId,
               class_code: classCode,
               class_name: className,
               academic_year: academicYear,

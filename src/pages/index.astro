@@ -25,13 +25,63 @@ const ASSESSMENTS = [
 
 <BaseLayout title="Cổng Giảng Dạy CNTT • Trường CĐ Buôn Ma Thuột">
   <!-- Hero Section -->
-  <section class="bg-primary-700 text-white py-12 sm:py-16">
+  <section class="bg-gradient-to-b from-primary-800 to-primary-900 text-white py-12 sm:py-16">
     <div class="max-w-5xl mx-auto px-4 text-center">
-      <p class="text-xs sm:text-sm font-semibold uppercase tracking-wider text-primary-200 mb-2">Trường Cao đẳng Buôn Ma Thuột</p>
-      <h1 class="text-3xl sm:text-4xl font-extrabold mb-3 text-white tracking-tight">Khoa Công nghệ Thông tin</h1>
-      <p class="text-primary-100 text-base sm:text-lg max-w-2xl mx-auto font-medium">
-        Hệ thống giảng dạy trực tuyến & Đánh giá năng lực các môn chuyên ngành CNTT
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-700/60 border border-primary-500/40 text-xs font-semibold text-primary-200 mb-3">
+        <span>🏫</span>
+        <span>Trường Cao đẳng Buôn Ma Thuột · Khoa CNTT</span>
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-black mb-3 text-white tracking-tight">Cổng Giảng Dạy & Thực Hành CNTT</h1>
+      <p class="text-primary-100 text-sm sm:text-base max-w-2xl mx-auto font-medium leading-relaxed">
+        Giảng dạy chuyên ngành thực hành · Sát hạch đánh giá năng lực nghề · Quản lý hồ sơ lớp học & điểm số
       </p>
+
+      <!-- 2 NÚT THAO TÁC 1-CHẠM NHANH CHO HỌC SINH -->
+      <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto text-left">
+        <!-- Nút 1: Vào xưởng thực hành -->
+        <a 
+          href="/practice" 
+          class="p-4 sm:p-5 rounded-2xl bg-white text-gray-900 shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all no-underline group flex items-center gap-4 border-2 border-indigo-200"
+        >
+          <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition-transform">
+            🛠️
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-black text-indigo-700 uppercase tracking-wide">Điểm Danh & Học Tập</span>
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            </div>
+            <h3 class="text-base sm:text-lg font-black text-gray-900 group-hover:text-indigo-700 transition-colors">
+              Xưởng Thực Hành 7 Bước
+            </h3>
+            <p class="text-xs text-gray-500 mt-0.5 line-clamp-2">
+              Điểm danh theo buổi học, quy trình an toàn bàn máy & nộp kết quả thực hành tại xưởng.
+            </p>
+          </div>
+        </a>
+
+        <!-- Nút 2: Vào sát hạch đánh giá -->
+        <a 
+          href="/assessment/phan-cung" 
+          class="p-4 sm:p-5 rounded-2xl bg-white text-gray-900 shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all no-underline group flex items-center gap-4 border-2 border-amber-200"
+        >
+          <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition-transform">
+            📝
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-xs font-black text-amber-700 uppercase tracking-wide">Sát Hạch Trực Tuyến</span>
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Chuẩn TT55</span>
+            </div>
+            <h3 class="text-base sm:text-lg font-black text-gray-900 group-hover:text-amber-700 transition-colors">
+              Đánh Giá Năng Lực Nghề
+            </h3>
+            <p class="text-xs text-gray-500 mt-0.5 line-clamp-2">
+              Bộ 100 câu trắc nghiệm tình huống, bốc thăm ca thi & có Trợ giảng AI giải thích câu sai.
+            </p>
+          </div>
+        </a>
+      </div>
     </div>
   </section>
 

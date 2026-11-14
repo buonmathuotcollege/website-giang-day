@@ -216,7 +216,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         return new Response(JSON.stringify({ ok: false, error: "Vui lòng chọn ít nhất 1 lớp nguồn để ghép" }), { status: 400, headers: CORS_HEADERS });
       }
 
-      const compClassId = "cls_ghep_" + compCode.toLowerCase().replace(/[^a-z0-9]/g, "_") + "_" + Date.now().toString(36).slice(-4);
+      const compClassId = String(body.id || ("cls_ghep_" + compCode.toLowerCase().replace(/[^a-z0-9]/g, "_"))).trim();
 
       if (env && env.DB) {
         await ensureTables(env.DB);
@@ -441,7 +441,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       return new Response(JSON.stringify({ ok: false, error: "Vui lòng nhập đầy đủ Mã lớp và Tên lớp" }), { status: 400, headers: CORS_HEADERS });
     }
 
-    const classId = (isComposite ? "cls_ghep_" : "cls_") + classCode.toLowerCase().replace(/[^a-z0-9]/g, "_") + "_" + Date.now().toString(36).slice(-4);
+    const classId = String(body.id || ((isComposite ? "cls_ghep_" : "cls_") + classCode.toLowerCase().replace(/[^a-z0-9]/g, "_"))).trim();
 
     if (env && env.DB) {
       await ensureTables(env.DB);

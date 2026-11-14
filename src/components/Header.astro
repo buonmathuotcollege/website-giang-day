@@ -2,30 +2,47 @@
 // Header.astro — Top navigation bar
 ---
 
-<header class="w-full bg-white border-b border-gray-200 sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" x-data="{ open: false }">
+<header class="w-full bg-white border-b border-gray-200 sticky top-0 z-50" x-data="navState">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-14">
       <!-- Logo -->
-      <a href="/" class="flex items-center gap-2 text-primary-700 font-bold text-lg shrink-0">
+      <a href="/" class="flex items-center gap-2 text-primary-700 font-bold text-lg shrink-0 no-underline">
         <span class="text-xl">🎓</span>
         <span class="hidden sm:inline">Cổng Giảng Dạy CNTT</span>
-        <span class="sm:hidden">CNTT</span>
+        <span class="sm:hidden font-extrabold">CĐ Buôn Ma Thuột</span>
       </a>
 
       <!-- Desktop nav -->
       <nav class="hidden md:flex items-center gap-1">
-        <a href="/" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-primary-700 transition-colors">Trang chủ</a>
-        <a href="/courses" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-primary-700 transition-colors">Môn học</a>
-        <a href="/practice" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-primary-700 transition-colors">Thực hành</a>
-        <a href="/assessment" class="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-primary-700 transition-colors">Đánh giá</a>
+        <a href="/" class="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-primary-700 transition-colors no-underline">Trang chủ</a>
+        <a href="/courses" class="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-primary-700 transition-colors no-underline">Môn học</a>
+        <a href="/practice" class="px-3 py-1.5 rounded-lg text-sm font-bold text-indigo-700 hover:bg-indigo-50 transition-colors no-underline flex items-center gap-1">
+          <span>🛠️</span>
+          <span>Thực hành</span>
+        </a>
+        <a href="/assessment" class="px-3 py-1.5 rounded-lg text-sm font-bold text-amber-700 hover:bg-amber-50 transition-colors no-underline flex items-center gap-1">
+          <span>📝</span>
+          <span>Đánh giá</span>
+        </a>
       </nav>
 
       <!-- Login button + hamburger -->
       <div class="flex items-center gap-2">
-        <a href="/admin" class="hidden sm:inline-flex btn-primary text-xs">GV Đăng nhập</a>
+        <template x-if="isTeacherLoggedIn">
+          <a href="/admin" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-300 text-xs font-bold hover:bg-emerald-100 transition-all no-underline shadow-2xs">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>👨‍🏫 Bảng Giảng Viên</span>
+          </a>
+        </template>
+        <template x-if="!isTeacherLoggedIn">
+          <a href="/admin" class="hidden sm:inline-flex btn-primary text-xs px-3.5 py-1.5 font-bold shadow-2xs no-underline">
+            <span>🔐 GV Đăng nhập</span>
+          </a>
+        </template>
+
         <!-- Mobile hamburger -->
         <button
-          class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+          class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 cursor-pointer"
           @click="open = !open"
           aria-label="Menu"
         >
@@ -40,15 +57,38 @@
     </div>
 
     <!-- Mobile menu -->
-    <div x-show="open" x-cloak x-transition class="md:hidden border-t border-gray-100 py-2 pb-3">
-      <a href="/" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100">Trang chủ</a>
-      <a href="/courses" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100">Môn học</a>
-      <a href="/practice" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100">Thực hành</a>
-      <a href="/assessment" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100">Đánh giá</a>
-      <a href="/admin" class="block px-3 py-2 mt-1 rounded-lg text-sm font-semibold text-primary-700 hover:bg-primary-50">GV Đăng nhập</a>
+    <div x-show="open" x-cloak x-transition class="md:hidden border-t border-gray-100 py-2.5 pb-3 space-y-1">
+      <a href="/" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100 no-underline">🏠 Trang chủ</a>
+      <a href="/courses" class="block px-3 py-2 rounded-lg text-sm text-gray-700 hover:bg-gray-100 no-underline">📚 Danh sách Môn học</a>
+      <a href="/practice" class="block px-3 py-2 rounded-lg text-sm font-bold text-indigo-700 hover:bg-indigo-50 no-underline">🛠️ Xưởng Thực hành 7 bước</a>
+      <a href="/assessment" class="block px-3 py-2 rounded-lg text-sm font-bold text-amber-700 hover:bg-amber-50 no-underline">📝 Sát hạch Đánh giá Năng lực</a>
+      <template x-if="isTeacherLoggedIn">
+        <a href="/admin" class="block px-3 py-2 rounded-xl text-sm font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 no-underline mt-2">
+          👨‍🏫 Vào Bảng Giảng Viên (Đã xác thực)
+        </a>
+      </template>
+      <template x-if="!isTeacherLoggedIn">
+        <a href="/admin" class="block px-3 py-2 rounded-xl text-sm font-bold text-primary-700 hover:bg-primary-50 no-underline mt-2">
+          🔐 Đăng nhập Giảng viên
+        </a>
+      </template>
     </div>
   </div>
 </header>
+
+<script is:inline>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('navState', () => ({
+      open: false,
+      isTeacherLoggedIn: false,
+      init() {
+        this.isTeacherLoggedIn = Boolean(
+          sessionStorage.getItem('BMTC_ADMIN_TOKEN') || localStorage.getItem('BMTC_ADMIN_TOKEN')
+        );
+      }
+    }));
+  });
+</script>
 
 <style>
   [x-cloak] { display: none !important; }

@@ -38,7 +38,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Mã chính xác -> Cấp token phiên làm việc có thời hạn
-    const token = "bmtc_sec_" + Buffer.from(inputSecret + ":" + Date.now()).toString('base64');
+    const rawSecret = inputSecret + ":" + Date.now();
+    let b64 = "";
+    if (typeof Buffer !== 'undefined') {
+      b64 = Buffer.from(rawSecret, 'utf-8').toString('base64');
+    } else {
+      b64 = btoa(unescape(encodeURIComponent(rawSecret)));
+    }
+    const token = "bmtc_sec_" + b64;
 
     return new Response(JSON.stringify({
       ok: true,

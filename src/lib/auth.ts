@@ -22,7 +22,13 @@ export function checkAdminAuth(request: Request, env: any): boolean {
     }
     if (token.startsWith("bmtc_sec_")) {
       try {
-        const decoded = Buffer.from(token.replace("bmtc_sec_", ""), 'base64').toString('utf-8');
+        const rawPayload = token.replace("bmtc_sec_", "");
+        let decoded = "";
+        if (typeof Buffer !== 'undefined') {
+          decoded = Buffer.from(rawPayload, 'base64').toString('utf-8');
+        } else if (typeof atob !== 'undefined') {
+          decoded = decodeURIComponent(escape(atob(rawPayload)));
+        }
         const [tokenSecret] = decoded.split(":");
         if (tokenSecret === validSecret) {
           return true;
