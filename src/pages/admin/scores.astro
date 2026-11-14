@@ -204,13 +204,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       },
 
       async fetchClasses() {
+        const localClasses = localStorage.getItem('BMTC_CLASSES');
+        if (localClasses) {
+          try {
+            this.availableClasses = JSON.parse(localClasses);
+          } catch(e){}
+        }
         try {
           const res = await fetch('/api/classes');
           const data = await res.json();
-          this.availableClasses = data.data || [];
-        } catch (e) {
-          this.availableClasses = [];
-        }
+          if (data && data.ok && Array.isArray(data.data)) {
+            if (!localClasses || data.from_d1) {
+              this.availableClasses = data.data;
+            }
+          }
+        } catch (e) {}
       },
 
       async fetchScores() {

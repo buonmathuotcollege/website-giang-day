@@ -1699,17 +1699,29 @@ const exam = isHardware
         },
 
         async loadClasses() {
+          const localClasses = localStorage.getItem('BMTC_CLASSES');
+          if (localClasses) {
+            try {
+              this.availableClasses = JSON.parse(localClasses);
+              if (!this.student.className && this.availableClasses.length > 0) {
+                this.student.className = this.availableClasses[0].class_name;
+                this.onClassChange();
+              }
+            } catch(e){}
+          }
           try {
             const res = await fetch('/api/classes');
             const data = await res.json();
-            this.availableClasses = data.data || [];
-            if (!this.student.className && this.availableClasses.length > 0) {
-              this.student.className = this.availableClasses[0].class_name;
-              this.onClassChange();
+            if (data && data.ok && Array.isArray(data.data) && data.data.length > 0) {
+              if (!localClasses || data.from_d1) {
+                this.availableClasses = data.data;
+                if (!this.student.className && this.availableClasses.length > 0) {
+                  this.student.className = this.availableClasses[0].class_name;
+                  this.onClassChange();
+                }
+              }
             }
-          } catch (e) {
-            this.availableClasses = [];
-          }
+          } catch (e) {}
         },
 
         async onClassChange() {
@@ -1717,13 +1729,24 @@ const exam = isHardware
             this.classStudentsList = [];
             return;
           }
+          // Kiểm tra trong localStorage trước
+          let foundLocal = false;
+          try {
+            const allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+            const targetCls = (this.availableClasses || []).find(c => c.class_name === this.student.className || c.class_code === this.student.className);
+            if (targetCls && allStudentsStore[targetCls.id]) {
+              this.classStudentsList = allStudentsStore[targetCls.id];
+              foundLocal = true;
+            }
+          } catch(e){}
+
           try {
             const res = await fetch('/api/classes?code=' + encodeURIComponent(this.student.className));
             const data = await res.json();
-            this.classStudentsList = data.data || [];
-          } catch (e) {
-            this.classStudentsList = [];
-          }
+            if (data && data.ok && Array.isArray(data.data) && (data.from_d1 || !foundLocal)) {
+              this.classStudentsList = data.data;
+            }
+          } catch (e) {}
           this.handleNameChange();
         },
 

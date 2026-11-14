@@ -10,11 +10,8 @@ const CORS_HEADERS = {
 };
 
 const DEFAULT_CLASSES = [
-  { id: 'cls_thud_k26a', class_code: 'THUD_K26A', class_name: 'Tin học ứng dụng K26A', academic_year: '2026-2027', is_composite: 0, student_count: 0 },
-  { id: 'cls_thud_k26b', class_code: 'THUD_K26B', class_name: 'Tin học ứng dụng K26B', academic_year: '2026-2027', is_composite: 0, student_count: 0 },
-  { id: 'cls_qtm_k26',   class_code: 'QTM_K26',   class_name: 'Quản trị mạng K26',     academic_year: '2026-2027', is_composite: 0, student_count: 0 },
-  { id: 'cls_dien_93',   class_code: 'DIEN_93',   class_name: 'Điện công nghiệp 9+3',   academic_year: '2026-2027', is_composite: 0, student_count: 0 },
-  { id: 'cls_oto_93',    class_code: 'OTO_93',    class_name: 'Công nghệ Ô tô 9+3',     academic_year: '2026-2027', is_composite: 0, student_count: 0 }
+  { id: 'cls_03tha8', class_code: '03THA8', class_name: 'EHL Tin học ứng dụng 03THA8', academic_year: '2024-2026', is_composite: 0, student_count: 0 },
+  { id: 'cls_03tha9', class_code: '03THA9', class_name: 'EHL Tin học ứng dụng 03THA9', academic_year: '2024-2026', is_composite: 0, student_count: 0 }
 ];
 
 // In-memory fallback
@@ -141,7 +138,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
       `;
       const classes = await env.DB.prepare(query).all();
       const list = classes.results && classes.results.length ? classes.results : (globalThis as any).MEM_CLASSES;
-      return new Response(JSON.stringify({ ok: true, data: list }), { headers: CORS_HEADERS });
+      return new Response(JSON.stringify({ ok: true, data: list, from_d1: true }), { headers: CORS_HEADERS });
     } catch (e: any) {
       // Fallback
     }
@@ -152,12 +149,12 @@ export const GET: APIRoute = async ({ request, locals }) => {
   const memStudents = (globalThis as any).MEM_STUDENTS;
 
   if (action === "all_students") {
-    return new Response(JSON.stringify({ ok: true, data: memStudents }), { headers: CORS_HEADERS });
+    return new Response(JSON.stringify({ ok: true, data: memStudents, from_d1: false }), { headers: CORS_HEADERS });
   }
 
   if (classId || classCode) {
     const list = memStudents.filter((s: any) => s.class_id === classId || s.class_code === classCode);
-    return new Response(JSON.stringify({ ok: true, data: list }), { headers: CORS_HEADERS });
+    return new Response(JSON.stringify({ ok: true, data: list, from_d1: false }), { headers: CORS_HEADERS });
   }
 
   const result = memClasses.map((c: any) => ({
@@ -165,7 +162,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
     student_count: memStudents.filter((s: any) => s.class_id === c.id).length
   }));
 
-  return new Response(JSON.stringify({ ok: true, data: result }), { headers: CORS_HEADERS });
+  return new Response(JSON.stringify({ ok: true, data: result, from_d1: false }), { headers: CORS_HEADERS });
 };
 
 // 2. POST CREATE CLASS, MERGE CLASSES, IMPORT, OR SAVE STUDENT
@@ -175,6 +172,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const body = await request.json();
     const action = body.action || "create_class";
+
+    // -------------------------------------------------------------
+    // ACTION 0: ĐỒNG BỘ DANH SÁCH LỚP TỪ CLIENT LÊN WORKER MEMORY
+    // -------------------------------------------------------------
+    if (action === "sync_classes") {
+      const incomingClasses = body.classes || [];
+      if (Array.isArray(incomingClasses) && incomingClasses.length > 0) {
+        (globalThis as any).MEM_CLASSES = incomingClasses;
+      }
+      return new Response(JSON.stringify({ ok: true, count: incomingClasses.length }), { headers: CORS_HEADERS });
+    }
 
     // -------------------------------------------------------------
     // ACTION A: GHÉP LỚP TỰ ĐỘNG TỪ CÁC LỚP CÓ SẴN (MERGE CLASSES)

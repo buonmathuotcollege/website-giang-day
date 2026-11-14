@@ -137,13 +137,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       },
 
       async loadClasses() {
+        const localClasses = localStorage.getItem('BMTC_CLASSES');
+        if (localClasses) {
+          try {
+            this.classes = JSON.parse(localClasses);
+          } catch(e){}
+        }
         try {
           const res = await fetch('/api/classes');
           const data = await res.json();
-          this.classes = data.data || [];
-        } catch (e) {
-          this.classes = [];
-        }
+          if (data && data.ok && Array.isArray(data.data) && data.data.length > 0) {
+            if (!localClasses || data.from_d1) {
+              this.classes = data.data;
+            }
+          }
+        } catch (e) {}
       },
 
       async onClassChange() {
@@ -151,13 +159,23 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           this.studentsList = [];
           return;
         }
+        let foundLocal = false;
+        try {
+          const allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+          const targetCls = (this.classes || []).find(c => c.class_name === this.selectedClassName || c.class_code === this.selectedClassName);
+          if (targetCls && allStudentsStore[targetCls.id]) {
+            this.studentsList = allStudentsStore[targetCls.id];
+            foundLocal = true;
+          }
+        } catch(e){}
+
         try {
           const res = await fetch('/api/classes?code=' + encodeURIComponent(this.selectedClassName));
           const data = await res.json();
-          this.studentsList = data.data || [];
-        } catch (e) {
-          this.studentsList = [];
-        }
+          if (data && data.ok && Array.isArray(data.data) && (data.from_d1 || !foundLocal)) {
+            this.studentsList = data.data;
+          }
+        } catch (e) {}
       },
 
       async startPractice() {
