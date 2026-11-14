@@ -4,6 +4,8 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import {
   HARDWARE_METADATA,
   OFFICIAL_RUBRIC_CRITERIA,
+  FIVE_CLASSIC_CASES,
+  THREE_SURVIVAL_RULES,
 } from '../../data/hardwareCurriculum';
 import {
   ORAL_QUESTIONS,
@@ -12,38 +14,17 @@ import {
   MCQ_PRACTICAL_BANK,
   FULL_EXAM_TICKETS,
 } from '../../data/questionBank';
+import {
+  DIAGNOSTIC_SCENARIOS,
+  DIAGNOSTIC_STEPS,
+} from '../../data/diagnosticTree';
 
 export const prerender = true;
 
-export function getStaticPaths() {
-  return [
-    { params: { examSlug: 'phan-cung' } },
-    { params: { examSlug: 'mang' } },
-  ];
-}
-
-const { examSlug } = Astro.params;
-const isHardware = examSlug === 'phan-cung';
-
-// Standard quiz for 'mang' or fallback
-const STANDARD_EXAMS: Record<string, any> = {
-  'mang': {
-    name: 'Mạng Căn Bản & LAN/WAN',
-    icon: '🌐',
-    desc: 'Kiểm tra năng lực mô hình OSI, thiết bị mạng, chia mạng con IPv4 và cấu hình dịch vụ mạng.',
-    questions: [
-      { text: 'Mô hình tham chiếu OSI chuẩn hóa truyền thông mạng gồm bao nhiêu tầng?', options: ['4 tầng', '5 tầng', '7 tầng', '9 tầng'], correct: 2 },
-      { text: 'Thiết bị nào hoạt động ở Tầng 3 (Network Layer) để định tuyến gói tin giữa các mạng logic?', options: ['Hub', 'Switch Layer 2', 'Router (Bộ định tuyến)', 'Repeater'], correct: 2 },
-      { text: 'Địa chỉ IPv4 nào sau đây thuộc dải địa chỉ mạng riêng (Private IP)?', options: ['8.8.8.8', '192.168.1.100', '1.1.1.1', '203.162.0.11'], correct: 1 },
-      { text: 'Giao thức nào có nhiệm vụ tự động cấp phát địa chỉ IP, Subnet Mask và Gateway cho client?', options: ['DNS', 'DHCP', 'FTP', 'HTTP'], correct: 1 },
-      { text: 'Lệnh dòng lệnh nào dùng để kiểm tra tính thông suốt kết nối giữa 2 nút mạng bằng gói tin ICMP?', options: ['ipconfig /all', 'ping', 'tracert', 'netstat'], correct: 1 },
-    ],
-  },
+const exam = {
+  name: 'Ôn luyện Năng lực Nghề: Phần cứng Máy tính (OL-01)',
+  icon: '🔧',
 };
-
-const exam = isHardware
-  ? { name: 'Ôn luyện Năng lực Nghề: Phần cứng Máy tính (OL-01)', icon: '🔧' }
-  : (STANDARD_EXAMS[examSlug!] || STANDARD_EXAMS['mang']);
 ---
 
 <BaseLayout title={`${exam.name} - Đánh giá năng lực thực tế`} hideChatbot={true}>
@@ -54,8 +35,7 @@ const exam = isHardware
       { label: exam.name, href: '' },
     ]} />
 
-    {isHardware && (
-      <div class="mt-6" x-data="hardwareMasterEngine">
+    <div class="mt-6" x-data="hardwareMasterEngine">
         <!-- Poka-Yoke Auto-Recovery Notification Banner -->
         <div
           x-show="showRecoveryBanner"
@@ -163,14 +143,62 @@ const exam = isHardware
           <div class="mt-4 flex flex-wrap gap-2 pt-2">
             <button
               type="button"
-              @click="switchMode('mcq')"
+              @click="switchMode('diagnostic')"
               class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center gap-2 border shadow-sm"
+              :class="activeMode === 'diagnostic'
+                ? 'bg-slate-900 text-white border-slate-900'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+            >
+              <span>⚡</span>
+              <span>1. Bắt Bệnh 60s (Cây Chẩn Đoán)</span>
+            </button>
+
+            <button
+              type="button"
+              @click="switchMode('flashcards')"
+              class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center gap-2 border shadow-sm"
+              :class="activeMode === 'flashcards'
+                ? 'bg-slate-900 text-white border-slate-900'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+            >
+              <span>🗂️</span>
+              <span>2. Thẻ Lật Ôn Thi (Flashcards)</span>
+            </button>
+
+            <button
+              type="button"
+              @click="switchMode('simulator')"
+              class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border shadow-sm"
+              :class="activeMode === 'simulator'
+                ? 'bg-slate-900 text-white border-slate-900'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+            >
+              <span>🎮</span>
+              <span>3. Mô Phỏng Ca Thi & In Phiếu A4</span>
+            </button>
+
+            <button
+              type="button"
+              @click="switchMode('mcq')"
+              class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border shadow-sm"
               :class="activeMode === 'mcq'
                 ? 'bg-slate-900 text-white border-slate-900'
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
             >
               <span>🎲</span>
-              <span>1. Trắc Nghiệm Sát Hạch (100 Câu AI)</span>
+              <span>4. Trắc Nghiệm Sát Hạch (100 Câu AI)</span>
+            </button>
+
+            <button
+              type="button"
+              @click="switchMode('library')"
+              class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border shadow-sm"
+              :class="activeMode === 'library'
+                ? 'bg-slate-900 text-white border-slate-900'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+            >
+              <span>📚</span>
+              <span>5. Ngân Hàng Vấn Đáp</span>
             </button>
 
             <a
@@ -178,32 +206,482 @@ const exam = isHardware
               class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100 no-underline shadow-sm"
             >
               <span>🛠️</span>
-              <span>2. Bàn Máy 10 Nhóm KTV →</span>
+              <span>Bàn Máy 10 Nhóm KTV →</span>
             </a>
+          </div>
+        </div>
 
-            <button
-              type="button"
-              @click="switchMode('simulator')"
-              class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border"
-              :class="activeMode === 'simulator'
-                ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
-                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
-            >
-              <span>🎮</span>
-              <span>3. Mô Phỏng Ca Thi 7 Bước</span>
-            </button>
+        <!-- ============================================================== -->
+        <!-- MODE: CÂY CHẨN ĐOÁN BẮT BỆNH 60 GIÂY                          -->
+        <!-- ============================================================== -->
+        <div x-show="activeMode === 'diagnostic'" class="space-y-6" x-cloak>
+          <!-- Hero Bar -->
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 mb-2">
+                  <span>⚡</span>
+                  <span>CÂY QUYẾT ĐỊNH KHOANH VÙNG SỰ CỐ 60 GIÂY</span>
+                </span>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900">
+                  Cây Chẩn Đoán Bắt Bệnh Kỹ Thuật Viên
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                  Nguyên tắc vàng: Quan sát triệu chứng → Đo đạc / Khoanh vùng → Loại trừ → Xử lý dứt điểm. Không đoán mò!
+                </p>
+              </div>
 
-            <button
-              type="button"
-              @click="switchMode('library')"
-              class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 border"
-              :class="activeMode === 'library'
-                ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
-                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
-            >
-              <span>📚</span>
-              <span>4. Ngân Hàng Vấn Đáp</span>
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  @click="resetDiagnostic()"
+                  class="px-3.5 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center gap-1.5"
+                >
+                  <span>🔄</span>
+                  <span>Bắt đầu lại ca này</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Scenario Selector 5 Classic Cases -->
+            <div class="mt-5 pt-4 border-t border-slate-100">
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2.5">
+                Chọn 1 trong 5 Ca Bệnh Kinh Điển (Chiếm 85% Thực Tế Xưởng):
+              </label>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+                <template x-for="sc in diagnosticScenarios" :key="sc.id">
+                  <button
+                    type="button"
+                    @click="selectDiagnosticScenario(sc.id)"
+                    class="p-3 rounded-xl border text-left transition-all flex flex-col justify-between"
+                    :class="currentScenarioId === sc.id
+                      ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-slate-900/10'
+                      : 'bg-white text-slate-800 border-slate-200 hover:border-slate-300 hover:bg-slate-50'"
+                  >
+                    <div>
+                      <div class="flex items-center justify-between gap-1 mb-1">
+                        <span class="text-lg" x-text="sc.icon"></span>
+                        <span
+                          class="text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded"
+                          :class="currentScenarioId === sc.id ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'"
+                          x-text="sc.code"
+                        ></span>
+                      </div>
+                      <h3 class="text-xs font-bold line-clamp-1" x-text="sc.title"></h3>
+                      <p
+                        class="text-[11px] mt-1 line-clamp-2"
+                        :class="currentScenarioId === sc.id ? 'text-slate-300' : 'text-slate-500'"
+                        x-text="sc.shortDesc"
+                      ></p>
+                    </div>
+                    <div class="mt-2.5 pt-2 border-t text-[10px] flex items-center justify-between" :class="currentScenarioId === sc.id ? 'border-white/10 text-slate-300' : 'border-slate-100 text-slate-400'">
+                      <span>Ước tính:</span>
+                      <span class="font-bold" x-text="sc.estimatedTime"></span>
+                    </div>
+                  </button>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- DIAGNOSTIC INTERACTION CONTAINER -->
+          <div class="space-y-4">
+            <!-- Active Step Card -->
+            <div x-show="!diagnosticCompleted && currentDiagnosticStep" class="bg-white border-2 border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm">
+              <!-- Breadcrumb & Back action -->
+              <div class="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
+                <div class="flex items-center gap-2">
+                  <span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-blue-50 text-blue-900 border border-blue-200" x-text="currentDiagnosticStep ? currentDiagnosticStep.caseCode : ''"></span>
+                  <span class="text-xs text-slate-500 font-semibold" x-text="currentDiagnosticStep ? currentDiagnosticStep.caseName : ''"></span>
+                </div>
+
+                <button
+                  type="button"
+                  x-show="diagnosticHistory.length > 0"
+                  @click="backDiagnosticStep()"
+                  class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200 hover:bg-slate-50"
+                >
+                  <span>←</span>
+                  <span>Quay lại bước trước</span>
+                </button>
+              </div>
+
+              <!-- Question & Instruction -->
+              <div class="mb-6">
+                <h3 class="text-lg sm:text-xl font-black text-slate-900 leading-snug" x-text="currentDiagnosticStep ? currentDiagnosticStep.question : ''"></h3>
+                <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed" x-text="currentDiagnosticStep ? currentDiagnosticStep.instruction : ''"></p>
+              </div>
+
+              <!-- Visual Hint Box -->
+              <div x-show="currentDiagnosticStep && currentDiagnosticStep.visualHint" class="mb-6 p-4 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-950 text-xs flex items-start gap-3">
+                <span class="text-xl flex-shrink-0">💡</span>
+                <div>
+                  <strong class="font-bold block mb-0.5">Dấu hiệu nhận biết nhanh từ giảng viên:</strong>
+                  <span class="leading-relaxed" x-text="currentDiagnosticStep ? currentDiagnosticStep.visualHint : ''"></span>
+                </div>
+              </div>
+
+              <!-- Options Selection (Tactile Buttons >= 48px height) -->
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+                  Chọn kết quả kiểm tra hoặc bước tiếp theo:
+                </label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <template x-for="(opt, oIdx) in (currentDiagnosticStep ? currentDiagnosticStep.options : [])" :key="oIdx">
+                    <button
+                      type="button"
+                      @click="chooseDiagnosticOption(opt)"
+                      class="min-h-[52px] p-4 rounded-xl border-2 border-slate-200 hover:border-slate-900 bg-white hover:bg-slate-50 text-slate-900 font-bold text-xs sm:text-sm transition-all flex items-center justify-between gap-3 text-left group shadow-sm active:scale-[0.99]"
+                    >
+                      <div class="flex items-center gap-3">
+                        <span class="text-xl flex-shrink-0" x-text="opt.icon || (opt.isSolution ? '🎯' : '➡️')"></span>
+                        <span x-text="opt.label"></span>
+                      </div>
+                      <span class="text-slate-400 group-hover:text-slate-900 font-mono text-sm transition-transform group-hover:translate-x-1">→</span>
+                    </button>
+                  </template>
+                </div>
+              </div>
+            </div>
+
+            <!-- Solved Solution Card -->
+            <div x-show="diagnosticCompleted && currentSolution" class="bg-white border-2 border-emerald-500 rounded-2xl p-6 sm:p-8 shadow-md space-y-6">
+              <!-- Success Banner -->
+              <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-5 border-b border-slate-100">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-900 flex items-center justify-center text-2xl font-bold flex-shrink-0">
+                    ✓
+                  </div>
+                  <div>
+                    <span class="text-[11px] font-mono uppercase tracking-wider font-extrabold text-emerald-700 block">
+                      ĐÃ KHOANH VÙNG CHÍNH XÁC NGUYÊN NHÂN GỐC RỄ
+                    </span>
+                    <h3 class="text-xl sm:text-2xl font-black text-slate-900">
+                      Kết Quả Chẩn Đoán & Phương Án Xử Lý Tiêu Chuẩn
+                    </h3>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  @click="backDiagnosticStep()"
+                  class="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50"
+                >
+                  <span>←</span>
+                  <span>Xem lại bước trước</span>
+                </button>
+              </div>
+
+              <!-- Root Cause -->
+              <div class="bg-emerald-50/70 border border-emerald-200 rounded-xl p-4 sm:p-5">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-950 mb-1 flex items-center gap-1.5">
+                  <span>🎯</span>
+                  <span>Nguyên nhân kỹ thuật gốc rễ:</span>
+                </h4>
+                <p class="text-sm sm:text-base font-bold text-slate-900 leading-relaxed" x-text="currentSolution ? currentSolution.rootCause : ''"></p>
+              </div>
+
+              <!-- Standard Action Steps -->
+              <div>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-1.5">
+                  <span>🛠️</span>
+                  <span>Quy trình thao tác chuẩn của Kỹ thuật viên:</span>
+                </h4>
+                <div class="p-4 sm:p-5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-800 leading-relaxed whitespace-pre-line font-medium" x-text="currentSolution ? currentSolution.action : ''"></div>
+              </div>
+
+              <!-- Tools Needed & Poka-Yoke -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                  <h5 class="text-xs font-bold text-slate-900 mb-2 flex items-center gap-1.5">
+                    <span>🧰</span>
+                    <span>Dụng cụ & Vật tư KTV cần chuẩn bị:</span>
+                  </h5>
+                  <ul class="space-y-1.5 text-xs text-slate-700">
+                    <template x-for="(tl, tIdx) in (currentSolution ? currentSolution.tools : [])" :key="tIdx">
+                      <li class="flex items-center gap-2">
+                        <span class="text-emerald-600 font-bold">•</span>
+                        <span x-text="tl"></span>
+                      </li>
+                    </template>
+                  </ul>
+                </div>
+
+                <div class="p-4 rounded-xl bg-blue-50/80 border border-blue-200 text-blue-950 text-xs flex flex-col justify-between">
+                  <div>
+                    <h5 class="font-bold mb-1 flex items-center gap-1.5 text-blue-900">
+                      <span>🛡️</span>
+                      <span>Mẹo Poka-Yoke (Chống sai lỗi):</span>
+                    </h5>
+                    <p class="leading-relaxed mt-1" x-text="currentSolution ? currentSolution.pokaYoke : ''"></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Safety Warning if any -->
+              <div x-show="currentSolution && currentSolution.safetyWarning" class="p-4 rounded-xl bg-red-50 border-2 border-red-200 text-red-950 text-xs flex items-start gap-3">
+                <span class="text-xl flex-shrink-0">⚠️</span>
+                <div>
+                  <strong class="font-bold text-red-900 block mb-0.5">CẢNH BÁO AN TOÀN SỐNG CÒN:</strong>
+                  <span class="leading-relaxed" x-text="currentSolution ? currentSolution.safetyWarning : ''"></span>
+                </div>
+              </div>
+
+              <!-- Next Actions -->
+              <div class="pt-4 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                <button
+                  type="button"
+                  @click="resetDiagnostic()"
+                  class="px-4 py-2.5 rounded-xl text-xs font-bold border border-slate-300 hover:bg-slate-50 text-slate-700"
+                >
+                  🔄 Thử lại tình huống này
+                </button>
+
+                <div class="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    @click="switchMode('flashcards')"
+                    class="px-4 py-2.5 rounded-xl text-xs font-bold border border-slate-300 bg-white hover:bg-slate-50 text-slate-900 flex items-center gap-1.5 shadow-sm"
+                  >
+                    <span>🗂️</span>
+                    <span>Ôn Flashcards vấn đáp →</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    @click="switchMode('simulator')"
+                    class="px-5 py-2.5 rounded-xl text-xs font-extrabold bg-slate-900 text-white hover:bg-slate-800 flex items-center gap-1.5 shadow-md"
+                  >
+                    <span>🎮</span>
+                    <span>Vào Buồng Mô Phỏng Ca Thi 7 Bước →</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- MODE: THẺ LẬT ÔN THI THÔNG MINH (FLASHCARDS)                   -->
+        <!-- ============================================================== -->
+        <div x-show="activeMode === 'flashcards'" class="space-y-6" x-cloak>
+          <!-- Hero Bar -->
+          <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-900 mb-2">
+                  <span>🗂️</span>
+                  <span>PHẢN XẠ NHANH THỰC CHIẾN TẠI BÀN MÁY</span>
+                </span>
+                <h2 class="text-xl sm:text-2xl font-black text-slate-900">
+                  Thẻ Lật Ôn Luyện Kỹ Thuật Viên
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                  Chạm vào thẻ để lật xem đáp án chuẩn KTV, từ khóa bắt buộc và mẹo an toàn sống còn.
+                </p>
+              </div>
+
+              <!-- Stats & Filter -->
+              <div class="flex items-center gap-3">
+                <button
+                  type="button"
+                  @click="shuffleDeck()"
+                  class="px-3 py-2 rounded-xl text-xs font-bold border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 flex items-center gap-1.5"
+                  title="Xáo trộn ngẫu nhiên thứ tự thẻ"
+                >
+                  <span>🔀</span>
+                  <span>Xáo thẻ</span>
+                </button>
+
+                <label class="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700 select-none bg-slate-50 border border-slate-200 px-3 py-2 rounded-xl hover:bg-slate-100">
+                  <input type="checkbox" x-model="filterOnlyReview" class="rounded text-slate-900 focus:ring-0">
+                  <span>⭐ Chỉ câu cần ôn (<span x-text="reviewCount"></span>)</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Deck Selector Tabs -->
+            <div class="mt-4 pt-4 border-t border-slate-100 flex flex-wrap gap-2">
+              <button
+                type="button"
+                @click="switchDeck('oral')"
+                class="px-4 py-2 rounded-xl text-xs font-bold transition-all border flex items-center gap-2"
+                :class="flashcardDeck === 'oral'
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+              >
+                <span>🎙️</span>
+                <span>20 Câu Vấn Đáp Miệng TT55</span>
+              </button>
+
+              <button
+                type="button"
+                @click="switchDeck('classic')"
+                class="px-4 py-2 rounded-xl text-xs font-bold transition-all border flex items-center gap-2"
+                :class="flashcardDeck === 'classic'
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+              >
+                <span>🚨</span>
+                <span>5 Ca Bệnh Kinh Điển (85%)</span>
+              </button>
+
+              <button
+                type="button"
+                @click="switchDeck('rules')"
+                class="px-4 py-2 rounded-xl text-xs font-bold transition-all border flex items-center gap-2"
+                :class="flashcardDeck === 'rules'
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+              >
+                <span>🛡️</span>
+                <span>3 Luật Sống Còn & Điểm Dừng</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Empty filter alert -->
+          <div x-show="activeDeckCards.length === 0" class="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm">
+            <span class="text-4xl block mb-2">⭐</span>
+            <h3 class="text-base font-bold text-slate-800">Không có thẻ nào được gắn sao cần ôn lại</h3>
+            <p class="text-xs text-slate-500 mt-1">Bỏ chọn "Chỉ câu cần ôn" ở góc trên để xem lại toàn bộ bộ thẻ.</p>
+            <button type="button" @click="filterOnlyReview = false" class="mt-4 btn-secondary text-xs px-4 py-2">
+              Xem toàn bộ thẻ
             </button>
+          </div>
+
+          <!-- FLASHCARD COMPONENT (3D FLIP) -->
+          <div x-show="currentCard" class="space-y-4">
+            <!-- Progress Tracker -->
+            <div class="flex items-center justify-between text-xs font-bold text-slate-500 px-2">
+              <span x-text="'Thẻ ' + (cardIndex + 1) + ' / ' + activeDeckCards.length"></span>
+              <div class="flex items-center gap-3">
+                <span class="text-emerald-700">✓ Đã thuộc: <strong x-text="masteredCount"></strong></span>
+                <span class="text-amber-700">⭐ Cần ôn: <strong x-text="reviewCount"></strong></span>
+              </div>
+            </div>
+
+            <!-- Card Box with 3D Flip -->
+            <div class="perspective-1000 min-h-[380px] w-full cursor-pointer select-none" @click="toggleCardFlip()">
+              <div
+                class="relative w-full h-full min-h-[380px] transition-transform duration-500 transform-style-3d rounded-2xl"
+                :class="isCardFlipped ? 'rotate-y-180' : ''"
+              >
+                <!-- FRONT SIDE (Question) -->
+                <div
+                  class="absolute inset-0 w-full h-full backface-hidden bg-white border-2 border-slate-200 hover:border-slate-400 rounded-2xl p-6 sm:p-8 flex flex-col justify-between shadow-sm transition-all"
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
+                      <span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-slate-100 text-slate-700" x-text="currentCard ? currentCard.category : ''"></span>
+                      <div class="flex items-center gap-2">
+                        <span x-show="currentCard && masteredCards[currentCard.id]" class="text-xs font-bold text-emerald-600">✓ Đã thuộc</span>
+                        <span x-show="currentCard && reviewedCards[currentCard.id]" class="text-xs font-bold text-amber-500">⭐ Cần ôn lại</span>
+                        <span class="text-xs font-mono text-slate-400" x-text="'#' + (cardIndex + 1)"></span>
+                      </div>
+                    </div>
+
+                    <h3 class="text-lg sm:text-2xl font-black text-slate-900 leading-snug" x-text="currentCard ? currentCard.frontTitle : ''"></h3>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-3 italic leading-relaxed" x-text="currentCard ? currentCard.frontHint : ''"></p>
+                  </div>
+
+                  <div class="mt-8 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                    <span class="flex items-center gap-1.5 font-bold text-slate-700">
+                      <span>👆</span>
+                      <span>Chạm vào thẻ để lật xem đáp án kỹ thuật</span>
+                    </span>
+                    <span class="text-slate-400 font-mono">Click hoặc Chạm</span>
+                  </div>
+                </div>
+
+                <!-- BACK SIDE (Standard Technical Answer) -->
+                <div
+                  class="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-slate-900 text-white rounded-2xl p-6 sm:p-8 flex flex-col justify-between shadow-lg"
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2 mb-3 pb-3 border-b border-white/10">
+                      <span class="px-2.5 py-1 rounded-md text-xs font-mono font-bold bg-white/15 text-white" x-text="currentCard ? currentCard.category : ''"></span>
+                      <span class="text-xs font-bold text-emerald-400">✓ Đáp án chuẩn KTV</span>
+                    </div>
+
+                    <div class="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium whitespace-pre-line max-h-[220px] overflow-y-auto pr-2" x-text="currentCard ? currentCard.backAnswer : ''"></div>
+
+                    <!-- Critical Keywords -->
+                    <div x-show="currentCard && currentCard.keywords && currentCard.keywords.length > 0" class="mt-4 pt-3 border-t border-white/10">
+                      <span class="text-[11px] uppercase tracking-wider font-bold text-slate-400 block mb-1.5">Từ khóa bắt buộc:</span>
+                      <div class="flex flex-wrap gap-1.5">
+                        <template x-for="(kw, kIdx) in (currentCard ? currentCard.keywords : [])" :key="kIdx">
+                          <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold" x-text="kw"></span>
+                        </template>
+                      </div>
+                    </div>
+
+                    <!-- Danger note if any -->
+                    <div x-show="currentCard && currentCard.danger" class="mt-3 p-2.5 rounded-lg bg-red-950/60 border border-red-500/30 text-red-200 text-xs">
+                      <strong class="font-bold text-red-400">Nguy cơ vi phạm: </strong>
+                      <span x-text="currentCard ? currentCard.danger : ''"></span>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
+                    <span class="flex items-center gap-1.5 font-bold text-slate-300">
+                      <span>🔄</span>
+                      <span>Chạm để lật lại câu hỏi</span>
+                    </span>
+                    <span class="text-slate-500 font-mono">Lật thẻ</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Flashcard Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+              <button
+                type="button"
+                @click="prevCard()"
+                :disabled="cardIndex === 0"
+                class="min-h-[48px] px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition-all flex items-center gap-2"
+                :class="cardIndex === 0 ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed' : 'bg-white text-slate-800 border-slate-300 hover:bg-slate-50 shadow-sm'"
+              >
+                <span>⬅️</span>
+                <span>Câu trước</span>
+              </button>
+
+              <div class="flex items-center gap-2">
+                <button
+                  type="button"
+                  @click="if (currentCard) toggleCardReview(currentCard.id)"
+                  class="min-h-[48px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition-all flex items-center gap-1.5"
+                  :class="currentCard && reviewedCards[currentCard.id]
+                    ? 'bg-amber-100 text-amber-900 border-amber-300'
+                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+                >
+                  <span x-text="currentCard && reviewedCards[currentCard.id] ? '⭐ Đã gắn sao cần ôn' : '☆ Gắn sao cần ôn'"></span>
+                </button>
+
+                <button
+                  type="button"
+                  @click="if (currentCard) toggleCardMastered(currentCard.id)"
+                  class="min-h-[48px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition-all flex items-center gap-1.5"
+                  :class="currentCard && masteredCards[currentCard.id]
+                    ? 'bg-emerald-100 text-emerald-900 border-emerald-300'
+                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+                >
+                  <span x-text="currentCard && masteredCards[currentCard.id] ? '✅ Đã thuộc' : '◯ Đánh dấu đã thuộc'"></span>
+                </button>
+              </div>
+
+              <button
+                type="button"
+                @click="nextCard()"
+                :disabled="cardIndex >= activeDeckCards.length - 1"
+                class="min-h-[48px] px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold border transition-all flex items-center gap-2"
+                :class="cardIndex >= activeDeckCards.length - 1 ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed' : 'bg-slate-900 text-white border-slate-900 hover:bg-slate-800 shadow-sm'"
+              >
+                <span>Câu sau</span>
+                <span>➡️</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -302,13 +780,70 @@ const exam = isHardware
                   <p class="text-xs text-gray-500">Mỗi học sinh nhận 1 ca bệnh khác nhau, tỉ lệ trùng lặp giữa các bàn là cực thấp</p>
                 </div>
 
-                <button
-                  type="button"
-                  @click="pickRandomTicket()"
-                  class="btn-secondary text-xs px-3 py-2 flex items-center gap-1.5 font-bold"
-                >
-                  <span>🎲 Bốc thăm ngẫu nhiên ca bệnh</span>
-                </button>
+                <div class="flex items-center gap-2">
+                  <button
+                    type="button"
+                    @click="showAIGeneratorModal = !showAIGeneratorModal"
+                    class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 border border-purple-300 bg-purple-50 text-purple-900 hover:bg-purple-100 shadow-sm"
+                  >
+                    <span>✨</span>
+                    <span>Sinh Ca Bệnh AI Studio</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    @click="pickRandomTicket()"
+                    class="btn-secondary text-xs px-3 py-2 flex items-center gap-1.5 font-bold"
+                  >
+                    <span>🎲 Bốc thăm ngẫu nhiên</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- AI Studio Generator Accordion -->
+              <div x-show="showAIGeneratorModal" x-cloak class="mb-5 p-5 rounded-2xl bg-purple-50/80 border-2 border-purple-200 space-y-3.5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xl">🤖</span>
+                    <h3 class="text-sm font-bold text-purple-950">AI Studio: Sinh Ca Bệnh Kỹ Thuật Viên Thực Tế Chuẩn TT55</h3>
+                  </div>
+                  <button type="button" @click="showAIGeneratorModal = false" class="text-purple-700 hover:text-purple-950 text-xs font-bold">✕ Đóng</button>
+                </div>
+                <p class="text-xs text-purple-900">
+                  Hệ thống kết nối Google Gemini API để tạo tình huống lỗi máy tính thực tế kèm mục tiêu cứu dữ liệu, các bước xử lý và thang điểm Thông tư 55.
+                </p>
+                <div class="space-y-1.5">
+                  <label class="block text-xs font-bold text-purple-950">Chọn chủ đề sự cố nhanh:</label>
+                  <div class="flex flex-wrap gap-1.5">
+                    <button type="button" @click="aiTicketPrompt = 'Máy bật lên kêu 1 bíp dài 2 bíp ngắn màn hình đen No Signal'" class="text-xs px-2.5 py-1 rounded-lg border border-purple-200 bg-white hover:bg-purple-100 text-purple-900">🖥️ Lỗi VGA/Bíp màn đen</button>
+                    <button type="button" @click="aiTicketPrompt = 'Máy chạy 10 phút sập nguồn nhiệt độ CPU 92 độ C khô keo'" class="text-xs px-2.5 py-1 rounded-lg border border-purple-200 bg-white hover:bg-purple-100 text-purple-900">🔥 Quá nhiệt CPU/Khô keo</button>
+                    <button type="button" @click="aiTicketPrompt = 'Khách mang ổ SSD mới nhờ gắn thêm và cứu tài liệu kế toán'" class="text-xs px-2.5 py-1 rounded-lg border border-purple-200 bg-white hover:bg-purple-100 text-purple-900">💾 Lắp SSD mới/Disk Mgmt</button>
+                    <button type="button" @click="aiTicketPrompt = 'Máy in văn phòng bị đơ kẹt lệnh in Print Spooler'" class="text-xs px-2.5 py-1 rounded-lg border border-purple-200 bg-white hover:bg-purple-100 text-purple-900">🖨️ Kẹt lệnh in văn phòng</button>
+                    <button type="button" @click="aiTicketPrompt = 'Bật máy im re không quay quạt mất nguồn PSU'" class="text-xs px-2.5 py-1 rounded-lg border border-purple-200 bg-white hover:bg-purple-100 text-purple-900">🔌 Mất nguồn hoàn toàn</button>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-purple-950 mb-1">Mô tả tình huống / lời kể của khách hàng (hoặc để trống để AI sinh ngẫu nhiên):</label>
+                  <input
+                    type="text"
+                    x-model="aiTicketPrompt"
+                    placeholder="Ví dụ: Máy tính kế toán bị nhiễm virus mã hóa, cần cứu dữ liệu ngoài Desktop..."
+                    class="w-full px-3 py-2 border border-purple-200 rounded-lg text-xs bg-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                  />
+                </div>
+                <div class="flex items-center justify-between pt-1">
+                  <span x-show="aiTicketSuccess" class="text-xs text-emerald-700 font-bold">✅ Đã sinh ca bệnh mới và đưa vào danh sách!</span>
+                  <span x-show="aiTicketError" class="text-xs text-red-600 font-bold" x-text="aiTicketError"></span>
+                  <button
+                    type="button"
+                    :disabled="aiTicketLoading"
+                    @click="generateAITicket()"
+                    class="ml-auto px-4 py-2 rounded-xl text-xs font-extrabold bg-purple-900 text-white hover:bg-purple-950 shadow-md flex items-center gap-2"
+                  >
+                    <span x-show="!aiTicketLoading">⚡ Sinh Đề Bằng AI Studio</span>
+                    <span x-show="aiTicketLoading">⏳ Đang kết nối AI...</span>
+                  </button>
+                </div>
               </div>
 
               <!-- Ticket Grid -->
@@ -1000,7 +1535,7 @@ const exam = isHardware
             </div>
 
             <!-- Printable A4 Ticket -->
-            <div class="bg-white border-2 border-gray-300 rounded-2xl p-6 sm:p-10 shadow-md print:border-none print:shadow-none print:p-0">
+            <div id="printable-ticket" class="bg-white border-2 border-gray-300 rounded-2xl p-6 sm:p-10 shadow-md print:border-none print:shadow-none print:p-0">
               <div class="border-b-2 border-gray-800 pb-4 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
                   <p class="text-xs uppercase font-bold text-gray-600">BỘ MÔN: ÔN LUYỆN NĂNG LỰC NGHỀ PHẦN CỨNG MÁY TÍNH</p>
@@ -1056,12 +1591,12 @@ const exam = isHardware
                 <div>
                   <p class="font-bold text-gray-700 mb-12">KỸ THUẬT VIÊN THỰC HIỆN</p>
                   <p class="font-bold text-gray-900 text-sm" x-text="student.name"></p>
-                  <p class="text-gray-500 text-[11px]">Kỹ thuật viên tập sự</p>
+                  <p class="text-gray-500 text-[11px]">Kỹ thuật viên thực hiện</p>
                 </div>
                 <div>
                   <p class="font-bold text-gray-700 mb-12">GIÁO VIÊN HUẤN LUYỆN / NGHIỆM THU</p>
                   <p class="font-bold text-gray-900 text-sm">{HARDWARE_METADATA.teacher}</p>
-                  <p class="text-gray-500 text-[11px]">Trưởng xưởng kỹ thuật</p>
+                  <p class="text-gray-500 text-[11px]">Giảng viên phụ trách</p>
                 </div>
               </div>
             </div>
@@ -1409,7 +1944,6 @@ const exam = isHardware
             </div>
           </div>
         </div>
-        </div>
 
         <!-- ============================================================== -->
         <!-- MODE 3: ORAL & SCENARIO REFERENCE LIBRARY                     -->
@@ -1555,16 +2089,50 @@ const exam = isHardware
           </div>
         </div>
       </div>
-    )}
-
-    {!isHardware && (
-      <div class="card p-6 text-center mt-6">
-        <h2 class="text-xl font-bold mb-2">{exam.name}</h2>
-        <p class="text-sm text-gray-500">Môn học đang được chuẩn hóa ngân hàng câu hỏi.</p>
-      </div>
-    )}
   </section>
 </BaseLayout>
+
+<style>
+  @media print {
+    /* Hide everything except printable ticket */
+    body * {
+      visibility: hidden !important;
+    }
+    #printable-ticket, #printable-ticket * {
+      visibility: visible !important;
+    }
+    #printable-ticket {
+      position: absolute !important;
+      left: 0 !important;
+      top: 0 !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 10mm 15mm !important;
+      border: 1.5px solid #111827 !important;
+      background: white !important;
+      color: black !important;
+      box-shadow: none !important;
+    }
+    @page {
+      size: A4 portrait;
+      margin: 8mm;
+    }
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+</style>
 
 <script is:inline define:vars={{
     initialTickets: FULL_EXAM_TICKETS,
@@ -1572,11 +2140,15 @@ const exam = isHardware
     initialAssembly: ASSEMBLY_SCENARIOS,
     initialWindows: WINDOWS_INSTALL_SCENARIOS,
     initialMCQBank: MCQ_PRACTICAL_BANK,
-    initialRubric: OFFICIAL_RUBRIC_CRITERIA
+    initialRubric: OFFICIAL_RUBRIC_CRITERIA,
+    initialDiagnosticScenarios: DIAGNOSTIC_SCENARIOS,
+    initialDiagnosticSteps: DIAGNOSTIC_STEPS,
+    initialClassicCases: FIVE_CLASSIC_CASES,
+    initialSurvivalRules: THREE_SURVIVAL_RULES
   }}>
     document.addEventListener('alpine:init', () => {
       Alpine.data('hardwareMasterEngine', () => ({
-        activeMode: 'simulator', // 'simulator' | 'mcq' | 'library'
+        activeMode: 'diagnostic', // 'diagnostic' | 'flashcards' | 'simulator' | 'mcq' | 'library'
         librarySubTab: 'oral', // 'oral' | 'assembly' | 'windows'
         librarySearch: '',
 
@@ -1600,6 +2172,33 @@ const exam = isHardware
         windowsScenarios: initialWindows,
         allMCQBank: initialMCQBank,
         rubricCriteria: initialRubric,
+
+        // AI Ticket Studio Generator (Module 4)
+        showAIGeneratorModal: false,
+        aiTicketPrompt: '',
+        aiTicketCategory: '',
+        aiTicketLoading: false,
+        aiTicketError: '',
+        aiTicketSuccess: false,
+
+        // Diagnostic Tree State (Module 1)
+        diagnosticScenarios: initialDiagnosticScenarios,
+        diagnosticSteps: initialDiagnosticSteps,
+        currentScenarioId: 'case_im_re',
+        currentStepId: 'step_power_01',
+        diagnosticHistory: [],
+        currentSolution: null,
+        diagnosticCompleted: false,
+
+        // Smart Flashcards State (Module 2)
+        classicCases: initialClassicCases,
+        survivalRules: initialSurvivalRules,
+        flashcardDeck: 'oral', // 'oral' | 'classic' | 'rules'
+        cardIndex: 0,
+        isCardFlipped: false,
+        reviewedCards: {},
+        masteredCards: {},
+        filterOnlyReview: false,
 
         // Dynamic Classes and Students from D1 Database
         availableClasses: [],
@@ -1647,6 +2246,217 @@ const exam = isHardware
         mcqFlagged: {},
         mcqSubmitted: false,
         mcqScore: 0,
+
+        // --- MODULE 1: CÂY CHẨN ĐOÁN 60 GIÂY ---
+        get currentDiagnosticStep() {
+          return this.diagnosticSteps[this.currentStepId] || null;
+        },
+
+        selectDiagnosticScenario(id) {
+          this.currentScenarioId = id;
+          const sc = this.diagnosticScenarios.find(s => s.id === id);
+          if (sc) {
+            this.currentStepId = sc.startStepId;
+          }
+          this.diagnosticHistory = [];
+          this.currentSolution = null;
+          this.diagnosticCompleted = false;
+        },
+
+        chooseDiagnosticOption(option) {
+          if (option.isSolution && option.solution) {
+            this.currentSolution = option.solution;
+            this.diagnosticCompleted = true;
+          } else if (option.nextNodeId) {
+            this.diagnosticHistory.push(this.currentStepId);
+            this.currentStepId = option.nextNodeId;
+          }
+        },
+
+        backDiagnosticStep() {
+          if (this.diagnosticCompleted) {
+            this.diagnosticCompleted = false;
+            this.currentSolution = null;
+            return;
+          }
+          if (this.diagnosticHistory.length > 0) {
+            this.currentStepId = this.diagnosticHistory.pop();
+            this.currentSolution = null;
+            this.diagnosticCompleted = false;
+          }
+        },
+
+        resetDiagnostic() {
+          const sc = this.diagnosticScenarios.find(s => s.id === this.currentScenarioId);
+          if (sc) {
+            this.currentStepId = sc.startStepId;
+          }
+          this.diagnosticHistory = [];
+          this.currentSolution = null;
+          this.diagnosticCompleted = false;
+        },
+
+        // --- MODULE 2: THẺ LẬT ÔN THI THÔNG MINH (FLASHCARDS) ---
+        get activeDeckCards() {
+          let cards = [];
+          if (this.flashcardDeck === 'oral') {
+            cards = this.allOralQuestions.map((q, i) => ({
+              id: q.id || 'oral_' + i,
+              category: q.category,
+              frontTitle: q.question,
+              frontHint: q.teacherIntent ? ('Mục đích kiểm tra: ' + q.teacherIntent) : 'Câu hỏi vấn đáp chuyên môn KTV',
+              backAnswer: q.standardAnswer,
+              keywords: q.criticalKeywords || [],
+              danger: null
+            }));
+          } else if (this.flashcardDeck === 'classic') {
+            cards = this.classicCases.map((c, i) => ({
+              id: c.id || 'case_' + i,
+              category: c.code + ' · Ca bệnh kinh điển',
+              frontTitle: c.name,
+              frontHint: 'Triệu chứng: ' + c.symptom,
+              backAnswer: 'Nguyên nhân kỹ thuật: ' + c.cause + '\n\nThao tác xử lý chuẩn KTV:\n' + c.action,
+              keywords: [c.tool, 'Thao tác chuẩn KTV'],
+              danger: null
+            }));
+          } else if (this.flashcardDeck === 'rules') {
+            cards = this.survivalRules.map((r, i) => ({
+              id: r.id || 'rule_' + i,
+              category: 'Quy chuẩn an toàn nghề',
+              frontTitle: r.name,
+              frontHint: r.tagline,
+              backAnswer: r.detail,
+              keywords: ['Quy tắc sống còn', 'Poka-Yoke an toàn'],
+              danger: r.danger
+            }));
+          }
+          if (this.filterOnlyReview) {
+            return cards.filter(c => this.reviewedCards[c.id]);
+          }
+          return cards;
+        },
+
+        get currentCard() {
+          const cards = this.activeDeckCards;
+          if (!cards || cards.length === 0) return null;
+          const idx = Math.min(this.cardIndex, cards.length - 1);
+          return cards[idx >= 0 ? idx : 0];
+        },
+
+        get masteredCount() {
+          const cards = this.activeDeckCards;
+          return cards.filter(c => this.masteredCards[c.id]).length;
+        },
+
+        get reviewCount() {
+          const cards = this.activeDeckCards;
+          return cards.filter(c => this.reviewedCards[c.id]).length;
+        },
+
+        switchDeck(deck) {
+          this.flashcardDeck = deck;
+          this.cardIndex = 0;
+          this.isCardFlipped = false;
+        },
+
+        toggleCardFlip() {
+          this.isCardFlipped = !this.isCardFlipped;
+        },
+
+        nextCard() {
+          if (this.cardIndex < this.activeDeckCards.length - 1) {
+            this.cardIndex++;
+            this.isCardFlipped = false;
+          }
+        },
+
+        prevCard() {
+          if (this.cardIndex > 0) {
+            this.cardIndex--;
+            this.isCardFlipped = false;
+          }
+        },
+
+        shuffleDeck() {
+          this.cardIndex = 0;
+          this.isCardFlipped = false;
+          if (this.flashcardDeck === 'oral') {
+            this.allOralQuestions = [...this.allOralQuestions].sort(() => Math.random() - 0.5);
+          } else if (this.flashcardDeck === 'classic') {
+            this.classicCases = [...this.classicCases].sort(() => Math.random() - 0.5);
+          } else if (this.flashcardDeck === 'rules') {
+            this.survivalRules = [...this.survivalRules].sort(() => Math.random() - 0.5);
+          }
+        },
+
+        toggleCardReview(id) {
+          if (this.reviewedCards[id]) {
+            delete this.reviewedCards[id];
+          } else {
+            this.reviewedCards[id] = true;
+            delete this.masteredCards[id];
+          }
+          this.saveFlashcardProgress();
+        },
+
+        toggleCardMastered(id) {
+          if (this.masteredCards[id]) {
+            delete this.masteredCards[id];
+          } else {
+            this.masteredCards[id] = true;
+            delete this.reviewedCards[id];
+          }
+          this.saveFlashcardProgress();
+        },
+
+        saveFlashcardProgress() {
+          try {
+            localStorage.setItem('cntt_fc_reviewed', JSON.stringify(this.reviewedCards));
+            localStorage.setItem('cntt_fc_mastered', JSON.stringify(this.masteredCards));
+          } catch(e){}
+        },
+
+        loadFlashcardProgress() {
+          try {
+            const rev = localStorage.getItem('cntt_fc_reviewed');
+            if (rev) this.reviewedCards = JSON.parse(rev);
+            const mas = localStorage.getItem('cntt_fc_mastered');
+            if (mas) this.masteredCards = JSON.parse(mas);
+          } catch(e){}
+        },
+
+        // --- MODULE 4: AI TICKET STUDIO GENERATOR ---
+        async generateAITicket() {
+          this.aiTicketLoading = true;
+          this.aiTicketError = '';
+          this.aiTicketSuccess = false;
+          try {
+            const res = await fetch('/api/generate-ticket', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                prompt: this.aiTicketPrompt,
+                category: this.aiTicketCategory
+              })
+            });
+            const data = await res.json();
+            if (data.ok && data.ticket) {
+              this.tickets.unshift(data.ticket);
+              this.selectedTicketIndex = 0;
+              this.syncTicketData();
+              this.aiTicketSuccess = true;
+              setTimeout(() => {
+                this.showAIGeneratorModal = false;
+              }, 1200);
+            } else {
+              this.aiTicketError = 'Không thể tạo đề bài, vui lòng thử lại.';
+            }
+          } catch(e) {
+            this.aiTicketError = 'Lỗi kết nối máy chủ AI.';
+          } finally {
+            this.aiTicketLoading = false;
+          }
+        },
 
         get currentTicket() {
           return this.tickets[this.selectedTicketIndex] || this.tickets[0];
@@ -1704,6 +2514,7 @@ const exam = isHardware
           this.syncTicketData();
           this.initRandomMCQ();
           this.loadClasses();
+          this.loadFlashcardProgress();
           this.checkSavedSession();
           this.startTimer();
           this.setupKeyboardListeners();
@@ -1791,6 +2602,10 @@ const exam = isHardware
             this.timerSeconds = 900; // 15 mins for MCQ
           } else if (mode === 'simulator') {
             this.timerSeconds = 10800; // 180 mins for workshop
+          } else if (mode === 'diagnostic') {
+            this.timerSeconds = 3600;
+          } else if (mode === 'flashcards') {
+            this.timerSeconds = 3600;
           }
           this.persistSession();
         },
@@ -1951,6 +2766,19 @@ const exam = isHardware
                 } else {
                   this.mcqNextQuestion();
                 }
+                e.preventDefault();
+              }
+            }
+
+            if (this.activeMode === 'flashcards' && this.currentCard) {
+              if (e.key === ' ' || e.key === 'Enter') {
+                this.toggleCardFlip();
+                e.preventDefault();
+              } else if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'h') {
+                this.prevCard();
+                e.preventDefault();
+              } else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'l') {
+                this.nextCard();
                 e.preventDefault();
               }
             }
