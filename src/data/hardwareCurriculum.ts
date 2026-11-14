@@ -2,7 +2,7 @@
 // CHƯƠNG TRÌNH & NỘI DUNG HUẤN LUYỆN KỸ THUẬT VIÊN THỰC CHIẾN
 // MÔN: ÔN LUYỆN NĂNG LỰC NGHỀ - PHẦN CỨNG MÁY TÍNH (MÃ: OL-01_PHAN_CUNG)
 // Theo chuẩn Phụ lục II, Thông tư 55/2026/TT-BGDĐT
-// Biên soạn: CN. Phạm Tiến Đồng
+// Biên soạn: CN. Phạm Tiến Đông
 // ============================================================================
 
 export interface RuleItem {
@@ -62,7 +62,7 @@ export interface ExamCase {
 export const HARDWARE_METADATA = {
   courseCode: 'OL-01_PHAN_CUNG',
   courseName: 'Ôn luyện Năng lực Nghề: Phần cứng Máy tính',
-  teacher: 'CN. Phạm Tiến Đồng',
+  teacher: 'CN. Phạm Tiến Đông',
   institution: 'Cổng Giảng Dạy & Thực Hành CNTT',
   standard: 'Phụ lục II, Thông tư số 55/2026/TT-BGDĐT ngày 30/6/2026 của Bộ trưởng Bộ GD&ĐT',
   slogan: 'Kỹ năng Kỹ thuật viên chuẩn hóa: Thực chiến từ số 0 — Quy trình A-Z',
@@ -82,7 +82,7 @@ export const THREE_SURVIVAL_RULES: RuleItem[] = [
     name: 'LUẬT 2: GIỮ NỒI CƠM CỦA KHÁCH',
     tagline: 'Cứu dữ liệu trước khi đụng vào máy hay format',
     detail: 'Tài liệu trong máy là nồi cơm của khách hàng. Chưa sao lưu đầy đủ Desktop, Documents, Downloads và các ổ chứa dữ liệu thì TUYỆT ĐỐI KHÔNG format, không cài lại Windows, không tháo gỡ bừa bãi. Phải kiểm tra đối chiếu số file và dung lượng MB khớp 100% trước và sau khi sao lưu.',
-    danger: 'Vi phạm: Làm mất dữ liệu khách hàng là tội nặng nhất của người thợ, bị ĐÌNH CHỈ ca thi ngay lập tức!',
+    danger: 'Vi phạm: Làm mất dữ liệu khách hàng là lỗi nghiêm trọng nhất của kỹ thuật viên, bị ĐÌNH CHỈ ca thi ngay lập tức!',
   },
   {
     id: 'rule_3',
@@ -112,7 +112,7 @@ export const THREE_SAFETY_CHECKPOINTS: StopPoint[] = [
     step: 7,
     name: 'ĐIỂM DỪNG AN TOÀN 3: NGHIỆM THU 5 ĐIỂM TRƯỚC BÀN GIAO',
     rule: 'Trước khi giao trả máy cho khách / Nộp bài thi',
-    condition: 'Nghiệm thu đủ 5 điểm vàng: (1) Quạt quay êm ái; (2) HWMonitor CPU < 75°C khi tải; (3) Dữ liệu khách nguyên vẹn 100%; (4) Device Manager sạch bóng chấm than vàng; (5) Bàn thợ dọn sạch sẽ, phiếu A-Z ký đủ chữ ký.',
+    condition: 'Nghiệm thu đủ 5 điểm vàng: (1) Quạt quay êm ái; (2) HWMonitor CPU < 75°C khi tải; (3) Dữ liệu khách nguyên vẹn 100%; (4) Device Manager sạch bóng chấm than vàng; (5) Bàn kỹ thuật dọn sạch sẽ, phiếu A-Z ký đủ chữ ký.',
     signoff: 'Biên bản bàn giao dịch vụ A-Z được cả Kỹ thuật viên và Giáo viên nghiệm thu phê duyệt.',
   },
 ];
@@ -226,7 +226,7 @@ export const SEVEN_STEPS_WORKFLOW = [
       'Nếu máy báo "No Bootable Device" -> Kiểm tra cắm chặt lại cáp SATA dữ liệu và dây nguồn SATA ổ cứng; kiểm tra thứ tự Boot trong BIOS.',
       'Nếu sai ngày giờ hoặc báo F1 -> Thay viên pin CMOS CR2032 3V mới, chỉnh lại ngày giờ và bấm F10 lưu lại.',
     ],
-    proTip: 'Cục gôm tẩy học sinh là "thần dược" của thợ máy tính! 70% máy tính màn hình đen chỉ cần chà sạch lớp oxit bám ở chân RAM là máy sống lại ngay.',
+    proTip: 'Cục gôm tẩy học sinh là "công cụ bỏ túi" của kỹ thuật viên phần cứng! 70% máy tính màn hình đen chỉ cần chà sạch lớp oxit bám ở chân RAM là máy sống lại ngay.',
   },
   {
     step: 4,
@@ -291,7 +291,7 @@ export const SEVEN_STEPS_WORKFLOW = [
       'Lập và ký Phiếu dịch vụ kỹ thuật A-Z: Kỹ thuật viên ký tên, Giáo viên / Khách hàng kiểm tra nghiệm thu và ký xác nhận.',
     ],
     checkpoint: 'ĐIỂM DỪNG AN TOÀN 3: Đủ 5 điểm nghiệm thu mới được phép bàn giao máy cho khách hoặc nộp bài thi kết thúc môn.',
-    proTip: 'Khách hàng đánh giá trình độ người thợ qua 2 thứ: Máy chạy mát êm và Bàn làm việc sạch sẽ, ngăn nắp. Hãy làm việc với tác phong của một người thợ chuyên nghiệp!',
+    proTip: 'Khách hàng đánh giá trình độ của kỹ thuật viên qua 2 thứ: Máy chạy mát êm và Bàn làm việc sạch sẽ, ngăn nắp. Hãy làm việc với tác phong của một kỹ thuật viên chuyên nghiệp!',
   },
   {
     step: 8,
@@ -315,7 +315,7 @@ export const PRACTICAL_EXAM_TICKETS: ExamCase[] = [
     id: 'ticket_pc01',
     code: 'ĐỀ THI 01',
     title: 'Ca bệnh Màn hình đen (RAM tiếp xúc kém) & Nâng cấp RAM + Cứu tài liệu Kế toán',
-    customerProblem: 'Khách hàng mang máy bàn đến xưởng phản ánh: Sáng nay bấm nút nguồn thì quạt trong máy vẫn quay vù vù nhưng màn hình đen thui (báo No Signal). Trong máy có thư mục "BAO_CAO_TAI_CHINH_2026" ngoài Desktop cực kỳ quan trọng cần cứu gấp. Khách có mang kèm theo 1 thanh RAM 8GB DDR4 mua thêm nhờ thợ lắp nâng cấp.',
+    customerProblem: 'Khách hàng mang máy bàn đến xưởng phản ánh: Sáng nay bấm nút nguồn thì quạt trong máy vẫn quay vù vù nhưng màn hình đen thui (báo No Signal). Trong máy có thư mục "BAO_CAO_TAI_CHINH_2026" ngoài Desktop cực kỳ quan trọng cần cứu gấp. Khách có mang kèm theo 1 thanh RAM 8GB DDR4 mua thêm nhờ kỹ thuật viên lắp nâng cấp.',
     dataTarget: 'Desktop\\BAO_CAO_TAI_CHINH_2026 (12 tệp Excel, 145 MB) -> Sao lưu sang Ổ D:\\BACKUP_KHACH_HANG',
     hardwareTask: 'Xử lý lỗi màn hình đen cho máy lên hình; sau đó lắp thêm 1 thanh RAM 8GB DDR4 (nghe 2 tiếng "tách" sập tai khóa).',
     softwareTask: 'Kiểm tra Device Manager sạch bóng chấm than vàng; cài đặt UniKey tiếng Việt; tạo điểm khôi phục hệ thống MAY_CHAY_TOT.',

@@ -1,9 +1,9 @@
----
+﻿---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 ---
 
-<BaseLayout title="Quản lý Lớp học & Học sinh - Cổng Giảng Dạy CNTT">
+<BaseLayout title="Quản lý Lớp học & Học sinh - Cổng Giảng Dạy CNTT" noindex={true}>
   <section class="max-w-6xl mx-auto px-4 py-8">
     <AdminAuthGuard pageTitle="Quản lý Lớp & Học sinh">
       <div x-data="classesManager">
@@ -1116,7 +1116,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
       async fetchClasses() {
         this.loading = true;
         // 1. Tải tức thì từ localStorage
-        const localClasses = localStorage.getItem('BMTC_CLASSES');
+        const localClasses = (localStorage.getItem('CNTT_CLASSES') || localStorage.getItem('CNTT_CLASSES'));
         if (localClasses) {
           try {
             this.classes = JSON.parse(localClasses);
@@ -1126,7 +1126,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
         // Tự động quét và phục hồi học sinh cho từng lớp
         let allStudentsStore = {};
         try {
-          allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+          allStudentsStore = JSON.parse((localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('CNTT_STUDENTS')) || '{}');
         } catch(e){}
 
         if (Array.isArray(this.classes)) {
@@ -1139,8 +1139,8 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
             }
           });
           try {
-            localStorage.setItem('BMTC_STUDENTS', JSON.stringify(allStudentsStore));
-            localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
+            localStorage.setItem('CNTT_STUDENTS', JSON.stringify(allStudentsStore));
+            localStorage.setItem('CNTT_CLASSES', JSON.stringify(this.classes));
           } catch(e){}
         }
 
@@ -1151,10 +1151,10 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
           if (data && data.ok && Array.isArray(data.data)) {
             if (!localClasses || (Array.isArray(this.classes) && this.classes.length === 0)) {
               this.classes = data.data;
-              localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
+              localStorage.setItem('CNTT_CLASSES', JSON.stringify(this.classes));
             } else if (data.from_d1) {
               this.classes = data.data;
-              localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
+              localStorage.setItem('CNTT_CLASSES', JSON.stringify(this.classes));
             } else {
               // Server đang dùng memory fallback, đẩy các lớp của Thầy từ localStorage lên Worker
               fetch('/api/classes', {
@@ -1196,7 +1196,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
         
         let allStudentsStore = {};
         try {
-          allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+          allStudentsStore = JSON.parse((localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('CNTT_STUDENTS')) || '{}');
         } catch(e){}
 
         const mergedStudents = [];
@@ -1228,10 +1228,10 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
         };
 
         allStudentsStore[compClassId] = mergedStudents;
-        localStorage.setItem('BMTC_STUDENTS', JSON.stringify(allStudentsStore));
+        localStorage.setItem('CNTT_STUDENTS', JSON.stringify(allStudentsStore));
 
         this.classes.unshift(newCompClass);
-        localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
+        localStorage.setItem('CNTT_CLASSES', JSON.stringify(this.classes));
 
         this.showToast(`✅ Đã tạo lớp ghép "${newCompClass.class_name}" với ${mergedStudents.length} học sinh!`);
         this.showMergeModal = false;
@@ -1277,7 +1277,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 
         // Lưu ngay lập tức vào state và localStorage để không bao giờ bị biến mất!
         this.classes.unshift(newClassObj);
-        localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
+        localStorage.setItem('CNTT_CLASSES', JSON.stringify(this.classes));
 
         this.showToast('✅ Đã tạo lớp học mới thành công!');
         this.showCreateClassModal = false;
@@ -1482,7 +1482,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
         // 1. Lưu học sinh vào localStorage theo CẢ classId VÀ classCode
         let allStudentsStore = {};
         try {
-          allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+          allStudentsStore = JSON.parse((localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('CNTT_STUDENTS')) || '{}');
         } catch(e){}
 
         const mappedStudents = students.map((s, idx) => ({
@@ -1500,12 +1500,12 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
           allStudentsStore[classId] = [...current, ...mappedStudents];
           allStudentsStore[classCode] = allStudentsStore[classId];
         }
-        localStorage.setItem('BMTC_STUDENTS', JSON.stringify(allStudentsStore));
+        localStorage.setItem('CNTT_STUDENTS', JSON.stringify(allStudentsStore));
 
         // 2. Cập nhật sĩ số trong this.classes và localStorage
         if (targetClass) {
           targetClass.student_count = allStudentsStore[classId].length;
-          localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
+          localStorage.setItem('CNTT_CLASSES', JSON.stringify(this.classes));
         }
 
         this.showToast(`✅ Đã nạp thành công ${students.length} học sinh vào lớp!`);
@@ -1540,7 +1540,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 
         let allStudentsStore = {};
         try {
-          allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+          allStudentsStore = JSON.parse((localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('CNTT_STUDENTS')) || '{}');
         } catch(e){}
 
         // Tìm kiếm thông minh qua id, mã lớp hoặc quét mờ (cứu dữ liệu nếu lệch key)
@@ -1558,7 +1558,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
             this.selectedClassStudents = data.data;
             allStudentsStore[cls.id] = data.data;
             allStudentsStore[cls.class_code] = data.data;
-            localStorage.setItem('BMTC_STUDENTS', JSON.stringify(allStudentsStore));
+            localStorage.setItem('CNTT_STUDENTS', JSON.stringify(allStudentsStore));
             if (cls) cls.student_count = data.data.length;
           } else if (localStudents.length > 0) {
             // Đẩy dữ liệu học sinh của Thầy từ localStorage lên server
@@ -1627,7 +1627,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
         const classId = this.studentForm.class_id || (this.selectedClass ? this.selectedClass.id : '');
         let allStudentsStore = {};
         try {
-          allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+          allStudentsStore = JSON.parse((localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('CNTT_STUDENTS')) || '{}');
         } catch(e){}
 
         const list = allStudentsStore[classId] || [...this.selectedClassStudents];
@@ -1647,12 +1647,12 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
         }
 
         allStudentsStore[classId] = list;
-        localStorage.setItem('BMTC_STUDENTS', JSON.stringify(allStudentsStore));
+        localStorage.setItem('CNTT_STUDENTS', JSON.stringify(allStudentsStore));
 
         this.selectedClassStudents = list;
         if (this.selectedClass) {
           this.selectedClass.student_count = list.length;
-          localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
+          localStorage.setItem('CNTT_CLASSES', JSON.stringify(this.classes));
         }
 
         this.showToast(this.studentForm.id ? '✅ Đã cập nhật hồ sơ học sinh!' : '✅ Đã thêm học sinh mới thành công!');
@@ -1677,12 +1677,12 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 
         if (this.selectedClass) {
           try {
-            const allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+            const allStudentsStore = JSON.parse((localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('CNTT_STUDENTS')) || '{}');
             allStudentsStore[this.selectedClass.id] = this.selectedClassStudents;
-            localStorage.setItem('BMTC_STUDENTS', JSON.stringify(allStudentsStore));
+            localStorage.setItem('CNTT_STUDENTS', JSON.stringify(allStudentsStore));
 
             this.selectedClass.student_count = this.selectedClassStudents.length;
-            localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
+            localStorage.setItem('CNTT_CLASSES', JSON.stringify(this.classes));
           } catch(e){}
         }
 
@@ -1701,13 +1701,13 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 
         // Xóa ngay lập tức khỏi state và localStorage (không bao giờ xuất hiện lại!)
         this.classes = this.classes.filter(c => c.id !== cls.id && c.class_code !== cls.class_code);
-        localStorage.setItem('BMTC_CLASSES', JSON.stringify(this.classes));
+        localStorage.setItem('CNTT_CLASSES', JSON.stringify(this.classes));
 
         // Xóa cả học sinh của lớp đó trong localStorage
         try {
-          const allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+          const allStudentsStore = JSON.parse((localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('CNTT_STUDENTS')) || '{}');
           delete allStudentsStore[cls.id];
-          localStorage.setItem('BMTC_STUDENTS', JSON.stringify(allStudentsStore));
+          localStorage.setItem('CNTT_STUDENTS', JSON.stringify(allStudentsStore));
         } catch(e){}
 
         this.showToast('Đã xóa lớp học thành công!');

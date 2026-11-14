@@ -1,9 +1,9 @@
----
+﻿---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 ---
 
-<BaseLayout title="Trang quản trị Giảng viên - Cổng Giảng Dạy CNTT">
+<BaseLayout title="Trang quản trị Giảng viên - Cổng Giảng Dạy CNTT" noindex={true}>
   <section class="max-w-5xl mx-auto px-4 py-8">
     <AdminAuthGuard pageTitle="Bảng điều khiển Giảng viên">
       <div x-data="adminDashboard" class="space-y-6">
@@ -166,7 +166,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
       loadStats() {
         // 1. Đọc số lớp từ localStorage
         try {
-          const classes = JSON.parse(localStorage.getItem('BMTC_CLASSES') || '[]');
+          const classes = JSON.parse((localStorage.getItem('CNTT_CLASSES') || localStorage.getItem('CNTT_CLASSES')) || '[]');
           if (Array.isArray(classes)) {
             this.stats.classCount = classes.length;
             this.stats.compositeCount = classes.filter(c => c.is_composite).length;
@@ -175,7 +175,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 
         // 2. Đọc tổng số học sinh từ localStorage
         try {
-          const allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+          const allStudentsStore = JSON.parse((localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('CNTT_STUDENTS')) || '{}');
           let count = 0;
           Object.values(allStudentsStore).forEach(list => {
             if (Array.isArray(list)) count += list.length;

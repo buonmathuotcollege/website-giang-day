@@ -1,10 +1,10 @@
-// ============================================================================
+﻿// ============================================================================
 // FILE QUẢN LÝ LỚP HỌC, DANH SÁCH HỌC SINH & BÀI TẬP (data/course-data.js)
 // -> THẦY CHỈ CẦN SỬA FILE NÀY (HOẶC DÙNG MỤC "QUẢN LÝ LỚP & BÀI TẬP" TRÊN WEB)
 // ============================================================================
 
 window.COURSE_DATA = {
-  portalTitle: "🎓 Cổng Thực Hành Tin Học 9+3 • Trường CĐ Buôn Ma Thuột",
+  portalTitle: "🎓 Cổng Thực Hành Tin Học 9+3 • Cổng Giảng Dạy CNTT",
   sendUrl: "/api/scores",
 
   // 1. QUẢN LÝ DANH SÁCH LỚP & HỌC SINH (HỖ TRỢ LỚP ĐƠN, GHÉP 2 LỚP, GHÉP 1/2 LỚP THEO CA)
@@ -58,7 +58,7 @@ window.COURSE_DATA = {
   // 3. BÀI TẬP BƯỚC 3: LUYỆN GÕ TIẾNG VIỆT TELEX (5 CÂU)
   telexSentences: [
     {
-      target: "Trường Cao đẳng Buôn Ma Thuột",
+      target: "Cổng Giảng Dạy CNTT",
       hint: "Gợi ý gõ: T-r-u-w-o-w-n-g-f  C-a-o  d-d-a-w-n-g-r  B-u-o-o-n  M-a  T-h-u-o-o-t-j"
     },
     {
@@ -122,7 +122,7 @@ window.COURSE_DATA = {
       ],
       sampleHtml: `
         <div class="text-center font-bold">
-          TRƯỜNG CAO ĐẲNG BUÔN MA THUỘT<br/>
+          Cổng Giảng Dạy CNTT<br/>
           <span class="underline">KHOA CÔNG NGHỆ THÔNG TIN</span>
         </div>
         <div class="text-center font-bold text-base my-2">THÔNG BÁO LỊCH THỰC HÀNH &amp; BẢO TRÌ PHÒNG MÁY</div>

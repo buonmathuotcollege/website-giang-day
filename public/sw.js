@@ -2,7 +2,7 @@
 // SERVICE WORKER - CỔNG GIẢNG DẠY CNTT (PWA)
 // ============================================================================
 
-const CACHE_NAME = 'bmtc-edu-v1';
+const CACHE_NAME = 'cntt-edu-v2';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',

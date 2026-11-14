@@ -1,6 +1,6 @@
 -- ============================================================================
 -- CƠ SỞ DỮ LIỆU CLOUDFLARE D1 CHO HỆ THỐNG GIẢNG DẠY CNTT
--- Trường Cao đẳng Buôn Ma Thuột
+-- Cổng Giảng Dạy & Thực Hành CNTT - CN. Phạm Tiến Đông
 -- ============================================================================
 
 -- 1. BẢNG MÔN HỌC (Courses)

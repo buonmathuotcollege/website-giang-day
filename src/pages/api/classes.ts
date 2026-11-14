@@ -115,19 +115,26 @@ export const GET: APIRoute = async ({ request, locals }) => {
       if (classId || classCode) {
         let targetId = classId;
         if (!targetId && classCode) {
-          const cls = await env.DB.prepare("SELECT id FROM classes WHERE class_code = ? OR class_name LIKE ?")
-            .bind(classCode, `%${classCode}%`).first();
+          const cls = await env.DB.prepare("SELECT id FROM classes WHERE UPPER(class_code) = UPPER(?) OR id = ?")
+            .bind(classCode, classCode).first();
           if (cls) targetId = cls.id;
         }
 
         if (targetId) {
-          const students = await env.DB.prepare(
-            `SELECT id, class_id, student_number, student_code, full_name, date_of_birth, gender, phone, status, original_class, created_at
-             FROM students 
-             WHERE class_id = ? 
-             ORDER BY student_number ASC, student_code ASC, full_name ASC`
-          ).bind(targetId).all();
-          return new Response(JSON.stringify({ ok: true, data: students.results || [] }), { headers: CORS_HEADERS });
+          const isAdmin = checkAdminAuth(request, env);
+          // Bảo vệ dữ liệu cá nhân (PII): Chỉ Giảng viên mới được xem ngày sinh, SĐT, giới tính
+          const query = isAdmin
+            ? `SELECT id, class_id, student_number, student_code, full_name, date_of_birth, gender, phone, status, original_class, created_at
+               FROM students 
+               WHERE class_id = ? 
+               ORDER BY student_number ASC, student_code ASC, full_name ASC`
+            : `SELECT id, class_id, student_number, student_code, full_name
+               FROM students 
+               WHERE class_id = ? 
+               ORDER BY student_number ASC, student_code ASC, full_name ASC`;
+
+          const students = await env.DB.prepare(query).bind(targetId).all();
+          return new Response(JSON.stringify({ ok: true, data: students.results || [], is_admin: isAdmin }), { headers: CORS_HEADERS });
         }
       }
 
@@ -167,10 +174,23 @@ export const GET: APIRoute = async ({ request, locals }) => {
       (classCode && (
         (s.class_code && s.class_code.toUpperCase() === targetCode) ||
         (s.original_class && s.original_class.toUpperCase() === targetCode) ||
-        (s.class_id && s.class_id.toLowerCase().replace(/[^a-z0-9]/g, "").includes(cleanTarget))
+        (s.class_id && s.class_id.toLowerCase().replace(/[^a-z0-9]/g, "") === cleanTarget)
       ))
     );
-    return new Response(JSON.stringify({ ok: true, data: list, from_d1: false }), { headers: CORS_HEADERS });
+
+    const isAdmin = checkAdminAuth(request, env);
+    const sanitizedList = list.map((s: any) => {
+      if (isAdmin) return s;
+      return {
+        id: s.id,
+        class_id: s.class_id,
+        student_number: s.student_number,
+        student_code: s.student_code,
+        full_name: s.full_name
+      };
+    });
+
+    return new Response(JSON.stringify({ ok: true, data: sanitizedList, from_d1: false, is_admin: isAdmin }), { headers: CORS_HEADERS });
   }
 
   const result = memClasses.map((c: any) => ({
@@ -185,6 +205,11 @@ export const GET: APIRoute = async ({ request, locals }) => {
 export const POST: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
 
+  // Kiểm tra quyền Giảng viên cho TOÀN BỘ các thao tác POST sửa đổi dữ liệu
+  if (!checkAdminAuth(request, env)) {
+    return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để thực hiện thao tác này!" }), { status: 401, headers: CORS_HEADERS });
+  }
+
   try {
     const body = await request.json();
     const action = body.action || "create_class";
@@ -198,11 +223,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
         (globalThis as any).MEM_CLASSES = incomingClasses;
       }
       return new Response(JSON.stringify({ ok: true, count: incomingClasses.length }), { headers: CORS_HEADERS });
-    }
-
-    // Kiểm tra quyền Giảng viên cho mọi thao tác sửa đổi lớp và học sinh
-    if (!checkAdminAuth(request, env)) {
-      return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để thực hiện thao tác này!" }), { status: 401, headers: CORS_HEADERS });
     }
 
     // -------------------------------------------------------------

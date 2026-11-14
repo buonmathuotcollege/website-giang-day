@@ -46,7 +46,7 @@ const exam = isHardware
   : (STANDARD_EXAMS[examSlug!] || STANDARD_EXAMS['mang']);
 ---
 
-<BaseLayout title={`${exam.name} - Đánh giá năng lực thực tế`}>
+<BaseLayout title={`${exam.name} - Đánh giá năng lực thực tế`} hideChatbot={true}>
   <section class="max-w-6xl mx-auto px-4 py-8">
     <Breadcrumb items={[
       { label: 'Trang chủ', href: '/' },
@@ -932,7 +932,7 @@ const exam = isHardware
                     </label>
                     <label class="flex items-center gap-2 p-2 rounded-lg border">
                       <input type="checkbox" x-model="step7.benchCleaned" class="w-4 h-4 rounded text-primary-700" />
-                      <span>Điểm 4: Tác phong người thợ: Bàn kỹ thuật lau sạch sẽ, dụng cụ cất vào hộp</span>
+                      <span>Điểm 4: Tác phong kỹ thuật viên: Bàn kỹ thuật lau sạch sẽ, dụng cụ cất vào hộp</span>
                     </label>
                     <label class="flex items-center gap-2 p-2 rounded-lg border">
                       <input type="checkbox" x-model="step7.sheetSigned" class="w-4 h-4 rounded text-primary-700" />
@@ -1008,7 +1008,7 @@ const exam = isHardware
                 <div>
                   <p class="text-xs uppercase font-bold text-gray-600">BỘ MÔN: ÔN LUYỆN NĂNG LỰC NGHỀ PHẦN CỨNG MÁY TÍNH</p>
                   <p class="text-xs uppercase font-extrabold text-gray-900">HỆ THỐNG THỰC HÀNH & SÁT HẠCH KỸ THUẬT CNTT</p>
-                  <p class="text-[11px] text-gray-500 font-mono">Giảng viên phụ trách: CN. Phạm Tiến Đồng</p>
+                  <p class="text-[11px] text-gray-500 font-mono">Giảng viên phụ trách: CN. Phạm Tiến Đông</p>
                 </div>
                 <div class="text-left sm:text-right">
                   <span class="text-xs font-mono font-bold text-gray-900 block" x-text="'MÃ PHIẾU: DV-PC-' + Date.now().toString().slice(-6)"></span>
@@ -1040,7 +1040,7 @@ const exam = isHardware
                       <th class="py-2 px-3">Tiêu chí đánh giá</th>
                       <th class="py-2 px-3 text-center">Tối đa</th>
                       <th class="py-2 px-3 text-center">Điểm đạt</th>
-                      <th class="py-2 px-3">Đánh giá của Thầy</th>
+                      <th class="py-2 px-3">Đánh giá của Giảng viên</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200">
@@ -1048,7 +1048,7 @@ const exam = isHardware
                     <tr><td class="py-2 px-3">2</td><td class="py-2 px-3">Chẩn đoán nguyên nhân sự cố</td><td class="py-2 px-3 text-center font-bold">2.5</td><td class="py-2 px-3 text-center font-bold text-primary-700" x-text="rubricScores.diagnosis"></td><td class="py-2 px-3 text-[11px] text-emerald-700">✓ Bắt đúng bệnh trong 60 giây.</td></tr>
                     <tr><td class="py-2 px-3">3</td><td class="py-2 px-3">Thao tác xử lý kỹ thuật</td><td class="py-2 px-3 text-center font-bold">3.0</td><td class="py-2 px-3 text-center font-bold text-primary-700" x-text="rubricScores.operation"></td><td class="py-2 px-3 text-[11px] text-emerald-700">✓ Keo hạt đậu, RAM sập 2 tai.</td></tr>
                     <tr><td class="py-2 px-3">4</td><td class="py-2 px-3">Kiểm tra và Xác nhận vận hành</td><td class="py-2 px-3 text-center font-bold">1.5</td><td class="py-2 px-3 text-center font-bold text-primary-700" x-text="rubricScores.verification"></td><td class="py-2 px-3 text-[11px] text-emerald-700">✓ CPU dưới 75°C, in Test Page tốt.</td></tr>
-                    <tr><td class="py-2 px-3">5</td><td class="py-2 px-3">Bàn giao và Hồ sơ kỹ thuật</td><td class="py-2 px-3 text-center font-bold">1.0</td><td class="py-2 px-3 text-center font-bold text-primary-700" x-text="rubricScores.handover"></td><td class="py-2 px-3 text-[11px] text-emerald-700">✓ Bàn thợ sạch sẽ ngăn nắp.</td></tr>
+                    <tr><td class="py-2 px-3">5</td><td class="py-2 px-3">Bàn giao và Hồ sơ kỹ thuật</td><td class="py-2 px-3 text-center font-bold">1.0</td><td class="py-2 px-3 text-center font-bold text-primary-700" x-text="rubricScores.handover"></td><td class="py-2 px-3 text-[11px] text-emerald-700">✓ Bàn kỹ thuật sạch sẽ ngăn nắp.</td></tr>
                     <tr class="bg-gray-50 font-bold"><td colspan="2" class="py-2.5 px-3 text-right">TỔNG ĐIỂM:</td><td class="py-2.5 px-3 text-center font-mono">10.0</td><td class="py-2.5 px-3 text-center font-mono text-sm text-primary-800" x-text="rubricScores.total"></td><td class="py-2.5 px-3" :class="rubricScores.isPass ? 'text-emerald-700' : 'text-red-700'" x-text="rubricScores.isPass ? 'XẾP LOẠI: ĐẠT' : 'CHƯA ĐẠT'"></td></tr>
                   </tbody>
                 </table>
@@ -1384,7 +1384,7 @@ const exam = isHardware
                     </div>
 
                     <div class="bg-white p-3 rounded-xl border border-gray-200 text-gray-600 text-[11px] leading-relaxed shadow-xs">
-                      💡 <strong>Thợ mách nước:</strong> <span x-text="q.explanation"></span>
+                      💡 <strong>Ghi nhớ kỹ thuật:</strong> <span x-text="q.explanation"></span>
                     </div>
 
                     <!-- Nút Thầy ơi giải thích câu này (Gemini AI cho 9+3) -->
@@ -1478,10 +1478,10 @@ const exam = isHardware
 
                 <div class="p-3 bg-gray-50 rounded-xl border border-gray-100 text-xs space-y-1.5">
                   <p class="text-gray-500 text-[11px] italic">
-                    🎯 <strong>Ý đồ của Thầy khi hỏi:</strong> <span x-text="oq.teacherIntent"></span>
+                    🎯 <strong>Ý đồ của Giảng viên khi hỏi:</strong> <span x-text="oq.teacherIntent"></span>
                   </p>
                   <p class="text-emerald-900 font-medium leading-relaxed">
-                    ✅ <strong>Câu trả lời chuẩn của thợ lành nghề:</strong> <span x-text="oq.standardAnswer"></span>
+                    ✅ <strong>Câu trả lời chuẩn của Kỹ thuật viên:</strong> <span x-text="oq.standardAnswer"></span>
                   </p>
                 </div>
 
@@ -1513,7 +1513,7 @@ const exam = isHardware
                   </div>
 
                   <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-900">
-                    <strong class="block mb-0.5">⚠️ Cái bẫy thợ non tay hay mắc phải:</strong>
+                    <strong class="block mb-0.5">⚠️ Bẫy sai lầm kỹ thuật viên mới hay mắc phải:</strong>
                     <span x-text="sc.trap"></span>
                   </div>
 
@@ -1544,7 +1544,7 @@ const exam = isHardware
                   </div>
 
                   <div class="bg-red-50 p-3 rounded-lg border border-red-200 text-red-900">
-                    <strong class="block mb-0.5">⚠️ Cái bẫy thợ non tay hay mắc phải:</strong>
+                    <strong class="block mb-0.5">⚠️ Bẫy sai lầm kỹ thuật viên mới hay mắc phải:</strong>
                     <span x-text="sc.trap"></span>
                   </div>
 
@@ -1713,7 +1713,7 @@ const exam = isHardware
         },
 
         async loadClasses() {
-          const localClasses = localStorage.getItem('BMTC_CLASSES');
+          const localClasses = localStorage.getItem('CNTT_CLASSES') || localStorage.getItem('BMTC_CLASSES');
           if (localClasses) {
             try {
               this.availableClasses = JSON.parse(localClasses);
@@ -1746,7 +1746,7 @@ const exam = isHardware
           // Kiểm tra trong localStorage trước
           let foundLocal = false;
           try {
-            const allStudentsStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+            const allStudentsStore = JSON.parse(localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('BMTC_STUDENTS') || '{}');
             const targetCls = (this.availableClasses || []).find(c => c.class_name === this.student.className || c.class_code === this.student.className);
             if (targetCls && allStudentsStore[targetCls.id]) {
               this.classStudentsList = allStudentsStore[targetCls.id];
@@ -1838,14 +1838,14 @@ const exam = isHardware
               mcqSubmitted: this.mcqSubmitted,
               timerSeconds: this.timerSeconds,
             };
-            localStorage.setItem('bmtc_hardware_state_v2', JSON.stringify(data));
+            localStorage.setItem('cntt_hardware_state_v2', JSON.stringify(data));
             this.lastSavedText = data.timestamp;
           } catch (e) {}
         },
 
         checkSavedSession() {
           try {
-            const raw = localStorage.getItem('bmtc_hardware_state_v2');
+            const raw = localStorage.getItem('cntt_hardware_state_v2') || localStorage.getItem('bmtc_hardware_state_v2');
             if (raw) {
               const data = JSON.parse(raw);
               if (data && (data.student?.name || Object.keys(data.mcqAnswers || {}).length > 0)) {
@@ -1861,7 +1861,7 @@ const exam = isHardware
 
         restoreSavedSession() {
           try {
-            const raw = localStorage.getItem('bmtc_hardware_state_v2');
+            const raw = localStorage.getItem('cntt_hardware_state_v2') || localStorage.getItem('bmtc_hardware_state_v2');
             if (raw) {
               const data = JSON.parse(raw);
               if (data.student) this.student = data.student;
@@ -1890,6 +1890,7 @@ const exam = isHardware
 
         discardSavedSession() {
           try {
+            localStorage.removeItem('cntt_hardware_state_v2');
             localStorage.removeItem('bmtc_hardware_state_v2');
           } catch (e) {}
           this.showRecoveryBanner = false;
@@ -2048,7 +2049,7 @@ const exam = isHardware
         approveStop1() {
           this.step2.teacherApprovedStop1 = true;
           this.persistSession();
-          alert('✅ Thầy Phạm Tiến Đồng: Đã kiểm tra đối chiếu khớp 100% dữ liệu. Cho phép em chuyển sang Bước 3 mở máy xử lý!');
+          alert('✅ Giảng viên CN. Phạm Tiến Đông: Đã kiểm tra đối chiếu khớp 100% dữ liệu. Cho phép chuyển sang Bước 3 mở máy xử lý!');
         },
 
         handleCleanRam() {
@@ -2075,7 +2076,7 @@ const exam = isHardware
         approveStop2() {
           this.step4.teacherApprovedStop2 = true;
           this.persistSession();
-          alert('✅ Thầy Phạm Tiến Đồng: Đã kiểm tra thùng máy an toàn, CPU_FAN cắm chuẩn, không rơi ốc. Cho phép cắm điện thử máy!');
+          alert('✅ Giảng viên CN. Phạm Tiến Đông: Đã kiểm tra thùng máy an toàn, CPU_FAN cắm chuẩn, không rơi ốc. Cho phép cắm điện thử máy!');
         },
 
         selectDriveC() {
@@ -2100,7 +2101,7 @@ const exam = isHardware
         approveStop3() {
           this.step7.teacherApprovedStop3 = true;
           this.persistSession();
-          alert('✅ Thầy Phạm Tiến Đồng: Ca máy xử lý xuất sắc! Máy chạy mát êm, dữ liệu nguyên vẹn, bàn sạch sẽ. Chúc mừng em đã hoàn thành ca sát hạch!');
+          alert('✅ Giảng viên CN. Phạm Tiến Đông: Ca máy xử lý xuất sắc! Máy chạy mát êm, dữ liệu nguyên vẹn, bàn sạch sẽ. Chúc mừng bạn đã hoàn thành ca sát hạch!');
         },
 
         finishEvaluation() {

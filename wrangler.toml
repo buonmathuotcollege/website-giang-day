@@ -10,5 +10,7 @@ command = "npm run build"
 directory = "dist"
 binding = "ASSETS"
 
-[vars]
-TEACHER_SECRET = "BMTC2026"
+[[d1_databases]]
+binding = "DB"
+database_name = "giang-day-db"
+database_id = "giang-day-db"

@@ -55,12 +55,26 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const studentCode = String(data.studentCode || data.student_code || "").trim();
     const originalClass = String(data.originalClass || data.original_class || "").trim();
     const station = String(data.station || "").trim();
-    const score = Number(data.score || data.grade10 || 10.0);
+    
+    // Giới hạn điểm hợp lệ trong khoảng [0, 10], không mặc định 10.0
+    const rawScore = data.score !== undefined ? data.score : (data.grade10 !== undefined ? data.grade10 : 0);
+    const numScore = Number(rawScore);
+    const score = isNaN(numScore) ? 0 : Math.max(0, Math.min(10, Math.round(numScore * 10) / 10));
+
     const details = JSON.stringify(data.details || {});
     const status = score >= 5.0 ? "Đạt" : "Cần rèn luyện";
 
     if (!studentName) {
       return new Response(JSON.stringify({ ok: false, error: "Họ tên học sinh không được để trống" }), { status: 400, headers: CORS_HEADERS });
+    }
+
+    // Yêu cầu quyền Giảng viên khi chấm điểm sát hạch xưởng hoặc có rubric đánh giá
+    const isTeacherGrading = Boolean(data.isTeacherGraded || data.details?.rubric || sessionName.includes("Sát hạch"));
+    if (isTeacherGrading && !checkAdminAuth(request, env)) {
+      return new Response(JSON.stringify({ 
+        ok: false, 
+        error: "Yêu cầu quyền Giảng viên để ghi nhận điểm đánh giá kỹ năng vào sổ điểm!" 
+      }), { status: 401, headers: CORS_HEADERS });
     }
 
     if (env && env.DB) {

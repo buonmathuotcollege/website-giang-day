@@ -15,7 +15,14 @@ export const OPTIONS: APIRoute = async () => {
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (typeof process !== 'undefined' ? (process as any).env : {}) || {};
-  const validSecret = String(env.TEACHER_SECRET || env.ADMIN_TOKEN || "BMTC2026").trim();
+  const validSecret = String(env.TEACHER_SECRET || env.ADMIN_TOKEN || "").trim();
+
+  if (!validSecret) {
+    return new Response(JSON.stringify({
+      ok: false,
+      error: "Hệ thống chưa cấu hình biến môi trường TEACHER_SECRET trên máy chủ. Vui lòng cấu hình trên Dashboard Cloudflare."
+    }), { status: 503, headers: CORS_HEADERS });
+  }
 
   try {
     const body = await request.json();
@@ -45,7 +52,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     } else {
       b64 = btoa(unescape(encodeURIComponent(rawSecret)));
     }
-    const token = "bmtc_sec_" + b64;
+    const token = "cntt_sec_" + b64;
 
     return new Response(JSON.stringify({
       ok: true,
@@ -66,7 +73,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
 // Kiểm tra token còn hợp lệ hay không
 export const GET: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (typeof process !== 'undefined' ? (process as any).env : {}) || {};
-  const validSecret = String(env.TEACHER_SECRET || env.ADMIN_TOKEN || "BMTC2026").trim();
+  const validSecret = String(env.TEACHER_SECRET || env.ADMIN_TOKEN || "").trim();
+
+  if (!validSecret) {
+    return new Response(JSON.stringify({ ok: false, valid: false, error: "TEACHER_SECRET chưa được thiết lập" }), { status: 503, headers: CORS_HEADERS });
+  }
 
   const authHeader = request.headers.get("Authorization") || "";
   const secretHeader = request.headers.get("x-admin-secret") || "";
@@ -75,14 +86,31 @@ export const GET: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ ok: true, valid: true }), { headers: CORS_HEADERS });
   }
 
-  if (authHeader.startsWith("Bearer bmtc_sec_")) {
-    try {
-      const decoded = Buffer.from(authHeader.replace("Bearer bmtc_sec_", ""), 'base64').toString('utf-8');
-      const [tokenSecret] = decoded.split(":");
-      if (tokenSecret === validSecret) {
-        return new Response(JSON.stringify({ ok: true, valid: true }), { headers: CORS_HEADERS });
-      }
-    } catch(e) {}
+  const prefixes = ["cntt_sec_", "bmtc_sec_"];
+  for (const prefix of prefixes) {
+    const bearerPrefix = `Bearer ${prefix}`;
+    if (authHeader.startsWith(bearerPrefix)) {
+      try {
+        const rawPayload = authHeader.replace(bearerPrefix, "");
+        let decoded = "";
+        if (typeof Buffer !== 'undefined') {
+          decoded = Buffer.from(rawPayload, 'base64').toString('utf-8');
+        } else {
+          decoded = decodeURIComponent(escape(atob(rawPayload)));
+        }
+        const [tokenSecret, timestampStr] = decoded.split(":");
+        if (tokenSecret === validSecret) {
+          if (timestampStr) {
+            const tokenTime = Number(timestampStr);
+            const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+            if (Number.isFinite(tokenTime) && Date.now() - tokenTime > MAX_AGE_MS) {
+              return new Response(JSON.stringify({ ok: false, valid: false, error: "Token đã hết hạn" }), { status: 401, headers: CORS_HEADERS });
+            }
+          }
+          return new Response(JSON.stringify({ ok: true, valid: true }), { headers: CORS_HEADERS });
+        }
+      } catch(e) {}
+    }
   }
 
   return new Response(JSON.stringify({ ok: false, valid: false }), { status: 401, headers: CORS_HEADERS });

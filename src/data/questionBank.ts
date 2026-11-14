@@ -1,6 +1,6 @@
-// ============================================================================
+﻿// ============================================================================
 // NGÂN HÀNG ĐỀ THI & CÂU HỎI THỰC CHIẾN NĂNG LỰC NGHỀ PHẦN CỨNG (OL-01)
-// Biên soạn: CN. Phạm Tiến Đồng
+// Biên soạn: CN. Phạm Tiến Đông
 // Theo chuẩn Thông tư 55/2026/TT-BGDĐT
 // ============================================================================
 
@@ -8,8 +8,8 @@ export interface OralQuestion {
   id: string;
   category: string;
   question: string;
-  teacherIntent: string; // Ý đồ của Thầy khi hỏi câu này
-  standardAnswer: string; // Câu trả lời chuẩn của thợ lành nghề
+  teacherIntent: string; // Ý đồ của Giảng viên khi hỏi câu này
+  standardAnswer: string; // Câu trả lời chuẩn của Kỹ thuật viên
   criticalKeywords: string[]; // Các từ khóa bắt buộc phải có
 }
 
@@ -18,7 +18,7 @@ export interface PracticalScenario {
   category: 'lap-rap' | 'cai-win' | 'bat-benh' | 'ngoai-vi';
   title: string;
   situation: string; // Tình huống thực tế xảy ra tại xưởng/văn phòng
-  trap: string; // Cái bẫy mà thợ non tay hay mắc phải
+  trap: string; // Cái bẫy mà kỹ thuật viên mới hay mắc phải
   correctHandling: string; // Cách xử lý chuẩn xác
   toolNeeded: string; // Dụng cụ / phần mềm cần dùng
 }
@@ -81,7 +81,7 @@ export const ORAL_QUESTIONS: OralQuestion[] = [
     category: 'Lắp ráp nâng cấp',
     question: 'Tại sao sau khi cắm ổ SSD SATA mới vào máy, bật máy vào Win mở My Computer (This PC) lại không thấy ổ đĩa đâu?',
     teacherIntent: 'Nắm vững quy trình quản lý ổ đĩa Disk Management trong Windows.',
-    standardAnswer: 'Vì ổ SSD mới xuất xưởng từ nhà máy là ổ đĩa nguyên bản (RAW / Unallocated), chưa được khởi tạo bảng phân vùng (MBR/GPT) và chưa được định dạng hệ thống tập tin (File System NTFS). Windows Explorer chỉ hiển thị những phân vùng đã được format có gán ký tự. Người thợ phải mở Disk Management (diskmgmt.msc), khởi tạo GPT và tạo phân vùng New Simple Volume format NTFS thì ổ mới xuất hiện.',
+    standardAnswer: 'Vì ổ SSD mới xuất xưởng từ nhà máy là ổ đĩa nguyên bản (RAW / Unallocated), chưa được khởi tạo bảng phân vùng (MBR/GPT) và chưa được định dạng hệ thống tập tin (File System NTFS). Windows Explorer chỉ hiển thị những phân vùng đã được format có gán ký tự. kỹ thuật viên phải mở Disk Management (diskmgmt.msc), khởi tạo GPT và tạo phân vùng New Simple Volume format NTFS thì ổ mới xuất hiện.',
     criticalKeywords: ['ổ mới xuất xưởng', 'chưa phân vùng', 'Disk Management', 'Initialize GPT', 'New Simple Volume'],
   },
   {
@@ -96,9 +96,9 @@ export const ORAL_QUESTIONS: OralQuestion[] = [
     id: 'oral_08',
     category: 'Nghiệm thu bàn giao',
     question: 'Em hãy nêu 5 điểm bắt buộc phải nghiệm thu trước khi giao trả máy cho khách hoặc nộp bài thi?',
-    teacherIntent: 'Rèn luyện tác phong công nghiệp và trách nhiệm người thợ.',
+    teacherIntent: 'Rèn luyện tác phong công nghiệp và trách nhiệm của kỹ thuật viên.',
     standardAnswer: 'Nghiệm thu 5 điểm vàng: (1) Nắp thùng máy đóng khít vặn đủ ốc, quạt quay êm ái; (2) Đo HWMonitor nhiệt độ CPU ổn định dưới 75°C khi tải; (3) Dữ liệu khách hàng đã chép trả lại Desktop/Documents đầy đủ 100%, mở đọc bình thường; (4) Device Manager sạch bóng 100% dấu chấm than vàng, gõ được tiếng Việt UniKey; (5) Bàn kỹ thuật lau dọn sạch sẽ, thu cất dụng cụ và ký đủ phiếu dịch vụ A-Z.',
-    criticalKeywords: ['quạt êm', 'nhiệt độ CPU < 75°C', 'dữ liệu đủ 100%', 'sạch chấm than', 'bàn thợ sạch sẽ'],
+    criticalKeywords: ['quạt êm', 'nhiệt độ CPU < 75°C', 'dữ liệu đủ 100%', 'sạch chấm than', 'bàn kỹ thuật sạch sẽ'],
   },
   {
     id: 'oral_09',
@@ -119,7 +119,7 @@ export const ORAL_QUESTIONS: OralQuestion[] = [
   {
     id: 'oral_11',
     category: 'Cứu dữ liệu',
-    question: 'Tại sao trong quy trình cứu dữ liệu khách hàng, người thợ tuyệt đối không được dùng lệnh CUT mà bắt buộc phải dùng lệnh COPY?',
+    question: 'Tại sao trong quy trình cứu dữ liệu khách hàng, kỹ thuật viên tuyệt đối không được dùng lệnh CUT mà bắt buộc phải dùng lệnh COPY?',
     teacherIntent: 'Khắc sâu nguyên tắc an toàn dữ liệu số 1 của người làm nghề.',
     standardAnswer: 'Vì khi dùng lệnh CUT, hệ điều hành sẽ đánh dấu xóa tệp ở nguồn ngay khi ghi vào đích. Nếu đang trong quá trình chuyển file mà xảy ra sự cố đột ngột như cúp điện, sập nguồn, tuột cáp USB hoặc treo máy, tệp gốc đã bị cắt sẽ bị biến mất vĩnh viễn không thể khôi phục. Khi dùng lệnh COPY, tệp gốc luôn được giữ nguyên vẹn 100% cho đến khi ta kiểm tra đối chiếu bên đích thành công.',
     criticalKeywords: ['lệnh CUT', 'cúp điện treo máy', 'mất file gốc', 'lệnh COPY bảo toàn dữ liệu'],
@@ -207,7 +207,7 @@ export const ASSEMBLY_SCENARIOS: PracticalScenario[] = [
     category: 'lap-rap',
     title: 'Bẫy ốc chân đồng cách điện (Standoff) làm chập mass thùng máy',
     situation: 'Học sinh lắp xong bộ máy tính để bàn mới, cắm nguồn bật thử thì quạt nguồn chỉ nhích nhẹ 1 vòng rồi tắt lịm, sau đó bấm nút nguồn không còn phản ứng gì.',
-    trap: 'Thợ non tay thường bắt vít trực tiếp bo mạch chủ vào tấm tôn của vỏ case mà quên gắn các ốc đệm chân đồng cách điện (standoff), hoặc để sót một ốc standoff thừa ở vị trí không có lỗ bắt ốc trên mainboard.',
+    trap: 'kỹ thuật viên mới thường bắt vít trực tiếp bo mạch chủ vào tấm tôn của vỏ case mà quên gắn các ốc đệm chân đồng cách điện (standoff), hoặc để sót một ốc standoff thừa ở vị trí không có lỗ bắt ốc trên mainboard.',
     correctHandling: 'Rút điện xả tụ ngay lập tức! Tháo bo mạch chủ ra khỏi thùng máy, kiểm tra mặt sau tấm tôn case. Chỉ gắn các ốc standoff bằng đồng đúng vị trí các lỗ bắt ốc có vòng đệm chì trên mainboard. Lắp lại bo mạch chủ và siết ốc vừa tay.',
     toolNeeded: 'Tua-vít 4 cạnh có từ tính, kìm mũi nhọn hoặc đầu vặn lục giác để siết ốc standoff.',
   },
@@ -267,7 +267,7 @@ export const WINDOWS_INSTALL_SCENARIOS: PracticalScenario[] = [
     category: 'cai-win',
     title: 'Bẫy format nhầm ổ D dữ liệu khách hàng do ký tự ổ đĩa bị tráo đổi',
     situation: 'Khách mang máy đến cài lại Windows yêu cầu giữ lại toàn bộ dữ liệu ở ổ D. Vào bộ cài Windows hiển thị: Partition 1: Drive C (380 GB) và Partition 2: Drive D (120 GB).',
-    trap: 'Thợ non tay thấy ghi chữ Drive C liền bấm Format ngay mà không nhìn số GB, dẫn đến xóa sạch toàn bộ 380GB tài liệu dự án của khách hàng!',
+    trap: 'kỹ thuật viên mới thấy ghi chữ Drive C liền bấm Format ngay mà không nhìn số GB, dẫn đến xóa sạch toàn bộ 380GB tài liệu dự án của khách hàng!',
     correctHandling: 'Áp dụng quy tắc vàng: "Nhìn số GB, không nhìn ký tự!". Đối chiếu với phiếu ghi ban đầu: Ổ C là 120GB, Ổ D là 380GB. Vậy phân vùng 120GB mới chính là ổ chứa hệ điều hành cũ cần cài lại. Chỉ format phân vùng 120GB, tuyệt đối không chạm vào phân vùng 380GB.',
     toolNeeded: 'Phiếu tiếp nhận máy đã ghi rõ số GB ở Bước 1.',
   },
@@ -313,7 +313,7 @@ export const WINDOWS_INSTALL_SCENARIOS: PracticalScenario[] = [
     title: 'Lỗi thiếu Driver Card Mạng (Network Controller) sau khi cài Win trắng',
     situation: 'Cài xong Windows vào màn hình Desktop nhưng biểu tượng mạng ở góc dưới báo quả cầu trái đất có gạch chéo đỏ, cắm dây mạng LAN hoặc bật Wifi đều không nhận diện được Internet.',
     trap: 'Học sinh không chuẩn bị sẵn bộ driver mạng offline, không có mạng để lên web tải driver nên bị tắc nghẽn toàn bộ quá trình hoàn thiện máy.',
-    correctHandling: 'Người thợ chuyên nghiệp luôn có sẵn 1 thư mục chứa gói Driver mạng vạn năng (như WanDriver, EasyDriverPack hoặc 3DP Net) trong USB cứu hộ. Cắm USB vào máy, chạy 3DP Net để nạp driver mạng chỉ trong 30 giây. Khi có mạng Internet, Windows Update sẽ tự động tải các driver còn lại.',
+    correctHandling: 'kỹ thuật viên chuyên nghiệp luôn có sẵn 1 thư mục chứa gói Driver mạng vạn năng (như WanDriver, EasyDriverPack hoặc 3DP Net) trong USB cứu hộ. Cắm USB vào máy, chạy 3DP Net để nạp driver mạng chỉ trong 30 giây. Khi có mạng Internet, Windows Update sẽ tự động tải các driver còn lại.',
     toolNeeded: 'USB tích hợp phần mềm 3DP Net / EasyDrv offline.',
   },
 ];
@@ -322,7 +322,7 @@ export const WINDOWS_INSTALL_SCENARIOS: PracticalScenario[] = [
 // 4. NGÂN HÀNG CÂU HỎI TRẮC NGHIỆM THỰC CHIẾN (50 CÂU HỎI THEO 5 CHỦ ĐỀ NGHỀ)
 // ----------------------------------------------------------------------------
 export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
-  // CHỦ ĐỀ 1: AN TOÀN ĐIỆN & DỤNG CỤ THỢ (10 CÂU)
+  // CHỦ ĐỀ 1: AN TOÀN ĐIỆN & DỤNG CỤ KỸ THUẬT (10 CÂU)
   {
     id: 'mcq_01',
     category: 'an-toan',
@@ -334,7 +334,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_02',
     category: 'an-toan',
-    question: 'Khi tháo mở các linh kiện máy tính, tại sao người thợ bắt buộc phải bỏ ngay các ốc vít vào KHAY phân loại?',
+    question: 'Khi tháo mở các linh kiện máy tính, tại sao kỹ thuật viên bắt buộc phải bỏ ngay các ốc vít vào KHAY phân loại?',
     options: ['Để tránh thất lạc làm thiếu ốc khi bàn giao và chống ốc kim loại rơi vào kẹt mạch bo mạch gây nổ khi bật máy', 'Để tính tiền ốc vít cho khách', 'Để khay ốc trang trí cho bàn làm việc đẹp hơn', 'Chỉ cần thiết khi tháo máy laptop, máy bàn không cần'],
     correctIndex: 0,
     explanation: 'Ốc kim loại nếu rơi rớt trên bề mặt bo mạch chủ hoặc lọt vào khe cắm nguồn, khi cắm điện sẽ gây chập đoản mạch trực tiếp làm nổ linh kiện bán dẫn.',
@@ -350,10 +350,10 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_04',
     category: 'an-toan',
-    question: 'Dụng cụ nào sau đây KHÔNG THỂ THIẾU trong túi đồ nghề của một thợ kỹ thuật viên máy tính thực thụ?',
+    question: 'Dụng cụ nào sau đây KHÔNG THỂ THIẾU trong túi đồ nghề của một kỹ thuật viên máy tính thực thụ?',
     options: ['Mỏ hàn thiếc công suất lớn 100W', 'Tua-vít 4 cạnh có từ tính, khay đựng ốc, cục gôm tẩy trắng học sinh và USB cứu hộ', 'Búa cao su và kìm cắt sắt', 'Dao rọc giấy sắc nhọn'],
     correctIndex: 1,
-    explanation: 'Tua-vít từ tính giúp giữ ốc không rơi, khay đựng ốc chống chập mạch, gôm tẩy trắng chà chân RAM và USB cứu hộ WinPE là bộ tứ bất ly thân của người thợ.',
+    explanation: 'Tua-vít từ tính giúp giữ ốc không rơi, khay đựng ốc chống chập mạch, gôm tẩy trắng chà chân RAM và USB cứu hộ WinPE là bộ tứ bất ly thân của kỹ thuật viên.',
   },
   {
     id: 'mcq_05',
@@ -401,7 +401,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
     question: 'Nghiệm thu 5 điểm vàng trước khi giao máy cho khách (Điểm dừng an toàn số 3) KHÔNG bao gồm tiêu chí nào sau đây?',
     options: ['Quạt quay êm ái, nắp thùng máy đóng khít vặn đủ ốc', 'Nhiệt độ CPU đo bằng phần mềm HWMonitor dưới 75°C khi tải', 'Dữ liệu khách hàng đã chép trả lại đầy đủ 100% và bàn kỹ thuật dọn sạch bóng', 'Máy tính phải cài đặt đầy đủ tất cả các game đồ họa nặng nhất'],
     correctIndex: 3,
-    explanation: 'Tiêu chuẩn nghiệm thu của người thợ tập trung vào độ ổn định phần cứng, nhiệt độ, an toàn dữ liệu và tác phong vệ sinh ngăn nắp, không cài đặt phần mềm ngoài yêu cầu.',
+    explanation: 'Tiêu chuẩn nghiệm thu của kỹ thuật viên tập trung vào độ ổn định phần cứng, nhiệt độ, an toàn dữ liệu và tác phong vệ sinh ngăn nắp, không cài đặt phần mềm ngoài yêu cầu.',
   },
 
   // CHỦ ĐỀ 2: LẮP RÁP & NHẬN DIỆN LINH KIỆN LEGO (10 CÂU)
@@ -440,7 +440,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_15',
     category: 'lap-rap',
-    question: 'Trên thanh RAM, đặc điểm cấu tạo nào giúp người thợ không bao giờ sợ cắm ngược chiều vào khe cắm?',
+    question: 'Trên thanh RAM, đặc điểm cấu tạo nào giúp kỹ thuật viên không bao giờ sợ cắm ngược chiều vào khe cắm?',
     options: ['Chân cắm RAM có nam châm hút', 'Thanh RAM có một "rãnh khuyết" lệch tâm chia hàng chân tiếp xúc thành 2 phần không bằng nhau', 'Thanh RAM phát ra tiếng kêu bíp khi cắm ngược', 'Màu sắc thanh RAM khác với khe cắm'],
     correctIndex: 1,
     explanation: 'Rãnh khuyết (notch) lệch tâm đảm bảo thanh RAM chỉ có thể lọt vào khe cắm khi đặt đúng chiều, cắm ngược sẽ bị đội lên không vào được.',
@@ -538,7 +538,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_27',
     category: 'bat-benh',
-    question: 'Để kiểm tra bộ nguồn PSU còn hoạt động hay đã chết khi tháo rời ra ngoài, người thợ dùng nhíp kim loại chập 2 chân nào trên đầu cắm 24 chân?',
+    question: 'Để kiểm tra bộ nguồn PSU còn hoạt động hay đã chết khi tháo rời ra ngoài, kỹ thuật viên dùng nhíp kim loại chập 2 chân nào trên đầu cắm 24 chân?',
     options: ['Chân dây màu đỏ (+5V) và chân dây màu đen (GND)', 'Chân dây màu xanh lá cây (PS_ON) và bất kỳ chân dây màu đen nào (GND/COM)', 'Chân dây màu vàng (+12V) và chân dây màu cam (+3.3V)', 'Chân dây màu tím và chân dây màu xám'],
     correctIndex: 1,
     explanation: 'Chập chân PS_ON (dây xanh lá) với Mass (dây đen) sẽ kích hoạt mạch điều khiển của bộ nguồn PSU đóng điện, quạt nguồn sẽ tự động quay.',
@@ -572,7 +572,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_31',
     category: 'cai-win',
-    question: 'Khi nhận máy tính của khách để xử lý cài lại Windows, những thư mục nào sau đây bắt buộc người thợ phải kiểm tra và sao lưu sang phân vùng an toàn?',
+    question: 'Khi nhận máy tính của khách để xử lý cài lại Windows, những thư mục nào sau đây bắt buộc kỹ thuật viên phải kiểm tra và sao lưu sang phân vùng an toàn?',
     options: ['Thư mục Windows và Program Files', 'Desktop, Documents, Downloads và thư mục hình ảnh/video của khách hàng', 'Thư mục Temp của hệ thống', 'Thùng rác Recycle Bin'],
     correctIndex: 1,
     explanation: 'Người dùng văn phòng có thói quen lưu toàn bộ tài liệu làm việc ngoài màn hình Desktop và trong Documents/Downloads nằm trên phân vùng ổ C.',
@@ -588,7 +588,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_33',
     category: 'cai-win',
-    question: 'Để đối chiếu dữ liệu đã sao lưu từ Desktop sang ổ D đã khớp 100% hay chưa, người thợ thực hiện thao tác nào?',
+    question: 'Để đối chiếu dữ liệu đã sao lưu từ Desktop sang ổ D đã khớp 100% hay chưa, kỹ thuật viên thực hiện thao tác nào?',
     options: ['Nhìn lướt qua bằng mắt', 'Nhấp chuột phải vào thư mục gốc chọn Properties, đối chiếu số lượng Files/Folders và tổng dung lượng MB/GB với thư mục đích', 'Chỉ cần mở thử 1 bài hát', 'Đổi tên thư mục thành BACKUP_XONG'],
     correctIndex: 1,
     explanation: 'Kiểm tra đối chiếu thông số Properties (Size on disk và số lượng file) đảm bảo toàn bộ tệp tin con và thư mục lồng nhau đã được sao chép toàn vẹn.',
@@ -612,7 +612,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_36',
     category: 'cai-win',
-    question: 'Sau khi cài đặt xong hệ điều hành Windows, người thợ mở công cụ nào để kiểm tra xem máy tính đã cài đặt đầy đủ tất cả Driver phần cứng hay chưa?',
+    question: 'Sau khi cài đặt xong hệ điều hành Windows, kỹ thuật viên mở công cụ nào để kiểm tra xem máy tính đã cài đặt đầy đủ tất cả Driver phần cứng hay chưa?',
     options: ['Task Manager', 'Device Manager', 'Disk Cleanup', 'Control Panel Programs'],
     correctIndex: 1,
     explanation: 'Device Manager hiển thị toàn bộ cây phần cứng. Nếu thiếu driver, linh kiện sẽ bị gắn dấu chấm than vàng (!) hoặc hiển thị Unknown Device.',
@@ -620,7 +620,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_37',
     category: 'cai-win',
-    question: 'Trong Device Manager, dấu chấm than màu vàng (!) xuất hiện ở mục nào đó có ý nghĩa gì đối với người thợ?',
+    question: 'Trong Device Manager, dấu chấm than màu vàng (!) xuất hiện ở mục nào đó có ý nghĩa gì đối với kỹ thuật viên?',
     options: ['Linh kiện đó đã bị cháy nổ vật lý', 'Linh kiện đó đang thiếu Driver điều khiển hoặc Driver cài đặt bị lỗi, cần cập nhật đúng driver', 'Linh kiện đó đang chạy ở chế độ tiết kiệm điện', 'Máy tính đã sẵn sàng giao cho khách'],
     correctIndex: 1,
     explanation: 'Dấu chấm than vàng là cảnh báo hệ điều hành chưa có Driver tương thích để giao tiếp với linh kiện phần cứng đó.',
@@ -636,7 +636,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_39',
     category: 'cai-win',
-    question: 'Tại sao sau khi cài đặt hoàn thiện mọi driver và phần mềm, người thợ nên tạo một điểm khôi phục hệ thống (System Restore Point) đặt tên là `MAY_CHAY_TOT`?',
+    question: 'Tại sao sau khi cài đặt hoàn thiện mọi driver và phần mềm, kỹ thuật viên nên tạo một điểm khôi phục hệ thống (System Restore Point) đặt tên là `MAY_CHAY_TOT`?',
     options: ['Để làm tăng dung lượng trống của ổ C', 'Để sau này nếu máy bị nhiễm virus hoặc xung đột phần mềm, có thể quay trở lại trạng thái hoàn hảo này chỉ trong 5 phút mà không cần cài lại Win', 'Để nộp bài thi cho giáo viên', 'Để khóa không cho khách cài thêm ứng dụng'],
     correctIndex: 1,
     explanation: 'System Restore Point chụp lại trạng thái registry và hệ thống đang hoạt động ổn định nhất, là phao cứu sinh khi người dùng cài phần mềm lỗi.',
@@ -662,7 +662,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_42',
     category: 'ngoai-vi',
-    question: 'Để khởi động lại tiến trình quản lý in ấn của Windows bằng lệnh dòng lệnh (Command Prompt / CMD), người thợ dùng cặp lệnh nào?',
+    question: 'Để khởi động lại tiến trình quản lý in ấn của Windows bằng lệnh dòng lệnh (Command Prompt / CMD), kỹ thuật viên dùng cặp lệnh nào?',
     options: ['ipconfig /release và ipconfig /renew', 'net stop spooler và net start spooler', 'ping 127.0.0.1 và shutdown /r', 'taskkill /f /im explorer.exe'],
     correctIndex: 1,
     explanation: 'Dịch vụ Print Spooler quản lý toàn bộ lệnh in của Windows. Lệnh `net stop spooler` và `net start spooler` dừng và khởi động lại dịch vụ này tức thì.',
@@ -678,7 +678,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_44',
     category: 'ngoai-vi',
-    question: 'Để kiểm tra chất lượng bản in của máy in sau khi bảo trì hoặc cài đặt mà không cần mở phần mềm Word hay Excel, người thợ thực hiện thao tác nào?',
+    question: 'Để kiểm tra chất lượng bản in của máy in sau khi bảo trì hoặc cài đặt mà không cần mở phần mềm Word hay Excel, kỹ thuật viên thực hiện thao tác nào?',
     options: ['In thử ảnh màn hình Desktop', 'Vào Printer properties của máy in, tại tab General bấm nút "Print Test Page"', 'Mở Notepad gõ 1 chữ rồi in', 'Khởi động lại máy in 3 lần'],
     correctIndex: 1,
     explanation: 'Nút Print Test Page in trang kiểm tra tiêu chuẩn của Windows có logo và thông số kỹ thuật driver, xác nhận máy in và driver đã thông suốt 100%.',
@@ -694,7 +694,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_46',
     category: 'ngoai-vi',
-    question: 'Trước khi bàn giao máy tính cho khách, phần mềm HWMonitor hoặc Core Temp cho thấy nhiệt độ CPU khi chạy tải ở mức nào là ĐẠT CHUẨN người thợ lành nghề?',
+    question: 'Trước khi bàn giao máy tính cho khách, phần mềm HWMonitor hoặc Core Temp cho thấy nhiệt độ CPU khi chạy tải ở mức nào là ĐẠT CHUẨN kỹ thuật viên lành nghề?',
     options: ['Trên 95°C', 'Dưới 75°C (lý tưởng trong khoảng 45°C - 65°C)', 'Chính xác 0°C', 'Nhiệt độ càng nóng máy chạy càng nhanh'],
     correctIndex: 1,
     explanation: 'CPU hoạt động ổn định và mát mẻ dưới 75°C khi tải, chứng tỏ keo tản nhiệt đã tra đúng lượng hạt đậu xanh và quạt tản nhiệt quay tốt.',
@@ -710,10 +710,10 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_48',
     category: 'ngoai-vi',
-    question: 'Hành động nào sau đây thể hiện rõ nhất tác phong công nghiệp chuyên nghiệp của một người thợ kỹ thuật viên tại bàn máy?',
+    question: 'Hành động nào sau đây thể hiện rõ nhất tác phong công nghiệp chuyên nghiệp của một kỹ thuật viên kỹ thuật viên tại bàn máy?',
     options: ['Để ốc vít và tua-vít vương vãi trên bàn để thể hiện mình đang bận rộn', 'Lau chùi thùng máy sạch bụi, xếp gọn dụng cụ đồ nghề vào hộp, dọn sạch rác và bàn làm việc trước khi mời thầy/khách đến nghiệm thu', 'Bật nhạc thật to trong xưởng thực hành', 'Vừa làm vừa ăn uống tại bàn kỹ thuật'],
     correctIndex: 1,
-    explanation: 'Tác phong 5S: Sàng lọc, Sắp xếp, Sạch sẽ, Săn sóc, Sẵn sàng. Khách hàng và giáo viên đánh giá trình độ người thợ qua sự ngăn nắp và sạch sẽ.',
+    explanation: 'Tác phong 5S: Sàng lọc, Sắp xếp, Sạch sẽ, Săn sóc, Sẵn sàng. Khách hàng và giáo viên đánh giá trình độ kỹ thuật viên qua sự ngăn nắp và sạch sẽ.',
   },
   {
     id: 'mcq_49',
@@ -782,7 +782,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
   {
     id: 'mcq_57',
     category: 'an-toan',
-    question: 'Khi dùng máy thổi bụi hoặc bình xịt khí nén để vệ sinh quạt tản nhiệt máy tính, nguyên tắc bắt buộc người thợ phải làm là gì?',
+    question: 'Khi dùng máy thổi bụi hoặc bình xịt khí nén để vệ sinh quạt tản nhiệt máy tính, nguyên tắc bắt buộc kỹ thuật viên phải làm là gì?',
     options: ['Thổi hết công suất cho cánh quạt quay tít mù', 'Dùng ngón tay hoặc que nhựa giữ chặn cánh quạt không cho quay tự do khi thổi gió', 'Vừa thổi vừa bôi dầu ăn vào cánh quạt', 'Thổi thẳng vào lúc quạt đang cắm điện chạy'],
     correctIndex: 1,
     explanation: 'Gió thổi tốc độ cao làm cánh quạt quay quá giới hạn sẽ sinh ra dòng điện ngược cảm ứng chạy ngược vào bo mạch chủ gây chập IC quản lý quạt.',
@@ -1129,7 +1129,7 @@ export const MCQ_PRACTICAL_BANK: PracticalMCQ[] = [
     question: 'Nguyên tắc đạo đức nghề nghiệp và an toàn bảo mật số 1 của người kỹ thuật viên CNTT khi sửa máy tính cho người khác là gì?',
     options: ['Cố ý xóa tài liệu của khách để máy chạy nhanh hơn', 'Tuyệt đối tôn trọng quyền riêng tư: Không tò mò mở xem, sao chép hoặc phát tán hình ảnh, tài liệu cá nhân của khách hàng', 'Mở các thư mục cá nhân ra xem để tìm lỗi', 'Đổi hết mật khẩu của khách hàng'],
     correctIndex: 1,
-    explanation: 'Đạo đức nghề nghiệp là thước đo cao nhất của người thợ CNTT: Bảo mật tuyệt đối dữ liệu cá nhân của khách hàng là danh dự và trách nhiệm pháp luật.',
+    explanation: 'Đạo đức nghề nghiệp là thước đo cao nhất của kỹ thuật viên CNTT: Bảo mật tuyệt đối dữ liệu cá nhân của khách hàng là danh dự và trách nhiệm pháp luật.',
   },
 ];
 

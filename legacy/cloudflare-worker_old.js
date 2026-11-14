@@ -1,6 +1,6 @@
 // ============================================================================
 // HỆ THỐNG BACKEND TOÀN DIỆN CHO WEB GIẢNG DẠY (cloudflare-worker.js)
-// Đơn vị: Khoa CNTT - Trường Cao đẳng Buôn Ma Thuột
+// Đơn vị: Cổng Giảng Dạy & Thực Hành CNTT - CN. Phạm Tiến Đông
 // Tích hợp:
 // 1. Cơ sở dữ liệu Cloudflare D1 (SQL chuẩn) + KV Fallback
 // 2. API Quản lý Bảng điểm Lớp học (/api/scores)
@@ -38,7 +38,7 @@ export default {
     if (url.pathname === "/api/health") {
       return new Response(JSON.stringify({
         status: "healthy",
-        school: "Trường Cao đẳng Buôn Ma Thuột",
+        school: "Cổng Giảng Dạy & Thực Hành CNTT",
         major: "Tin học ứng dụng (Hệ 9+3)",
         hasD1Database: !!(env && env.DB),
         hasKVStorage: !!(env && env.SCORES_KV),

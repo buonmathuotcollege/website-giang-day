@@ -83,6 +83,7 @@
       isTeacherLoggedIn: false,
       init() {
         this.isTeacherLoggedIn = Boolean(
+          sessionStorage.getItem('CNTT_ADMIN_TOKEN') || localStorage.getItem('CNTT_ADMIN_TOKEN') ||
           sessionStorage.getItem('BMTC_ADMIN_TOKEN') || localStorage.getItem('BMTC_ADMIN_TOKEN')
         );
       }

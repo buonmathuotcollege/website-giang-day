@@ -42,8 +42,8 @@ export const prerender = false;
         <!-- TEACHER COCKPIT TRIGGER BUTTON (PROGRESSIVE DISCLOSURE) -->
         <button
           type="button"
-          @click="showTeacherModal = true"
-          class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white transition-colors shadow-sm"
+          @click="openTeacherModal()"
+          class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white transition-colors shadow-sm cursor-pointer"
         >
           <span>🔐</span>
           <span>Bảng Của Thầy</span>
@@ -278,11 +278,11 @@ export const prerender = false;
               <div class="space-y-2">
                 <template x-for="(st, sIdx) in hardwareSteps" :key="sIdx">
                   <label class="flex items-center gap-3 p-3 rounded-xl border transition-all cursor-pointer select-none"
-                    :class="activeCrewDetail.stepsCompleted[sIdx] ? 'bg-blue-50/50 border-blue-200 text-slate-900' : 'bg-slate-50/60 border-slate-200 text-slate-600 hover:bg-slate-100/50'"
+                    :class="activeCrewDetail.hardwareStepsCompleted[sIdx] ? 'bg-blue-50/50 border-blue-200 text-slate-900' : 'bg-slate-50/60 border-slate-200 text-slate-600 hover:bg-slate-100/50'"
                   >
                     <input
                       type="checkbox"
-                      x-model="activeCrewDetail.stepsCompleted[sIdx]"
+                      x-model="activeCrewDetail.hardwareStepsCompleted[sIdx]"
                       @change="autoSave()"
                       class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 shrink-0"
                     />
@@ -320,11 +320,11 @@ export const prerender = false;
               <div class="space-y-2">
                 <template x-for="(wst, wIdx) in winSteps" :key="wIdx">
                   <label class="flex items-center gap-3 p-3 rounded-xl border transition-all cursor-pointer select-none"
-                    :class="activeCrewDetail.stepsCompleted[wIdx] ? 'bg-blue-50/50 border-blue-200 text-slate-900' : 'bg-slate-50/60 border-slate-200 text-slate-600 hover:bg-slate-100/50'"
+                    :class="activeCrewDetail.winStepsCompleted[wIdx] ? 'bg-blue-50/50 border-blue-200 text-slate-900' : 'bg-slate-50/60 border-slate-200 text-slate-600 hover:bg-slate-100/50'"
                   >
                     <input
                       type="checkbox"
-                      x-model="activeCrewDetail.stepsCompleted[wIdx]"
+                      x-model="activeCrewDetail.winStepsCompleted[wIdx]"
                       @change="autoSave()"
                       class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 shrink-0"
                     />
@@ -424,18 +424,50 @@ export const prerender = false;
             <span class="text-2xl">🔐</span>
             <div>
               <h3 class="text-base font-black text-slate-900">Bảng Điều Phối Của Giảng Viên</h3>
-              <p class="text-xs text-slate-500">CN. Phạm Tiến Đồng · Quản trị xưởng 10 bàn máy</p>
+              <p class="text-xs text-slate-500">CN. Phạm Tiến Đông · Quản trị xưởng 10 bàn máy</p>
             </div>
           </div>
           <button
             type="button"
             @click="showTeacherModal = false"
-            class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center text-sm"
+            class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center text-sm cursor-pointer"
           >
             ✕
           </button>
         </div>
 
+        <!-- MÀN HÌNH KHÓA XÁC THỰC GIẢNG VIÊN (NẾU CHƯA XÁC THỰC) -->
+        <div x-show="!isTeacherUnlocked" class="py-8 px-4 space-y-4 max-w-sm mx-auto text-center">
+          <div class="w-14 h-14 rounded-2xl bg-slate-100 text-slate-800 mx-auto flex items-center justify-center text-2xl shadow-inner">
+            🔒
+          </div>
+          <div>
+            <h4 class="text-base font-bold text-slate-900">Xác Thực Quyền Giảng Viên</h4>
+            <p class="text-xs text-slate-500 mt-1">Vui lòng nhập mã bí mật để mở quyền chia nhóm, xoay trạm và chấm điểm xưởng.</p>
+          </div>
+          <form @submit.prevent="verifyTeacherSecret()" class="space-y-3">
+            <input
+              type="password"
+              x-model="teacherSecretInput"
+              placeholder="Nhập mã bí mật của Thầy..."
+              required
+              autofocus
+              class="w-full px-4 py-2.5 text-sm border border-slate-300 rounded-xl font-mono text-center focus:ring-2 focus:ring-slate-900 outline-none"
+            />
+            <div x-show="teacherAuthError" class="text-rose-600 text-xs font-semibold" x-text="teacherAuthError"></div>
+            <button
+              type="submit"
+              :disabled="isTeacherVerifying"
+              class="w-full py-2.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-colors shadow-sm cursor-pointer"
+            >
+              <span x-show="!isTeacherVerifying">Xác Nhận Mở Khóa</span>
+              <span x-show="isTeacherVerifying">Đang kiểm tra...</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- NỘI DUNG ĐIỀU PHỐI (CHỈ HIỂN THỊ KHI ĐÃ XÁC THỰC THÀNH CÔNG) -->
+        <div x-show="isTeacherUnlocked" class="space-y-5">
         <!-- 1. Chọn Lớp & Nạp Danh Sách -->
         <div class="space-y-2 text-xs">
           <label class="block font-bold text-slate-700">Lớp chuyên ngành huấn luyện:</label>
@@ -458,10 +490,10 @@ export const prerender = false;
           <button
             type="button"
             @click="autoDistributeCrews()"
-            class="px-3.5 py-2.5 rounded-xl bg-blue-50 text-blue-800 border border-blue-200 font-bold text-xs hover:bg-blue-100 flex items-center justify-center gap-1.5 transition-colors"
+            class="px-3.5 py-2.5 rounded-xl bg-blue-50 text-blue-800 border border-blue-200 font-bold text-xs hover:bg-blue-100 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <span>🎲</span>
-            <span>Tự Động Chia 10 Kíp</span>
+            <span>Tự Động Chia 10 Nhóm KTV</span>
           </button>
 
           <button
@@ -552,7 +584,7 @@ export const prerender = false;
             <button
               type="button"
               @click="saveGradeForBench()"
-              class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+              class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm cursor-pointer"
             >
               <span>💾</span>
               <span>Lưu Điểm Cho Cả 3 Học Sinh Bàn Này Lên CSDL</span>
@@ -560,12 +592,14 @@ export const prerender = false;
           </div>
         </div>
 
+        </div> <!-- /isTeacherUnlocked -->
+
         <!-- Footer -->
         <div class="flex justify-end pt-2">
           <button
             type="button"
             @click="showTeacherModal = false"
-            class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs"
+            class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs cursor-pointer"
           >
             Đóng bảng quản lý
           </button>
@@ -590,6 +624,10 @@ export const prerender = false;
     Alpine.data('workshopEngine', () => ({
       activeTab: 'workbench',
       showTeacherModal: false,
+      isTeacherUnlocked: false,
+      teacherSecretInput: '',
+      teacherAuthError: '',
+      isTeacherVerifying: false,
       activeCrewDetail: null,
       selectedClassName: '',
       availableClasses: [],
@@ -653,12 +691,56 @@ export const prerender = false;
               rule2_thermal_paste: false,
               rule3_cable_ram_seated: false,
             },
-            stepsCompleted: [false, false, false, false, false, false, false],
+            hardwareStepsCompleted: [false, false, false, false, false, false, false],
+            winStepsCompleted: [false, false, false, false, false],
             specs: { cpu: '', ram: '', storage: '', temperature: '' },
             grade: 10.0,
           });
         }
         this.crews = arr;
+      },
+
+      async openTeacherModal() {
+        this.showTeacherModal = true;
+        this.teacherAuthError = '';
+        const token = sessionStorage.getItem('CNTT_ADMIN_TOKEN') || localStorage.getItem('CNTT_ADMIN_TOKEN') ||
+                      sessionStorage.getItem('BMTC_ADMIN_TOKEN') || localStorage.getItem('BMTC_ADMIN_TOKEN');
+        if (token) {
+          try {
+            const res = await fetch('/api/auth', { headers: { 'Authorization': 'Bearer ' + token } });
+            const data = await res.json();
+            if (data && data.ok && data.valid) {
+              this.isTeacherUnlocked = true;
+              return;
+            }
+          } catch(e) {}
+        }
+        this.isTeacherUnlocked = false;
+      },
+
+      async verifyTeacherSecret() {
+        this.teacherAuthError = '';
+        if (!this.teacherSecretInput.trim()) return;
+        this.isTeacherVerifying = true;
+        try {
+          const res = await fetch('/api/auth', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ secret: this.teacherSecretInput.trim() })
+          });
+          const data = await res.json();
+          if (data && data.ok && data.token) {
+            sessionStorage.setItem('CNTT_ADMIN_TOKEN', data.token);
+            this.isTeacherUnlocked = true;
+            this.teacherSecretInput = '';
+          } else {
+            this.teacherAuthError = data.error || 'Mã bí mật không chính xác. Quyền truy cập bị từ chối!';
+          }
+        } catch(e) {
+          this.teacherAuthError = 'Lỗi kết nối máy chủ khi xác thực!';
+        } finally {
+          this.isTeacherVerifying = false;
+        }
       },
 
       openCrewDetail(id) {
@@ -677,11 +759,11 @@ export const prerender = false;
       },
 
       countDoneSteps(c) {
-        return c?.stepsCompleted?.filter(Boolean).length || 0;
+        return c?.hardwareStepsCompleted?.filter(Boolean).length || 0;
       },
 
       countDoneWinSteps(c) {
-        return c?.stepsCompleted?.slice(0, 5).filter(Boolean).length || 0;
+        return c?.winStepsCompleted?.filter(Boolean).length || 0;
       },
 
       toggleStation(crewId) {
@@ -709,7 +791,7 @@ export const prerender = false;
 
       async loadClasses() {
         try {
-          const raw = localStorage.getItem('BMTC_CLASSES');
+          const raw = localStorage.getItem('CNTT_CLASSES') || localStorage.getItem('BMTC_CLASSES');
           if (raw) this.availableClasses = JSON.parse(raw);
           const res = await fetch('/api/classes');
           const data = await res.json();
@@ -728,7 +810,7 @@ export const prerender = false;
       async onClassChange() {
         if (!this.selectedClassName) return;
         try {
-          const allStore = JSON.parse(localStorage.getItem('BMTC_STUDENTS') || '{}');
+          const allStore = JSON.parse(localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('BMTC_STUDENTS') || '{}');
           const tCls = this.availableClasses.find(c => c.class_name === this.selectedClassName || c.class_code === this.selectedClassName);
           if (tCls && allStore[tCls.id]) {
             this.studentsInClass = allStore[tCls.id];
@@ -773,27 +855,59 @@ export const prerender = false;
           return;
         }
 
+        const token = sessionStorage.getItem('CNTT_ADMIN_TOKEN') || localStorage.getItem('CNTT_ADMIN_TOKEN') ||
+                      sessionStorage.getItem('BMTC_ADMIN_TOKEN') || localStorage.getItem('BMTC_ADMIN_TOKEN');
+        if (!token) {
+          alert('Yêu cầu quyền Giảng viên để lưu điểm! Vui lòng nhập mã bí mật để xác thực.');
+          this.isTeacherUnlocked = false;
+          return;
+        }
+
+        let saveSuccess = true;
         for (const m of members) {
-          await fetch('/api/scores', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              className: this.selectedClassName || '03THA9',
-              sessionName: `Sát hạch - Bàn ${c.id} (${c.station === 1 ? 'Trạm 1: Tháo lắp' : 'Trạm 2: Cài Win'})`,
-              studentName: m.name,
-              score: total,
-              details: { benchId: c.id, role: m.role, rubric: this.tempGrade, safe: this.isSafe(c) }
-            })
-          }).catch(() => {});
+          try {
+            const res = await fetch('/api/scores', {
+              method: 'POST',
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              },
+              body: JSON.stringify({
+                isTeacherGraded: true,
+                className: this.selectedClassName || '03THA9',
+                sessionName: `Sát hạch - Bàn ${c.id} (${c.station === 1 ? 'Trạm 1: Tháo lắp' : 'Trạm 2: Cài Win'})`,
+                studentName: m.name,
+                score: total,
+                details: { benchId: c.id, role: m.role, rubric: this.tempGrade, safe: this.isSafe(c) }
+              })
+            });
+
+            if (res.status === 401) {
+              alert('Phiên làm việc của Giảng viên đã hết hạn. Vui lòng nhập lại mã bí mật!');
+              this.isTeacherUnlocked = false;
+              return;
+            }
+
+            const data = await res.json();
+            if (!data.ok) {
+              saveSuccess = false;
+            }
+          } catch (e) {
+            saveSuccess = false;
+          }
         }
 
         this.autoSave();
-        this.showMsg(`Đã lưu điểm ${total}đ cho Bàn ${c.id} thành công!`);
+        if (saveSuccess) {
+          this.showMsg(`Đã lưu điểm ${total}đ cho Bàn ${c.id} thành công lên hệ thống!`);
+        } else {
+          this.showMsg(`Đã lưu điểm ${total}đ vào bộ nhớ máy (kết nối máy chủ gặp sự cố)`);
+        }
       },
 
       autoSave() {
         try {
-          localStorage.setItem('BMTC_WORKSHOP_CREWS', JSON.stringify({
+          localStorage.setItem('CNTT_WORKSHOP_CREWS', JSON.stringify({
             className: this.selectedClassName,
             crews: this.crews
           }));
@@ -802,11 +916,15 @@ export const prerender = false;
 
       loadSaved() {
         try {
-          const raw = localStorage.getItem('BMTC_WORKSHOP_CREWS');
+          const raw = localStorage.getItem('CNTT_WORKSHOP_CREWS') || localStorage.getItem('BMTC_WORKSHOP_CREWS');
           if (raw) {
             const data = JSON.parse(raw);
             if (data && Array.isArray(data.crews)) {
-              this.crews = data.crews;
+              this.crews = data.crews.map(c => ({
+                ...c,
+                hardwareStepsCompleted: c.hardwareStepsCompleted || c.stepsCompleted?.slice(0, 7) || [false, false, false, false, false, false, false],
+                winStepsCompleted: c.winStepsCompleted || [false, false, false, false, false]
+              }));
               if (data.className) this.selectedClassName = data.className;
             }
           }
@@ -858,7 +976,7 @@ export const prerender = false;
             </table>
             <div style="display:flex; justify-content:space-between; margin-top:40px; text-align:center;">
               <div style="width:45%;"><p><strong>ĐẠI DIỆN NHÓM KTV</strong><br><br><br><br>${c.members.operator.name || 'KTV 1'}</p></div>
-              <div style="width:45%;"><p><strong>GIẢNG VIÊN HƯỚNG DẪN</strong><br><br><br><br><strong>CN. Phạm Tiến Đồng</strong></p></div>
+              <div style="width:45%;"><p><strong>GIẢNG VIÊN HƯỚNG DẪN</strong><br><br><br><br><strong>CN. Phạm Tiến Đông</strong></p></div>
             </div>
             <div style="text-align:center; margin-top:30px;"><button onclick="window.print()" style="padding:8px 16px; font-weight:bold; cursor:pointer;">IN PHIẾU (CTRL+P)</button></div>
           </body>
