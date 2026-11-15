@@ -105,7 +105,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
       // Tra cứu tất cả học sinh toàn trường (Bảo mật: Chỉ Giảng viên mới được xem)
       if (action === "all_students") {
-        if (!checkAdminAuth(request, env)) {
+        if (!(await checkAdminAuth(request, env))) {
           return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để truy xuất danh sách toàn trường!" }), { status: 401, headers: CORS_HEADERS });
         }
         const query = `
@@ -124,26 +124,29 @@ export const GET: APIRoute = async ({ request, locals }) => {
       if (classId || classCode) {
         let targetId = classId;
         if (!targetId && classCode) {
-          const cls = await env.DB.prepare("SELECT id FROM classes WHERE UPPER(class_code) = UPPER(?) OR id = ?")
-            .bind(classCode, classCode).first();
+          const cls = await env.DB.prepare("SELECT id FROM classes WHERE UPPER(class_code) = UPPER(?) OR id = ? OR UPPER(class_name) = UPPER(?)")
+            .bind(classCode, classCode, classCode).first();
           if (cls) targetId = cls.id;
         }
 
         if (targetId) {
-          const isAdmin = checkAdminAuth(request, env);
-          // Bảo vệ dữ liệu cá nhân (PII): Chỉ Giảng viên mới được xem ngày sinh, SĐT, giới tính
+          const isAdmin = await checkAdminAuth(request, env);
+          // Bảo vệ dữ liệu cá nhân (PII theo NĐ 13/2023/NĐ-CP): Không tiết lộ ngày sinh, SĐT, mã số cho client công cộng
           const query = isAdmin
             ? `SELECT id, class_id, student_number, student_code, full_name, date_of_birth, gender, phone, status, original_class, created_at
                FROM students 
                WHERE class_id = ? 
                ORDER BY student_number ASC, student_code ASC, full_name ASC`
-            : `SELECT id, class_id, student_number, student_code, full_name
+            : `SELECT id, class_id, student_number, full_name, original_class
                FROM students 
                WHERE class_id = ? 
-               ORDER BY student_number ASC, student_code ASC, full_name ASC`;
+               ORDER BY student_number ASC, full_name ASC`;
 
           const students = await env.DB.prepare(query).bind(targetId).all();
-          return new Response(JSON.stringify({ ok: true, data: students.results || [], is_admin: isAdmin }), { headers: CORS_HEADERS });
+          return new Response(JSON.stringify({ ok: true, data: students.results || [], is_admin: isAdmin, from_d1: true }), { headers: CORS_HEADERS });
+        } else {
+          // Khi tìm kiếm theo lớp nhưng không thấy, trả về danh sách học sinh rỗng thay vì rơi xuống danh sách toàn bộ lớp
+          return new Response(JSON.stringify({ ok: true, data: [], from_d1: true }), { headers: CORS_HEADERS });
         }
       }
 
@@ -169,7 +172,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
   const memStudents = (globalThis as any).MEM_STUDENTS;
 
   if (action === "all_students") {
-    if (!checkAdminAuth(request, env)) {
+    if (!(await checkAdminAuth(request, env))) {
       return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để truy xuất danh sách toàn trường!" }), { status: 401, headers: CORS_HEADERS });
     }
     return new Response(JSON.stringify({ ok: true, data: memStudents, from_d1: false }), { headers: CORS_HEADERS });
@@ -178,24 +181,29 @@ export const GET: APIRoute = async ({ request, locals }) => {
   if (classId || classCode) {
     const targetCode = (classCode || "").toUpperCase();
     const cleanTarget = (classCode || classId || "").toLowerCase().replace(/[^a-z0-9]/g, "");
-    const list = memStudents.filter((s: any) => 
-      (classId && s.class_id === classId) || 
+    
+    // Tìm lớp tương ứng trong memory
+    const matchedClass = memClasses.find((c: any) => 
+      (classId && c.id === classId) ||
       (classCode && (
-        (s.class_code && s.class_code.toUpperCase() === targetCode) ||
-        (s.original_class && s.original_class.toUpperCase() === targetCode) ||
-        (s.class_id && s.class_id.toLowerCase().replace(/[^a-z0-9]/g, "") === cleanTarget)
+        (c.class_code && c.class_code.toUpperCase() === targetCode) ||
+        (c.id && c.id.toLowerCase().replace(/[^a-z0-9]/g, "") === cleanTarget) ||
+        (c.class_name && c.class_name.toUpperCase() === targetCode)
       ))
     );
+    const targetId = matchedClass ? matchedClass.id : (classId || null);
 
-    const isAdmin = checkAdminAuth(request, env);
+    const list = targetId ? memStudents.filter((s: any) => s.class_id === targetId) : [];
+
+    const isAdmin = await checkAdminAuth(request, env);
     const sanitizedList = list.map((s: any) => {
       if (isAdmin) return s;
       return {
         id: s.id,
         class_id: s.class_id,
         student_number: s.student_number,
-        student_code: s.student_code,
-        full_name: s.full_name
+        full_name: s.full_name,
+        original_class: s.original_class
       };
     });
 
@@ -215,7 +223,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
 
   // Kiểm tra quyền Giảng viên cho TOÀN BỘ các thao tác POST sửa đổi dữ liệu
-  if (!checkAdminAuth(request, env)) {
+  if (!(await checkAdminAuth(request, env))) {
     return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để thực hiện thao tác này!" }), { status: 401, headers: CORS_HEADERS });
   }
 
@@ -512,7 +520,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 export const DELETE: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
 
-  if (!checkAdminAuth(request, env)) {
+  if (!(await checkAdminAuth(request, env))) {
     return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để xóa dữ liệu!" }), { status: 401, headers: CORS_HEADERS });
   }
 

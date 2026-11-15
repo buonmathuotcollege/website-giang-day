@@ -22,10 +22,19 @@ function getGeminiKey(env: any): string {
   return (env?.GEMINI_API_KEY || (typeof process !== 'undefined' ? (process as any).env?.GEMINI_API_KEY : '') || '').trim();
 }
 
-// In-memory cache for explanations by (question + selectedOption + correctOption)
+// In-memory cache for explanations by (question + selectedOption + correctOption) - Giới hạn tối đa 300 mục FIFO để chống tràn RAM
 const EXPLANATION_CACHE = new Map<string, string>();
+const MAX_CACHE_ENTRIES = 300;
 
-// Simple in-memory rate limiter
+function setExplanationCache(key: string, value: string) {
+  if (EXPLANATION_CACHE.size >= MAX_CACHE_ENTRIES) {
+    const firstKey = EXPLANATION_CACHE.keys().next().value;
+    if (firstKey) EXPLANATION_CACHE.delete(firstKey);
+  }
+  EXPLANATION_CACHE.set(key, value);
+}
+
+// In-memory rate limiter: Nâng lên 120 lượt/phút để tránh chặn nhầm khi cả phòng máy cùng học
 const EXPLAIN_RATE_MAP = new Map<string, { count: number; resetAt: number }>();
 
 function isExplainRateLimited(clientIp: string): boolean {
@@ -38,8 +47,8 @@ function isExplainRateLimited(clientIp: string): boolean {
   }
 
   client.count++;
-  if (client.count > 30) {
-    return true; // Quá 30 câu / phút
+  if (client.count > 120) {
+    return true; // Quá 120 câu / phút từ 1 IP phòng máy
   }
   return false;
 }
@@ -104,9 +113,10 @@ Hãy giải thích ngắn gọn 1-2 câu đời thường dễ hiểu vì sao ch
       // Fallback
     }
 
-    reply = reply || fallbackExplanation || "Bạn chú ý đối chiếu lại quy tắc kỹ thuật thực hành nhé!";
+    const safeFallback = typeof fallbackExplanation === 'string' ? fallbackExplanation.slice(0, 200) : '';
+    reply = reply || safeFallback || "Bạn chú ý đối chiếu lại quy tắc kỹ thuật thực hành nhé!";
     if (reply) {
-      EXPLANATION_CACHE.set(cacheKey, reply);
+      setExplanationCache(cacheKey, reply);
     }
 
     return new Response(JSON.stringify({ ok: true, explanation: reply }), { headers: CORS_HEADERS });

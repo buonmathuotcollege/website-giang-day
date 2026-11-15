@@ -368,12 +368,12 @@ export const prerender = false;
     <div x-show="activeTab === 'attendance'" class="space-y-4">
       <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-7 shadow-sm max-w-xl mx-auto">
         <h2 class="text-base font-bold text-slate-900 mb-1">Điểm danh buổi thực hành</h2>
-        <p class="text-xs text-slate-500 mb-4">Dành cho sinh viên nộp bài tập điểm danh theo từng buổi học</p>
+        <p class="text-xs text-slate-500 mb-4">Dành cho học sinh điểm danh và xác nhận tham gia buổi thực hành</p>
 
         <form @submit.prevent="submitAttendance()" class="space-y-4 text-xs">
           <div>
             <label class="block font-bold text-slate-700 mb-1">Lớp học (*)</label>
-            <select x-model="selectedClassName" required class="w-full px-3 py-2 border border-slate-300 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-slate-900">
+            <select x-model="selectedClassName" @change="onClassChange()" required class="w-full px-3 py-2 border border-slate-300 rounded-xl font-medium focus:outline-none focus:ring-2 focus:ring-slate-900">
               <template x-for="c in availableClasses" :key="c.id || c.class_code">
                 <option :value="c.class_name" x-text="c.class_code + ' - ' + c.class_name"></option>
               </template>
@@ -393,8 +393,18 @@ export const prerender = false;
           </div>
 
           <div>
-            <label class="block font-bold text-slate-700 mb-1">Họ và tên sinh viên (*)</label>
-            <input type="text" x-model="attendanceStudentName" required placeholder="Nhập họ và tên của em..." class="w-full px-3 py-2 border border-slate-300 rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-slate-900" />
+            <label class="block font-bold text-slate-700 mb-1">Họ và tên học sinh (*)</label>
+            <input type="text" list="practiceStudentsList" x-model="attendanceStudentName" required placeholder="Nhập hoặc chọn họ và tên của em..." class="w-full px-3 py-2 border border-slate-300 rounded-xl font-semibold focus:outline-none focus:ring-2 focus:ring-slate-900" />
+            <datalist id="practiceStudentsList">
+              <template x-for="st in studentsInClass" :key="st.id">
+                <option :value="st.full_name"></option>
+              </template>
+            </datalist>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Mã PIN buổi học (nếu Thầy yêu cầu)</label>
+            <input type="text" x-model="attendancePin" maxlength="8" placeholder="Nhập mã PIN buổi học..." class="w-full px-3 py-2 border border-slate-300 rounded-xl font-mono focus:outline-none focus:ring-2 focus:ring-slate-900" />
           </div>
 
           <button type="submit" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold transition-colors">
@@ -635,6 +645,7 @@ export const prerender = false;
       // Attendance traditional
       attendanceSession: 'Buổi 6: Thực hành Phần cứng máy tính',
       attendanceStudentName: '',
+      attendancePin: '',
 
       // Teacher grade
       teacherGradeBench: 1,
@@ -807,18 +818,19 @@ export const prerender = false;
 
       async onClassChange() {
         if (!this.selectedClassName) return;
+        const tCls = (this.availableClasses || []).find(c => c.class_name === this.selectedClassName || c.class_code === this.selectedClassName || c.id === this.selectedClassName);
         try {
           const allStore = JSON.parse(localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('BMTC_STUDENTS') || '{}');
-          const tCls = this.availableClasses.find(c => c.class_name === this.selectedClassName || c.class_code === this.selectedClassName);
           if (tCls && allStore[tCls.id]) {
             this.studentsInClass = allStore[tCls.id];
           }
         } catch(e){}
 
         try {
-          const res = await fetch('/api/classes?code=' + encodeURIComponent(this.selectedClassName));
+          const queryParam = tCls ? ('?id=' + encodeURIComponent(tCls.id) + '&code=' + encodeURIComponent(tCls.class_code || '')) : ('?code=' + encodeURIComponent(this.selectedClassName));
+          const res = await fetch('/api/classes' + queryParam);
           const data = await res.json();
-          if (data && data.ok && Array.isArray(data.data)) {
+          if (data && data.ok && Array.isArray(data.data) && data.data.length > 0) {
             this.studentsInClass = data.data;
           }
         } catch(e){}
@@ -940,16 +952,29 @@ export const prerender = false;
         setTimeout(() => { this.toast = ''; }, 2800);
       },
 
+      escapeHtml(str) {
+        return String(str || '').replace(/[&<>"']/g, (m) => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[m]));
+      },
+
       openPrintA4() {
         const c = this.crews[this.teacherGradeBench - 1] || this.crews[0];
         const w = window.open('', '_blank');
         if (!w) return;
+        const escCls = this.escapeHtml(this.selectedClassName || '03THA9');
+        const escBench = this.escapeHtml(c.id);
+        const escBenchName = this.escapeHtml(c.name);
+        const escOp = this.escapeHtml(c.members?.operator?.name || '................................');
+        const escSaf = this.escapeHtml(c.members?.safety?.name || '................................');
+        const escRec = this.escapeHtml(c.members?.recorder?.name || '................................');
+
         w.document.write(`
           <!DOCTYPE html>
           <html>
           <head>
             <meta charset="utf-8">
-            <title>Phiếu Nghiệm Thu Kỹ Thuật Viên - Bàn ${c.id}</title>
+            <title>Phiếu Nghiệm Thu Kỹ Thuật Viên - Bàn ${escBench}</title>
             <style>
               body { font-family: 'Times New Roman', serif; margin: 25mm 20mm; color: #000; font-size: 13pt; line-height: 1.4; }
               .center { text-align: center; }
@@ -964,11 +989,11 @@ export const prerender = false;
               <h2>PHIẾU NGHIỆM THU KỸ THUẬT VIÊN (CHUẨN TT55)</h2>
               <hr style="width: 200px; margin: 5px auto;">
             </div>
-            <p><strong>Lớp:</strong> ${this.selectedClassName || '03THA9'} &nbsp;&nbsp;&nbsp;&nbsp; <strong>Bàn máy:</strong> Số ${c.id} (${c.name})</p>
+            <p><strong>Lớp:</strong> ${escCls} &nbsp;&nbsp;&nbsp;&nbsp; <strong>Bàn máy:</strong> Số ${escBench} (${escBenchName})</p>
             <p><strong>Trạm thực hành:</strong> ${c.station === 1 ? 'Trạm 1: Tháo Lắp Cơ Khí' : 'Trạm 2: Cài Win PE & Driver'}</p>
-            <p><strong>1. KTV 1 (Thao tác chính):</strong> ${c.members.operator.name || '................................'}</p>
-            <p><strong>2. KTV 2 (Kiểm soát an toàn):</strong> ${c.members.safety.name || '................................'}</p>
-            <p><strong>3. KTV 3 (Báo cáo kỹ thuật):</strong> ${c.members.recorder.name || '................................'}</p>
+            <p><strong>1. KTV 1 (Thao tác chính):</strong> ${escOp}</p>
+            <p><strong>2. KTV 2 (Kiểm soát an toàn):</strong> ${escSaf}</p>
+            <p><strong>3. KTV 3 (Báo cáo kỹ thuật):</strong> ${escRec}</p>
             <table>
               <tr><th>Tiêu chí đánh giá</th><th>Điểm tối đa</th><th>Điểm đạt</th></tr>
               <tr><td>5S & An toàn Poka-Yoke 3 điểm dừng</td><td align="center">2.0</td><td align="center">${this.tempGrade.safety}</td></tr>
@@ -979,7 +1004,7 @@ export const prerender = false;
               <tr><td align="right"><strong>TỔNG ĐIỂM ĐÁNH GIÁ:</strong></td><td align="center"><strong>10.0</strong></td><td align="center"><strong style="font-size:14pt;">${this.calcGradeTotal()}</strong></td></tr>
             </table>
             <div style="display:flex; justify-content:space-between; margin-top:40px; text-align:center;">
-              <div style="width:45%;"><p><strong>ĐẠI DIỆN NHÓM KTV</strong><br><br><br><br>${c.members.operator.name || 'KTV 1'}</p></div>
+              <div style="width:45%;"><p><strong>ĐẠI DIỆN NHÓM KTV</strong><br><br><br><br>${escOp}</p></div>
               <div style="width:45%;"><p><strong>GIẢNG VIÊN HƯỚNG DẪN</strong><br><br><br><br><strong>CN. Phạm Tiến Đông</strong></p></div>
             </div>
             <div style="text-align:center; margin-top:30px;"><button onclick="window.print()" style="padding:8px 16px; font-weight:bold; cursor:pointer;">IN PHIẾU (CTRL+P)</button></div>
@@ -999,6 +1024,7 @@ export const prerender = false;
               className: this.selectedClassName,
               sessionName: this.attendanceSession,
               studentName: this.attendanceStudentName.trim(),
+              classPin: (this.attendancePin || '').trim(),
               isAttendance: true,
               details: { type: 'DiemDanhBuoi' }
             })
@@ -1007,6 +1033,7 @@ export const prerender = false;
           if (data && data.ok) {
             this.showMsg('Đã ghi nhận điểm danh thành công!');
             this.attendanceStudentName = '';
+            this.attendancePin = '';
           } else {
             alert('Lỗi ghi nhận điểm danh: ' + (data?.error || 'Không thể lưu'));
           }

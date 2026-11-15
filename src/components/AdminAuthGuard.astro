@@ -132,7 +132,11 @@ const { pageTitle = "Bảng điều khiển Giảng viên" } = Astro.props;
     window.fetch = function(url, options = {}) {
       const token = sessionStorage.getItem('CNTT_ADMIN_TOKEN') || localStorage.getItem('CNTT_ADMIN_TOKEN') ||
                     sessionStorage.getItem('BMTC_ADMIN_TOKEN') || localStorage.getItem('BMTC_ADMIN_TOKEN');
-      if (token && typeof url === 'string' && url.includes('/api/')) {
+      const isInternalApi = typeof url === 'string' && (
+        url.startsWith('/api/') || 
+        (typeof window !== 'undefined' && url.startsWith(window.location.origin + '/api/'))
+      );
+      if (token && isInternalApi) {
         options = options || {};
         options.headers = options.headers || {};
         if (options.headers instanceof Headers) {
@@ -187,8 +191,8 @@ const { pageTitle = "Bảng điều khiển Giảng viên" } = Astro.props;
             this.logout(false);
           }
         } catch(e) {
-          // Mạng chập chờn -> tạm giữ nếu token có cấu trúc hợp lệ
-          if (storedToken.startsWith('cntt_sec_') || storedToken.startsWith('bmtc_sec_')) {
+          // Mạng chập chờn -> chỉ tạm giữ nếu token là JWT có chữ ký hợp lệ bắt đầu bằng cntt_jwt_
+          if (storedToken.startsWith('cntt_jwt_')) {
             this.isAuthenticated = true;
           } else {
             this.logout(false);

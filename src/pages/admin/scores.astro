@@ -3,7 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 ---
 
-<BaseLayout title="Bảng điểm Thực hành & Đánh giá Năng lực - Quản trị Giảng viên" noindex={true}>
+<BaseLayout title="Bảng điểm Thực hành & Đánh giá Năng lực - Quản trị Giảng viên" noindex={true} hideChatbot={true}>
   <section class="max-w-6xl mx-auto px-4 py-8">
     <AdminAuthGuard pageTitle="Bảng điểm & Đánh giá Năng lực">
       <div x-data="scoresManager">
@@ -245,8 +245,13 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
       async fetchScores() {
         this.loading = true;
         try {
-          const url = this.filterClass ? `/api/scores?class=${encodeURIComponent(this.filterClass)}` : '/api/scores';
-          const res = await fetch(url);
+          const token = localStorage.getItem('CNTT_ADMIN_TOKEN') || sessionStorage.getItem('CNTT_ADMIN_TOKEN') ||
+                        localStorage.getItem('BMTC_ADMIN_TOKEN') || sessionStorage.getItem('BMTC_ADMIN_TOKEN') || '';
+          const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+          const url = this.filterClass 
+            ? `/api/scores?class=${encodeURIComponent(this.filterClass)}&limit=500` 
+            : '/api/scores?limit=500';
+          const res = await fetch(url, { headers });
           const data = await res.json();
           this.scores = data.data || [];
         } catch (e) {

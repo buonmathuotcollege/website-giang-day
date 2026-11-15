@@ -10,8 +10,24 @@ const CORS_HEADERS = {
   "Content-Type": "application/json;charset=UTF-8"
 };
 
-// In-memory fallback
+// In-memory fallback & rate limiting
 (globalThis as any).MEM_SCORES = (globalThis as any).MEM_SCORES || [];
+const scoresRateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
+function checkScoresRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const record = scoresRateLimitMap.get(ip);
+  if (!record || now > record.resetAt) {
+    scoresRateLimitMap.set(ip, { count: 1, resetAt: now + 60000 });
+    return true;
+  }
+  // Cho phép 180 requests/phút từ 1 IP để phòng máy 30-40 học sinh NAT chung không bị chặn
+  if (record.count >= 180) {
+    return false;
+  }
+  record.count += 1;
+  return true;
+}
 
 async function ensureTable(db: any) {
   if (!db) return;
@@ -50,6 +66,18 @@ export const OPTIONS: APIRoute = async () => {
 export const POST: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
 
+  const clientIp = request.headers.get("cf-connecting-ip") || 
+                   request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
+                   "127.0.0.1";
+
+  const isTeacher = await checkAdminAuth(request, env);
+  if (!isTeacher && !checkScoresRateLimit(clientIp)) {
+    return new Response(JSON.stringify({ 
+      ok: false, 
+      error: "Tần suất gửi yêu cầu quá nhanh từ phòng máy. Vui lòng thử lại sau 1 phút." 
+    }), { status: 429, headers: CORS_HEADERS });
+  }
+
   try {
     const data = await request.json();
     const id = "sub_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
@@ -65,6 +93,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // Nhận diện nếu là lượt điểm danh đơn thuần (không phải bài thi đánh giá năng lực)
     const isAttendance = Boolean(data.isAttendance || data.details?.type === 'DiemDanhBuoi' || sessionName.toLowerCase().includes('điểm danh'));
 
+    // BẢO MẬT: BẤT KỲ ĐIỂM SỐ NÀO ĐƯA VÀO SỔ ĐIỂM CHÍNH THỨC PHẢI CÓ XÁC THỰC GIẢNG VIÊN (TEACHER_SECRET)
+    if (!isAttendance) {
+      if (!isTeacher) {
+        return new Response(JSON.stringify({ 
+          ok: false, 
+          error: "Yêu cầu quyền Giảng viên để ghi nhận điểm đánh giá kỹ năng vào sổ điểm chính thức!" 
+        }), { status: 401, headers: CORS_HEADERS });
+      }
+    }
+
     // Giới hạn điểm hợp lệ trong khoảng [0, 10]
     const rawScore = data.score !== undefined ? data.score : (data.grade10 !== undefined ? data.grade10 : 0);
     const numScore = Number(rawScore);
@@ -72,21 +110,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     const details = JSON.stringify({
       ...(data.details || {}),
-      isAttendance: isAttendance
+      isAttendance: isAttendance,
+      classPin: data.classPin || ''
     });
     const status = isAttendance ? "Đã điểm danh" : (score >= 5.0 ? "Đạt" : "Cần rèn luyện");
 
     if (!studentName) {
       return new Response(JSON.stringify({ ok: false, error: "Họ tên học sinh không được để trống" }), { status: 400, headers: CORS_HEADERS });
-    }
-
-    // Yêu cầu quyền Giảng viên khi chấm điểm sát hạch xưởng hoặc có rubric đánh giá
-    const isTeacherGrading = Boolean(data.isTeacherGraded || data.details?.rubric || sessionName.includes("Sát hạch"));
-    if (isTeacherGrading && !checkAdminAuth(request, env)) {
-      return new Response(JSON.stringify({ 
-        ok: false, 
-        error: "Yêu cầu quyền Giảng viên để ghi nhận điểm đánh giá kỹ năng vào sổ điểm!" 
-      }), { status: 401, headers: CORS_HEADERS });
     }
 
     if (env && env.DB) {
@@ -121,7 +151,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 export const GET: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
 
-  if (!checkAdminAuth(request, env)) {
+  if (!(await checkAdminAuth(request, env))) {
     return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên để xem toàn bộ bảng điểm!" }), { status: 401, headers: CORS_HEADERS });
   }
 
@@ -172,7 +202,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
 // 3. DELETE SCORE
 export const DELETE: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
-  if (!checkAdminAuth(request, env)) {
+  if (!(await checkAdminAuth(request, env))) {
     return new Response(JSON.stringify({ ok: false, error: "Yêu cầu quyền Giảng viên" }), { status: 401, headers: CORS_HEADERS });
   }
 

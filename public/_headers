@@ -6,6 +6,9 @@
 
 /admin/*
   X-Robots-Tag: noindex, nofollow
+  X-Frame-Options: DENY
+  Cache-Control: no-store, no-cache, must-revalidate
 
 /api/*
   X-Content-Type-Options: nosniff
+  Cache-Control: no-store, no-cache, must-revalidate

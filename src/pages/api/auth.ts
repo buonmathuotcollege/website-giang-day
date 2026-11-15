@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { createTeacherToken, checkAdminAuth } from '../../lib/auth';
 
 export const prerender = false;
 
@@ -13,6 +14,7 @@ export const OPTIONS: APIRoute = async () => {
   return new Response(null, { headers: CORS_HEADERS });
 };
 
+// 1. ĐĂNG NHẬP / XÁC THỰC GIẢNG VIÊN -> CẤP TOKEN KÝ SỐ HMAC-SHA256
 export const POST: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (typeof process !== 'undefined' ? (process as any).env : {}) || {};
   const validSecret = String(env.TEACHER_SECRET || env.ADMIN_TOKEN || "").trim();
@@ -25,7 +27,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   try {
-    const body = await request.json();
+    const body = await request.json().catch(() => ({}));
     const inputSecret = String(body.secret || "").trim();
 
     if (!inputSecret) {
@@ -36,7 +38,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     if (inputSecret !== validSecret) {
-      // Bảo mật chống dò mã (Brute-force delay nhẹ)
+      // Bảo mật chống dò mã (Brute-force delay nhẹ 400ms)
       await new Promise(r => setTimeout(r, 400));
       return new Response(JSON.stringify({ 
         ok: false, 
@@ -44,18 +46,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
       }), { status: 401, headers: CORS_HEADERS });
     }
 
-    // Mã chính xác -> Cấp token phiên làm việc có thời hạn
-    const rawSecret = inputSecret + ":" + Date.now();
-    let b64 = "";
-    if (typeof Buffer !== 'undefined') {
-      b64 = Buffer.from(rawSecret, 'utf-8').toString('base64');
-    } else {
-      const bytes = new TextEncoder().encode(rawSecret);
-      let binary = '';
-      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-      b64 = btoa(binary);
-    }
-    const token = "cntt_sec_" + b64;
+    // Mã chính xác -> Cấp Token JWT chữ ký số HMAC-SHA256 (hạn 7 ngày)
+    // Token KHÔNG chứa mật khẩu, không thể giải mã ngược ra bí mật
+    const token = await createTeacherToken(validSecret, 7);
 
     return new Response(JSON.stringify({
       ok: true,
@@ -73,7 +66,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 };
 
-// Kiểm tra token còn hợp lệ hay không
+// 2. KIỂM TRA TÍNH HỢP LỆ CỦA PHIÊN ĐĂNG NHẬP
 export const GET: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (typeof process !== 'undefined' ? (process as any).env : {}) || {};
   const validSecret = String(env.TEACHER_SECRET || env.ADMIN_TOKEN || "").trim();
@@ -82,40 +75,10 @@ export const GET: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ ok: false, valid: false, error: "TEACHER_SECRET chưa được thiết lập" }), { status: 503, headers: CORS_HEADERS });
   }
 
-  const authHeader = request.headers.get("Authorization") || "";
-  const secretHeader = request.headers.get("x-admin-secret") || "";
-
-  if (secretHeader && secretHeader.trim() === validSecret) {
+  const isValid = await checkAdminAuth(request, env);
+  if (isValid) {
     return new Response(JSON.stringify({ ok: true, valid: true }), { headers: CORS_HEADERS });
   }
 
-  const prefixes = ["cntt_sec_", "bmtc_sec_"];
-  for (const prefix of prefixes) {
-    const bearerPrefix = `Bearer ${prefix}`;
-    if (authHeader.startsWith(bearerPrefix)) {
-      try {
-        const rawPayload = authHeader.replace(bearerPrefix, "");
-        let decoded = "";
-        if (typeof Buffer !== 'undefined') {
-          decoded = Buffer.from(rawPayload, 'base64').toString('utf-8');
-        } else {
-          const bytes = Uint8Array.from(atob(rawPayload), c => c.charCodeAt(0));
-          decoded = new TextDecoder().decode(bytes);
-        }
-        const [tokenSecret, timestampStr] = decoded.split(":");
-        if (tokenSecret === validSecret) {
-          if (timestampStr) {
-            const tokenTime = Number(timestampStr);
-            const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
-            if (Number.isFinite(tokenTime) && Date.now() - tokenTime > MAX_AGE_MS) {
-              return new Response(JSON.stringify({ ok: false, valid: false, error: "Token đã hết hạn" }), { status: 401, headers: CORS_HEADERS });
-            }
-          }
-          return new Response(JSON.stringify({ ok: true, valid: true }), { headers: CORS_HEADERS });
-        }
-      } catch(e) {}
-    }
-  }
-
-  return new Response(JSON.stringify({ ok: false, valid: false }), { status: 401, headers: CORS_HEADERS });
+  return new Response(JSON.stringify({ ok: false, valid: false, error: "Phiên làm việc hết hạn hoặc không hợp lệ" }), { status: 401, headers: CORS_HEADERS });
 };

@@ -2553,9 +2553,9 @@ const exam = {
           }
           // Kiểm tra trong localStorage trước
           let foundLocal = false;
+          const targetCls = (this.availableClasses || []).find(c => c.class_name === this.student.className || c.class_code === this.student.className || c.id === this.student.className);
           try {
             const allStudentsStore = JSON.parse(localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('BMTC_STUDENTS') || '{}');
-            const targetCls = (this.availableClasses || []).find(c => c.class_name === this.student.className || c.class_code === this.student.className);
             if (targetCls && allStudentsStore[targetCls.id]) {
               this.classStudentsList = allStudentsStore[targetCls.id];
               foundLocal = true;
@@ -2563,7 +2563,8 @@ const exam = {
           } catch(e){}
 
           try {
-            const res = await fetch('/api/classes?code=' + encodeURIComponent(this.student.className));
+            const queryParam = targetCls ? ('?id=' + encodeURIComponent(targetCls.id) + '&code=' + encodeURIComponent(targetCls.class_code || '')) : ('?code=' + encodeURIComponent(this.student.className));
+            const res = await fetch('/api/classes' + queryParam);
             const data = await res.json();
             if (data && data.ok && Array.isArray(data.data) && (data.from_d1 || !foundLocal)) {
               this.classStudentsList = data.data;

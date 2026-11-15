@@ -10,7 +10,12 @@ command = "npm run build"
 directory = "dist"
 binding = "ASSETS"
 
+# ==============================================================================
+# CẤU HÌNH CƠ SỞ DỮ LIỆU CLOUDFLARE D1
+# Lưu ý quan trọng: database_id BẮT BUỘC phải là mã UUID hợp lệ (36 ký tự)
+# Lấy mã UUID tại: Cloudflare Dashboard -> Storage & Databases -> D1 -> giang-day-db -> Database ID
+# ==============================================================================
 [[d1_databases]]
 binding = "DB"
 database_name = "giang-day-db"
-database_id = "giang-day-db"
+database_id = "00000000-0000-0000-0000-000000000000"

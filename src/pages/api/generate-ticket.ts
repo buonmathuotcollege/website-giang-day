@@ -94,6 +94,23 @@ const PRESET_TICKETS = [
   }
 ];
 
+// In-memory rate limiter: 60 requests per minute per IP
+const ticketRateLimitMap = new Map<string, { count: number; resetAt: number }>();
+
+function checkTicketRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const record = ticketRateLimitMap.get(ip);
+  if (!record || now > record.resetAt) {
+    ticketRateLimitMap.set(ip, { count: 1, resetAt: now + 60000 });
+    return true;
+  }
+  if (record.count >= 60) {
+    return false;
+  }
+  record.count += 1;
+  return true;
+}
+
 export const OPTIONS: APIRoute = async () => {
   return new Response(null, { headers: CORS_HEADERS });
 };
@@ -101,10 +118,25 @@ export const OPTIONS: APIRoute = async () => {
 export const POST: APIRoute = async ({ request, locals }) => {
   const env = (locals as any)?.runtime?.env || (process as any)?.env || {};
 
+  const clientIp = request.headers.get("cf-connecting-ip") || 
+                   request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
+                   "127.0.0.1";
+
+  if (!checkTicketRateLimit(clientIp)) {
+    // Nếu quá tần suất, trả về preset an toàn thay vì lỗi 429
+    const selectedPreset = PRESET_TICKETS[Math.floor(Math.random() * PRESET_TICKETS.length)];
+    return new Response(JSON.stringify({ 
+      ok: true, 
+      ticket: { ...selectedPreset, ticketId: 'TICKET_PRESET_' + Date.now() }, 
+      source: 'preset_rate_limit' 
+    }), { headers: CORS_HEADERS });
+  }
+
   try {
     const body = await request.json().catch(() => ({}));
-    const userPrompt = String(body.prompt || '').trim().slice(0, 300);
-    const category = String(body.category || '').trim();
+    // Giới hạn prompt tối đa 120 ký tự và loại bỏ ký tự điều khiển
+    const userPrompt = String(body.prompt || '').trim().slice(0, 120).replace(/[\r\n\t]+/g, ' ');
+    const category = String(body.category || '').trim().slice(0, 50);
 
     const apiKey = getGeminiKey(env);
 

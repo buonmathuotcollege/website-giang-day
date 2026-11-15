@@ -9,7 +9,7 @@ const CORS_HEADERS = {
   "Content-Type": "application/json;charset=UTF-8"
 };
 
-// Rate limiter: 30 requests per minute per IP
+// Rate limiter: 180 requests per minute per IP (đảm bảo cả phòng máy dùng chung 1 IP NAT không bị nghẽn)
 const assessmentRateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function checkAssessmentRateLimit(ip: string): boolean {
@@ -19,11 +19,80 @@ function checkAssessmentRateLimit(ip: string): boolean {
     assessmentRateLimitMap.set(ip, { count: 1, resetAt: now + 60000 });
     return true;
   }
-  if (record.count >= 30) {
+  if (record.count >= 180) {
     return false;
   }
   record.count += 1;
   return true;
+}
+
+// Chấm điểm server-side chuẩn xác cho bài thi mô phỏng kỹ thuật
+function computeVerifiedRubric(userAnswers: any) {
+  const steps = userAnswers.stepSummary;
+  if (!steps) {
+    const raw = Number(userAnswers.rubric?.total || 0);
+    const total = Number(Math.min(10.0, Math.max(0.0, isNaN(raw) ? 0 : raw)).toFixed(1));
+    return {
+      safety: 0,
+      diagnosis: 0,
+      operation: 0,
+      verification: 0,
+      handover: 0,
+      total,
+      isPass: total >= 5.0,
+      rank: total >= 8.5 ? 'Xuất sắc' : (total >= 7.0 ? 'Khá' : (total >= 5.0 ? 'Đạt' : 'Chưa đạt'))
+    };
+  }
+
+  const s1 = steps.step1 || {};
+  const s2 = steps.step2 || {};
+  const s3 = steps.step3 || {};
+  const s4 = steps.step4 || {};
+  const s5 = steps.step5 || {};
+  const s6 = steps.step6 || {};
+  const s7 = steps.step7 || {};
+
+  let safety = 0;
+  if (s3.pullPlugDischargeChecked) safety += 0.75;
+  if (s7.benchCleaned) safety += 0.5;
+  if (s2.isVerifiedMatch && s2.teacherApprovedStop1) safety += 0.75;
+
+  let diagnosis = 0;
+  if (s1.completed) diagnosis += 0.75;
+  if (s3.screenRevived) diagnosis += 1.75;
+
+  let operation = 0;
+  if (s4.thermalPasteBeanSize && s4.fanHeldWhenBlowing && s4.cpuFanPlugged) operation += 1.5;
+  if (s2.samplesOpened) operation += 0.75;
+  if (s5.deviceManagerClean) operation += 0.75;
+
+  let verification = 0;
+  if (s6.peripheralsWorking && s6.testPagePrinted) verification += 0.75;
+  if (s7.tempUnder75Checked && s7.dataIntact100Checked) verification += 0.75;
+
+  let handover = 0;
+  if (s7.benchCleaned) handover += 0.25;
+  if (s7.sheetSigned && s7.teacherApprovedStop3) handover += 0.75;
+
+  const total = Number((safety + diagnosis + operation + verification + handover).toFixed(1));
+  const isPass = total >= 5.0;
+  let rank = 'Chưa Đạt';
+  if (isPass) {
+    if (total >= 8.5) rank = 'Xuất sắc';
+    else if (total >= 7.0) rank = 'Khá';
+    else rank = 'Đạt yêu cầu';
+  }
+
+  return {
+    safety: Number(safety.toFixed(2)),
+    diagnosis: Number(diagnosis.toFixed(2)),
+    operation: Number(operation.toFixed(2)),
+    verification: Number(verification.toFixed(2)),
+    handover: Number(handover.toFixed(2)),
+    total,
+    isPass,
+    rank
+  };
 }
 
 // Global cache flag for D1 tables
@@ -207,13 +276,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const bank = QUESTION_BANKS[slug] || QUESTION_BANKS["phan-cung"];
 
     // KIỂM TRA NẾU ĐÂY LÀ BÀI THI MÔ PHỎNG TAY NGHỀ THỰC TẾ (JOB TICKET SIMULATION)
-    if (userAnswers && userAnswers.rubric) {
-      const rubric = userAnswers.rubric;
-      const rawScore = Number(rubric.total || 0);
-      const score10 = Number(Math.min(10.0, Math.max(0.0, isNaN(rawScore) ? 0 : rawScore)).toFixed(1));
+    if (userAnswers && (userAnswers.rubric || userAnswers.stepSummary)) {
+      // Tự động tính toán lại điểm Rubric trên máy chủ từ dữ liệu các bước thực hiện (Server-side validation)
+      const verifiedRubric = computeVerifiedRubric(userAnswers);
+      const score10 = verifiedRubric.total;
       const total = 10;
       const percentage = Math.round((score10 / 10) * 100);
-      const status = rubric.isPass ? "ĐẠT" : "CHƯA ĐẠT";
+      const status = verifiedRubric.isPass ? "ĐẠT" : "CHƯA ĐẠT";
 
       if (env && env.DB) {
         try {
@@ -225,13 +294,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
           `).bind(resId, slug, studentName, studentCode, originalClass, className, station, score10, total, percentage, status, JSON.stringify(userAnswers)).run();
 
           const dateOnly = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());
-          const sessionName = `Sát hạch: ${userAnswers.ticketTitle || 'Phần cứng PC (OL-01)'}`;
+          const sessionName = `[Tự luyện Online] ${userAnswers.ticketTitle || 'Phần cứng PC (OL-01)'}`;
           await env.DB.prepare(`
             INSERT INTO submissions (id, class_name, session_name, student_name, student_code, original_class, station, date_only, score, details_json, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-          `).bind(resId, className, sessionName, studentName, studentCode, originalClass, station, dateOnly, score10, JSON.stringify(userAnswers), status).run();
-        } catch (err) {
+          `).bind(resId, className, sessionName, studentName, studentCode, originalClass, station, dateOnly, score10, JSON.stringify({ ...userAnswers, verifiedRubric, isSelfPractice: true }), status).run();
+        } catch (err: any) {
           console.error("D1 assessment write error:", err);
+          return new Response(JSON.stringify({ ok: false, error: "Không thể lưu kết quả bài thi vào cơ sở dữ liệu." }), { status: 500, headers: CORS_HEADERS });
         }
       }
 
@@ -247,7 +317,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         total,
         percentage,
         status,
-        rubric
+        rubric: verifiedRubric
       }), { headers: CORS_HEADERS });
     }
 
@@ -283,8 +353,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
           INSERT INTO assessment_results (id, assessment_id, student_name, student_code, original_class, class_name, station, score, total, percentage, status, answers_json)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).bind(resId, slug, studentName, studentCode, originalClass, className, station, score10, total, percentage, status, JSON.stringify(userAnswers)).run();
-      } catch (err) {
+      } catch (err: any) {
         console.error("D1 assessment MCQ write error:", err);
+        return new Response(JSON.stringify({ ok: false, error: "Không thể lưu kết quả trắc nghiệm vào cơ sở dữ liệu." }), { status: 500, headers: CORS_HEADERS });
       }
     }
 
