@@ -30,7 +30,7 @@ export default function SpecializedHardwarePage() {
   const [openOralCard, setOpenOralCard] = useState<string | null>(null);
 
   // Tab 3: Candidate & Rubric State
-  const [candidateClass, setCandidateClass] = useState('04THA2');
+  const [candidateClass, setCandidateClass] = useState('04THA3');
   const [candidateStation, setCandidateStation] = useState('Máy 01');
   const [candidateName, setCandidateName] = useState('');
   const [rubricScores, setRubricScores] = useState({
@@ -546,9 +546,7 @@ export default function SpecializedHardwarePage() {
                     onChange={(e) => setCandidateClass(e.target.value)}
                     className="w-full p-2.5 border rounded-xl text-xs font-bold min-h-[48px]"
                   >
-                    <option value="04THA2">Lớp 04THA2</option>
-                    <option value="04THA3">Lớp 04THA3</option>
-                    <option value="04THA4">Lớp 04THA4</option>
+                    <option value="04THA3">Lớp 04THA3 (Cơ sở Ea H'leo)</option>
                   </select>
                 </div>
                 <div>

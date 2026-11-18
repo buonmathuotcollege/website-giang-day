@@ -1,7 +1,7 @@
 // ============================================================================
 // CHƯƠNG TRÌNH & NGÂN HÀNG CÂU HỎI ÔN LUYỆN THI HỌC SINH GIỎI
 // CHUYÊN ĐỀ 02: PHẦN CỨNG VÀ MẠNG MÁY TÍNH (MÃ: HSG-02_PHAN_CUNG_MANG)
-// Bồi dưỡng đội tuyển HSG chuyên ngành CNTT (04THA2 Krông Pắc, 04THA3 Ea H'leo, 04THA4 Cư Kuin)
+// Bồi dưỡng đội tuyển HSG chuyên ngành CNTT · Cơ sở Ea H'leo (Lớp 04THA3)
 // Chủ nhiệm: CN. Phạm Tiến Đông · Cổng Học Tập & Giảng Dạy CNTT
 // ============================================================================
 
@@ -76,26 +76,26 @@ export const SUBNET_CHEAT_SHEET: SubnetFormulaItem[] = [
   { cidr: '/30', subnetMask: '255.255.255.252', magicNumber: 4, totalHosts: 4, usableHosts: 2, usageContext: 'Đường truyền điểm - điểm (Point-to-Point) giữa 2 Router' },
 ];
 
-// Danh sách 3 Đội tuyển đại diện các cơ sở
+// Danh sách các Đội tuyển HSG Cơ sở Ea H'leo (Lớp 04THA3)
 export const HSG_PROJECT_TEAMS: HsgTeamInfo[] = [
   {
-    id: 'team_04tha2',
-    code: '04THA2',
-    branch: 'Cơ sở Krông Pắc',
-    motto: 'Kỹ luật cơ khí - Tốc độ bấm cáp - Quy hoạch IP tối ưu',
-    color: 'emerald'
-  },
-  {
-    id: 'team_04tha3',
-    code: '04THA3',
+    id: 'team_04tha3_1',
+    code: '04THA3 - Đội 1',
     branch: 'Cơ sở Ea H\'leo',
-    motto: 'Quản trị hệ thống vững vàng - Dịch vụ mạng thông suốt',
+    motto: 'Kỹ luật cơ khí - Tốc độ bấm cáp Gigabit - Quy hoạch IP tối ưu',
     color: 'blue'
   },
   {
-    id: 'team_04tha4',
-    code: '04THA4',
-    branch: 'Cơ sở Cư Kuin',
+    id: 'team_04tha3_2',
+    code: '04THA3 - Đội 2',
+    branch: 'Cơ sở Ea H\'leo',
+    motto: 'Quản trị hệ thống vững vàng - Dịch vụ mạng thông suốt',
+    color: 'emerald'
+  },
+  {
+    id: 'team_04tha3_3',
+    code: '04THA3 - Đội 3',
+    branch: 'Cơ sở Ea H\'leo',
     motto: 'Bảo mật đa tầng - Thuyết trình tự tin - Nghiệm thu hoàn hảo',
     color: 'purple'
   }
@@ -1106,7 +1106,7 @@ export const SUBNET_PRACTICE_PROBLEMS: SubnetProblem[] = [
   {
     id: 'sp_01',
     department: 'Phòng Kế Toán Doanh Nghiệp',
-    teamTarget: '04THA2 - Krông Pắc',
+    teamTarget: '04THA3 - Đội 1 (Ea H\'leo)',
     ipInput: '192.168.10.75/26',
     requiredHosts: 60,
     cidr: '/26',
@@ -1121,7 +1121,7 @@ export const SUBNET_PRACTICE_PROBLEMS: SubnetProblem[] = [
   {
     id: 'sp_02',
     department: 'Ban Giám Đốc & Hội Đồng Quản Trị',
-    teamTarget: '04THA3 - Ea H\'leo',
+    teamTarget: '04THA3 - Đội 2 (Ea H\'leo)',
     ipInput: '172.16.20.45/27',
     requiredHosts: 28,
     cidr: '/27',
@@ -1136,7 +1136,7 @@ export const SUBNET_PRACTICE_PROBLEMS: SubnetProblem[] = [
   {
     id: 'sp_03',
     department: 'Cụm Máy Chủ Server & Máy In Nội Bộ',
-    teamTarget: '04THA4 - Cư Kuin',
+    teamTarget: '04THA3 - Đội 3 (Ea H\'leo)',
     ipInput: '10.0.5.18/28',
     requiredHosts: 12,
     cidr: '/28',
@@ -1151,7 +1151,7 @@ export const SUBNET_PRACTICE_PROBLEMS: SubnetProblem[] = [
   {
     id: 'sp_04',
     department: 'Đường Truyền Điểm - Điểm Giữa 2 Router Core',
-    teamTarget: 'Đội Tuyển HSG',
+    teamTarget: '04THA3 - Toàn Đội Tuyển',
     ipInput: '192.168.100.5/30',
     requiredHosts: 2,
     cidr: '/30',
@@ -1166,7 +1166,7 @@ export const SUBNET_PRACTICE_PROBLEMS: SubnetProblem[] = [
   {
     id: 'sp_05',
     department: 'Phòng Kỹ Thuật & Đồ Họa Đa Phương Tiện',
-    teamTarget: '04THA2 - Krông Pắc',
+    teamTarget: '04THA3 - Đội 1 (Ea H\'leo)',
     ipInput: '192.168.1.130/25',
     requiredHosts: 120,
     cidr: '/25',
@@ -1181,7 +1181,7 @@ export const SUBNET_PRACTICE_PROBLEMS: SubnetProblem[] = [
   {
     id: 'sp_06',
     department: 'Khu Vực Wi-Fi Khách Vãng Lai (Guest)',
-    teamTarget: '04THA4 - Cư Kuin',
+    teamTarget: '04THA3 - Đội 2 (Ea H\'leo)',
     ipInput: '172.16.50.85/26',
     requiredHosts: 50,
     cidr: '/26',

@@ -117,7 +117,7 @@ const appDataPayload = {
       // Sát hạch State (Tab 3)
       ticketsList: rawPayload.tickets || [],
       currentTicket: firstTicket,
-      candidateClass: '04THA2',
+      candidateClass: '04THA3',
       candidateStation: 'Máy 01',
       candidateName: '',
 
@@ -255,7 +255,7 @@ const appDataPayload = {
       // Printable Certificate Meta
       get certificateCode() {
         var stationClean = (this.candidateStation || 'M01').replace('Máy ', 'M');
-        var classClean = this.candidateClass || '04THA2';
+        var classClean = this.candidateClass || '04THA3';
         return 'PKTV-2026-' + stationClean + '-' + classClean;
       },
 
@@ -1413,9 +1413,7 @@ const appDataPayload = {
                 x-model="candidateClass"
                 class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[48px]"
               >
-                <option value="04THA2">Lớp 04THA2</option>
-                <option value="04THA3">Lớp 04THA3</option>
-                <option value="04THA4">Lớp 04THA4</option>
+                <option value="04THA3">Lớp 04THA3 (Cơ sở Ea H'leo)</option>
               </select>
             </div>
 

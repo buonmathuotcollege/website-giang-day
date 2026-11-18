@@ -127,7 +127,7 @@ export default function HsgPhanCungMangPage() {
   // =========================================================================
   // MODULE 3: 5 STAGES & RUBRIC 100 POINTS
   // =========================================================================
-  const [selectedTeamId, setSelectedTeamId] = useState('team_04tha2');
+  const [selectedTeamId, setSelectedTeamId] = useState('team_04tha3_1');
   const [currentStageIdx, setCurrentStageIdx] = useState(0);
   const [checklist, setChecklist] = useState<{ [id: string]: boolean }>({});
 
@@ -234,7 +234,7 @@ export default function HsgPhanCungMangPage() {
             <div className="flex flex-wrap items-center gap-2.5 shrink-0">
               <div className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center min-w-[90px]">
                 <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Đội Tuyển</div>
-                <div className="text-sm font-black text-slate-800">3 Cơ Sở</div>
+                <div className="text-sm font-black text-slate-800">Ea H'leo</div>
               </div>
               <div className="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center min-w-[90px]">
                 <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Trắc Nghiệm</div>
