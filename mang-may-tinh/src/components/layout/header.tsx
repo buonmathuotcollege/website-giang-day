@@ -23,32 +23,32 @@ export function Header() {
 
         {/* Menu Điều Hướng Nhanh */}
         <nav className="hidden md:flex items-center gap-1.5 text-xs font-bold">
+          <Link
+            href="/#danh-sach-lab"
+            className="px-3 py-2 rounded-xl text-emerald-800 bg-emerald-50 hover:bg-emerald-100 transition-colors"
+          >
+            📖 6 Bài Lab iFixit
+          </Link>
           <a
-            href="#tong-quan"
+            href="/#bam-cap-rj45"
             className="px-3 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
           >
-            Tổng quan
+            Mô phỏng RJ45
           </a>
           <a
-            href="#bam-cap-rj45"
-            className="px-3 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-          >
-            Bấm cáp RJ45
-          </a>
-          <a
-            href="#chia-subnet"
+            href="/#chia-subnet"
             className="px-3 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
           >
             Tính Subnet
           </a>
           <a
-            href="#so-do-ban"
+            href="/#so-do-ban"
             className="px-3 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
           >
             10 Bàn KTV
           </a>
           <a
-            href="#diem-danh"
+            href="/#diem-danh"
             className="px-3 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
           >
             Điểm danh

@@ -18,12 +18,17 @@ export interface LabStep {
   pokaYoke: string; // Quy tắc chống sai lỗi (Poka-Yoke) bắt buộc kiểm tra
   analogy?: string; // Ví von đời thường dễ hiểu
   diagramType: 
-    | "strip_cable"      // Tuốt vỏ bảo vệ cáp
-    | "arrange_wires"    // Sắp xếp thứ tự 8 sợi màu
-    | "trim_wires"       // Cắt bằng đầu dây cáp
-    | "crimp_rj45"       // Bấm kìm mạng RJ45
-    | "cable_tester"     // Hộp test cáp 8 đèn LED
-    | "switch_plug";     // Cắm vào Switch thử mạng
+    | "strip_cable"           // Tuốt vỏ bảo vệ cáp
+    | "arrange_wires"         // Sắp xếp thứ tự 8 sợi màu
+    | "trim_wires"            // Cắt bằng đầu dây cáp
+    | "crimp_rj45"            // Bấm kìm mạng RJ45
+    | "cable_tester"          // Hộp test cáp 8 đèn LED
+    | "switch_plug"           // Cắm vào Switch thử mạng
+    | "ip_config"             // Cửa sổ cài đặt IPv4 Windows
+    | "subnetting"            // Phân chia mạng con Subnetting
+    | "switch_vlan"           // Phân chia VLAN trên Switch tủ Rack
+    | "router_dhcp"           // Cấu hình Router & DHCP Pool
+    | "troubleshoot_cmd";     // Lệnh CMD chẩn đoán lỗi mạng (Ping/Tracert)
 }
 
 export interface LabLesson {

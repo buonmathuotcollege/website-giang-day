@@ -179,6 +179,185 @@ export function MediaPreview({ currentStep }: MediaPreviewProps) {
           </div>
         );
 
+      case "ip_config":
+        return (
+          <div className="space-y-4">
+            <div className="bg-slate-900 rounded-2xl p-4 sm:p-5 text-white border border-slate-700 space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono border-b border-slate-800 pb-2 text-slate-400">
+                <span>INTERNET PROTOCOL VERSION 4 (TCP/IPv4)</span>
+                <span className="text-emerald-400 font-bold">Static IP</span>
+              </div>
+              <div className="space-y-2 font-mono text-xs">
+                <div className="flex items-center justify-between bg-slate-800 p-2.5 rounded-xl border border-slate-700">
+                  <span className="text-slate-400">IP address:</span>
+                  <span className="text-emerald-400 font-bold text-sm">192.168.1.10</span>
+                </div>
+                <div className="flex items-center justify-between bg-slate-800 p-2.5 rounded-xl border border-slate-700">
+                  <span className="text-slate-400">Subnet mask:</span>
+                  <span className="text-amber-400 font-bold">255.255.255.0</span>
+                </div>
+                <div className="flex items-center justify-between bg-slate-800 p-2.5 rounded-xl border border-slate-700">
+                  <span className="text-slate-400">Default gateway:</span>
+                  <span className="text-blue-400 font-bold">192.168.1.1</span>
+                </div>
+                <div className="flex items-center justify-between bg-slate-800 p-2.5 rounded-xl border border-slate-700">
+                  <span className="text-slate-400">Preferred DNS:</span>
+                  <span className="text-purple-400 font-bold">8.8.8.8</span>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-[11px] font-medium text-slate-700">
+              <div className="p-2 rounded-xl bg-blue-50 border border-blue-200">
+                🏡 <strong>IP:</strong> Số nhà riêng biệt của máy tính trong mạng.
+              </div>
+              <div className="p-2 rounded-xl bg-purple-50 border border-purple-200">
+                🚪 <strong>Gateway:</strong> Cổng làng để đi ra mạng ngoài (Internet).
+              </div>
+            </div>
+          </div>
+        );
+
+      case "subnetting":
+        return (
+          <div className="space-y-4">
+            <div className="bg-slate-900 rounded-2xl p-4 sm:p-5 text-white border border-slate-700 space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono border-b border-slate-800 pb-2 text-slate-400">
+                <span>CHIA MẠNG CON: 192.168.1.0/24 ➔ /26</span>
+                <span className="text-amber-400 font-bold">4 Subnet (64 IP/mạng)</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono text-[11px]">
+                <div className="p-2.5 rounded-xl bg-slate-800 border border-emerald-500/50">
+                  <div className="font-bold text-emerald-400 mb-1">Mạng 1: Phòng Lab 1</div>
+                  <div className="text-slate-300">Net ID: 192.168.1.0</div>
+                  <div className="text-slate-400">Dải Host: .1 ➔ .62</div>
+                  <div className="text-slate-500 text-[10px]">Broadcast: 192.168.1.63</div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-800 border border-blue-500/50">
+                  <div className="font-bold text-blue-400 mb-1">Mạng 2: Phòng Lab 2</div>
+                  <div className="text-slate-300">Net ID: 192.168.1.64</div>
+                  <div className="text-slate-400">Dải Host: .65 ➔ .126</div>
+                  <div className="text-slate-500 text-[10px]">Broadcast: 192.168.1.127</div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-800 border border-purple-500/50">
+                  <div className="font-bold text-purple-400 mb-1">Mạng 3: Giảng Viên</div>
+                  <div className="text-slate-300">Net ID: 192.168.1.128</div>
+                  <div className="text-slate-400">Dải Host: .129 ➔ .190</div>
+                  <div className="text-slate-500 text-[10px]">Broadcast: 192.168.1.191</div>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-800 border border-amber-500/50">
+                  <div className="font-bold text-amber-400 mb-1">Mạng 4: Máy Chủ Lab</div>
+                  <div className="text-slate-300">Net ID: 192.168.1.192</div>
+                  <div className="text-slate-400">Dải Host: .193 ➔ .254</div>
+                  <div className="text-slate-500 text-[10px]">Broadcast: 192.168.1.255</div>
+                </div>
+              </div>
+            </div>
+            <div className="text-xs text-center font-mono font-bold text-slate-800 bg-amber-50 border border-amber-200 p-2.5 rounded-xl">
+              Subnet Mask mới: <strong>255.255.255.192 (/26)</strong> (Mượn 2 bit mạng)
+            </div>
+          </div>
+        );
+
+      case "switch_vlan":
+        return (
+          <div className="space-y-4">
+            <div className="bg-slate-900 rounded-2xl p-4 sm:p-5 text-white border border-slate-700 space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono border-b border-slate-800 pb-2 text-slate-400">
+                <span>SWITCH CISCO/TP-LINK 24-PORT GIGABIT</span>
+                <span className="text-emerald-400 font-bold">VLAN ISOLATION</span>
+              </div>
+              <div className="grid grid-cols-6 sm:grid-cols-12 gap-1.5 py-2">
+                {[...Array(24)].map((_, i) => {
+                  const portNum = i + 1;
+                  const isVlan10 = portNum <= 12;
+                  const isVlan20 = portNum > 12 && portNum <= 20;
+                  const isTrunk = portNum > 20;
+                  return (
+                    <div
+                      key={portNum}
+                      className={`flex flex-col items-center justify-center p-1 rounded border text-[9px] font-mono ${
+                        isVlan10
+                          ? "bg-blue-950/80 border-blue-500 text-blue-300"
+                          : isVlan20
+                          ? "bg-purple-950/80 border-purple-500 text-purple-300"
+                          : "bg-emerald-950/80 border-emerald-500 text-emerald-300"
+                      }`}
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-current mb-0.5 animate-pulse"></div>
+                      <span>{portNum}</span>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex flex-wrap items-center justify-between text-[10px] font-mono text-slate-300 pt-1 border-t border-slate-800">
+                <span className="text-blue-400 font-bold">Port 1-12: VLAN 10 (Sinh Viên)</span>
+                <span className="text-purple-400 font-bold">Port 13-20: VLAN 20 (Giáo Viên)</span>
+                <span className="text-emerald-400 font-bold">Port 21-24: Trunk Uplink</span>
+              </div>
+            </div>
+            <div className="text-xs text-center font-mono font-bold text-slate-800 bg-slate-100 border border-slate-200 p-2.5 rounded-xl">
+              Phân tách miền phát sóng Broadcast: Hai phòng không nhìn thấy nhau, bảo mật tuyệt đối!
+            </div>
+          </div>
+        );
+
+      case "router_dhcp":
+        return (
+          <div className="space-y-4">
+            <div className="bg-slate-900 rounded-2xl p-4 sm:p-5 text-white border border-slate-700 space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono border-b border-slate-800 pb-2 text-slate-400">
+                <span>ROUTER GATEWAY - DHCP POOL</span>
+                <span className="text-emerald-400 font-bold">CẤP PHÁT TỰ ĐỘNG</span>
+              </div>
+              <div className="space-y-2 font-mono text-xs">
+                <div className="p-2.5 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
+                  <span className="text-slate-400">Gateway IP:</span>
+                  <span className="text-white font-bold">192.168.1.1</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
+                  <span className="text-slate-400">Dải IP cấp phát (Pool):</span>
+                  <span className="text-emerald-400 font-bold">192.168.1.100 ➔ 192.168.1.200</span>
+                </div>
+                <div className="p-2.5 rounded-xl bg-slate-800 border border-slate-700 flex justify-between">
+                  <span className="text-slate-400">Thời gian thuê (Lease time):</span>
+                  <span className="text-amber-400 font-bold">86400 giây (24 giờ)</span>
+                </div>
+              </div>
+            </div>
+            <div className="text-xs text-center font-mono font-bold text-blue-900 bg-blue-50 border border-blue-200 p-2.5 rounded-xl">
+              Quy trình 4 bước DORA: Discover ➔ Offer ➔ Request ➔ Acknowledge
+            </div>
+          </div>
+        );
+
+      case "troubleshoot_cmd":
+        return (
+          <div className="space-y-4">
+            <div className="bg-slate-950 rounded-2xl p-4 sm:p-5 text-emerald-400 font-mono text-xs border border-slate-800 shadow-inner">
+              <div className="flex items-center gap-1.5 pb-2 border-b border-slate-800 text-slate-500 mb-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                <span className="text-[10px] ml-2 text-slate-400">Command Prompt - C:\Windows\System32\cmd.exe</span>
+              </div>
+              <p className="text-slate-300">C:\Users\Student&gt; <span className="text-white font-bold">ping 192.168.1.1 -n 4</span></p>
+              <div className="py-2 space-y-1 text-slate-300">
+                <p>Pinging 192.168.1.1 with 32 bytes of data:</p>
+                <p>Reply from 192.168.1.1: bytes=32 <span className="text-emerald-400 font-bold">time&lt;1ms</span> TTL=64</p>
+                <p>Reply from 192.168.1.1: bytes=32 <span className="text-emerald-400 font-bold">time&lt;1ms</span> TTL=64</p>
+                <p>Reply from 192.168.1.1: bytes=32 <span className="text-emerald-400 font-bold">time&lt;1ms</span> TTL=64</p>
+                <p>Reply from 192.168.1.1: bytes=32 <span className="text-emerald-400 font-bold">time&lt;1ms</span> TTL=64</p>
+              </div>
+              <p className="text-slate-400 text-[10px] border-t border-slate-800 pt-1.5">
+                Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+              </p>
+            </div>
+            <div className="text-xs text-center font-mono font-bold text-emerald-900 bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl">
+              ✓ Độ trễ &lt;1ms không mất gói ➔ Tuyến cáp và Card mạng hoạt động hoàn hảo!
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }

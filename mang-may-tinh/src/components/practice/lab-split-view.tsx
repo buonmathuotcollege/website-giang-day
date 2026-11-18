@@ -3,6 +3,7 @@
 import * as React from "react";
 import { StepByStepGuide } from "@/components/practice/step-by-step-guide";
 import { MediaPreview } from "@/components/practice/media-preview";
+import { PracticeForm } from "@/components/practice/practice-form";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ArrowLeft, ArrowRight, ShieldCheck, CheckSquare } from "lucide-react";
@@ -21,6 +22,7 @@ export function LabSplitView({ lesson }: LabSplitViewProps) {
   const [currentStepIndex, setCurrentStepIndex] = React.useState(0);
   const [completedSteps, setCompletedSteps] = React.useState<Record<number, boolean>>({});
   const [isSavedLocally, setIsSavedLocally] = React.useState(false);
+  const [showReportForm, setShowReportForm] = React.useState(false);
 
   const storageKey = `MANG_LAB_PROGRESS_${lesson.code}`;
 
@@ -170,7 +172,7 @@ export function LabSplitView({ lesson }: LabSplitViewProps) {
             })}
           </div>
 
-          {/* Nút tiến bước */}
+          {/* Nút tiến bước / Nghiệm thu */}
           {currentStepIndex < totalSteps - 1 ? (
             <Button
               size="touch"
@@ -185,19 +187,52 @@ export function LabSplitView({ lesson }: LabSplitViewProps) {
               size="touch"
               className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
               onClick={() => {
-                if (completedCount === totalSteps) {
-                  alert("Chúc mừng nhóm KTV đã hoàn thành 100% các bước bài thực hành mạng!");
-                } else {
-                  alert(`Nhóm KTV đã hoàn thành ${completedCount}/${totalSteps} bước. Hãy kiểm tra các bước còn lại trước khi nghiệm thu!`);
-                }
+                setShowReportForm(true);
+                // Cuộn xuống form nghiệm thu
+                setTimeout(() => {
+                  document.getElementById("lab-practice-report-section")?.scrollIntoView({ behavior: "smooth" });
+                }, 100);
               }}
             >
               <CheckSquare className="w-4 h-4 mr-2" />
-              <span>Nghiệm Thu Bài Lab</span>
+              <span>Nghiệm Thu & Chấm Điểm</span>
             </Button>
           )}
         </div>
       </Card>
+
+      {/* ==================================================================== */}
+      {/* 4. KHU VỰC BIỂU MẪU BÁO CÁO NGHIỆM THU (PRACTICE FORM)                */}
+      {/* ==================================================================== */}
+      <div id="lab-practice-report-section" className="pt-2">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
+            <span>📋</span>
+            <span>Báo Cáo Nghiệm Thu Bàn Kỹ Thuật (KTV 1 - 2 - 3)</span>
+          </h3>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowReportForm(!showReportForm)}
+            className="text-xs font-bold border-slate-300"
+          >
+            {showReportForm ? "Ẩn Phiếu Nghiệm Thu" : "Mở Phiếu Nghiệm Thu"}
+          </Button>
+        </div>
+
+        {showReportForm && (
+          <div className="animate-in fade-in duration-300">
+            <PracticeForm
+              labCode={lesson.code}
+              labTitle={lesson.title}
+              onSuccess={() => {
+                // Tự động đánh dấu bước cuối đã xong nếu có
+                handleToggleComplete(lesson.steps[totalSteps - 1].id);
+              }}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
