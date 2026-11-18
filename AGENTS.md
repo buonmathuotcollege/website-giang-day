@@ -59,3 +59,15 @@
 * **An Toàn Dữ Liệu Hai Lớp (Dual-Layer Persistence - Zero Data Loss):** Lưu đồng thời `localStorage` và Cloudflare D1.
 * **Bảo mật:** Mật mã `TEACHER_SECRET` bảo vệ các API quản trị và trang `/admin/*`. Tuyệt đối không để lộ khóa bí mật ra HTML/JS client.
 * **Tiêu chuẩn Code:** Kiểm tra `npm run build` trước khi hoàn tất: Đảm bảo **0 lỗi (0 errors)** và **0 cảnh báo (0 warnings)**.
+
+---
+
+## 6. MÔI TRƯỜNG THỰC HÀNH PHÒNG MÁY (WINDOWS 10 MANDATE)
+* **Hệ điều hành thực hành bắt buộc:** Chuẩn hóa **100% trên Windows 10** (phiên bản Windows 10 Pro / Enterprise được cài đặt tại các phòng máy thực hành).
+* **Quy chuẩn Giao diện & Thao tác:**
+  - Mọi hướng dẫn từng bước (Step-by-step), phím tắt, cửa sổ thiết lập, ảnh chụp màn hình thực tế và sơ đồ trực quan **BẮT BUỘC theo chuẩn Windows 10**:
+    - **Cửa sổ Settings Windows 10:** Giao diện phẳng, danh mục `Network & Internet` với menu điều hướng bên trái và thanh tìm kiếm chính giữa.
+    - **Control Panel & Network and Sharing Center:** Giữ nguyên giao diện cổ điển của Windows 10.
+    - **File Explorer Windows 10:** Thanh công cụ Ribbon cổ điển (File, Home, Share, View).
+    - **Command Prompt (CMD):** Giao diện console đen truyền thống của Windows 10 (`cmd.exe`).
+  - ❌ **TUYỆT ĐỐI KHÔNG DÙNG GIAO DIỆN WINDOWS 11:** Không dùng ảnh chụp hoặc mô tả giao diện Windows 11 (Taskbar căn giữa, menu Settings bo tròn kiểu Win 11, menu chuột phải rút gọn) để tránh gây nhầm lẫn, bỡ ngỡ cho học sinh khi thao tác trên máy phòng lab.
