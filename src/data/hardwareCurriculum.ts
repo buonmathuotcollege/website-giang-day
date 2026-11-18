@@ -59,14 +59,38 @@ export interface ExamCase {
   };
 }
 
+export interface HelpdeskStep {
+  id: string;
+  stepNumber: number;
+  rubricCriteria: string;
+  maxScore: number;
+  title: string;
+  role: string;
+  timeEstimate: string;
+  motto: string;
+  summary: string;
+  actions: string[];
+  checkpoint?: {
+    name: string;
+    requirement: string;
+    signoff: string;
+  };
+  dangerNote: string;
+  proTip: string;
+  imageSrc: string;
+  secondaryImageSrc?: string;
+  imageAlt: string;
+  tags: string[];
+}
+
 export const HARDWARE_METADATA = {
   courseCode: 'OL-01_PHAN_CUNG',
   courseName: 'Ôn luyện Năng lực Nghề: Phần cứng Máy tính',
   teacher: 'CN. Phạm Tiến Đông',
   institution: 'Cổng Giảng Dạy & Thực Hành CNTT',
   standard: 'Phụ lục II, Thông tư số 55/2026/TT-BGDĐT ngày 30/6/2026 của Bộ trưởng Bộ GD&ĐT',
-  slogan: 'Kỹ năng Kỹ thuật viên chuẩn hóa: Thực chiến từ số 0 — Quy trình A-Z',
-  philosophy: 'Đọc tới đâu, tay làm được ngay tới đó. Không học vẹt lý thuyết suông — Thùng máy tính như bộ Lego 5 món lớn và 4 sợi dây nguồn.',
+  slogan: 'Kỹ năng Kỹ thuật viên chuẩn hóa: Thực chiến từ số 0 — Mô hình Helpdesk Workflow 5 Bước',
+  philosophy: 'Đào tạo theo năng lực (CBT - Competency-Based Training). Học theo luồng công việc thực tế, khớp 100% với 5 tiêu chí Rubric sát hạch 4 giờ.',
 };
 
 export const THREE_SURVIVAL_RULES: RuleItem[] = [
@@ -95,24 +119,24 @@ export const THREE_SURVIVAL_RULES: RuleItem[] = [
 
 export const THREE_SAFETY_CHECKPOINTS: StopPoint[] = [
   {
-    step: 2,
-    name: 'ĐIỂM DỪNG AN TOÀN 1: BẢO TOÀN DỮ LIỆU',
-    rule: 'Trước khi mổ máy phần cứng hoặc phân vùng format ổ đĩa',
-    condition: 'Đã đếm số file, dung lượng MB trên Desktop, Documents; đã sao lưu sang ổ D hoặc USB WinPE; đối chiếu khớp 100% và mở thử 2 file kiểm tra.',
-    signoff: 'Giáo viên hướng dẫn / Trưởng xưởng ký xác nhận mới được làm bước tiếp theo.',
+    step: 1,
+    name: 'ĐIỂM DỪNG AN TOÀN 1: BẢO TOÀN DỮ LIỆU & AN TOÀN ĐIỆN',
+    rule: 'Trước khi tháo lắp linh kiện hoặc phân vùng format ổ đĩa',
+    condition: 'Đã rút phích cắm điện, xả tụ 3 lần; đã đếm số file, dung lượng MB trên Desktop, Documents; đã sao lưu sang ổ D hoặc USB WinPE; đối chiếu khớp 100% và mở thử 2 file kiểm tra.',
+    signoff: 'Giáo viên hướng dẫn kiểm tra và ký xác nhận mới được chuyển sang Bước tiếp theo.',
   },
   {
-    step: 4,
-    name: 'ĐIỂM DỪNG AN TOÀN 2: KIỂM TRA TRƯỚC KHI CẮM ĐIỆN',
-    rule: 'Trước khi cắm dây nguồn và bật điện thử máy',
-    condition: 'RAM đã sập khóa 2 tai nhựa; quạt CPU_FAN đã cắm đúng chân trên bo mạch; không có ốc vít hay vật kim loại rơi bên trong thùng máy; 4 sợi dây nguồn cắm chắc chắn.',
+    step: 3,
+    name: 'ĐIỂM DỪNG AN TOÀN 2: KIỂM TRA TRƯỚC KHI CẮM ĐIỆN BẬT MÁY',
+    rule: 'Trước khi cắm dây nguồn và bật điện thử máy sau khi thao tác',
+    condition: 'RAM đã sập khóa 2 tai nhựa; quạt CPU_FAN đã cắm đúng cọc trên bo mạch; không có ốc vít hay vật kim loại rơi bên trong thùng máy; 4 sợi dây nguồn (24 pin, 8 pin CPU, SATA, F_PANEL) cắm chắc chắn.',
     signoff: 'Giáo viên kiểm tra thùng máy bằng mắt trong 10 giây và ký xác nhận cho phép cắm điện.',
   },
   {
-    step: 7,
+    step: 5,
     name: 'ĐIỂM DỪNG AN TOÀN 3: NGHIỆM THU 5 ĐIỂM TRƯỚC BÀN GIAO',
-    rule: 'Trước khi giao trả máy cho khách / Nộp bài thi',
-    condition: 'Nghiệm thu đủ 5 điểm vàng: (1) Quạt quay êm ái; (2) HWMonitor CPU < 75°C khi tải; (3) Dữ liệu khách nguyên vẹn 100%; (4) Device Manager sạch bóng chấm than vàng; (5) Bàn kỹ thuật dọn sạch sẽ, phiếu A-Z ký đủ chữ ký.',
+    rule: 'Trước khi giao trả máy cho khách / Nộp bài thi kết thúc',
+    condition: 'Nghiệm thu đủ 5 điểm vàng: (1) Quạt quay êm ái; (2) HWMonitor CPU < 75°C khi tải; (3) Dữ liệu khách nguyên vẹn 100%; (4) Device Manager sạch bóng chấm than vàng; (5) Bàn kỹ thuật dọn sạch sẽ, biên bản A4 ký đủ chữ ký 3 bên KTV.',
     signoff: 'Biên bản bàn giao dịch vụ A-Z được cả Kỹ thuật viên và Giáo viên nghiệm thu phê duyệt.',
   },
 ];
@@ -162,6 +186,387 @@ export const FIVE_CLASSIC_CASES: ClassicCase[] = [
     cause: 'Lớp keo tản nhiệt giữa CPU và đế nhôm bị khô cứng nứt nẻ; quạt CPU bám két búi bụi; bung chốt gài tản nhiệt hoặc quên cắm dây quạt vào cọc CPU_FAN.',
     action: '1. Tháo quạt tản nhiệt, lau sạch lớp keo khô cũ bằng giấy khô/cồn. 2. Vệ sinh quạt gió (giữ cánh quạt khi xịt). 3. Bơm 1 giọt keo tản nhiệt bằng hạt đậu xanh vào giữa lưng CPU. 4. Khóa tản nhiệt ấn chéo 4 góc đối xứng, cắm chặt dây CPU_FAN.',
     tool: 'Tuýp keo tản nhiệt (MX-4 hoặc tương đương), khăn giấy mềm lau keo, bóng thổi bụi.',
+  },
+];
+
+// ============================================================================
+// PHÂN KHU 1: SỔ TAY NGHIỆP VỤ KỸ THUẬT VIÊN (5 BƯỚC KHỚP 5 TIÊU CHÍ RUBRIC)
+// ============================================================================
+export const HELPDESK_5_STEPS: HelpdeskStep[] = [
+  {
+    id: 'step_1',
+    stepNumber: 1,
+    rubricCriteria: 'Tiêu chí 1: Quy trình & An toàn kỹ thuật',
+    maxScore: 2.0,
+    title: 'BƯỚC 1: TIẾP NHẬN & ĐẢM BẢO AN TOÀN',
+    role: 'KTV 3 (Ghi chép & Thông số) & KTV 2 (Kiểm soát an toàn)',
+    timeEstimate: '30 phút',
+    motto: 'XẢ ĐIỆN TĨNH – BẢO TOÀN DỮ LIỆU – LẬP PHIẾU TIẾP NHẬN',
+    summary: 'Khám vỏ máy, xả tĩnh điện ESD, an toàn điện (Rút - Bấm - Khay), phân loại 4 kịch bản khởi động và sao lưu dữ liệu khách trước khi thao tác phần cứng.',
+    actions: [
+      'Chống tĩnh điện (ESD): Chạm tay vào phần kim loại trần của vỏ thùng máy (case) trước khi chạm vào bo mạch; tháo đồng hồ, nhẫn kim loại.',
+      'An toàn điện tuyệt đối (Luật Rút - Bấm - Khay): (1) Rút phích cắm điện AC khỏi nguồn PSU, gạt công tắc I/O sang O; (2) Bấm nút Power trên vỏ case 3 lần để xả sạch điện tích dư trong tụ nguồn; (3) Mọi con ốc tháo ra bỏ ngay vào khay phân loại.',
+      'Khám ngoại quan & lập Phiếu Tiếp Nhận: Ghi nhận tình trạng vỏ máy (trầy xước, móp méo, thiếu ốc), số serial linh kiện để tránh tranh chấp.',
+      'Đọc nhanh cấu hình ban đầu: Nhìn số GB phân vùng Ổ C (hệ thống) và Ổ D (dữ liệu), ghi nhận rõ ràng vào phiếu tiếp nhận.',
+      'Bảo toàn dữ liệu (Luật giữ nồi cơm): Copy toàn bộ tài liệu ngoài Desktop, Documents, Downloads sang ổ D hoặc USB WinPE. Kiểm tra đối chiếu số file và dung lượng MB khớp 100%.',
+    ],
+    checkpoint: {
+      name: 'ĐIỂM DỪNG AN TOÀN 1 (BẢO TOÀN DỮ LIỆU & XẢ ĐIỆN)',
+      requirement: 'Dây nguồn đã rút, đã bấm xả điện 3 lần; dữ liệu khách đã copy đủ 100% sang ổ D hoặc USB và mở thử đọc được 2 tệp.',
+      signoff: 'Giáo viên hướng dẫn kiểm tra và ký duyệt trước khi chuyển sang Bước tiếp theo.',
+    },
+    dangerNote: 'VI PHẠM NGUY HIỂM: Thò tay tháo lắp linh kiện khi chưa rút điện nguồn hoặc tự ý format ổ đĩa khi chưa sao lưu dữ liệu sẽ bị 0 ĐIỂM tiêu chí An toàn hoặc ĐÌNH CHỈ thi ngay lập tức!',
+    proTip: 'Quy tắc sao lưu sống còn: Luôn dùng lệnh COPY, tuyệt đối không dùng lệnh CUT. Nếu cúp điện giữa chừng khi CUT, file gốc sẽ biến mất vĩnh viễn.',
+    imageSrc: '/images/ol-01/step-1-kham-may.jpg',
+    secondaryImageSrc: '/images/ol-01/step-2-cuu-du-lieu-win10.jpg',
+    imageAlt: 'Khám ngoại quan thùng máy PC, kiểm tra cổng xuất hình và an toàn tĩnh điện',
+    tags: ['An toàn điện', 'Chống tĩnh điện ESD', 'Bảo toàn dữ liệu', 'Phiếu tiếp nhận'],
+  },
+  {
+    id: 'step_2',
+    stepNumber: 2,
+    rubricCriteria: 'Tiêu chí 2: Chẩn đoán nguyên nhân sự cố',
+    maxScore: 2.5,
+    title: 'BƯỚC 2: CHẨN ĐOÁN NGUYÊN NHÂN',
+    role: 'KTV 1 (Thao tác chính) & KTV 2 (Kiểm soát chẩn đoán)',
+    timeEstimate: '30 - 45 phút',
+    motto: 'NHÌN ĐÈN – NGHE BÍP – KHOANH VÙNG ĐÚNG BỆNH',
+    summary: 'Khoanh vùng theo 4 kịch bản khởi động, đọc tín hiệu bo mạch phòng máy (MSI EZ Debug LED, Buzzer WINNFOX, ASUS POST), xác định chính xác 1 câu nguyên nhân gốc rễ.',
+    actions: [
+      'Phân loại 4 kịch bản khởi động trong 10 giây: (A) Vào Windows bình thường; (B) Im re quạt không quay (Nguồn / dây Power SW); (C) Quạt quay màn hình đen No Signal (RAM / cắm nhầm cổng xuất hình); (D) Báo lỗi chữ trắng No Bootable Device / Sai ngày giờ F1.',
+      'Đọc đèn báo bo mạch MSI H510M Pro: Quan sát cụm 4 đèn EZ Debug LED góc phải mainboard (CPU -> DRAM -> VGA -> BOOT). Đèn dừng ở vị trí nào là linh kiện đó đang có sự cố.',
+      'Nghe tiếng bíp bo mạch WINNFOX H510: Lắng nghe loa Buzzer (1 bíp dài 2 bíp ngắn = lỗi RAM hoặc card VGA; bíp dồn dập liên tục = nguồn sụt áp hoặc chập RAM; 1 bíp ngắn ngân vang = máy POST thành công).',
+      'Đọc thông báo màn hình bo mạch ASUS Prime H510: Đèn Q-LED Core nhấp nháy hoặc hiển thị mã lỗi POST trên màn hình (Keyboard Error, Over Temperature Error, USB Device Over Current).',
+      'Khoanh vùng nguyên nhân gốc rễ: Không tháo mò mẫm dàn trải. Xác định rõ lỗi do RAM tiếp xúc kém, lỏng cáp SATA, cạn pin CMOS CR2032 hay quạt CPU bám bụi quá nhiệt.',
+      'Sử dụng công cụ kiểm tra chuẩn: BIOS/UEFI kiểm tra nhận diện ổ cứng và dung lượng RAM; CrystalDiskInfo kiểm tra sức khỏe ổ cứng (phải báo Good màu xanh); HWMonitor đo nhiệt độ.',
+    ],
+    dangerNote: 'LỖI PHỔ BIẾN: Bật máy thấy màn hình đen vội vã tháo tung CPU và nguồn ra sửa, trong khi thực tế chỉ do chân RAM bị bám bụi oxy hóa hoặc cắm nhầm dây màn hình vào cổng Main thay vì cổng Card đồ họa rời GT 730!',
+    proTip: 'Cắm dây màn hình: Nếu máy có Card màn hình rời (VGA GT 730 nằm ngang ở dưới), BẮT BUỘC cắm dây HDMI/VGA vào cổng của Card rời. Cắm lên cổng dọc của Mainboard máy sẽ không xuất hình!',
+    imageSrc: '/images/ol-01/main-h510-compare.jpg',
+    secondaryImageSrc: '/images/ol-01/step-3-cha-ram-cuc-tay.jpg',
+    imageAlt: 'So sánh 3 dòng bo mạch chủ H510 phòng lab: MSI EZ Debug LED, ASUS Prime, WINNFOX Buzzer',
+    tags: ['EZ Debug LED', 'Buzzer Bíp', 'Khoanh vùng lỗi', 'CrystalDiskInfo'],
+  },
+  {
+    id: 'step_3',
+    stepNumber: 3,
+    rubricCriteria: 'Tiêu chí 3: Thao tác xử lý kỹ thuật',
+    maxScore: 3.0,
+    title: 'BƯỚC 3: THAO TÁC XỬ LÝ KỸ THUẬT',
+    role: 'KTV 1 (Thao tác chính) & KTV 2 (Poka-Yoke & An toàn)',
+    timeEstimate: '90 - 120 phút',
+    motto: 'THÁO ĐÚNG TRÌNH TỰ – TRA KEO ĐẬU XANH – CÀI WIN ĐÚNG Ổ C',
+    summary: 'Thực hiện tháo lắp phần cứng an toàn, vệ sinh chân RAM/VGA bằng gôm tẩy, tra keo tản nhiệt hạt đậu xanh, đấu nối 4 sợi dây nguồn + 9 chân F_PANEL, cài đặt Windows 10 UEFI/GPT và cấu hình máy in.',
+    actions: [
+      'Kỹ năng tháo máy 6 bước chuẩn mực: Dây nguồn & ngoại vi -> Nắp thùng máy -> Card đồ họa rời GT 730 (nhả lẫy đuôi khe PCIe) -> Cáp dữ liệu & dây nguồn SATA -> Ổ cứng SSD/HDD -> RAM (mở 2 tai khóa) -> Quạt tản nhiệt CPU (vặn/ấn chốt chéo) -> Bo mạch chủ H510.',
+      'Kỹ năng lắp máy 7 bước chuẩn hóa: Bắt ốc đồng đệm cố định Mainboard -> Đặt CPU đúng tam giác vàng -> Bơm 1 giọt keo tản nhiệt bằng hạt đậu xanh -> Gài quạt CPU đối xứng và cắm dây cọc CPU_FAN -> Lắp RAM ấn đều 2 đầu kêu "tách" sập khóa -> Lắp Card GT 730 sập lẫy -> Bắt ốc SSD vào khay.',
+      'Đấu nối điện & F_PANEL: Cắm đủ 4 sợi dây nguồn (24 chân ATX, 8 chân CPU, nguồn SATA, cụm 9 chân Front Panel: POWER SW, RESET SW, HDD LED, POWER LED). Clear CMOS bằng jumper hoặc tháo pin 5 phút khi cần reset BIOS.',
+      'Vệ sinh cơ khí & chân tiếp xúc: Lấy cục gôm tẩy học sinh chà sạch 2 mặt chân mạ vàng của RAM và Card VGA GT 730; dùng cọ quét sạch bụi khe cắm; ngón tay giữ cánh quạt khi xịt bụi (chống cháy IC bo mạch).',
+      'Cài đặt Windows 10 Pro 64-bit chuẩn UEFI / GPT: Cắm USB cài Win, bấm phím Boot Menu (F8/F11), chọn phân vùng ổ C (nhìn số GB đối chiếu với Bước 1 để Format, tuyệt đối không chạm vào ổ D chứa dữ liệu khách).',
+      'Kiểm tra Driver & Máy in: Device Manager phải sạch bóng 100% dấu chấm than vàng; cài UniKey gõ tiếng Việt, 7-Zip; kết nối máy in, xử lý kẹt lệnh in Print Spooler, Set as default printer (tích xanh) và in bản Test Page.',
+    ],
+    checkpoint: {
+      name: 'ĐIỂM DỪNG AN TOÀN 2 (KIỂM TRA TRƯỚC KHI BẬT ĐIỆN)',
+      requirement: 'RAM đã sập khóa 2 tai nhựa; CPU_FAN đã cắm chặt; không có ốc vít rơi trong case; 4 sợi dây nguồn cắm chuẩn.',
+      signoff: 'Giáo viên kiểm tra bằng mắt trong 10 giây và ký xác nhận cho phép cắm điện thử máy.',
+    },
+    dangerNote: 'VI PHẠM NGUY HIỂM: Cắm ngược chân RAM hoặc ép mạnh tay làm gãy khe cắm; format nhầm phân vùng ổ D làm mất dữ liệu khách; xịt bụi để quạt CPU quay tít sinh dòng điện ngược làm cháy bo mạch!',
+    proTip: 'Cục gôm tẩy học sinh màu trắng là bùa hộ mệnh của KTV phần cứng: 70% sự cố quạt quay màn hình đen chỉ cần chà sạch lớp oxy hóa ở chân RAM là máy lên hình ngay.',
+    imageSrc: '/images/ol-01/workflow-lap-may.jpg',
+    secondaryImageSrc: '/images/ol-01/step-4-tra-keo-hat-dau-xanh.jpg',
+    imageAlt: 'Sơ đồ quy trình lắp máy chuẩn hóa và kỹ thuật tra keo tản nhiệt hạt đậu xanh',
+    tags: ['Tháo lắp PC', 'Tra keo hạt đậu xanh', 'Cắm F_PANEL', 'Cài Win 10 GPT', 'Máy in Test Page'],
+  },
+  {
+    id: 'step_4',
+    stepNumber: 4,
+    rubricCriteria: 'Tiêu chí 4: Kiểm tra & Xác nhận vận hành',
+    maxScore: 1.5,
+    title: 'BƯỚC 4: KIỂM TRA XÁC NHẬN VẬN HÀNH',
+    role: 'KTV 2 (Kiểm soát an toàn) & KTV 1 (Thao tác test)',
+    timeEstimate: '20 - 30 phút',
+    motto: 'TEST TẢI NHIỆT ĐỘ – KIỂM TRA PHẦN CỨNG – IN TEST PAGE',
+    summary: 'Chạy thử tải máy tính, kiểm tra thông số nhiệt độ HWMonitor CPU < 75°C, sức khỏe ổ đĩa CrystalDiskInfo Good, Device Manager sạch chấm than, in Test Page máy in thành công.',
+    actions: [
+      'Kiểm tra POST & Nhận diện thiết bị: Bo mạch khởi động êm ái, vào BIOS kiểm tra nhận đủ mã CPU, nhận đủ 8GB/16GB RAM (kênh đơn / Dual Channel), ổ SSD hiển thị đúng tên nhà sản xuất.',
+      'Khởi động Windows 10 & Kiểm tra độ ổn định: Máy vào thẳng desktop trong vòng < 20 giây; Device Manager sạch 100% dấu chấm than vàng (đầy đủ Driver Chipset, Audio, LAN, VGA NVIDIA GT 730).',
+      'Đo tải & kiểm soát nhiệt độ bằng HWMonitor / Core Temp: Cho CPU hoạt động tải thử 5 phút, nhiệt độ CPU phải duy trì ổn định DƯỚI 75°C. (Nếu vọt lên > 85°C là lỗi tra keo quá dày hoặc gắn tản nhiệt lỏng chốt).',
+      'Kiểm tra sức khỏe ổ cứng: Bật CrystalDiskInfo, ổ SSD/HDD phải ở trạng thái Good (Màu xanh, nhiệt độ < 45°C, 0 sector lỗi).',
+      'Kiểm tra thiết bị ngoại vi & Máy in: Mở Devices and Printers, bấm in "Print Test Page" máy in Canon/HP in ra bản in sắc nét, không kẹt giấy; kiểm tra toàn bộ phím, chuột, cổng USB, âm thanh và mạng Internet.',
+      'Tạo điểm khôi phục hệ thống (System Restore Point): Đặt tên là "MAY_CHAY_TOT" trong System Properties để bảo vệ máy.',
+    ],
+    dangerNote: 'LỖI KỸ THUẬT: Nhiệt độ CPU khi tải vượt quá 80°C chứng tỏ tra keo sai quy chuẩn hoặc gài lệch chốt tản nhiệt, bắt buộc phải tháo ra xử lý lại trước khi chuyển sang bước bàn giao.',
+    proTip: 'Đừng chỉ nhìn máy bật lên hình là tưởng đã xong. Máy chạy mát và ổn định dưới 75°C mới là thước đo đẳng cấp tay nghề của kỹ thuật viên!',
+    imageSrc: '/images/ol-01/step-7-hwmonitor-nhiet-do.jpg',
+    secondaryImageSrc: '/images/ol-01/step-6-may-in-test-page.jpg',
+    imageAlt: 'Kiểm tra nhiệt độ CPU dưới 75 độ C trên HWMonitor và in trang Test Page máy in thành công',
+    tags: ['HWMonitor < 75°C', 'CrystalDiskInfo Good', 'In Test Page', 'Device Manager sạch'],
+  },
+  {
+    id: 'step_5',
+    stepNumber: 5,
+    rubricCriteria: 'Tiêu chí 5: Bàn giao & Hồ sơ kỹ thuật',
+    maxScore: 1.0,
+    title: 'BƯỚC 5: BÀN GIAO & LẬP HỒ SƠ KỸ THUẬT',
+    role: 'KTV 3 (Lập biên bản) & Toàn nhóm KTV',
+    timeEstimate: '15 - 20 phút',
+    motto: 'BÀN GIAO DỮ LIỆU – DỌN SẠCH BÀN MÁY – KÝ BIÊN BẢN A4',
+    summary: 'Đóng thùng case vặn đủ ốc, dọn sạch đồ nghề bàn kỹ thuật, khôi phục dữ liệu khách hàng nguyên vẹn, lập biên bản nghiệm thu A4 có đủ chữ ký 3 bên KTV và Giảng viên.',
+    actions: [
+      'Hoàn thiện cơ khí thùng máy: Đóng nắp hông case vặn đủ ốc, bó gọn dây cáp bên trong bằng dây rút nhựa để luồng gió đối lưu thông thoáng, quạt không cọ dây điện.',
+      'Tác phong nghề nghiệp 5S: Thu dọn toàn bộ tua-vít, kềm, nhíp, tuýp keo tản nhiệt và khay ốc về đúng hộp đồ nghề; lau sạch bụi bẩn trên mặt bàn kỹ thuật.',
+      'Bàn giao và đối chiếu dữ liệu: Chép trả dữ liệu từ thư mục sao lưu ra Desktop và Documents của khách; mở thử 2 tệp tài liệu Word/Excel trước sự chứng kiến của khách/giáo viên.',
+      'Lập Phiếu Dịch Vụ Kỹ Thuật & Biên Bản Nghiệm Thu A4: Ghi chép trung thực, đầy đủ các thông số: Cấu hình ban đầu, lỗi chẩn đoán, linh kiện đã thay/lắp thêm, nhiệt độ test tải, tình trạng máy in.',
+      'Ký xác nhận 3 bên: KTV 1 (thao tác chính), KTV 2 (kiểm soát an toàn Poka-Yoke), KTV 3 (ghi chép báo cáo) cùng ký tên và trình Giáo viên hướng dẫn nghiệm thu phê duyệt.',
+    ],
+    checkpoint: {
+      name: 'ĐIỂM DỪNG AN TOÀN 3 (NGHIỆM THU 5 ĐIỂM VÀNG TRƯỚC BÀN GIAO)',
+      requirement: 'Đủ 5 điểm: Quạt êm; HWMonitor < 75°C; Dữ liệu khách nguyên vẹn 100%; Device Manager sạch chấm than; Bàn máy dọn sạch sẽ, biên bản A4 ký đủ chữ ký.',
+      signoff: 'Biên bản bàn giao A4 được Giáo viên nghiệm thu phê duyệt.',
+    },
+    dangerNote: 'LỖI TÁC PHONG: Để quên ốc vít, tua-vít trong thùng máy hoặc bỏ rác bừa bãi trên bàn kỹ thuật sẽ bị trừ toàn bộ điểm tiêu chí Bàn giao!',
+    proTip: 'Khách hàng và nhà tuyển dụng đánh giá kỹ thuật viên qua 2 điều: Máy chạy êm ái và Bàn làm việc ngăn nắp, sạch sẽ. Tác phong tạo nên uy tín!',
+    imageSrc: '/images/ol-01/step-5-cai-win10-partition.jpg',
+    secondaryImageSrc: '/images/ol-01/guide-fpanel-diagram.jpg',
+    imageAlt: 'Nghiệm thu bàn giao thiết bị, đối chiếu dữ liệu và lập biên bản nghiệm thu kỹ thuật A4',
+    tags: ['Biên bản A4', 'Tác phong 5S', 'Bàn giao dữ liệu', 'Chữ ký 3 bên KTV'],
+  },
+];
+
+// ============================================================================
+// PHÂN KHU 2: NGÂN HÀNG 6 ĐỀ THI SÁT HẠCH THỰC CHIẾN (CA THI 4 GIỜ)
+// ============================================================================
+export const PRACTICAL_EXAM_TICKETS: ExamCase[] = [
+  {
+    id: 'ticket_pc01',
+    code: 'ĐỀ SÁT HẠCH 01',
+    title: 'Ca bệnh Màn hình đen (RAM tiếp xúc kém) & Nâng cấp thêm RAM 8GB DDR4 + Cứu tài liệu Kế toán',
+    customerProblem: 'Khách hàng mang máy bàn phòng lab đến xưởng phản ánh: Sáng nay bấm nút nguồn thì quạt trong máy vẫn quay vù vù nhưng màn hình đen thui (báo No Signal). Trong máy có thư mục "BAO_CAO_TAI_CHINH_2026" ngoài Desktop cực kỳ quan trọng cần cứu gấp. Khách có mang kèm theo 1 thanh RAM 8GB DDR4 Bus 2666 nhờ kỹ thuật viên lắp nâng cấp.',
+    dataTarget: 'Desktop\\BAO_CAO_TAI_CHINH_2026 (12 tệp Excel, 145 MB) -> Sao lưu an toàn sang Ổ D:\\BACKUP_KHACH_HANG',
+    hardwareTask: 'Xử lý dứt điểm lỗi màn hình đen cho máy lên hình; sau đó lắp thêm 1 thanh RAM 8GB DDR4 vào khe số 2 (nghe 2 tiếng "tách" sập tai khóa).',
+    softwareTask: 'Kiểm tra Device Manager sạch bóng chấm than vàng; cài đặt bộ gõ tiếng Việt UniKey; tạo điểm khôi phục hệ thống MAY_CHAY_TOT.',
+    verificationTask: 'Nhiệt độ CPU ổn định < 75°C, BIOS/Windows nhận đủ tổng 16GB RAM (8GB gốc + 8GB mới), đối chiếu file sao lưu khớp 100%.',
+    initialState: {
+      powerStatus: 'Đèn nguồn sáng, quạt CPU quay',
+      screenStatus: 'Màn hình đen thui, thông báo "No Signal"',
+      ramDetected: 'Chân RAM bị bụi bẩn oxy hóa bám chân mạ vàng',
+      diskConfig: 'C: 120 GB (Hệ thống) | D: 380 GB (Dữ liệu)',
+      fanStatus: 'Quạt quay mạnh bình thường',
+      tempStatus: 'Chưa đo được do máy chưa lên hình',
+    },
+    rootCause: 'Chân mạ vàng của thanh RAM bị oxy hóa tiếp xúc kém, hoặc khe cắm RAM bị bám bụi khiến bo mạch không nhận diện được bộ nhớ RAM để xuất hình ảnh.',
+    correctAction: 'Rút điện, bấm xả tụ 3 lần. Tháo thanh RAM, dùng cục gôm tẩy học sinh chà sạch 2 mặt chân tiếp xúc mạ vàng. Dùng cọ quét sạch khe RAM. Cắm lại thanh RAM kêu 2 tiếng tách. Cắm thêm thanh RAM 8GB mới vào khe số 2. Bật máy lên hình!',
+    rubricMax: {
+      safety: 2.0,
+      diagnosis: 2.5,
+      operation: 3.0,
+      verification: 1.5,
+      handover: 1.0,
+    },
+  },
+  {
+    id: 'ticket_pc02',
+    code: 'ĐỀ SÁT HẠCH 02',
+    title: 'Ca bệnh "No Bootable Device" (Lỏng cáp SATA) & Xử lý Quạt CPU bám két bụi quá nhiệt 92°C tự tắt nguồn',
+    customerProblem: 'Khách hàng mang máy đến than phiền: Bật máy lên hiện logo rồi báo lỗi chữ trắng "No Bootable Device, strike F1 to retry boot". Ngoài ra dạo gần đây quạt máy tính gầm rú rất to, vào Win được 10 phút là tự động sập nguồn đen ngòm. Khách cần cứu gấp thư mục "HO_SO_DU_AN" trong Documents.',
+    dataTarget: 'Documents\\HO_SO_DU_AN (35 tệp Word và PDF, 320 MB) -> Dùng USB WinPE mini sao lưu sang Ổ D:',
+    hardwareTask: 'Cắm chặt lại 2 đầu cáp SATA và dây nguồn SATA ổ cứng; tháo tản nhiệt CPU lau sạch keo cũ, tra keo hạt đậu xanh mới, cắm CPU_FAN.',
+    softwareTask: 'Vào BIOS cấu hình đúng thứ tự Boot Option #1 (Windows Boot Manager); dùng CrystalDiskInfo kiểm tra sức khỏe ổ cứng (Good).',
+    verificationTask: 'Máy khởi động thẳng vào Windows ổn định; đo HWMonitor nhiệt độ CPU khi tải chỉ ở mức 52°C (< 75°C); dữ liệu khớp 100%.',
+    initialState: {
+      powerStatus: 'Máy bật lên được',
+      screenStatus: 'Báo lỗi chữ trắng: No Bootable Device',
+      ramDetected: 'Nhận đủ 8GB RAM',
+      diskConfig: 'Cáp tín hiệu SATA ổ cứng bị lỏng tuột; keo tản nhiệt khô giòn',
+      fanStatus: 'Quạt bám két búi bụi dày đặc, kêu to',
+      tempStatus: 'Nhiệt độ CPU vọt lên 92°C gây ngắt nguồn',
+    },
+    rootCause: 'Cáp tín hiệu SATA ổ cứng bị tuột lỏng khiến máy không nhận ổ đĩa khởi động; đồng thời keo tản nhiệt CPU bị khô nứt làm CPU quá nhiệt tự ngắt nguồn.',
+    correctAction: 'Rút điện xả tụ. Cắm chặt lại 2 đầu cáp SATA dữ liệu và dây nguồn ổ cứng. Tháo tản nhiệt CPU, lau sạch keo khô cũ, bơm 1 giọt keo mới bằng hạt đậu xanh, ấn chốt chéo, cắm dây CPU_FAN. Bật máy vào BIOS kiểm tra nhận ổ cứng và chỉnh Boot Option.',
+    rubricMax: {
+      safety: 2.0,
+      diagnosis: 2.5,
+      operation: 3.0,
+      verification: 1.5,
+      handover: 1.0,
+    },
+  },
+  {
+    id: 'ticket_pc03',
+    code: 'ĐỀ SÁT HẠCH 03',
+    title: 'Ca bệnh Nâng cấp Ổ cứng SSD SATA 240GB & Xử lý Máy in Văn phòng bị kẹt lệnh in Print Spooler',
+    customerProblem: 'Văn phòng mang máy tính kèm 1 ổ SSD SATA 240GB mới nguyên hộp nhờ lắp thêm làm ổ phụ để chứa dữ liệu. Ngoài ra, máy in Canon LBP 2900 của phòng mấy hôm nay bị đơ không in được, tài liệu bấm in cứ nằm im re không thấy máy in chạy. Cần sao lưu toàn bộ dữ liệu làm việc sang ổ SSD mới này.',
+    dataTarget: 'Desktop + Documents (Tổng 48 tệp, 580 MB) -> Sao lưu sang ổ đĩa SSD mới được kích hoạt.',
+    hardwareTask: 'Lắp ổ SSD 240GB mới vào khay 2.5 inch, cắm đủ 1 dây nguồn SATA và 1 cáp SATA dữ liệu nối vào bo mạch chủ.',
+    softwareTask: 'Mở Disk Management khởi tạo đĩa Initialize Disk GPT -> Tạo phân vùng New Simple Volume NTFS -> Ổ hiện trong This PC. Xử lý kẹt lệnh in trong Print Spooler -> Set as default printer.',
+    verificationTask: 'Ổ đĩa mới xuất hiện trong This PC với tên DATA_SSD; in bản Test Page thành công từ máy in Canon 2900; lập phiếu giao nhận.',
+    initialState: {
+      powerStatus: 'Máy hoạt động bình thường',
+      screenStatus: 'Vào Windows bình thường',
+      ramDetected: 'RAM 8GB',
+      diskConfig: 'Đang có sẵn 1 ổ SSD 120GB (C: 120GB), ổ SSD 240GB mới chưa lắp',
+      fanStatus: 'Quạt quay êm ái',
+      tempStatus: 'Nhiệt độ CPU 48°C (Tốt)',
+    },
+    rootCause: 'Ổ SSD mới mua chưa được khởi tạo phân vùng trong Disk Management nên không thể hiển thị trong My Computer; Máy in bị treo tiến trình Print Spooler do tài liệu in cũ bị nghẽn mạng.',
+    correctAction: 'Rút điện xả tụ. Bắt ốc SSD vào khay, cắm đủ dây nguồn và cáp dữ liệu SATA. Bật máy vào Win, chuột phải nút Start mở Disk Management, bấm Khởi tạo GPT, tạo New Simple Volume format NTFS. Mở Devices and Printers, hủy toàn bộ lệnh in kẹt Cancel All Documents, đặt Canon 2900 làm mặc định (tích xanh), bấm Print Test Page in thử.',
+    rubricMax: {
+      safety: 2.0,
+      diagnosis: 2.5,
+      operation: 3.0,
+      verification: 1.5,
+      handover: 1.0,
+    },
+  },
+  {
+    id: 'ticket_pc04',
+    code: 'ĐỀ SÁT HẠCH 04',
+    title: 'Ca bệnh Bấm nút nguồn IM RE (Tuột dây POWER SW cụm F_PANEL) & Thay pin CMOS CR2032 báo lỗi F1 Setup',
+    customerProblem: 'Máy tính văn phòng bấm nút nguồn phía trước thùng máy hoàn toàn im re, quạt không nhúc nhích. Trước đó máy hay bị tình trạng mỗi lần bật máy đều bắt bấm F1 mới vào được Windows và đồng hồ máy tính liên tục nhảy về năm 2015 khiến không vào được mạng Internet.',
+    dataTarget: 'Desktop\\DU_LIEU_BAN_HANG (20 tệp, 180 MB) -> Sao lưu sang ổ D:',
+    hardwareTask: 'Kiểm tra cắm lại dây POWER SW ở cụm 9 chân F_PANEL; tháo viên pin CMOS CR2032 cũ đã cạn điện (<2.5V) và thay bằng viên pin mới 3V.',
+    softwareTask: 'Vào BIOS cấu hình lại ngày giờ hiện tại, lưu F10; vào Windows kiểm tra kết nối mạng Internet SSL thông suốt, Device Manager chuẩn.',
+    verificationTask: 'Bấm nút Power ngoài case máy bật tức thì; khởi động vào Windows thẳng không còn báo lỗi F1; đồng hồ ngày giờ chính xác; lập phiếu nghiệm thu.',
+    initialState: {
+      powerStatus: 'Bấm nút Power thùng máy im re',
+      screenStatus: 'Màn hình tối đen, quạt không quay',
+      ramDetected: '8GB DDR4',
+      diskConfig: 'Ổ SSD 120GB nhận bình thường',
+      fanStatus: 'Quạt đứng im',
+      tempStatus: 'Chưa đo được',
+    },
+    rootCause: 'Đầu cắm POWER SW bị tuột khỏi cụm chân F_PANEL trên bo mạch chủ; đồng thời viên pin CMOS CR2032 trên mainboard đã cạn kiệt điện thế làm mất cấu hình BIOS.',
+    correctAction: 'Rút điện xả tụ. Dùng nhíp kỹ thuật cắm đúng 2 chân POWER SW ở hàng trên cụm F_PANEL. Lấy tua-vít dẹp nhỏ gạt lẫy lấy viên pin CMOS cũ ra, lắp viên pin CR2032 mới (mặt chữ + hướng lên). Cắm điện bật máy, bấm Del vào BIOS chỉnh ngày giờ, ấn F10 lưu cấu hình.',
+    rubricMax: {
+      safety: 2.0,
+      diagnosis: 2.5,
+      operation: 3.0,
+      verification: 1.5,
+      handover: 1.0,
+    },
+  },
+  {
+    id: 'ticket_pc05',
+    code: 'ĐỀ SÁT HẠCH 05',
+    title: 'Ca bệnh Hệ thống nhiễm virus đơ giật — Cài đặt Windows 10 Pro UEFI/GPT + Bảo toàn ổ D + Cài Driver VGA GT 730',
+    customerProblem: 'Máy tính bị nhiễm mã độc, trình duyệt tự nhảy quảng cáo và máy giật lag nghiêm trọng. Cần cài đặt mới hoàn toàn Windows 10 Pro 64-bit chuẩn UEFI/GPT. YÊU CẦU ĐẶC BIỆT: Ổ D (380GB) chứa toàn bộ hợp đồng kinh tế sống còn, TUYỆT ĐỐI KHÔNG ĐƯỢC FORMAT MẤT Ổ D. Cài đầy đủ driver Card đồ họa rời NVIDIA GT 730.',
+    dataTarget: 'Kiểm tra bảo toàn nguyên vẹn 100% dữ liệu ổ D:\\HOP_DONG (380GB); sao lưu thêm thư mục Desktop sang D:\\ trước khi format ổ C.',
+    hardwareTask: 'Kiểm tra vệ sinh bên trong case máy; kiểm tra cắm chắc chắn cổng xuất hình Card VGA rời GT 730.',
+    softwareTask: 'Cài đặt mới Windows 10 Pro 64-bit UEFI/GPT (chọn đúng phân vùng ổ C 120GB để format); cài Driver VGA GT 730 và các driver thiếu; cài UniKey.',
+    verificationTask: 'Device Manager sạch bóng 100% chấm than vàng; ổ D còn nguyên vẹn 100% dữ liệu; máy chạy mượt mà không còn virus; tạo Restore Point.',
+    initialState: {
+      powerStatus: 'Máy bật lên được',
+      screenStatus: 'Vào Windows cũ bị đơ giật, nhiễm virus',
+      ramDetected: '8GB DDR4',
+      diskConfig: 'C: 120GB (Hệ thống) | D: 380GB (Dữ liệu Hợp đồng cực kỳ quan trọng)',
+      fanStatus: 'Quạt quay êm ái',
+      tempStatus: 'CPU 45°C',
+    },
+    rootCause: 'Hệ điều hành Windows bị nhiễm mã độc sâu vào registry hệ thống và xung đột phần mềm; cần cài đặt lại bản Windows sạch chuẩn UEFI.',
+    correctAction: 'Vào Windows copy thư mục Desktop nhạy cảm sang ổ D. Khởi động USB cài Win chuẩn UEFI. Tại màn hình chọn phân vùng đĩa, nhìn số GB cột Total Size: CHỈ FORMAT PHÂN VÙNG Ổ C (120GB), TUYỆT ĐỐI KHÔNG CHẠM VÀO Ổ D (380GB). Tiến hành cài đặt Win 10, cài driver màn hình NVIDIA GT 730, kiểm tra Device Manager sạch chấm than.',
+    rubricMax: {
+      safety: 2.0,
+      diagnosis: 2.5,
+      operation: 3.0,
+      verification: 1.5,
+      handover: 1.0,
+    },
+  },
+  {
+    id: 'ticket_pc06',
+    code: 'ĐỀ SÁT HẠCH 06',
+    title: 'Lắp ráp hoàn chỉnh thùng máy tính KTV từ linh kiện rời (Main H510, CPU i5, RAM 8GB, SSD, VGA GT 730) + Cắm F_PANEL',
+    customerProblem: 'Bộ linh kiện phòng lab thực hành đang để rời trên bàn kỹ thuật: 01 Mainboard H510 (ASUS/MSI/Winnfox), 01 CPU Intel Core i5 Socket LGA1200, 01 thanh RAM 8GB DDR4, 01 ổ SSD 240GB, 01 Card đồ họa rời NVIDIA GT 730 và 01 Nguồn PSU. Yêu cầu nhóm KTV lắp ráp hoàn chỉnh thành bộ PC chuẩn mực, đi dây gọn gàng, vào BIOS kiểm tra POST thành công.',
+    dataTarget: 'Linh kiện mới chưa có dữ liệu; thực hiện quy trình kiểm tra an toàn 3 điểm dừng trước khi bật điện.',
+    hardwareTask: 'Bắt ốc đệm cố định Mainboard, tra 1 giọt keo hạt đậu xanh gài quạt CPU đối xứng cắm CPU_FAN, cắm RAM 8GB sập khóa, cắm Card GT 730, cắm đủ 4 sợi nguồn (24 pin, 8 pin CPU, SATA, cụm 9 chân F_PANEL).',
+    softwareTask: 'Bật máy vào BIOS/UEFI thiết lập chế độ UEFI Boot, kiểm tra nhận diện đầy đủ CPU i5, RAM 8GB, ổ SSD; chỉnh ngày giờ chuẩn.',
+    verificationTask: 'Máy bật nguồn êm ái từ nút Power trên vỏ case; màn hình POST xuất hình sắc nét từ cổng Card rời GT 730; nhiệt độ BIOS CPU < 45°C; dọn sạch bàn máy và lập biên bản bàn giao thiết bị.',
+    initialState: {
+      powerStatus: 'Linh kiện rời chưa lắp ráp',
+      screenStatus: 'Chưa có',
+      ramDetected: '01 thanh RAM 8GB DDR4 rời',
+      diskConfig: '01 ổ SSD 240GB SATA rời',
+      fanStatus: 'Quạt tản nhiệt rời',
+      tempStatus: 'Mới',
+    },
+    rootCause: 'Thao tác lắp ráp chuẩn hóa từ đầu đòi hỏi tuân thủ nghiêm ngặt kỹ thuật cơ khí, chống tĩnh điện ESD và cắm đúng chiều chân cắm.',
+    correctAction: 'Chạm tay xả tĩnh điện. Lắp CPU vào socket căn đúng tam giác vàng, đóng lẫy khóa. Bơm 1 giọt keo hạt đậu xanh, gài quạt CPU ấn chốt chéo đối xứng, cắm cọc CPU_FAN. Lắp RAM vào khe 1 nghe 2 tiếng tách sập lẫy. Bắt main vào case có ốc đệm đồng. Cắm Card GT 730 sập khóa PCIe. Cắm 4 sợi nguồn và cắm cụm 9 chân F_PANEL. Điểm dừng an toàn 2: Giáo viên kiểm tra mắt trước khi cắm điện. Bật máy vào BIOS kiểm tra thông số.',
+    rubricMax: {
+      safety: 2.0,
+      diagnosis: 2.5,
+      operation: 3.0,
+      verification: 1.5,
+      handover: 1.0,
+    },
+  },
+];
+
+// ============================================================================
+// FORM RUBRIC ĐÁNH GIÁ 5 TIÊU CHÍ (CHUẨN THÔNG TƯ 55/2026/TT-BGDĐT)
+// ============================================================================
+export interface RubricItemDetail {
+  id: string;
+  text: string;
+  score: number;
+}
+
+export interface RubricCriterion {
+  num: number;
+  name: string;
+  maxScore: number;
+  items: RubricItemDetail[];
+  dangerNote?: string;
+}
+
+export const OFFICIAL_RUBRIC_CRITERIA: RubricCriterion[] = [
+  {
+    num: 1,
+    name: 'Quy trình và An toàn kỹ thuật',
+    maxScore: 2.0,
+    items: [
+      { id: 'r1_1', text: 'Rút điện, gạt công tắc O, bấm nút nguồn xả tụ 3 lần, chạm kim loại xả tĩnh điện ESD, không đeo nhẫn/đồng hồ', score: 0.75 },
+      { id: 'r1_2', text: 'Ốc vít để ngay vào khay phân loại, không làm rơi ốc vào bo mạch, không làm trầy xước vỏ máy và mặt bàn', score: 0.50 },
+      { id: 'r1_3', text: 'Tuân thủ đúng quy trình tiếp nhận, sao lưu dữ liệu khách hàng khớp 100% trước khi tháo lắp / format', score: 0.75 },
+    ],
+    dangerNote: 'Vi phạm: Tháo cắm linh kiện khi chưa rút điện hoặc làm mất dữ liệu khách -> Điểm An toàn bị 0 ĐIỂM và ĐÁNH TRƯỢT ca thi!',
+  },
+  {
+    num: 2,
+    name: 'Chẩn đoán nguyên nhân sự cố',
+    maxScore: 2.5,
+    items: [
+      { id: 'r2_1', text: 'Khoanh vùng đúng nhóm bộ phận hư hỏng (RAM/Nguồn/SATA/Quạt/Pin CMOS), không tháo mò tràn lan', score: 0.75 },
+      { id: 'r2_2', text: 'Sử dụng đúng công cụ chẩn đoán thực tế (BIOS/UEFI, CPU-Z, HWMonitor, CrystalDiskInfo)', score: 0.75 },
+      { id: 'r2_3', text: 'Xác định và ghi nhận chính xác 1 câu nguyên nhân gốc rễ trên Phiếu dịch vụ kỹ thuật', score: 1.00 },
+    ],
+  },
+  {
+    num: 3,
+    name: 'Thao tác xử lý kỹ thuật',
+    maxScore: 3.0,
+    items: [
+      { id: 'r3_1', text: 'Tháo lắp chuẩn cơ khí, vệ sinh chân RAM/VGA bằng gôm tẩy, tra 1 giọt keo hạt đậu xanh, cắm 4 sợi nguồn và F_PANEL chuẩn', score: 1.50 },
+      { id: 'r3_2', text: 'Sao lưu dữ liệu mẫu khớp 100% về số file và dung lượng MB sang phân vùng ổ D hoặc USB an toàn', score: 0.75 },
+      { id: 'r3_3', text: 'Cài Windows 10 UEFI/GPT đúng phân vùng ổ C, Device Manager sạch chấm than, cấu hình máy in và in Test Page', score: 0.75 },
+    ],
+  },
+  {
+    num: 4,
+    name: 'Kiểm tra và Xác nhận vận hành',
+    maxScore: 1.5,
+    items: [
+      { id: 'r4_1', text: 'Máy khởi động lên BIOS/UEFI nhận diện chuẩn xác và vào Windows hoạt động trơn tru', score: 0.50 },
+      { id: 'r4_2', text: 'Nhận đủ RAM và ổ SSD mới, nhiệt độ HWMonitor CPU < 75°C khi tải, dữ liệu nguyên vẹn 100%', score: 1.00 },
+    ],
+  },
+  {
+    num: 5,
+    name: 'Bàn giao và Hồ sơ kỹ thuật',
+    maxScore: 1.0,
+    items: [
+      { id: 'r5_1', text: 'Đóng nắp thùng máy vặn đủ ốc, thu dọn dụng cụ và lau chùi bàn kỹ thuật sạch bóng theo tác phong 5S', score: 0.25 },
+      { id: 'r5_2', text: 'Điền đầy đủ, trung thực, rõ ràng thông số vào Biên bản Nghiệm thu A4 và có đủ chữ ký xác nhận của 3 bên KTV', score: 0.75 },
+    ],
   },
 ];
 
@@ -292,156 +697,5 @@ export const SEVEN_STEPS_WORKFLOW = [
     ],
     checkpoint: 'ĐIỂM DỪNG AN TOÀN 3: Đủ 5 điểm nghiệm thu mới được phép bàn giao máy cho khách hoặc nộp bài thi kết thúc môn.',
     proTip: 'Khách hàng đánh giá trình độ của kỹ thuật viên qua 2 thứ: Máy chạy mát êm và Bàn làm việc sạch sẽ, ngăn nắp. Hãy làm việc với tác phong của một kỹ thuật viên chuyên nghiệp!',
-  },
-  {
-    step: 8,
-    slug: 'chuong-8',
-    name: 'BỘ HỒ SƠ ĐÁNH GIÁ TAY NGHỀ & 3 ĐỀ THI THỰC HÀNH TỔNG HỢP',
-    time: '180 phút (Bài thi chính thức)',
-    summary: 'Cấu trúc bài thi thực hành 180 phút, Rubric 10 điểm Thông tư 55, Phiếu 10 gạch đầu dòng tự kiểm tra tại bàn xưởng.',
-    actions: [
-      'Nắm vững cấu trúc bài thi 180 phút: Gồm 3 yêu cầu tích hợp (Sửa 1 lỗi phần cứng + Cứu dữ liệu & Nâng cấp + Cài đặt Driver/Máy in & Nghiệm thu).',
-      'Đề mẫu 1: Xử lý máy quạt quay màn hình đen (chân RAM) + Sao lưu Desktop sang D: + Lắp thêm RAM 8GB + Cài UniKey và kiểm tra Device Manager.',
-      'Đề mẫu 2: Xử lý máy báo No Bootable Device + Quạt CPU bám bụi két quá nhiệt + Cứu Documents + Vệ sinh tra keo tản nhiệt + Kiểm tra HWMonitor.',
-      'Đề mẫu 3: Nâng cấp ổ cứng SSD 240GB mới + Kích hoạt Disk Management + Cứu dữ liệu sang SSD + Sửa lỗi kẹt lệnh in máy in Canon 2900 + In Test Page.',
-      'Áp dụng thang điểm 10 Thông tư 55: An toàn (2.0đ) + Chẩn đoán (2.5đ) + Thao tác (3.0đ) + Kiểm tra (1.5đ) + Bàn giao (1.0đ). Đạt từ 5.0đ trở lên.',
-    ],
-    proTip: 'Vào phòng thi: Bình tĩnh đọc kỹ đề, làm tuần tự từ Bước 1 đến Bước 7, bí chỗ nào ghi chú lại báo giáo viên hướng dẫn, điền phiếu ngay sau mỗi bước.',
-  },
-];
-
-export const PRACTICAL_EXAM_TICKETS: ExamCase[] = [
-  {
-    id: 'ticket_pc01',
-    code: 'ĐỀ THI 01',
-    title: 'Ca bệnh Màn hình đen (RAM tiếp xúc kém) & Nâng cấp RAM + Cứu tài liệu Kế toán',
-    customerProblem: 'Khách hàng mang máy bàn đến xưởng phản ánh: Sáng nay bấm nút nguồn thì quạt trong máy vẫn quay vù vù nhưng màn hình đen thui (báo No Signal). Trong máy có thư mục "BAO_CAO_TAI_CHINH_2026" ngoài Desktop cực kỳ quan trọng cần cứu gấp. Khách có mang kèm theo 1 thanh RAM 8GB DDR4 mua thêm nhờ kỹ thuật viên lắp nâng cấp.',
-    dataTarget: 'Desktop\\BAO_CAO_TAI_CHINH_2026 (12 tệp Excel, 145 MB) -> Sao lưu sang Ổ D:\\BACKUP_KHACH_HANG',
-    hardwareTask: 'Xử lý lỗi màn hình đen cho máy lên hình; sau đó lắp thêm 1 thanh RAM 8GB DDR4 (nghe 2 tiếng "tách" sập tai khóa).',
-    softwareTask: 'Kiểm tra Device Manager sạch bóng chấm than vàng; cài đặt UniKey tiếng Việt; tạo điểm khôi phục hệ thống MAY_CHAY_TOT.',
-    verificationTask: 'Nhiệt độ CPU ổn định < 75°C, BIOS/Windows nhận đủ tổng 16GB RAM (8GB gốc + 8GB mới), đối chiếu file sao lưu khớp 100%.',
-    initialState: {
-      powerStatus: 'Đèn nguồn sáng, quạt CPU quay',
-      screenStatus: 'Màn hình đen thui, thông báo "No Signal"',
-      ramDetected: 'Chân RAM bị bụi bẩn oxy hóa bám chân vàng',
-      diskConfig: 'C: 120 GB (Hệ thống) | D: 380 GB (Dữ liệu)',
-      fanStatus: 'Quạt quay mạnh bình thường',
-      tempStatus: 'Chưa đo được do máy chưa lên hình',
-    },
-    rootCause: 'Chân mạ vàng của thanh RAM bị oxy hóa tiếp xúc kém, hoặc khe cắm RAM bị bám bụi khiến bo mạch không nhận diện được bộ nhớ RAM để xuất hình ảnh.',
-    correctAction: 'Rút điện, bấm xả tụ 3 lần. Tháo thanh RAM, dùng cục gôm tẩy học sinh chà sạch 2 mặt chân tiếp xúc mạ vàng. Dùng cọ quét sạch khe RAM. Cắm lại thanh RAM kêu 2 tiếng tách. Cắm thêm thanh RAM 8GB mới vào khe số 2. Bật máy lên hình!',
-    rubricMax: {
-      safety: 2.0,
-      diagnosis: 2.5,
-      operation: 3.0,
-      verification: 1.5,
-      handover: 1.0,
-    },
-  },
-  {
-    id: 'ticket_pc02',
-    code: 'ĐỀ THI 02',
-    title: 'Ca bệnh "No Bootable Device" & Xử lý Quạt CPU bám két bụi quá nhiệt tự tắt nguồn',
-    customerProblem: 'Khách hàng mang máy đến than phiền: Bật máy lên hiện logo rồi báo lỗi chữ trắng "No Bootable Device, strike F1 to retry boot". Ngoài ra dạo gần đây quạt máy tính gầm rú rất to, vào Win được 10 phút là tự động sập nguồn đen ngòm. Khách cần cứu gấp thư mục "HO_SO_DU_AN" trong Documents.',
-    dataTarget: 'Documents\\HO_SO_DU_AN (35 tệp Word và PDF, 320 MB) -> Dùng USB WinPE sao lưu sang Ổ D:',
-    hardwareTask: 'Cắm chặt lại 2 đầu cáp SATA và dây nguồn SATA ổ cứng; tháo quạt tản nhiệt lau keo cũ, tra keo hạt đậu xanh mới, cắm CPU_FAN.',
-    softwareTask: 'Vào BIOS cấu hình đúng thứ tự Boot Option #1 (Windows Boot Manager); dùng CrystalDiskInfo kiểm tra sức khỏe ổ cứng (Good).',
-    verificationTask: 'Máy khởi động thẳng vào Windows ổn định; đo HWMonitor nhiệt độ CPU khi tải chỉ ở mức 52°C (< 75°C); dữ liệu khớp 100%.',
-    initialState: {
-      powerStatus: 'Máy bật lên được',
-      screenStatus: 'Báo lỗi chữ trắng: No Bootable Device',
-      ramDetected: 'Nhận đủ 8GB RAM',
-      diskConfig: 'Cáp tín hiệu SATA ổ cứng bị lỏng tuột; keo tản nhiệt khô giòn',
-      fanStatus: 'Quạt bám két búi bụi dày đặc, kêu to',
-      tempStatus: 'Nhiệt độ CPU vọt lên 92°C gây ngắt nguồn',
-    },
-    rootCause: 'Cáp tín hiệu SATA ổ cứng bị tuột lỏng khiến máy không nhận ổ đĩa khởi động; đồng thời keo tản nhiệt CPU bị khô nứt làm CPU quá nhiệt tự ngắt nguồn.',
-    correctAction: 'Rút điện xả tụ. Cắm chặt lại 2 đầu cáp SATA dữ liệu và dây nguồn ổ cứng. Tháo tản nhiệt CPU, lau sạch keo khô cũ, bơm 1 giọt keo mới bằng hạt đậu xanh, ấn chốt chéo, cắm dây CPU_FAN. Bật máy vào BIOS kiểm tra nhận ổ cứng và chỉnh Boot Option.',
-    rubricMax: {
-      safety: 2.0,
-      diagnosis: 2.5,
-      operation: 3.0,
-      verification: 1.5,
-      handover: 1.0,
-    },
-  },
-  {
-    id: 'ticket_pc03',
-    code: 'ĐỀ THI 03',
-    title: 'Ca bệnh Nâng cấp Ổ cứng SSD SATA 240GB & Xử lý Máy in Văn phòng bị kẹt lệnh in',
-    customerProblem: 'Văn phòng mang máy tính kèm 1 ổ SSD SATA 240GB mới nguyên hộp nhờ lắp thêm làm ổ phụ để chứa dữ liệu. Ngoài ra, máy in Canon LBP 2900 của phòng mấy hôm nay bị đơ không in được, tài liệu bấm in cứ nằm im re không thấy máy in chạy. Cần sao lưu toàn bộ dữ liệu làm việc sang ổ SSD mới này.',
-    dataTarget: 'Desktop + Documents (Tổng 48 tệp, 580 MB) -> Sao lưu sang ổ đĩa SSD mới được kích hoạt.',
-    hardwareTask: 'Lắp ổ SSD 240GB mới vào khay 2.5 inch, cắm đủ 1 dây nguồn SATA và 1 cáp SATA dữ liệu nối vào bo mạch chủ.',
-    softwareTask: 'Mở Disk Management khởi tạo đĩa Initialize Disk GPT -> Tạo phân vùng New Simple Volume NTFS -> Ổ hiện trong This PC. Xử lý kẹt lệnh in trong Print Spooler -> Set as default printer.',
-    verificationTask: 'Ổ đĩa mới xuất hiện trong This PC với tên DATA_SSD; in bản Test Page thành công từ máy in Canon 2900; lập phiếu giao nhận.',
-    initialState: {
-      powerStatus: 'Máy hoạt động bình thường',
-      screenStatus: 'Vào Windows bình thường',
-      ramDetected: 'RAM 8GB',
-      diskConfig: 'Đang có sẵn 1 ổ SSD 120GB (C: 120GB), ổ SSD 240GB mới chưa lắp',
-      fanStatus: 'Quạt quay êm ái',
-      tempStatus: 'Nhiệt độ CPU 48°C (Tốt)',
-    },
-    rootCause: 'Ổ SSD mới mua chưa được khởi tạo phân vùng trong Disk Management nên không thể hiển thị trong My Computer; Máy in bị treo tiến trình Print Spooler do tài liệu in cũ bị nghẽn mạng.',
-    correctAction: 'Rút điện xả tụ. Bắt ốc SSD vào khay, cắm đủ dây nguồn và cáp dữ liệu SATA. Bật máy vào Win, chuột phải nút Start mở Disk Management, bấm Khởi tạo GPT, tạo New Simple Volume format NTFS. Mở Devices and Printers, hủy toàn bộ lệnh in kẹt Cancel All Documents, đặt Canon 2900 làm mặc định (tích xanh), bấm Print Test Page in thử.',
-    rubricMax: {
-      safety: 2.0,
-      diagnosis: 2.5,
-      operation: 3.0,
-      verification: 1.5,
-      handover: 1.0,
-    },
-  },
-];
-
-export const OFFICIAL_RUBRIC_CRITERIA = [
-  {
-    num: 1,
-    name: 'Quy trình và An toàn kỹ thuật',
-    maxScore: 2.0,
-    items: [
-      { text: 'Rút điện, gạt công tắc O, bấm nút nguồn xả tụ 3 lần, đeo vòng ESD / chạm kim loại xả tĩnh điện', score: 0.75 },
-      { text: 'Ốc vít để ngay vào khay phân loại, không làm rơi ốc vào bo mạch, không làm trầy xước vỏ máy', score: 0.5 },
-      { text: 'Tuân thủ đúng trình tự 7 bước tiếp nhận, bảo vệ dữ liệu khách hàng trước khi sửa chữa / format', score: 0.75 },
-    ],
-    dangerNote: 'Vi phạm: Tháo cắm linh kiện khi chưa rút điện hoặc làm mất dữ liệu khách -> Điểm An toàn bị 0 ĐIỂM và ĐÁNH TRƯỢT ca thi!',
-  },
-  {
-    num: 2,
-    name: 'Chẩn đoán nguyên nhân sự cố',
-    maxScore: 2.5,
-    items: [
-      { text: 'Khoanh vùng đúng nhóm bộ phận hư hỏng (RAM/Nguồn/SATA/Quạt/Pin CMOS), không tháo mò tràn lan', score: 0.75 },
-      { text: 'Sử dụng đúng công cụ chẩn đoán thực tế (BIOS/UEFI, CPU-Z, HWMonitor, CrystalDiskInfo)', score: 0.75 },
-      { text: 'Xác định và ghi nhận chính xác 1 câu nguyên nhân gốc rễ trên Phiếu dịch vụ kỹ thuật', score: 1.0 },
-    ],
-  },
-  {
-    num: 3,
-    name: 'Thao tác xử lý kỹ thuật',
-    maxScore: 3.0,
-    items: [
-      { text: 'Tháo lắp, vệ sinh quạt giữ cánh, tra 1 giọt keo hạt đậu xanh, lắp RAM kêu "tách" sập khóa, cắm 4 sợi dây chuẩn', score: 1.5 },
-      { text: 'Sao lưu dữ liệu mẫu khớp 100% về số file và dung lượng MB sang phân vùng ổ D hoặc USB an toàn', score: 0.75 },
-      { text: 'Kích hoạt ổ SSD mới trong Disk Management / Cài đúng Driver Device Manager sạch chấm than / Cài máy in', score: 0.75 },
-    ],
-  },
-  {
-    num: 4,
-    name: 'Kiểm tra và Xác nhận vận hành',
-    maxScore: 1.5,
-    items: [
-      { text: 'Máy khởi động lên BIOS/UEFI nhận diện chuẩn xác và vào Windows hoạt động trơn tru', score: 0.5 },
-      { text: 'Nhận đủ RAM và ổ cứng mới, nhiệt độ HWMonitor CPU < 75°C khi tải, dữ liệu nguyên vẹn 100%', score: 1.0 },
-    ],
-  },
-  {
-    num: 5,
-    name: 'Bàn giao và Hồ sơ kỹ thuật',
-    maxScore: 1.0,
-    items: [
-      { text: 'Đóng nắp thùng máy vặn đủ ốc, thu dọn dụng cụ và lau chùi bàn kỹ thuật sạch bóng', score: 0.25 },
-      { text: 'Điền đầy đủ, trung thực, rõ ràng thông số vào Phiếu Dịch vụ Kỹ thuật A-Z và ký tên đúng quy định', score: 0.75 },
-    ],
   },
 ];

@@ -1,0 +1,714 @@
+---
+import {
+  PRACTICAL_EXAM_TICKETS,
+  OFFICIAL_RUBRIC_CRITERIA,
+  HARDWARE_METADATA,
+} from '../../data/hardwareCurriculum';
+---
+
+<div class="space-y-6" x-data="examSimulatorEngine">
+  <!-- 1. Hero Header Phân Khu 2 -->
+  <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 text-white rounded-2xl p-5 sm:p-7 shadow-md border border-slate-700">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-400 text-slate-950">
+            🎲 PHÂN KHU 2: GIẢ LẬP BÀI THI TỔNG HỢP 4 GIỜ
+          </span>
+          <span class="text-xs text-slate-300 font-mono">Chuẩn Thông tư 55/2026/TT-BGDĐT</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+          Máy Bốc Thăm Tình Huống & Bảng Chấm Rubric 10.0
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
+          Mô phỏng trọn vẹn ca làm việc 4 giờ của kỹ thuật viên. Bấm nút để bốc thăm ngẫu nhiên một ca bệnh thực tế từ khách hàng,
+          bật đồng hồ đếm ngược 4 giờ để thực hành, và sử dụng Form Rubric 5 tiêu chí bên dưới để chấm điểm thực tế tại bàn máy.
+        </p>
+      </div>
+
+      <!-- Action: Big Tactile Random Ticket Button -->
+      <div class="shrink-0 flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+        <button
+          type="button"
+          @click="pickRandomTicket()"
+          class="w-full sm:w-auto px-6 py-3.5 rounded-xl font-black text-xs sm:text-sm bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 shadow-lg hover:shadow-amber-500/20 active:scale-95 transition-all flex items-center justify-center gap-2 border border-amber-300 min-h-[48px]"
+        >
+          <span class="text-base">🎲</span>
+          <span>BỐC THĂM TÌNH HUỐNG NGẪU NHIÊN</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Pill Selector for 6 Tickets -->
+    <div class="mt-5 pt-4 border-t border-slate-700/70 flex flex-wrap items-center gap-2">
+      <span class="text-xs font-bold text-slate-400 shrink-0">Chọn nhanh đề thi:</span>
+      {PRACTICAL_EXAM_TICKETS.map((t, idx) => (
+        <button
+          type="button"
+          @click={`selectedTicketIdx = ${idx};`}
+          class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all border flex items-center gap-1.5"
+          :class={`selectedTicketIdx === ${idx} ? 'bg-amber-400 text-slate-950 border-amber-400 shadow-sm' : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'`}
+        >
+          <span>{t.code}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <!-- 2. Candidate & Station Form Info -->
+  <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm">
+    <h3 class="text-xs font-extrabold uppercase tracking-wider text-slate-600 mb-3 flex items-center gap-2">
+      <span>👤</span>
+      <span>Thông Tin Kỹ Thuật Viên Tiếp Nhận Ca Sát Hạch:</span>
+    </h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Họ và tên KTV (*)</label>
+        <input
+          type="text"
+          x-model="studentInfo.name"
+          placeholder="Ví dụ: Nguyễn Văn An"
+          class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 font-semibold"
+        />
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Lớp chuyên ngành (*)</label>
+        <input
+          type="text"
+          x-model="studentInfo.className"
+          placeholder="Ví dụ: Trung cấp Tin học ứng dụng"
+          class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500"
+        />
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Bàn kỹ thuật số</label>
+        <select
+          x-model="studentInfo.station"
+          class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 font-medium bg-white"
+        >
+          <option value="Bàn Kỹ Thuật 01">Bàn Kỹ Thuật 01</option>
+          <option value="Bàn Kỹ Thuật 02">Bàn Kỹ Thuật 02</option>
+          <option value="Bàn Kỹ Thuật 03">Bàn Kỹ Thuật 03</option>
+          <option value="Bàn Kỹ Thuật 04">Bàn Kỹ Thuật 04</option>
+          <option value="Bàn Kỹ Thuật 05">Bàn Kỹ Thuật 05</option>
+          <option value="Bàn Kỹ Thuật 06">Bàn Kỹ Thuật 06</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Bạn cùng bàn (KTV 2 / Poka-Yoke)</label>
+        <input
+          type="text"
+          x-model="studentInfo.partner"
+          placeholder="Ví dụ: Trần Quốc Bảo"
+          class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Ticket Card & 4-Hour Timer (Side-by-side or stacked) -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Cột Trái (8/12): Chi Tiết Đề Bài Ca Bệnh Được Bốc Thăm -->
+    <div class="lg:col-span-8 space-y-4">
+      {PRACTICAL_EXAM_TICKETS.map((t, idx) => (
+        <div
+          x-show={`selectedTicketIdx === ${idx}`}
+          class="bg-white border-2 border-slate-300 rounded-2xl p-5 sm:p-6 shadow-sm space-y-5"
+        >
+          <!-- Ticket Header -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-200 pb-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-black bg-slate-900 text-white">
+                  {t.code}
+                </span>
+                <span class="text-xs text-amber-700 font-bold bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                  ⏱️ Thời gian ca thi: 4 giờ (240 phút)
+                </span>
+              </div>
+              <h3 class="text-base sm:text-lg font-black text-slate-900 leading-snug">
+                {t.title}
+              </h3>
+            </div>
+
+            <button
+              type="button"
+              @click="pickRandomTicket()"
+              class="text-xs text-slate-600 hover:text-slate-900 font-bold flex items-center gap-1 border border-slate-200 bg-slate-50 px-3 py-1.5 rounded-lg shrink-0"
+              title="Bốc đề khác"
+            >
+              <span>🎲 Bốc đề khác</span>
+            </button>
+          </div>
+
+          <!-- Problem & Customer Complaint -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-1">
+              <span class="font-bold text-slate-900 flex items-center gap-1.5 uppercase text-[11px]">
+                <span>🗣️</span>
+                <span>Lời Kể / Khiếu Nại Của Khách Hàng:</span>
+              </span>
+              <p class="text-slate-700 leading-relaxed font-medium">
+                {t.customerProblem}
+              </p>
+            </div>
+
+            <div class="bg-rose-50 border-2 border-rose-200 rounded-xl p-3.5 space-y-1">
+              <span class="font-bold text-rose-900 flex items-center gap-1.5 uppercase text-[11px]">
+                <span>🛡️</span>
+                <span>Mục Tiêu Bảo Toàn Dữ Liệu (Luật Giữ Nồi Cơm):</span>
+              </span>
+              <p class="text-rose-950 font-bold leading-relaxed">
+                {t.dataTarget}
+              </p>
+              <p class="text-[10px] text-rose-700 italic">
+                * Yêu cầu đối chiếu số file và dung lượng MB khớp 100% trước khi format/mổ máy.
+              </p>
+            </div>
+          </div>
+
+          <!-- 2 Cột Nhiệm Vụ: Phần Cứng & Phần Mềm -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 space-y-1">
+              <span class="font-bold text-emerald-900 flex items-center gap-1.5 uppercase text-[11px]">
+                <span>🔧</span>
+                <span>Nhiệm Vụ Phần Cứng:</span>
+              </span>
+              <p class="text-emerald-950 font-medium leading-relaxed">
+                {t.hardwareTask}
+              </p>
+            </div>
+
+            <div class="bg-sky-50 border border-sky-200 rounded-xl p-3.5 space-y-1">
+              <span class="font-bold text-sky-900 flex items-center gap-1.5 uppercase text-[11px]">
+                <span>💿</span>
+                <span>Nhiệm Vụ Phần Mềm & Hệ Điều Hành:</span>
+              </span>
+              <p class="text-sky-950 font-medium leading-relaxed">
+                {t.softwareTask}
+              </p>
+            </div>
+          </div>
+
+          <!-- Initial Technical State & Verification Target -->
+          <div class="bg-slate-900 text-slate-100 rounded-xl p-4 text-xs space-y-2">
+            <div class="flex items-center justify-between border-b border-slate-700 pb-2">
+              <span class="font-bold text-amber-400 font-mono uppercase text-[11px]">
+                🔍 Trạng Thái Khám Máy Ban Đầu & Nghiệm Thu
+              </span>
+              <span class="text-[10px] text-slate-400 font-mono">Bo mạch: Intel H510 phòng lab</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] font-mono">
+              <div><span class="text-slate-400">Nguồn:</span> <span class="text-slate-200">{t.initialState.powerStatus}</span></div>
+              <div><span class="text-slate-400">Màn hình:</span> <span class="text-slate-200">{t.initialState.screenStatus}</span></div>
+              <div><span class="text-slate-400">RAM:</span> <span class="text-slate-200">{t.initialState.ramDetected}</span></div>
+              <div><span class="text-slate-400">Ổ đĩa:</span> <span class="text-slate-200">{t.initialState.diskConfig}</span></div>
+              <div><span class="text-slate-400">Quạt CPU:</span> <span class="text-slate-200">{t.initialState.fanStatus}</span></div>
+              <div><span class="text-slate-400">Nhiệt độ:</span> <span class="text-rose-400 font-bold">{t.initialState.tempStatus}</span></div>
+            </div>
+            <div class="pt-2 border-t border-slate-800 text-[11px]">
+              <span class="text-emerald-400 font-bold">✓ Chỉ số nghiệm thu:</span>
+              <span class="text-slate-300"> {t.verificationTask}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Cột Phải (4/12): Đồng Hồ 4 Giờ (Countdown) & 3 Mốc Tiến Độ -->
+    <div class="lg:col-span-4 space-y-4">
+      <div class="bg-slate-900 text-white rounded-2xl p-5 border border-slate-800 shadow-md space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
+          <span class="text-xs font-mono uppercase font-bold text-amber-400 flex items-center gap-1.5">
+            <span>⏱️</span>
+            <span>Đồng Hồ Ca Thi 4 Giờ</span>
+          </span>
+          <span
+            class="text-[10px] px-2 py-0.5 rounded-full font-mono font-bold"
+            :class="timerRunning ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-400'"
+            x-text="timerRunning ? 'ĐANG TÍNH GIỜ' : 'TẠM DỪNG'"
+          ></span>
+        </div>
+
+        <!-- Big Digital Timer Display -->
+        <div class="text-center py-2 bg-slate-950 rounded-xl border border-slate-800">
+          <p class="text-4xl sm:text-5xl font-mono font-black tracking-widest text-amber-400" x-text="formattedExamTimer"></p>
+          <p class="text-[11px] text-slate-400 mt-1 font-mono">Thời gian quy định: 240 phút (4:00:00)</p>
+        </div>
+
+        <!-- Timer Controls (Min 48px touch targets) -->
+        <div class="grid grid-cols-3 gap-2">
+          <button
+            type="button"
+            @click="startTimer()"
+            :disabled="timerRunning"
+            class="min-h-[48px] rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white flex items-center justify-center gap-1 transition-all"
+          >
+            <span>▶</span>
+            <span>Bắt Đầu</span>
+          </button>
+
+          <button
+            type="button"
+            @click="pauseTimer()"
+            :disabled="!timerRunning"
+            class="min-h-[48px] rounded-xl text-xs font-bold bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white flex items-center justify-center gap-1 transition-all"
+          >
+            <span>⏸</span>
+            <span>Tạm Dừng</span>
+          </button>
+
+          <button
+            type="button"
+            @click="resetTimer()"
+            class="min-h-[48px] rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center justify-center gap-1 transition-all"
+          >
+            <span>🔄</span>
+            <span>Đặt Lại</span>
+          </button>
+        </div>
+
+        <!-- 3-Phase Milestone Timeline -->
+        <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+          <p class="font-bold text-slate-300 text-[11px] uppercase tracking-wider">3 Mốc Tiến Độ Ca Thi 4 Giờ:</p>
+          
+          <div class="p-2.5 rounded-lg bg-slate-800/80 border border-slate-700 space-y-1">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="font-bold text-sky-300">Giai đoạn 1 (0 – 60 phút):</span>
+              <span class="font-mono text-slate-400">Tiêu chí 1</span>
+            </div>
+            <p class="text-[11px] text-slate-300">Tiếp nhận máy, xả tĩnh điện ESD, sao lưu 100% dữ liệu sang ổ D / USB.</p>
+          </div>
+
+          <div class="p-2.5 rounded-lg bg-slate-800/80 border border-slate-700 space-y-1">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="font-bold text-amber-300">Giai đoạn 2 (60 – 180 phút):</span>
+              <span class="font-mono text-slate-400">Tiêu chí 2 & 3</span>
+            </div>
+            <p class="text-[11px] text-slate-300">Chẩn đoán lỗi, vệ sinh RAM/VGA, tra keo hạt đậu xanh, cắm 9 chân F_PANEL, cài Win 10 UEFI.</p>
+          </div>
+
+          <div class="p-2.5 rounded-lg bg-slate-800/80 border border-slate-700 space-y-1">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="font-bold text-emerald-300">Giai đoạn 3 (180 – 240 phút):</span>
+              <span class="font-mono text-slate-400">Tiêu chí 4 & 5</span>
+            </div>
+            <p class="text-[11px] text-slate-300">Kiểm tra HWMonitor nhiệt độ &lt; 75°C, in Test Page máy in, dọn sạch bàn máy, lập biên bản A4.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. FORM RUBRIC 5 TIÊU CHÍ (THANG ĐIỂM 10.0) CHẤM TRỰC TIẾP -->
+  <div class="bg-white border-2 border-slate-300 rounded-2xl p-5 sm:p-7 shadow-sm space-y-6">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-primary-100 text-primary-900 border border-primary-200">
+            RUBRIC CHẤM THỰC HÀNH TỔNG HỢP
+          </span>
+          <span class="text-xs text-slate-500 font-mono">Thang điểm 10.0 · Đạt từ 5.0đ</span>
+        </div>
+        <h3 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+          Bảng Đánh Giá 5 Tiêu Chí Năng Lực Kỹ Thuật Viên
+        </h3>
+        <p class="text-xs text-slate-500 mt-0.5">
+          Giáo viên hoặc nhóm kỹ thuật viên đánh dấu trực tiếp các tiêu chí đã thực hiện đạt chuẩn. Hệ thống tự động tính tổng điểm và xếp loại.
+        </p>
+      </div>
+
+      <!-- Real-time Score Pill -->
+      <div class="bg-slate-900 text-white px-5 py-3 rounded-2xl text-center shrink-0 min-w-[180px] shadow">
+        <span class="text-[11px] uppercase tracking-wider text-slate-400 block font-semibold">Tổng Điểm Đạt Được</span>
+        <span class="text-3xl sm:text-4xl font-mono font-black" :class="safetyDisqualified ? 'text-rose-400' : 'text-amber-400'" x-text="safetyDisqualified ? '0.0 / 10' : (totalScore.toFixed(2) + ' / 10')"></span>
+        <span
+          class="block text-[11px] font-bold px-2 py-0.5 rounded-full mt-1"
+          :class="safetyDisqualified ? 'bg-rose-500 text-white' : (totalScore >= 8.5 ? 'bg-emerald-400 text-slate-950' : (totalScore >= 7.0 ? 'bg-sky-400 text-slate-950' : (totalScore >= 5.0 ? 'bg-amber-300 text-slate-950' : 'bg-rose-200 text-rose-950')))"
+          x-text="safetyDisqualified ? 'ĐÌNH CHỈ THI (0đ An toàn)' : rubricRank"
+        ></span>
+      </div>
+    </div>
+
+    <!-- Safety Violation Emergency Toggle Checkbox -->
+    <div class="p-3.5 rounded-xl border-2 transition-all flex items-center justify-between gap-3" :class="safetyDisqualified ? 'bg-rose-100 border-rose-500 text-rose-950' : 'bg-slate-50 border-slate-200 text-slate-700'">
+      <label class="flex items-center gap-3 cursor-pointer select-none">
+        <input
+          type="checkbox"
+          x-model="safetyDisqualified"
+          class="w-5 h-5 rounded text-rose-600 focus:ring-rose-500 cursor-pointer"
+        />
+        <div class="text-xs">
+          <span class="font-extrabold" :class="safetyDisqualified ? 'text-rose-900' : 'text-slate-800'">
+            🚨 ĐIỂM DỪNG AN TOÀN SINH TỬ: Đánh dấu nếu KTV vi phạm an toàn điện hoặc làm mất dữ liệu khách
+          </span>
+          <p class="text-[11px] text-slate-500 mt-0.5">
+            (Ví dụ: Cắm rút linh kiện khi chưa ngắt nguồn, format nhầm ổ D chứa dữ liệu khách -> Điểm tiêu chí An toàn = 0 điểm và đình chỉ ca thi).
+          </p>
+        </div>
+      </label>
+      <span x-show="safetyDisqualified" class="text-xs font-mono font-bold text-rose-700 bg-rose-200 px-2.5 py-1 rounded-lg shrink-0">
+        ĐÃ ĐÌNH CHỈ
+      </span>
+    </div>
+
+    <!-- 5 Criteria Accordion / Cards -->
+    <div class="space-y-4">
+      {OFFICIAL_RUBRIC_CRITERIA.map((criterion) => (
+        <div class="border border-slate-200 rounded-xl p-4 sm:p-5 bg-white shadow-sm space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-full bg-slate-900 text-white font-mono font-bold text-xs flex items-center justify-center">
+                {criterion.num}
+              </span>
+              <h4 class="text-sm sm:text-base font-bold text-slate-900">
+                {criterion.name}
+              </h4>
+            </div>
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-800">
+              Tối đa: {criterion.maxScore.toFixed(1)}đ
+            </span>
+          </div>
+
+          {criterion.dangerNote && (
+            <p class="text-[11px] text-rose-700 bg-rose-50 border border-rose-200 p-2 rounded-lg font-medium">
+              ⚠️ {criterion.dangerNote}
+            </p>
+          )}
+
+          <!-- Checkboxes for Items -->
+          <div class="space-y-2 text-xs">
+            {criterion.items.map((item) => (
+              <label class="flex items-start gap-3 p-2.5 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer transition-colors select-none">
+                <input
+                  type="checkbox"
+                  class="w-4 h-4 rounded text-primary-600 focus:ring-primary-500 mt-0.5 cursor-pointer shrink-0"
+                  x-model={`rubricChecks['${item.id}']`}
+                />
+                <div class="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <span class="text-slate-800 leading-relaxed font-medium">{item.text}</span>
+                  <span class="font-mono font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[11px] shrink-0 self-start sm:self-center">
+                    +{item.score.toFixed(2)}đ
+                  </span>
+                </div>
+              </label>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Teacher Evaluation Notes -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs space-y-2">
+      <label class="block font-bold text-slate-800 uppercase tracking-wider text-[11px]">
+        ✍️ Nhận Xét & Ghi Chú Đánh Giá Của Giáo Viên Chấm Sát Hạch:
+      </label>
+      <textarea
+        x-model="teacherNotes"
+        rows="2"
+        placeholder="Ghi nhận điểm mạnh, kỹ năng cơ khí, thao tác an toàn và các điểm cần rèn luyện thêm..."
+        class="w-full p-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-primary-500 text-xs bg-white"
+      ></textarea>
+    </div>
+
+    <!-- Action Buttons: Print A4 Ticket & Reset Form -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-slate-200">
+      <div class="text-xs text-slate-500 flex items-center gap-1.5">
+        <span>📋</span>
+        <span>Hồ sơ đánh giá được định dạng chuẩn A4 có chữ ký KTV và Giảng viên.</span>
+      </div>
+
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <button
+          type="button"
+          @click="resetRubricForm()"
+          class="px-4 py-2.5 rounded-xl text-xs font-bold border border-slate-300 hover:bg-slate-100 text-slate-700 min-h-[44px]"
+        >
+          Đặt lại bảng điểm
+        </button>
+
+        <button
+          type="button"
+          @click="printA4Rubric()"
+          class="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold bg-slate-900 hover:bg-slate-800 text-white shadow-md flex items-center justify-center gap-2 min-h-[44px]"
+        >
+          <span>🖨️</span>
+          <span>XUẤT / IN PHIẾU ĐIỂM A4</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- PRINT-READY A4 RUBRIC REPORT (HIỂN THỊ KHI BẤM IN / XUẤT PDF)           -->
+  <!-- ======================================================================= -->
+  <div id="printable-exam-rubric" class="hidden print:block bg-white text-black p-8 font-sans">
+    <!-- Header Trường & Giảng Viên -->
+    <div class="border-b-2 border-black pb-3 mb-4 flex justify-between items-start">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-wider">{HARDWARE_METADATA.institution}</p>
+        <h2 class="text-base font-black uppercase">CHUYÊN ĐỀ: {HARDWARE_METADATA.courseName}</h2>
+        <p class="text-[11px] text-gray-700">Mã môn: {HARDWARE_METADATA.courseCode} · {HARDWARE_METADATA.standard}</p>
+        <p class="text-[11px] text-gray-700">Giảng viên phụ trách: {HARDWARE_METADATA.teacher}</p>
+      </div>
+      <div class="text-right text-xs">
+        <p class="font-mono font-bold" x-text="'MÃ CA THI: CBT-' + Date.now().toString().slice(-6)"></p>
+        <p class="text-gray-600">{new Date().toLocaleDateString('vi-VN')}</p>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="text-center my-4">
+      <h1 class="text-xl font-black uppercase tracking-tight">
+        PHIẾU CHẤM ĐÁNH GIÁ NĂNG LỰC THỰC HÀNH TỔNG HỢP (4 GIỜ)
+      </h1>
+      <p class="text-xs italic">(Đánh giá theo chuẩn năng lực Kỹ thuật viên Helpdesk - 5 Tiêu chí Rubric)</p>
+    </div>
+
+    <!-- Meta Thông Tin Thí Sinh & Ca Thi -->
+    <div class="border border-black p-3 rounded mb-4 text-xs grid grid-cols-2 gap-2">
+      <div><span class="font-bold">Họ và tên KTV:</span> <span x-text="studentInfo.name || 'Học sinh'"></span></div>
+      <div><span class="font-bold">Lớp:</span> <span x-text="studentInfo.className || 'Tin học ứng dụng'"></span></div>
+      <div><span class="font-bold">Bàn kỹ thuật:</span> <span x-text="studentInfo.station"></span></div>
+      <div><span class="font-bold">KTV 2 (Bạn cùng bàn):</span> <span x-text="studentInfo.partner || 'KTV 2'"></span></div>
+      <div class="col-span-2">
+        <span class="font-bold">Đề bài bốc thăm:</span>
+        <span class="font-semibold" x-text="getCurrentTicket().code + ': ' + getCurrentTicket().title"></span>
+      </div>
+    </div>
+
+    <!-- Bảng Điểm 5 Tiêu Chí -->
+    <table class="w-full border-collapse border border-black text-xs mb-4">
+      <thead>
+        <tr class="bg-gray-100">
+          <th class="border border-black p-2 text-center w-10">TT</th>
+          <th class="border border-black p-2 text-left">Tiêu chí đánh giá theo chuẩn Thông tư 55</th>
+          <th class="border border-black p-2 text-center w-20">Điểm tối đa</th>
+          <th class="border border-black p-2 text-center w-20">Điểm đạt</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="border border-black p-2 text-center font-bold">1</td>
+          <td class="border border-black p-2">
+            <strong>Quy trình và An toàn kỹ thuật</strong>
+            <p class="text-[10px] text-gray-600">Rút-bấm-khay xả tụ 3 lần, đeo vòng/xả ESD, sao lưu dữ liệu khách 100%.</p>
+          </td>
+          <td class="border border-black p-2 text-center font-bold">2.0</td>
+          <td class="border border-black p-2 text-center font-bold" x-text="safetyDisqualified ? '0.0' : getScoreByCriterion(1).toFixed(2)"></td>
+        </tr>
+        <tr>
+          <td class="border border-black p-2 text-center font-bold">2</td>
+          <td class="border border-black p-2">
+            <strong>Chẩn đoán nguyên nhân sự cố</strong>
+            <p class="text-[10px] text-gray-600">Khoanh vùng đúng bệnh, đọc đèn EZ Debug/Buzzer bíp, dùng công cụ chuẩn.</p>
+          </td>
+          <td class="border border-black p-2 text-center font-bold">2.5</td>
+          <td class="border border-black p-2 text-center font-bold" x-text="getScoreByCriterion(2).toFixed(2)"></td>
+        </tr>
+        <tr>
+          <td class="border border-black p-2 text-center font-bold">3</td>
+          <td class="border border-black p-2">
+            <strong>Thao tác xử lý kỹ thuật</strong>
+            <p class="text-[10px] text-gray-600">Tháo lắp chuẩn cơ khí, chà gôm RAM, keo hạt đậu xanh, F_PANEL, cài Win 10 UEFI đúng ổ C.</p>
+          </td>
+          <td class="border border-black p-2 text-center font-bold">3.0</td>
+          <td class="border border-black p-2 text-center font-bold" x-text="getScoreByCriterion(3).toFixed(2)"></td>
+        </tr>
+        <tr>
+          <td class="border border-black p-2 text-center font-bold">4</td>
+          <td class="border border-black p-2">
+            <strong>Kiểm tra và Xác nhận vận hành</strong>
+            <p class="text-[10px] text-gray-600">HWMonitor CPU &lt; 75°C, CrystalDiskInfo Good, in Test Page máy in thành công.</p>
+          </td>
+          <td class="border border-black p-2 text-center font-bold">1.5</td>
+          <td class="border border-black p-2 text-center font-bold" x-text="getScoreByCriterion(4).toFixed(2)"></td>
+        </tr>
+        <tr>
+          <td class="border border-black p-2 text-center font-bold">5</td>
+          <td class="border border-black p-2">
+            <strong>Bàn giao và Hồ sơ kỹ thuật</strong>
+            <p class="text-[10px] text-gray-600">Đóng nắp vặn đủ ốc, dọn sạch bàn máy tác phong 5S, bàn giao dữ liệu nguyên vẹn.</p>
+          </td>
+          <td class="border border-black p-2 text-center font-bold">1.0</td>
+          <td class="border border-black p-2 text-center font-bold" x-text="getScoreByCriterion(5).toFixed(2)"></td>
+        </tr>
+        <tr class="bg-gray-100 font-bold">
+          <td colspan="2" class="border border-black p-2 text-right uppercase">Tổng Điểm Đạt Được:</td>
+          <td class="border border-black p-2 text-center font-mono">10.0</td>
+          <td class="border border-black p-2 text-center font-mono text-sm" x-text="safetyDisqualified ? '0.00' : totalScore.toFixed(2)"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="border border-black p-3 rounded mb-6 text-xs">
+      <span class="font-bold">Kết luận xếp loại:</span>
+      <span class="font-black uppercase ml-1" x-text="safetyDisqualified ? 'ĐÌNH CHỈ THI (VI PHẠM AN TOÀN SINH TỬ)' : rubricRank"></span>
+      <p class="mt-1"><span class="font-bold">Nhận xét của Giảng viên:</span> <span x-text="teacherNotes || 'Đạt yêu cầu kỹ năng nghề kỹ thuật viên cơ bản.'"></span></p>
+    </div>
+
+    <!-- Chữ ký 4 bên -->
+    <div class="grid grid-cols-4 text-center text-xs pt-4">
+      <div>
+        <p class="font-bold mb-14">KTV 1 (Thao tác)</p>
+        <p class="font-bold" x-text="studentInfo.name || 'KTV 1'"></p>
+      </div>
+      <div>
+        <p class="font-bold mb-14">KTV 2 (An toàn)</p>
+        <p class="font-bold" x-text="studentInfo.partner || 'KTV 2'"></p>
+      </div>
+      <div>
+        <p class="font-bold mb-14">KTV 3 (Ghi chép)</p>
+        <p class="font-bold">KTV 3</p>
+      </div>
+      <div>
+        <p class="font-bold mb-14">GIẢNG VIÊN CHẤM</p>
+        <p class="font-bold">{HARDWARE_METADATA.teacher}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ ticketsData: PRACTICAL_EXAM_TICKETS, rubricData: OFFICIAL_RUBRIC_CRITERIA }}>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('examSimulatorEngine', () => ({
+      tickets: ticketsData,
+      rubricCriteria: rubricData,
+      selectedTicketIdx: 0,
+      
+      // Timer: 4 Hours = 240 minutes = 14400 seconds
+      examTimerSeconds: 14400,
+      timerRunning: false,
+      timerInterval: null,
+
+      // Student info
+      studentInfo: {
+        name: '',
+        className: '',
+        station: 'Bàn Kỹ Thuật 01',
+        partner: '',
+      },
+
+      // Form rubric checks
+      rubricChecks: {},
+      safetyDisqualified: false,
+      teacherNotes: '',
+
+      init() {
+        // Try restoring student info from localStorage if exists
+        try {
+          const saved = localStorage.getItem('ktv_student_info');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            this.studentInfo.name = parsed.name || '';
+            this.studentInfo.className = parsed.className || '';
+            this.studentInfo.station = parsed.station || 'Bàn Kỹ Thuật 01';
+            this.studentInfo.partner = parsed.partner || '';
+          }
+        } catch (e) {}
+      },
+
+      getCurrentTicket() {
+        return this.tickets[this.selectedTicketIdx] || this.tickets[0];
+      },
+
+      pickRandomTicket() {
+        const current = this.selectedTicketIdx;
+        let next = current;
+        if (this.tickets.length > 1) {
+          while (next === current) {
+            next = Math.floor(Math.random() * this.tickets.length);
+          }
+        }
+        this.selectedTicketIdx = next;
+      },
+
+      // Timer methods
+      get formattedExamTimer() {
+        const total = this.examTimerSeconds;
+        const hrs = Math.floor(total / 3600);
+        const mins = Math.floor((total % 3600) / 60);
+        const secs = total % 60;
+        return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      },
+
+      startTimer() {
+        if (this.timerRunning) return;
+        this.timerRunning = true;
+        this.timerInterval = setInterval(() => {
+          if (this.examTimerSeconds > 0) {
+            this.examTimerSeconds--;
+          } else {
+            this.pauseTimer();
+            alert('⏱️ Đã hết 4 giờ làm bài sát hạch! Vui lòng dừng mọi thao tác và chuẩn bị nghiệm thu.');
+          }
+        }, 1000);
+      },
+
+      pauseTimer() {
+        this.timerRunning = false;
+        if (this.timerInterval) {
+          clearInterval(this.timerInterval);
+          this.timerInterval = null;
+        }
+      },
+
+      resetTimer() {
+        this.pauseTimer();
+        this.examTimerSeconds = 14400;
+      },
+
+      // Score calculation
+      get totalScore() {
+        if (this.safetyDisqualified) return 0;
+        let sum = 0;
+        this.rubricCriteria.forEach(c => {
+          c.items.forEach(item => {
+            if (this.rubricChecks[item.id]) {
+              sum += item.score;
+            }
+          });
+        });
+        return Math.min(10.0, Math.round(sum * 100) / 100);
+      },
+
+      getScoreByCriterion(criterionNum) {
+        const c = this.rubricCriteria.find(x => x.num === criterionNum);
+        if (!c) return 0;
+        let sum = 0;
+        c.items.forEach(item => {
+          if (this.rubricChecks[item.id]) {
+            sum += item.score;
+          }
+        });
+        return Math.min(c.maxScore, Math.round(sum * 100) / 100);
+      },
+
+      get rubricRank() {
+        if (this.safetyDisqualified) return 'CHƯA ĐẠT (ĐÌNH CHỈ THI)';
+        const s = this.totalScore;
+        if (s >= 8.5) return 'XUẤT SẮC (KTV BẬC CAO)';
+        if (s >= 7.0) return 'KHÁ - GIỎI (KTV ĐẠT CHUẨN)';
+        if (s >= 5.0) return 'ĐẠT YÊU CẦU (KTV THỰC TẬP)';
+        return 'CHƯA ĐẠT (CẦN ÔN LUYỆN LẠI)';
+      },
+
+      resetRubricForm() {
+        if (confirm('Em có chắc chắn muốn đặt lại toàn bộ điểm trên bảng Rubric không?')) {
+          this.rubricChecks = {};
+          this.safetyDisqualified = false;
+          this.teacherNotes = '';
+        }
+      },
+
+      printA4Rubric() {
+        // Save student info
+        try {
+          localStorage.setItem('ktv_student_info', JSON.stringify(this.studentInfo));
+        } catch (e) {}
+
+        window.print();
+      },
+    }));
+  });
+</script>

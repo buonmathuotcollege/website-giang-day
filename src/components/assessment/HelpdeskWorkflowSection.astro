@@ -1,0 +1,684 @@
+---
+import {
+  DISASSEMBLY_STEPS,
+  ASSEMBLY_STEPS,
+  CORE_SKILLS,
+  LAB_MOTHERBOARDS,
+  H510_HOTSPOTS,
+} from '../../data/hardwareTrainingPackage';
+import { HELPDESK_5_STEPS } from '../../data/hardwareCurriculum';
+---
+
+<div class="space-y-6" x-data="{
+  workflowSubTab: 'workflow5',
+  activeStep5Index: 0,
+  assemblySubTab: 'disassembly',
+  activeDisassemblyStep: 0,
+  activeAssemblyStep: 0,
+  selectedSkillId: 'ram',
+  selectedBoardId: 'msi',
+  zoomedImage: null,
+  zoomedImageTitle: '',
+  workflowProgress: {},
+  openZoom(src, title) {
+    this.zoomedImage = src;
+    this.zoomedImageTitle = title;
+  },
+  closeZoom() {
+    this.zoomedImage = null;
+    this.zoomedImageTitle = '';
+  },
+  toggleStep(key) {
+    this.workflowProgress[key] = !this.workflowProgress[key];
+    try {
+      localStorage.setItem('ktv_helpdesk_progress', JSON.stringify(this.workflowProgress));
+    } catch(e) {}
+  },
+  init() {
+    try {
+      const saved = localStorage.getItem('ktv_helpdesk_progress');
+      if (saved) this.workflowProgress = JSON.parse(saved);
+    } catch(e) {}
+  }
+}">
+  <!-- 1. Hero Formula Banner (Công thức 3 Giây Là Nhớ) -->
+  <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 text-white rounded-2xl p-5 sm:p-7 shadow-md border border-slate-700">
+    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-400 text-slate-950">
+            ★ CBT HELPDESK WORKFLOW (KHỚP 100% RUBRIC 10.0)
+          </span>
+          <span class="text-xs text-slate-300 font-medium">Mắt thấy – Tay làm – Chuẩn hóa KTV</span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+          Sổ Tay Nghiệp Vụ KTV: 5 Bước Quy Trình Thực Chiến
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
+          Đào tạo theo năng lực thực tế (CBT). Không chia theo buổi lý thuyết rời rạc, mà học theo đúng luồng công việc của kỹ thuật viên,
+          khớp 100% với 5 tiêu chí chấm điểm bài thi thực hành 4 giờ:
+          <span class="text-amber-300 font-bold">B1: An toàn (2.0đ)</span> •
+          <span class="text-sky-300 font-bold">B2: Chẩn đoán (2.5đ)</span> •
+          <span class="text-emerald-300 font-bold">B3: Xử lý kỹ thuật (3.0đ)</span> •
+          <span class="text-purple-300 font-bold">B4: Xác nhận (1.5đ)</span> •
+          <span class="text-rose-300 font-bold">B5: Bàn giao (1.0đ)</span>
+        </p>
+      </div>
+
+      <!-- Quick progress pill -->
+      <div class="bg-slate-800/90 border border-slate-700 rounded-xl p-3 text-center shrink-0 min-w-[170px] shadow-inner">
+        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tiến Độ Quy Trình</p>
+        <p class="text-2xl font-black text-emerald-400 mt-0.5 font-mono">
+          <span x-text="Object.values(workflowProgress).filter(Boolean).length"></span> / {HELPDESK_5_STEPS.length}
+        </p>
+        <p class="text-[11px] text-slate-400">bước đã xác nhận an toàn</p>
+      </div>
+    </div>
+
+    <!-- 4 Sub-navigation Pills (Min 48px touch targets) -->
+    <div class="mt-5 pt-4 border-t border-slate-700/70 flex flex-wrap gap-2">
+      <button
+        type="button"
+        @click="workflowSubTab = 'workflow5'"
+        class="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5"
+        :class="workflowSubTab === 'workflow5' ? 'bg-amber-400 text-slate-950 font-black shadow-md' : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700'"
+      >
+        <span>🎯</span>
+        <span>1. Luồng 5 Bước Helpdesk (Khớp Rubric)</span>
+      </button>
+
+      <button
+        type="button"
+        @click="workflowSubTab = 'assembly'"
+        class="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5"
+        :class="workflowSubTab === 'assembly' ? 'bg-amber-400 text-slate-950 font-black shadow-md' : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700'"
+      >
+        <span>⚙️</span>
+        <span>2. Tháo Máy (6b) & Lắp Máy (7b)</span>
+      </button>
+
+      <button
+        type="button"
+        @click="workflowSubTab = 'skills'"
+        class="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5"
+        :class="workflowSubTab === 'skills' ? 'bg-amber-400 text-slate-950 font-black shadow-md' : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700'"
+      >
+        <span>🔧</span>
+        <span>3. 4 Kỹ Năng Cơ Khí & Bẫy Lỗi</span>
+      </button>
+
+      <button
+        type="button"
+        @click="workflowSubTab = 'components'"
+        class="min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5"
+        :class="workflowSubTab === 'components' ? 'bg-amber-400 text-slate-950 font-black shadow-md' : 'bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700'"
+      >
+        <span>🧠</span>
+        <span>4. So Sánh 3 Bo Mạch H510 & Thị Trường</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- SUBTAB 1: LUỒNG 5 BƯỚC HELPDESK WORKFLOW (KHỚP 5 TIÊU CHÍ RUBRIC 10Đ)  -->
+  <!-- ===================================================================== -->
+  <div x-show="workflowSubTab === 'workflow5'" class="space-y-6">
+    <!-- Step Navigation Buttons Grid (5 Steps) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2.5">
+      {HELPDESK_5_STEPS.map((step, idx) => (
+        <button
+          type="button"
+          @click={`activeStep5Index = ${idx}`}
+          class="p-3.5 rounded-xl border text-left transition-all relative overflow-hidden flex flex-col justify-between min-h-[85px]"
+          :class={`activeStep5Index === ${idx} ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-amber-500/40' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'`}
+        >
+          <div>
+            <div class="flex items-center justify-between text-[11px] font-bold">
+              <span class="font-mono">BƯỚC {step.stepNumber}</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded font-mono font-bold" :class={`activeStep5Index === ${idx} ? 'bg-amber-400 text-slate-950' : 'bg-slate-100 text-slate-700'`}>
+                {step.maxScore.toFixed(1)}đ
+              </span>
+            </div>
+            <p class="text-xs font-black mt-1 leading-snug">{step.title.replace(`BƯỚC ${step.stepNumber}: `, '')}</p>
+          </div>
+          <div class="flex items-center justify-between mt-2 pt-1 border-t border-slate-100/20 text-[10px] text-slate-400 font-mono">
+            <span>⏱️ {step.timeEstimate}</span>
+            <span x-show={`workflowProgress['step_${step.stepNumber}']`} class="text-emerald-400 font-bold">✓ Đã xác nhận</span>
+          </div>
+        </button>
+      ))}
+    </div>
+
+    <!-- Active Step Detail Cards (5 Steps) -->
+    {HELPDESK_5_STEPS.map((step, idx) => (
+      <div
+        x-show={`activeStep5Index === ${idx}`}
+        class="bg-white border-2 border-slate-300 rounded-2xl p-5 sm:p-7 shadow-sm space-y-6"
+      >
+        <!-- Step Header -->
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
+          <div>
+            <div class="flex flex-wrap items-center gap-2 mb-1.5">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold bg-slate-900 text-white">
+                BƯỚC {step.stepNumber} / 5
+              </span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                ★ {step.rubricCriteria} ({step.maxScore.toFixed(1)} điểm)
+              </span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-900">
+                👤 {step.role}
+              </span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-mono bg-slate-100 text-slate-700">
+                ⏱️ {step.timeEstimate}
+              </span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              {step.title}
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">
+              {step.summary}
+            </p>
+          </div>
+
+          <!-- Confirm Checkbox in Header -->
+          <label class="flex items-center gap-2 cursor-pointer bg-slate-50 hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 p-2.5 rounded-xl transition-all select-none shrink-0 min-h-[44px]">
+            <input
+              type="checkbox"
+              class="w-5 h-5 rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+              :checked={`workflowProgress['step_${step.stepNumber}']`}
+              @change={`toggleStep('step_${step.stepNumber}')`}
+            />
+            <span class="text-xs font-bold text-slate-800">
+              Xác nhận đã nắm vững an toàn
+            </span>
+          </label>
+        </div>
+
+        <!-- 3-Second Formula Box (Khẩu quyết 3 chữ + 3 ô xúc giác) -->
+        <div class="bg-slate-50 border-2 border-slate-300 rounded-2xl p-4 sm:p-5">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lg">⚡</span>
+            <h4 class="text-xs font-extrabold uppercase tracking-wider text-slate-600">
+              Công Thức 3 Giây Là Nhớ: Khẩu Quyết Thực Chiến
+            </h4>
+          </div>
+
+          <div class="p-3 bg-slate-900 text-amber-400 font-mono font-black text-center text-sm sm:text-base rounded-xl tracking-wider mb-4 border border-slate-700 shadow-sm">
+            « {step.motto} »
+          </div>
+
+          <!-- Checkpoint & Danger Warning -->
+          <div class="space-y-2">
+            {step.checkpoint && (
+              <div class="bg-amber-50 border-2 border-amber-300 rounded-xl p-3.5 flex items-start gap-2.5">
+                <span class="text-xl shrink-0">🛑</span>
+                <div class="text-xs">
+                  <p class="font-bold text-amber-950 uppercase">{step.checkpoint.name}</p>
+                  <p class="text-amber-900 mt-0.5 leading-relaxed">{step.checkpoint.requirement}</p>
+                  <p class="text-amber-800 font-semibold mt-1">→ Ký duyệt: {step.checkpoint.signoff}</p>
+                </div>
+              </div>
+            )}
+
+            <div class="bg-rose-50 border border-rose-200 rounded-xl p-3.5 flex items-start gap-2.5">
+              <span class="text-xl shrink-0">⚠️</span>
+              <div class="text-xs">
+                <p class="font-bold text-rose-950 uppercase">Cảnh Báo Lỗi Nguy Hiểm & Vi Phạm:</p>
+                <p class="text-rose-900 mt-0.5 leading-relaxed font-medium">{step.dangerNote}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid 2 Cột: Bên Trái Hướng Dẫn & ProTip, Bên Phải Ảnh Thực Tế -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Cột Trái: Chi Tiết Thao Tác -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2.5">
+              <h5 class="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                <span>📋</span>
+                <span>Các Thao Tác Kỹ Thuật Bắt Buộc Tại Bàn Máy:</span>
+              </h5>
+              <ul class="space-y-2 text-xs sm:text-sm text-slate-700">
+                {step.actions.map((act) => (
+                  <li class="flex items-start gap-2">
+                    <span class="text-primary-600 font-bold mt-0.5">•</span>
+                    <span class="leading-relaxed">{act}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <!-- Pro Tip -->
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3.5 text-xs flex items-start gap-2">
+              <span class="text-base shrink-0">💡</span>
+              <div>
+                <strong class="text-indigo-950 block mb-0.5">Kinh Nghiệm Thực Chiến KTV:</strong>
+                <p class="text-indigo-900 leading-relaxed font-medium">{step.proTip}</p>
+              </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              {step.tags.map((tg) => (
+                <span class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-medium border border-slate-200">
+                  #{tg}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <!-- Cột Phải: Hình Ảnh Thực Tế Linh Kiện -->
+          <div class="lg:col-span-5 space-y-3">
+            <div class="relative bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
+              <img
+                src={step.imageSrc}
+                alt={step.imageAlt}
+                class="w-full h-56 sm:h-64 object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+                @click={`openZoom('${step.imageSrc}', '${step.imageAlt.replace(/'/g, "\\'")}')`}
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
+
+              <button
+                type="button"
+                @click={`openZoom('${step.imageSrc}', '${step.imageAlt.replace(/'/g, "\\'")}')`}
+                class="absolute bottom-3 right-3 px-3 py-1.5 bg-slate-900/90 hover:bg-slate-900 text-white text-xs font-bold rounded-lg border border-slate-600 flex items-center gap-1.5 shadow-md backdrop-blur-sm transition-all"
+              >
+                <span>🔍</span>
+                <span>Phóng to</span>
+              </button>
+
+              <div class="absolute bottom-3 left-3 right-24 pointer-events-none">
+                <span class="text-[11px] text-slate-200 font-medium line-clamp-1">
+                  {step.imageAlt}
+                </span>
+              </div>
+            </div>
+
+            {step.secondaryImageSrc && (
+              <div class="relative bg-slate-900 rounded-xl overflow-hidden border border-slate-200 shadow-sm group">
+                <img
+                  src={step.secondaryImageSrc}
+                  alt={`${step.title} - Ảnh chi tiết bổ sung`}
+                  class="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+                  @click={`openZoom('${step.secondaryImageSrc}', '${step.title.replace(/'/g, "\\'")}')`}
+                  loading="lazy"
+                />
+                <button
+                  type="button"
+                  @click={`openZoom('${step.secondaryImageSrc}', '${step.title.replace(/'/g, "\\'")}')`}
+                  class="absolute bottom-2 right-2 px-2.5 py-1 bg-slate-900/90 text-white text-[11px] font-bold rounded border border-slate-600 flex items-center gap-1"
+                >
+                  <span>🔍 Chi tiết</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- SUBTAB 2: THÁO MÁY (6 BƯỚC) & LẮP MÁY (7 BƯỚC)                       -->
+  <!-- ===================================================================== -->
+  <div x-show="workflowSubTab === 'assembly'" class="space-y-6" x-cloak>
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 mb-1.5">
+            <span>⚙️</span>
+            <span>QUY TRÌNH CƠ KHÍ CHUẨN KỸ THUẬT VIÊN</span>
+          </span>
+          <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            Thao Tác Tháo Máy (6 Bước) & Lắp Máy (7 Bước)
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">
+            Mọi thao tác đều có thứ tự cơ khí chuẩn xác, không làm xước vỏ, không gãy chân socket và không rơi ốc vào bo mạch.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            @click="assemblySubTab = 'disassembly'"
+            class="px-4 py-2 rounded-xl text-xs font-bold transition-all border"
+            :class="assemblySubTab === 'disassembly' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+          >
+            <span>🔄 Tháo Máy (6 Bước)</span>
+          </button>
+          <button
+            type="button"
+            @click="assemblySubTab = 'assembly'"
+            class="px-4 py-2 rounded-xl text-xs font-bold transition-all border"
+            :class="assemblySubTab === 'assembly' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+          >
+            <span>⚡ Lắp Máy (7 Bước)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- DISASSEMBLY STEPS (6 BƯỚC) -->
+      <div x-show="assemblySubTab === 'disassembly'" class="space-y-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+          {DISASSEMBLY_STEPS.map((s, idx) => (
+            <button
+              type="button"
+              @click={`activeDisassemblyStep = ${idx}`}
+              class="p-2.5 rounded-xl border text-left transition-all"
+              :class={`activeDisassemblyStep === ${idx} ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'`}
+            >
+              <span class="text-[10px] font-mono block opacity-80">BƯỚC {s.stepNumber}</span>
+              <p class="text-xs font-bold truncate mt-0.5">{s.shortName}</p>
+            </button>
+          ))}
+        </div>
+
+        {DISASSEMBLY_STEPS.map((s, idx) => (
+          <div x-show={`activeDisassemblyStep === ${idx}`} class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div>
+                <span class="text-xs font-mono font-bold text-slate-500 uppercase">Bước Tháo {s.stepNumber} / 6</span>
+                <h4 class="text-base sm:text-lg font-black text-slate-900">{s.title}</h4>
+              </div>
+              <span class="text-xs font-mono bg-white px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700">Dụng cụ: {s.tool}</span>
+            </div>
+
+            <div class="p-3 bg-slate-900 text-amber-400 font-mono font-bold text-xs sm:text-sm rounded-lg text-center">
+              « {s.motto} »
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div class="space-y-2 bg-white p-3.5 rounded-lg border border-slate-200">
+                <strong class="text-slate-900 block">Thao tác kỹ thuật chi tiết:</strong>
+                <p class="text-slate-700 leading-relaxed">{s.action}</p>
+                <div class="pt-2 border-t border-slate-100">
+                  <span class="text-emerald-700 font-bold">🛡️ Poka-Yoke:</span>
+                  <span class="text-slate-600"> {s.pokaYoke}</span>
+                </div>
+              </div>
+
+              <div class="space-y-2 bg-rose-50 p-3.5 rounded-lg border border-rose-200">
+                <strong class="text-rose-950 block">Các sai sót học sinh dễ mắc phải:</strong>
+                <ul class="space-y-1.5 text-rose-900 list-disc list-inside">
+                  {s.commonMistakes.map(m => (
+                    <li class="leading-relaxed">{m}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- ASSEMBLY STEPS (7 BƯỚC) -->
+      <div x-show="assemblySubTab === 'assembly'" class="space-y-6" x-cloak>
+        <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2">
+          {ASSEMBLY_STEPS.map((s, idx) => (
+            <button
+              type="button"
+              @click={`activeAssemblyStep = ${idx}`}
+              class="p-2.5 rounded-xl border text-left transition-all"
+              :class={`activeAssemblyStep === ${idx} ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'`}
+            >
+              <span class="text-[10px] font-mono block opacity-80">BƯỚC {s.stepNumber}</span>
+              <p class="text-xs font-bold truncate mt-0.5">{s.shortName}</p>
+            </button>
+          ))}
+        </div>
+
+        {ASSEMBLY_STEPS.map((s, idx) => (
+          <div x-show={`activeAssemblyStep === ${idx}`} class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div>
+                <span class="text-xs font-mono font-bold text-slate-500 uppercase">Bước Lắp {s.stepNumber} / 7</span>
+                <h4 class="text-base sm:text-lg font-black text-slate-900">{s.title}</h4>
+              </div>
+              <span class="text-xs font-mono bg-white px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700">Dụng cụ: {s.tool}</span>
+            </div>
+
+            <div class="p-3 bg-slate-900 text-amber-400 font-mono font-bold text-xs sm:text-sm rounded-lg text-center">
+              « {s.motto} »
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+              <div class="space-y-2 bg-white p-3.5 rounded-lg border border-slate-200">
+                <strong class="text-slate-900 block">Thao tác kỹ thuật chi tiết:</strong>
+                <p class="text-slate-700 leading-relaxed">{s.action}</p>
+                <div class="pt-2 border-t border-slate-100">
+                  <span class="text-emerald-700 font-bold">🛡️ Poka-Yoke:</span>
+                  <span class="text-slate-600"> {s.pokaYoke}</span>
+                </div>
+              </div>
+
+              <div class="space-y-2 bg-rose-50 p-3.5 rounded-lg border border-rose-200">
+                <strong class="text-rose-950 block">Các sai sót học sinh dễ mắc phải:</strong>
+                <ul class="space-y-1.5 text-rose-900 list-disc list-inside">
+                  {s.commonMistakes.map(m => (
+                    <li class="leading-relaxed">{m}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- SUBTAB 3: 4 KỸ NĂNG CƠ KHÍ & BẪY LỖI THỰC HÀNH                         -->
+  <!-- ===================================================================== -->
+  <div x-show="workflowSubTab === 'skills'" class="space-y-6" x-cloak>
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm space-y-6">
+      <div class="border-b border-slate-100 pb-4">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 mb-1.5">
+          <span>🔧</span>
+          <span>4 KỸ NĂNG SỐNG CÒN CỦA KỸ THUẬT VIÊN PHẦN CỨNG</span>
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+          Vệ Sinh Chân RAM/VGA · Cắm F_PANEL · Clear CMOS · Keo Hạt Đậu Xanh
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+          Bốn kỹ năng này chiếm tới 85% các lỗi thường gặp trong phòng thực hành và ca thi tổng hợp.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {CORE_SKILLS.map(sk => (
+          <button
+            type="button"
+            @click={`selectedSkillId = '${sk.id}'`}
+            class="p-3 rounded-xl border text-left transition-all"
+            :class={`selectedSkillId === '${sk.id}' ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-emerald-500/40' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'`}
+          >
+            <span class="text-base">{sk.icon}</span>
+            <p class="text-xs sm:text-sm font-bold mt-1 leading-snug">{sk.name}</p>
+          </button>
+        ))}
+      </div>
+
+      {CORE_SKILLS.map(sk => (
+        <div x-show={`selectedSkillId === '${sk.id}'`} class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-5">
+          <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+            <div>
+              <span class="text-xs font-mono font-bold text-slate-500 uppercase">{sk.target}</span>
+              <h4 class="text-base sm:text-lg font-black text-slate-900">{sk.name}</h4>
+            </div>
+            <span class="text-xs font-mono bg-white px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700">Dụng cụ: {sk.tool}</span>
+          </div>
+
+          <div class="p-3 bg-slate-900 text-amber-400 font-mono font-bold text-xs sm:text-sm rounded-lg text-center">
+            « {sk.motto} »
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            <div class="lg:col-span-7 space-y-3 text-xs">
+              <div class="bg-white p-3.5 rounded-lg border border-slate-200">
+                <strong class="text-slate-900 block mb-1">Thao tác tiêu chuẩn từng bước:</strong>
+                <ol class="space-y-1.5 text-slate-700 list-decimal list-inside">
+                  {sk.steps.map(st => (
+                    <li class="leading-relaxed">{st}</li>
+                  ))}
+                </ol>
+              </div>
+
+              <div class="bg-rose-50 p-3.5 rounded-lg border border-rose-200">
+                <strong class="text-rose-950 block mb-1">Các lỗi thường gặp nhất:</strong>
+                <ul class="space-y-1 text-rose-900 list-disc list-inside">
+                  {sk.mistakes.map(m => (
+                    <li class="leading-relaxed">{m}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div class="bg-emerald-50 p-3.5 rounded-lg border border-emerald-200 text-emerald-950">
+                <strong class="block mb-0.5">Dấu hiệu nhận biết đã đạt chuẩn:</strong>
+                <p class="leading-relaxed">{sk.successSign}</p>
+              </div>
+            </div>
+
+            <div class="lg:col-span-5">
+              <div class="relative bg-slate-900 rounded-xl overflow-hidden border border-slate-200 shadow group">
+                <img
+                  src={sk.imageSrc}
+                  alt={sk.name}
+                  class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+                  @click={`openZoom('${sk.imageSrc}', '${sk.name.replace(/'/g, "\\'")}')`}
+                  loading="lazy"
+                />
+                <button
+                  type="button"
+                  @click={`openZoom('${sk.imageSrc}', '${sk.name.replace(/'/g, "\\'")}')`}
+                  class="absolute bottom-2.5 right-2.5 px-3 py-1 bg-slate-900/90 text-white text-xs font-bold rounded-lg border border-slate-600 flex items-center gap-1"
+                >
+                  <span>🔍 Phóng to</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- SUBTAB 4: SO SÁNH 3 BO MẠCH H510 PHÒNG LAB & THỊ TRƯỜNG                -->
+  <!-- ===================================================================== -->
+  <div x-show="workflowSubTab === 'components'" class="space-y-6" x-cloak>
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm space-y-6">
+      <div class="border-b border-slate-100 pb-4">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-900 mb-1.5">
+          <span>🗺️</span>
+          <span>BẢN ĐỒ BO MẠCH & PHÂN KHÚC LINH KIỆN THỊ TRƯỜNG</span>
+        </span>
+        <h3 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+          So Sánh 3 Bo Mạch H510 (MSI · ASUS · WINNFOX) & Mẹo Nhận Diện
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-600 mt-1">
+          Nắm vững phím Boot USB, phím vào BIOS và tín hiệu báo lỗi phần cứng để tự tin thực hành trên mọi phòng máy.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {LAB_MOTHERBOARDS.map((mb) => (
+          <button
+            type="button"
+            @click={`selectedBoardId = '${mb.id}'`}
+            class="p-3 rounded-xl border text-left transition-all"
+            :class={`selectedBoardId === '${mb.id}' ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-indigo-500/40' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'`}
+          >
+            <span class="text-[10px] font-mono block opacity-80">{mb.badge}</span>
+            <p class="text-xs sm:text-sm font-bold truncate mt-0.5">{mb.name}</p>
+          </button>
+        ))}
+      </div>
+
+      {LAB_MOTHERBOARDS.map((mb) => (
+        <div x-show={`selectedBoardId === '${mb.id}'`} class="space-y-5">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">🔑 Phím Boot USB</span>
+              <p class="text-xs sm:text-sm font-black text-slate-900 mt-1 font-mono">{mb.bootKey}</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">⚙️ Phím BIOS</span>
+              <p class="text-xs sm:text-sm font-black text-slate-900 mt-1 font-mono">{mb.biosKey}</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">🚨 Báo Lỗi Phần Cứng</span>
+              <p class="text-xs sm:text-sm font-bold text-slate-900 mt-1">{mb.debugMethod}</p>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-3">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 block">🔌 Kiểu Ngàm RAM</span>
+              <p class="text-xs sm:text-sm font-bold text-slate-900 mt-1">{mb.ramLatchType}</p>
+            </div>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-start gap-2.5">
+            <span class="text-xl shrink-0 mt-0.5">💡</span>
+            <div class="text-xs sm:text-sm text-amber-950">
+              <strong class="font-bold block mb-0.5">Lời khuyên khi thực hành trên bo mạch này:</strong>
+              <p class="leading-relaxed">{mb.practicalTip}</p>
+            </div>
+          </div>
+
+          <div class="relative bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
+            <img
+              src={mb.imageSrc}
+              alt={mb.imageAlt}
+              class="w-full h-72 sm:h-96 object-contain bg-slate-950 transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+              @click={`openZoom('${mb.imageSrc}', '${mb.imageAlt.replace(/'/g, "\\'")}')`}
+              loading="lazy"
+            />
+            <button
+              type="button"
+              @click={`openZoom('${mb.imageSrc}', '${mb.imageAlt.replace(/'/g, "\\'")}')`}
+              class="absolute bottom-3 right-3 px-3 py-1.5 bg-slate-900/90 hover:bg-slate-900 text-white text-xs font-bold rounded-lg border border-slate-600 flex items-center gap-1.5 shadow-md backdrop-blur-sm transition-all"
+            >
+              <span>🔍</span>
+              <span>Phóng to xem chân cắm</span>
+            </button>
+            <div class="absolute bottom-3 left-3 right-28 pointer-events-none">
+              <span class="text-xs text-white font-bold block">{mb.name}</span>
+              <span class="text-[11px] text-slate-300 line-clamp-1">{mb.imageAlt}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- FLOATING MODAL PHÓNG TO HÌNH ẢNH THỰC TẾ -->
+  <div
+    x-show="zoomedImage"
+    x-cloak
+    class="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center p-4 backdrop-blur-sm"
+    @keydown.escape.window="closeZoom()"
+  >
+    <div class="relative max-w-5xl w-full max-h-[90vh] flex flex-col bg-slate-900 rounded-2xl overflow-hidden border border-slate-700 shadow-2xl">
+      <div class="flex items-center justify-between p-3.5 bg-slate-950 border-b border-slate-800 text-white">
+        <div class="flex items-center gap-2">
+          <span class="text-amber-400 font-bold text-xs uppercase font-mono">🔍 Ảnh Chi Tiết Thực Tế:</span>
+          <span class="text-xs text-slate-300 font-semibold truncate max-w-md" x-text="zoomedImageTitle"></span>
+        </div>
+        <button
+          type="button"
+          @click="closeZoom()"
+          class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold border border-slate-600"
+        >
+          ✕ Đóng (ESC)
+        </button>
+      </div>
+
+      <div class="p-2 flex-1 flex items-center justify-center overflow-auto bg-slate-950">
+        <img :src="zoomedImage" :alt="zoomedImageTitle" class="max-h-[75vh] max-w-full object-contain rounded" />
+      </div>
+
+      <div class="p-3 bg-slate-950 border-t border-slate-800 text-center text-xs text-slate-400">
+        💡 Bấm ra ngoài hoặc phím ESC để đóng ảnh
+      </div>
+    </div>
+  </div>
+</div>
