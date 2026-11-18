@@ -423,104 +423,120 @@ const title = "Ôn Luyện Thi Học Sinh Giỏi: Phần Cứng & Mạng Máy T�
 
     </div>
 
+    <!-- Embedded Questions Data -->
+    <script type="application/json" id="hsg-questions-data" set:html={JSON.stringify(HSG_QUESTION_BANK)} />
+
+    <!-- Script điều khiển Alpine.js -->
+    <script is:inline>
+      function createHsgApp() {
+        let initialQuestions = [];
+        try {
+          const el = document.getElementById('hsg-questions-data');
+          if (el && el.textContent) {
+            initialQuestions = JSON.parse(el.textContent);
+          }
+        } catch (e) {
+          console.error('Failed to parse HSG questions', e);
+        }
+
+        return {
+          activeTab: 'exam',
+          allQuestions: initialQuestions,
+          currentQuestions: [],
+          answers: {},
+          isSubmitted: false,
+          timeRemaining: 1800, // 30 phút
+          timerInterval: null,
+          score: 0,
+          scoreText: '',
+          resultFeedback: '',
+
+          init() {
+            this.resetExam();
+          },
+
+          resetExam() {
+            const shuffled = [...this.allQuestions].sort(() => 0.5 - Math.random());
+            this.currentQuestions = shuffled.slice(0, 20);
+            this.answers = {};
+            this.isSubmitted = false;
+            this.timeRemaining = 1800;
+            this.score = 0;
+            this.scoreText = '';
+            this.resultFeedback = '';
+
+            if (this.timerInterval) clearInterval(this.timerInterval);
+            this.timerInterval = setInterval(() => {
+              if (this.timeRemaining > 0 && !this.isSubmitted) {
+                this.timeRemaining--;
+              } else if (this.timeRemaining <= 0 && !this.isSubmitted) {
+                this.submitExam();
+              }
+            }, 1000);
+          },
+
+          formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+          },
+
+          selectOption(questionIdx, optionIdx) {
+            if (this.isSubmitted) return;
+            this.answers[questionIdx] = optionIdx;
+          },
+
+          getOptionClass(questionIdx, optionIdx) {
+            if (!this.isSubmitted) {
+              return this.answers[questionIdx] === optionIdx
+                ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50';
+            }
+
+            const q = this.currentQuestions[questionIdx];
+            const isCorrect = q && q.correctIndex === optionIdx;
+            const isSelected = this.answers[questionIdx] === optionIdx;
+
+            if (isCorrect) {
+              return 'bg-emerald-50 text-emerald-950 border-emerald-500 font-bold';
+            }
+            if (isSelected && !isCorrect) {
+              return 'bg-rose-50 text-rose-950 border-rose-400 font-medium';
+            }
+            return 'bg-slate-50 text-slate-400 border-slate-200 opacity-60';
+          },
+
+          submitExam() {
+            if (this.isSubmitted) return;
+            this.isSubmitted = true;
+            if (this.timerInterval) clearInterval(this.timerInterval);
+
+            let correctCount = 0;
+            this.currentQuestions.forEach((q, idx) => {
+              if (this.answers[idx] === q.correctIndex) {
+                correctCount++;
+              }
+            });
+
+            const grade10 = Number(((correctCount / (this.currentQuestions.length || 1)) * 10).toFixed(1));
+            this.score = grade10;
+            this.scoreText = `${grade10} / 10.0 điểm (${correctCount}/${this.currentQuestions.length} câu đúng)`;
+
+            if (grade10 >= 8.5) {
+              this.resultFeedback = `Xuất sắc! Bạn đạt kết quả xuất sắc với ${grade10} điểm. Năng lực tư duy phần cứng và phân tích mạng máy tính của bạn hoàn toàn sẵn sàng cho kỳ thi Học sinh giỏi các cấp.`;
+            } else if (grade10 >= 6.5) {
+              this.resultFeedback = `Khá tốt! Bạn đạt ${grade10} điểm. Hãy nghiên cứu kỹ phần giải thích bản chất ở các câu sai bên dưới và ôn lại công thức tính Subnetting 30s ở Tab 2 nhé!`;
+            } else {
+              this.resultFeedback = `Bạn đạt ${grade10} điểm. Cần ôn luyện thêm kiến thức chuyên sâu về mô hình OSI, dải IP và kiến trúc bo mạch chủ. Đừng nản lòng, bấm "Đổi Đề Mới" để luyện tập lại ngay!`;
+            }
+          }
+        };
+      }
+
+      window.hsgTrainingApp = createHsgApp;
+      document.addEventListener('alpine:init', () => {
+        Alpine.data('hsgTrainingApp', createHsgApp);
+      });
+    </script>
   </div>
 </BaseLayout>
-
-<script is:inline define:vars={{ initialQuestions: HSG_QUESTION_BANK }}>
-  function hsgTrainingApp() {
-    return {
-      activeTab: 'exam',
-      allQuestions: initialQuestions || [],
-      currentQuestions: [],
-      answers: {},
-      isSubmitted: false,
-      timeRemaining: 1800, // 30 phút
-      timerInterval: null,
-      score: 0,
-      scoreText: '',
-      resultFeedback: '',
-
-      init() {
-        this.resetExam();
-      },
-
-      resetExam() {
-        // Bốc ngẫu nhiên 20 câu hỏi từ ngân hàng
-        const shuffled = [...this.allQuestions].sort(() => 0.5 - Math.random());
-        this.currentQuestions = shuffled.slice(0, 20);
-        this.answers = {};
-        this.isSubmitted = false;
-        this.timeRemaining = 1800;
-        this.score = 0;
-        this.scoreText = '';
-        this.resultFeedback = '';
-
-        if (this.timerInterval) clearInterval(this.timerInterval);
-        this.timerInterval = setInterval(() => {
-          if (this.timeRemaining > 0 && !this.isSubmitted) {
-            this.timeRemaining--;
-          } else if (this.timeRemaining <= 0 && !this.isSubmitted) {
-            this.submitExam();
-          }
-        }, 1000);
-      },
-
-      formatTime(seconds) {
-        const m = Math.floor(seconds / 60);
-        const s = seconds % 60;
-        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-      },
-
-      selectOption(questionIdx, optionIdx) {
-        if (this.isSubmitted) return;
-        this.answers[questionIdx] = optionIdx;
-      },
-
-      getOptionClass(questionIdx, optionIdx) {
-        if (!this.isSubmitted) {
-          return this.answers[questionIdx] === optionIdx
-            ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
-            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50';
-        }
-
-        const q = this.currentQuestions[questionIdx];
-        const isCorrect = q.correctIndex === optionIdx;
-        const isSelected = this.answers[questionIdx] === optionIdx;
-
-        if (isCorrect) {
-          return 'bg-emerald-50 text-emerald-950 border-emerald-500 font-bold';
-        }
-        if (isSelected && !isCorrect) {
-          return 'bg-rose-50 text-rose-950 border-rose-400 font-medium';
-        }
-        return 'bg-slate-50 text-slate-400 border-slate-200 opacity-60';
-      },
-
-      submitExam() {
-        if (this.isSubmitted) return;
-        this.isSubmitted = true;
-        if (this.timerInterval) clearInterval(this.timerInterval);
-
-        let correctCount = 0;
-        this.currentQuestions.forEach((q, idx) => {
-          if (this.answers[idx] === q.correctIndex) {
-            correctCount++;
-          }
-        });
-
-        // Tính điểm trên thang điểm 10.0
-        const grade10 = Number(((correctCount / this.currentQuestions.length) * 10).toFixed(1));
-        this.score = grade10;
-        this.scoreText = `${grade10} / 10.0 điểm (${correctCount}/${this.currentQuestions.length} câu đúng)`;
-
-        if (grade10 >= 8.5) {
-          this.resultFeedback = `Xuất sắc! Bạn đạt kết quả xuất sắc với ${grade10} điểm. Năng lực tư duy phần cứng và phân tích mạng máy tính của bạn hoàn toàn sẵn sàng cho kỳ thi Học sinh giỏi các cấp.`;
-        } else if (grade10 >= 6.5) {
-          this.resultFeedback = `Khá tốt! Bạn đạt ${grade10} điểm. Hãy nghiên cứu kỹ phần giải thích bản chất ở các câu sai bên dưới và ôn lại công thức tính Subnetting 30s ở Tab 2 nhé!`;
-        } else {
-          this.resultFeedback = `Bạn đạt ${grade10} điểm. Cần ôn luyện thêm kiến thức chuyên sâu về mô hình OSI, dải IP và kiến trúc bo mạch chủ. Đừng nản lòng, bấm "Đổi Đề Mới" để luyện tập lại ngay!`;
-        }
-      }
-    };
-  }
-</script>
