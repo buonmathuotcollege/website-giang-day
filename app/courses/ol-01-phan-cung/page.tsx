@@ -224,7 +224,7 @@ export default function SpecializedHardwarePage() {
                   {openAccordion === 2 && (
                     <div className="p-4 space-y-3 text-xs text-slate-600 bg-white border-t border-slate-200">
                       <p><strong>• Beep Code & EZ Debug LED:</strong> 1 bíp dài 2 bíp ngắn (RAM/VGA); 4 đèn EZ Debug góc phải mainboard MSI H510.</p>
-                      <p><strong>• Cắm USB WinPE:</strong> Boot F8 (ASUS) hoặc F11 (MSI/Winnfox) -> Copy Desktop, Documents, Zalo PC sang Ổ D.</p>
+                      <p><strong>• Cắm USB WinPE:</strong> Boot F8 (ASUS) hoặc F11 (MSI/Winnfox) → Copy Desktop, Documents, Zalo PC sang Ổ D.</p>
                       <p><strong>• Đối chiếu Properties:</strong> Khớp 100% số file và MB trước khi format.</p>
                       <label className="flex items-center gap-2 font-bold text-slate-900 pt-2 border-t">
                         <input

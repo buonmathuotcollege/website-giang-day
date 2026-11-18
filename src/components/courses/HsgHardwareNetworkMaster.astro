@@ -6,6 +6,8 @@ import {
   HSG_PROJECT_TEAMS,
   HSG_PROJECT_STAGES,
   HSG_RUBRIC_CRITERIA,
+  HSG_PRACTICAL_STATIONS,
+  HSG_PRACTICAL_EXAMS,
 } from '../../data/hsgCurriculum';
 
 // Group MCQs count for badges
@@ -21,6 +23,8 @@ const hsgPayload = {
   questions: HSG_QUESTION_BANK,
   cheatSheet: SUBNET_CHEAT_SHEET,
   subnetProblems: SUBNET_PRACTICE_PROBLEMS,
+  practicalStations: HSG_PRACTICAL_STATIONS,
+  practicalExams: HSG_PRACTICAL_EXAMS,
 };
 ---
 
@@ -58,10 +62,88 @@ const hsgPayload = {
     };
 
     return {
-      activeTab: 'subnetting', // 'subnetting' | 'mcq' | 'stages'
-      
+      activeTab: 'hands-on', // 'hands-on' | 'subnetting' | 'mcq'
+      practicalSubTab: 'stations', // 'stations' | 'exams' | 'rubric'
+
       // =======================================================================
-      // MODULE 1: SUBNETTING REFLEX 30s
+      // MODULE 1: THỰC HÀNH TAY NGHỀ THỰC CHIẾN (4 TRẠM + 4 ĐỀ THI + RUBRIC)
+      // =======================================================================
+      practicalStations: rawPayload.practicalStations || [],
+      practicalExams: rawPayload.practicalExams || [],
+      currentStationIdx: 0,
+      currentExamIdx: 0,
+      examChecklistState: {},
+      examDurationMinutes: 90,
+      examTimerSeconds: 90 * 60,
+      examTimerRunning: false,
+      examTimerInterval: null,
+      showExamSolution: false,
+
+      get currentStation() {
+        var self = this;
+        return self.practicalStations[self.currentStationIdx] || self.practicalStations[0] || {};
+      },
+
+      get currentExam() {
+        var self = this;
+        return self.practicalExams[self.currentExamIdx] || self.practicalExams[0] || {};
+      },
+
+      startExamTimer() {
+        if (this.examTimerInterval) clearInterval(this.examTimerInterval);
+        this.examTimerRunning = true;
+        var self = this;
+        this.examTimerInterval = setInterval(function() {
+          if (self.examTimerSeconds > 0) {
+            self.examTimerSeconds--;
+          } else {
+            self.pauseExamTimer();
+            alert('Hết giờ làm bài thi thực hành! Mời KTV dừng tay để Ban Giám khảo chấm điểm.');
+          }
+        }, 1000);
+      },
+
+      pauseExamTimer() {
+        if (this.examTimerInterval) {
+          clearInterval(this.examTimerInterval);
+          this.examTimerInterval = null;
+        }
+        this.examTimerRunning = false;
+      },
+
+      resetExamTimer(mins) {
+        this.pauseExamTimer();
+        this.examDurationMinutes = mins || 90;
+        this.examTimerSeconds = this.examDurationMinutes * 60;
+      },
+
+      formatExamTime() {
+        var hrs = Math.floor(this.examTimerSeconds / 3600);
+        var mins = Math.floor((this.examTimerSeconds % 3600) / 60);
+        var secs = this.examTimerSeconds % 60;
+        var pad = function(n) { return n < 10 ? '0' + n : n; };
+        return pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
+      },
+
+      toggleExamTask(taskId) {
+        this.examChecklistState[taskId] = !this.examChecklistState[taskId];
+      },
+
+      get examScoreCalculated() {
+        var self = this;
+        var exam = self.currentExam;
+        if (!exam || !exam.taskChecklist) return 0;
+        var total = 0;
+        exam.taskChecklist.forEach(function(t) {
+          if (self.examChecklistState[t.id]) {
+            total += t.points;
+          }
+        });
+        return total;
+      },
+
+      // =======================================================================
+      // MODULE 2: SUBNETTING REFLEX 30s
       // =======================================================================
       problemsList: problems,
       problemIndex: 0,
@@ -311,8 +393,7 @@ const hsgPayload = {
       },
 
       init() {
-        // Auto start 30s timer for module 1
-        this.startSubnetTimer();
+        // Ready state
       }
     };
   }
@@ -337,8 +418,7 @@ const hsgPayload = {
           Thi Học Sinh Giỏi Phần Cứng & Mạng Máy Tính
         </h1>
         <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-3xl">
-          Chương trình bồi dưỡng Đội tuyển Học sinh Giỏi cấp trường: Huấn luyện phản xạ Subnetting trong 30 giây, 
-          ngân hàng 54 câu hỏi vận dụng cao và Sa bàn mô phỏng dự án thi công trọn gói 180 - 240 phút.
+          Chương trình bồi dưỡng Đội tuyển Học sinh Giỏi cấp trường: Trọng tâm huấn luyện 4 Trạm thực hành kỹ năng nghề thực chiến (80% tổng điểm), bộ đề thi tay nghề có bấm giờ 90 phút và ngân hàng kiến thức chuyên sâu.
         </p>
       </div>
 
@@ -349,12 +429,16 @@ const hsgPayload = {
           <div class="text-sm font-black text-slate-800">Ea H'leo</div>
         </div>
         <div class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center min-w-[90px]">
-          <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Trắc Nghiệm</div>
-          <div class="text-sm font-black text-blue-600">54 Câu HSG</div>
+          <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Kỹ Năng Nghề</div>
+          <div class="text-sm font-black text-emerald-600">4 Trạm Lab</div>
         </div>
         <div class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center min-w-[90px]">
-          <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Sa Bàn Dự Án</div>
-          <div class="text-sm font-black text-emerald-600">5 Chặng 100đ</div>
+          <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Đề Thi Mẫu</div>
+          <div class="text-sm font-black text-blue-600">4 Đề 90 Phút</div>
+        </div>
+        <div class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center min-w-[90px]">
+          <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Đánh Giá</div>
+          <div class="text-sm font-black text-amber-600">Rubric 100đ</div>
         </div>
       </div>
     </div>
@@ -363,38 +447,729 @@ const hsgPayload = {
     <div class="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
       <button
         type="button"
+        @click="activeTab = 'hands-on'"
+        :class="activeTab === 'hands-on' ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-900' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+        class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px] cursor-pointer"
+      >
+        <span class="text-base">🛠️</span>
+        <span>Phần 1: Trạm Thực Hành Kỹ Năng Nghề (80% Điểm)</span>
+      </button>
+
+      <button
+        type="button"
         @click="activeTab = 'subnetting'"
-        :class="activeTab === 'subnetting' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+        :class="activeTab === 'subnetting' ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-900' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
         class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px] cursor-pointer"
       >
         <span class="text-base">⚡</span>
-        <span>Module 1: Phản Xạ Subnetting 30s</span>
+        <span>Phần 2: Tính Nhẩm Quy Hoạch IP 30s</span>
       </button>
 
       <button
         type="button"
         @click="activeTab = 'mcq'"
-        :class="activeTab === 'mcq' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+        :class="activeTab === 'mcq' ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-900' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
         class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px] cursor-pointer"
       >
         <span class="text-base">📚</span>
-        <span>Module 2: 54 Câu Phân Loại Cao</span>
-      </button>
-
-      <button
-        type="button"
-        @click="activeTab = 'stages'"
-        :class="activeTab === 'stages' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
-        class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px] cursor-pointer"
-      >
-        <span class="text-base">🛠️</span>
-        <span>Module 3: Sa Bàn 5 Chặng & Rubric 100đ</span>
+        <span>Phần 3: Kiến Thức Bổ Trợ & Vấn Đáp (54 Câu HSG)</span>
       </button>
     </div>
   </section>
 
   <!-- ========================================================================= -->
-  <!-- TAB 1: MODULE 1 - LUYỆN PHẢN XẠ SUBNETTING & VLSM TRONG 30 GIÂY         -->
+  <!-- PHẦN 1 (TRỌNG TÂM 80%): TRẠM THỰC HÀNH TAY NGHỀ THỰC CHIẾN              -->
+  <!-- ========================================================================= -->
+  <section x-show="activeTab === 'hands-on'" class="space-y-6" x-transition>
+    
+    <!-- Top Cockpit: Team Selector, Practical Timer & Print Trigger (Hidden when printing) -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-5 print:hidden">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-4 border-b border-slate-100">
+        <!-- Team Selector -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Đội Tuyển Thực Hành (Cơ Sở Ea H'leo):</label>
+          <div class="flex flex-wrap items-center gap-2">
+            <template x-for="team in teamsList" :key="team.id">
+              <button
+                type="button"
+                @click="selectedTeamId = team.id"
+                :class="selectedTeamId === team.id ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-900' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+                class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[44px] cursor-pointer"
+              >
+                <span x-text="team.code"></span>
+                <span class="opacity-75 font-normal ml-1" x-text="'(' + team.branch.replace('Cơ sở ', '') + ')'"></span>
+              </button>
+            </template>
+          </div>
+        </div>
+
+        <!-- Practical Countdown Clock (90 mins default) -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="p-3 bg-slate-900 text-white rounded-xl flex items-center gap-3 shadow-inner">
+            <div>
+              <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Đồng Hồ Bài Thi Thực Hành</div>
+              <div class="text-xl sm:text-2xl font-mono font-black" x-text="formatExamTime()">01:30:00</div>
+            </div>
+            <div class="flex flex-col gap-1">
+              <button
+                type="button"
+                @click="examTimerRunning ? pauseExamTimer() : startExamTimer()"
+                class="px-2.5 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-colors cursor-pointer"
+                x-text="examTimerRunning ? '⏸ Tạm dừng' : '▶ Bắt đầu'"
+              ></button>
+              <button
+                type="button"
+                @click="resetExamTimer(examDurationMinutes === 90 ? 120 : 90)"
+                class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-mono transition-colors cursor-pointer"
+                x-text="examDurationMinutes + 'm (Đổi)'"
+              ></button>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            @click="printJudgeRecord()"
+            class="min-h-[48px] px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <span>🖨️</span>
+            <span>Xuất Biên Bản A4</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sub-Tab Navigation (Touch-friendly >= 44px) -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar border-b border-slate-100">
+        <button
+          type="button"
+          @click="practicalSubTab = 'stations'"
+          :class="practicalSubTab === 'stations' ? 'border-b-2 border-slate-900 text-slate-900 font-black' : 'text-slate-500 hover:text-slate-800 font-semibold'"
+          class="px-4 py-2.5 text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5"
+        >
+          <span>📍</span>
+          <span>4 Trạm Thao Tác Kỹ Thuật Nghề</span>
+        </button>
+
+        <button
+          type="button"
+          @click="practicalSubTab = 'exams'"
+          :class="practicalSubTab === 'exams' ? 'border-b-2 border-slate-900 text-slate-900 font-black' : 'text-slate-500 hover:text-slate-800 font-semibold'"
+          class="px-4 py-2.5 text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5"
+        >
+          <span>⏱️</span>
+          <span>Bộ 4 Đề Thi Thực Hành Mẫu (90m)</span>
+        </button>
+
+        <button
+          type="button"
+          @click="practicalSubTab = 'rubric'"
+          :class="practicalSubTab === 'rubric' ? 'border-b-2 border-slate-900 text-slate-900 font-black' : 'text-slate-500 hover:text-slate-800 font-semibold'"
+          class="px-4 py-2.5 text-xs sm:text-sm whitespace-nowrap transition-all cursor-pointer flex items-center gap-1.5"
+        >
+          <span>⚖️</span>
+          <span>Phiếu Chấm Điểm Rubric 100đ</span>
+        </button>
+      </div>
+
+      <!-- Team Members Roster Inputs -->
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+        <div>
+          <span class="text-slate-500 font-semibold block mb-1">1. Kỹ sư trưởng (Lead KTV):</span>
+          <input type="text" x-model="memberLead" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
+        </div>
+        <div>
+          <span class="text-slate-500 font-semibold block mb-1">2. KTV 1 (Cơ khí & Thi công cáp):</span>
+          <input type="text" x-model="memberCable" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
+        </div>
+        <div>
+          <span class="text-slate-500 font-semibold block mb-1">3. KTV 2 (Windows 10 & Dịch vụ):</span>
+          <input type="text" x-model="memberSys" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
+        </div>
+        <div>
+          <span class="text-slate-500 font-semibold block mb-1">4. KTV 3 (Thiết bị mạng & Bảo mật):</span>
+          <input type="text" x-model="memberNet" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
+        </div>
+      </div>
+    </div>
+
+    <!-- SUB-VIEW 1: 4 TRẠM THAO TÁC KỸ THUẬT NGHÈ (Hidden when printing) -->
+    <div x-show="practicalSubTab === 'stations'" class="space-y-6 print:hidden">
+      <!-- 4 Station Navigation Buttons -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <template x-for="(st, idx) in practicalStations" :key="st.id">
+          <button
+            type="button"
+            @click="currentStationIdx = idx"
+            :class="currentStationIdx === idx ? 'border-slate-900 bg-slate-900 text-white shadow-sm ring-2 ring-slate-900' : 'border-slate-200 hover:border-slate-300 bg-white text-slate-800'"
+            class="p-3.5 rounded-2xl border text-left transition-all min-h-[64px] cursor-pointer flex flex-col justify-between"
+          >
+            <div class="flex items-center justify-between text-[11px] mb-1">
+              <span class="font-extrabold uppercase" x-text="'Trạm ' + st.stationNumber"></span>
+              <span class="font-mono px-1.5 py-0.2 rounded text-[10px]" :class="currentStationIdx === idx ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-700'" x-text="st.points + 'đ'"></span>
+            </div>
+            <div class="text-xs font-bold leading-tight line-clamp-2" x-text="st.name"></div>
+          </button>
+        </template>
+      </div>
+
+      <!-- Active Station Details Panel -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-6 animate-fadeIn">
+        <!-- Station Header -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-blue-100 text-blue-800" x-text="currentStation.badge"></span>
+              <span class="text-xs text-slate-500 font-bold" x-text="'Vai trò: ' + currentStation.role"></span>
+              <span class="text-xs text-slate-500 font-medium" x-text="'· Định mức: ' + currentStation.timeLimit"></span>
+            </div>
+            <h3 class="text-base sm:text-xl font-black text-slate-900" x-text="'Trạm ' + currentStation.stationNumber + ': ' + currentStation.name"></h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed" x-text="currentStation.objective"></p>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">Trọng số</span>
+            <div class="text-2xl font-black text-emerald-600 font-mono" x-text="currentStation.points + ' Điểm'"></div>
+          </div>
+        </div>
+
+        <!-- Equipment Checklist -->
+        <div class="p-3.5 rounded-xl bg-amber-50/60 border border-amber-200/80 text-xs text-amber-950 space-y-1.5">
+          <span class="font-bold uppercase tracking-wider text-[11px] text-amber-900 block">🧰 Dụng Cụ & Thiết Bị Phòng Lab Cần Có:</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-0.5">
+            <template x-for="(eq, eqIdx) in currentStation.equipment" :key="eqIdx">
+              <div class="flex items-center gap-1.5">
+                <span class="text-amber-700">✔</span>
+                <span x-text="eq"></span>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- 4 Step-by-Step Practical Actions -->
+        <div class="space-y-3">
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-700">Quy Trình 4 Bước Thao Tác Kỹ Thuật Chuẩn:</h4>
+          <div class="grid grid-cols-1 gap-3">
+            <template x-for="step in currentStation.steps" :key="step.stepNum">
+              <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-2 hover:border-slate-300 transition-colors">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-black flex items-center justify-center shrink-0" x-text="step.stepNum"></span>
+                    <span class="text-xs sm:text-sm font-bold text-slate-900" x-text="step.title"></span>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-700 leading-relaxed pl-8" x-text="step.action"></p>
+                
+                <!-- Poka-Yoke Tip -->
+                <div class="ml-8 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-950 flex items-start gap-1.5">
+                  <span class="font-bold text-emerald-700 shrink-0">🛡️ Poka-Yoke:</span>
+                  <span x-text="step.pokaYokeTip"></span>
+                </div>
+
+                <!-- Command Box if available -->
+                <template x-if="step.command">
+                  <div class="ml-8 p-2.5 rounded-lg bg-slate-950 text-emerald-400 font-mono text-[11px] border border-slate-800 flex items-center justify-between">
+                    <div class="truncate">
+                      <span class="text-slate-500 mr-1.5">CMD &gt;</span>
+                      <span x-text="step.command"></span>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Technical Illustration SVG -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-700">Hình Ảnh Thực Tế & Sơ Đồ Kỹ Thuật:</h4>
+          
+          <template x-if="currentStation.stationNumber === 1">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
+                <img src="/images/hsg-02/cable-tia-568ab-standard.svg" alt="Sơ đồ màu chuẩn TIA/EIA-568A và 568B" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                  <span>📷 Sơ đồ chuẩn màu 8 sợi TIA/EIA-568B Gigabit</span>
+                  <a href="/images/hsg-02/cable-tia-568ab-standard.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                </div>
+              </div>
+              <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
+                <img src="/images/hsg-02/cable-tester-gigabit.svg" alt="Máy test mạng thông mạch 8/8 sợi tuyệt đối" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                  <span>📷 Máy test cáp mạng thông 8/8 sợi & Link Speed 1.0 Gbps</span>
+                  <a href="/images/hsg-02/cable-tester-gigabit.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <template x-if="currentStation.stationNumber === 2">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
+                <img src="/images/hsg-02/win10-static-ip-config.svg" alt="Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                  <span>📷 Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10 (ncpa.cpl)</span>
+                  <a href="/images/hsg-02/win10-static-ip-config.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                </div>
+              </div>
+              <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
+                <img src="/images/hsg-02/ntfs-security-matrix.svg" alt="Ma trận phân quyền NTFS Security & Share Permissions" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                  <span>📷 Ma trận phân quyền nâng cao NTFS Security & Share Permissions</span>
+                  <a href="/images/hsg-02/ntfs-security-matrix.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <template x-if="currentStation.stationNumber === 3">
+            <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+              <img src="/images/hsg-02/topology-packet-tracer-vlsm.svg" alt="Sơ đồ Cisco Packet Tracer" class="w-full h-auto max-h-64 object-contain p-2" loading="lazy" />
+              <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                <span>📷 Sơ đồ mạng Cisco Packet Tracer: Router Core, Switch 24-Port & VLAN phòng ban</span>
+                <a href="/images/hsg-02/topology-packet-tracer-vlsm.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+              </div>
+            </div>
+          </template>
+
+          <template x-if="currentStation.stationNumber === 4">
+            <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+              <img src="/images/hsg-02/system-full-acceptance-ping.svg" alt="Nghiệm thu toàn hệ thống bằng lệnh Ping" class="w-full h-auto max-h-64 object-contain p-2" loading="lazy" />
+              <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                <span>📷 Nghiệm thu đo kiểm Ping 0% Packet Loss & Biên bản bảo vệ đồ án</span>
+                <a href="/images/hsg-02/system-full-acceptance-ping.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Verification Criteria -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-700">Tiêu Chuẩn Nghiệm Thu Sản Phẩm Thật:</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+            <template x-for="(crit, critIdx) in currentStation.verificationCriteria" :key="critIdx">
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-2">
+                <span class="text-blue-600 font-bold">✓</span>
+                <span class="text-slate-800 leading-snug" x-text="crit"></span>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Penalty Traps Table -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-1.5 text-rose-700 font-black text-xs uppercase tracking-wider">
+            <span>⚠️</span>
+            <span>Bảng Bẫy Lỗi & Mức Phạt Điểm Trừ Rủi Ro:</span>
+          </div>
+          <div class="overflow-x-auto border border-rose-200 rounded-xl">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead class="bg-rose-50/80 text-rose-950 font-bold border-b border-rose-200">
+                <tr>
+                  <th class="p-2.5 min-w-[180px]">Bẫy Lỗi Thường Gặp</th>
+                  <th class="p-2.5 min-w-[130px]">Mức Phạt Điểm</th>
+                  <th class="p-2.5 min-w-[220px]">Cách Phòng Tránh Chuẩn Poka-Yoke</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-rose-100 bg-white">
+                <template x-for="(trap, tIdx) in currentStation.penaltyTraps" :key="tIdx">
+                  <tr class="hover:bg-rose-50/30">
+                    <td class="p-2.5 font-bold text-rose-900" x-text="trap.trap"></td>
+                    <td class="p-2.5 font-bold text-rose-700 font-mono" x-text="trap.penalty"></td>
+                    <td class="p-2.5 text-slate-700" x-text="trap.howToAvoid"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SUB-VIEW 2: BỘ 4 ĐỀ THI THỰC HÀNH MẪU (Hidden when printing) -->
+    <div x-show="practicalSubTab === 'exams'" class="space-y-6 print:hidden">
+      <!-- 4 Exam Selection Pills -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <template x-for="(ex, exIdx) in practicalExams" :key="ex.id">
+          <button
+            type="button"
+            @click="currentExamIdx = exIdx; showExamSolution = false;"
+            :class="currentExamIdx === exIdx ? 'border-slate-900 bg-slate-900 text-white shadow-sm ring-2 ring-slate-900' : 'border-slate-200 hover:border-slate-300 bg-white text-slate-800'"
+            class="p-3.5 rounded-2xl border text-left transition-all min-h-[64px] cursor-pointer flex flex-col justify-between"
+          >
+            <div class="flex items-center justify-between text-[11px] mb-1">
+              <span class="font-mono font-black" x-text="ex.code"></span>
+              <span class="text-[10px] opacity-80" x-text="ex.durationMinutes + ' Phút'"></span>
+            </div>
+            <div class="text-xs font-bold leading-tight line-clamp-2" x-text="ex.title.replace('Thi Công ', '').replace('Hạ Tầng ', '')"></div>
+          </button>
+        </template>
+      </div>
+
+      <!-- Active Exam Full Card -->
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-6 animate-fadeIn">
+        <!-- Exam Meta Banner -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-emerald-600 text-white font-mono" x-text="currentExam.code"></span>
+              <span class="text-xs text-slate-500 font-bold" x-text="'Đối tượng: ' + currentExam.targetCompany"></span>
+              <span class="text-xs text-slate-500 font-medium" x-text="'· Thời gian làm bài: ' + currentExam.durationMinutes + ' phút'"></span>
+            </div>
+            <h3 class="text-base sm:text-xl font-black text-slate-900" x-text="currentExam.title"></h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed" x-text="currentExam.scenarioDescription"></p>
+          </div>
+          <!-- Live Score from Checklist -->
+          <div class="text-right shrink-0 p-3 bg-white rounded-xl border border-slate-200">
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Điểm Tự Chấm</span>
+            <div class="text-2xl font-black text-blue-600 font-mono">
+              <span x-text="examScoreCalculated">0</span><span class="text-xs text-slate-400 font-normal"> / 100đ</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Topology Summary -->
+        <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-200 text-xs text-blue-950 flex items-start gap-2">
+          <span class="font-bold text-blue-800 shrink-0">🌐 Sơ đồ kết nối:</span>
+          <span class="font-medium" x-text="currentExam.topologySummary"></span>
+        </div>
+
+        <!-- Addressing Table (IP Table) -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-black uppercase tracking-wider text-slate-700">1. Bảng Phân Bổ Địa Chỉ IP Tĩnh (Addressing Table):</h4>
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-left text-xs border-collapse font-mono">
+              <thead class="bg-slate-100 text-slate-800 font-sans font-bold border-b border-slate-200 text-[11px]">
+                <tr>
+                  <th class="p-2.5">Thiết Bị</th>
+                  <th class="p-2.5">Cổng Giao Tiếp</th>
+                  <th class="p-2.5">Địa Chỉ IP</th>
+                  <th class="p-2.5">Subnet Mask</th>
+                  <th class="p-2.5">Default Gateway</th>
+                  <th class="p-2.5 font-sans">Ghi Chú Yêu Cầu</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 bg-white text-[11px]">
+                <template x-for="(ipItem, ipIdx) in currentExam.ipTable" :key="ipIdx">
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-2.5 font-bold font-sans text-slate-900" x-text="ipItem.device"></td>
+                    <td class="p-2.5 text-slate-600" x-text="ipItem.interface"></td>
+                    <td class="p-2.5 font-bold text-blue-600" x-text="ipItem.ipAddress"></td>
+                    <td class="p-2.5 text-slate-700" x-text="ipItem.subnetMask"></td>
+                    <td class="p-2.5 text-slate-700" x-text="ipItem.defaultGateway"></td>
+                    <td class="p-2.5 font-sans text-slate-600" x-text="ipItem.note"></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Permission Matrix if present -->
+        <template x-if="currentExam.permissionMatrix && currentExam.permissionMatrix.length > 0">
+          <div class="space-y-2">
+            <h4 class="text-xs font-black uppercase tracking-wider text-slate-700">2. Ma Trận Phân Quyền Bảo Mật NTFS (Security Matrix):</h4>
+            <div class="overflow-x-auto border border-slate-200 rounded-xl">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200 text-[11px]">
+                  <tr>
+                    <th class="p-2.5">Thư Mục Dùng Chung</th>
+                    <th class="p-2.5">Nhóm / Tài Khoản</th>
+                    <th class="p-2.5">Share Permissions</th>
+                    <th class="p-2.5">NTFS Permissions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 bg-white text-[11px]">
+                  <template x-for="(perm, pIdx) in currentExam.permissionMatrix" :key="pIdx">
+                    <tr class="hover:bg-slate-50">
+                      <td class="p-2.5 font-mono font-bold text-slate-900" x-text="perm.folder"></td>
+                      <td class="p-2.5 font-bold text-indigo-700" x-text="perm.group"></td>
+                      <td class="p-2.5 text-slate-700" x-text="perm.sharePerm"></td>
+                      <td class="p-2.5 font-medium" :class="perm.ntfsPerm.includes('Deny') ? 'text-rose-700 font-bold' : 'text-emerald-700'" x-text="perm.ntfsPerm"></td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </template>
+
+        <!-- Interactive Task Checklist -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-black uppercase tracking-wider text-slate-700">3. Phiếu Chấm Điểm Thao Tác Kỹ Thuật (Task Checklist):</h4>
+            <span class="text-xs font-bold text-slate-500">Tick chọn nhiệm vụ đã hoàn tất để cộng điểm</span>
+          </div>
+          <div class="grid grid-cols-1 gap-2">
+            <template x-for="task in currentExam.taskChecklist" :key="task.id">
+              <div
+                @click="toggleExamTask(task.id)"
+                :class="examChecklistState[task.id] ? 'bg-emerald-50/80 border-emerald-300' : 'bg-white border-slate-200 hover:border-slate-300'"
+                class="p-3.5 rounded-xl border transition-all flex items-center justify-between gap-3 cursor-pointer min-h-[48px]"
+              >
+                <div class="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    :checked="examChecklistState[task.id]"
+                    @click.stop="toggleExamTask(task.id)"
+                    class="w-4 h-4 rounded text-slate-900 focus:ring-0 cursor-pointer"
+                  />
+                  <span :class="examChecklistState[task.id] ? 'line-through text-slate-500' : 'text-slate-800 font-medium'" class="text-xs sm:text-sm leading-snug" x-text="task.task"></span>
+                  <template x-if="task.isCritical">
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200 shrink-0">Bắt buộc</span>
+                  </template>
+                </div>
+                <span class="text-xs font-mono font-bold px-2 py-1 rounded bg-slate-100 text-slate-800 shrink-0" x-text="'+' + task.points + 'đ'"></span>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- Hidden Troubleshooting Scenario -->
+        <template x-if="currentExam.troubleshootingTask">
+          <div class="p-4 rounded-xl border-2 border-amber-300 bg-amber-50/50 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 rounded text-[10px] font-black uppercase bg-amber-500 text-slate-950">
+                PAN BỆNH THỰC TẾ GIÁM KHẢO CÀI ĐẶT
+              </span>
+              <span class="text-[11px] text-amber-900 font-bold">Thử thách cứu hộ hệ thống</span>
+            </div>
+
+            <div>
+              <span class="text-[11px] font-bold text-slate-500 uppercase block mb-1">Triệu chứng lâm sàng tại hiện trường:</span>
+              <p class="text-xs sm:text-sm font-bold text-slate-900 leading-snug" x-text="currentExam.troubleshootingTask.symptom"></p>
+            </div>
+
+            <!-- Toggle Hint Button -->
+            <div>
+              <button
+                type="button"
+                @click="showExamSolution = !showExamSolution"
+                class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border border-amber-300 bg-amber-100/90 hover:bg-amber-200 text-amber-950 min-h-[40px] shadow-sm"
+              >
+                <span>💡</span>
+                <span x-text="showExamSolution ? 'Ẩn Hướng Dẫn Cứu Hộ' : 'Xem Gợi Ý Nguyên Nhân & Quy Trình Cứu Hộ'">Xem Gợi Ý Nguyên Nhân & Quy Trình Cứu Hộ</span>
+                <span class="text-[10px] font-mono" x-text="showExamSolution ? '▲' : '▼'">▼</span>
+              </button>
+            </div>
+
+            <!-- Revealed Content -->
+            <div x-show="showExamSolution" x-transition class="space-y-2 pt-2 border-t border-amber-200 text-xs">
+              <div class="p-3 rounded-lg bg-white border border-amber-200">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-0.5">Nguyên nhân gốc rễ:</span>
+                <span class="text-slate-800 font-medium" x-text="currentExam.troubleshootingTask.rootCause"></span>
+              </div>
+              <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-950">
+                <span class="text-[10px] font-black text-emerald-700 uppercase tracking-wider block mb-0.5">Quy trình cứu hộ chuẩn:</span>
+                <span class="font-medium" x-text="currentExam.troubleshootingTask.solution"></span>
+              </div>
+              <div class="p-2.5 rounded-lg bg-slate-950 text-emerald-400 font-mono text-[11px] border border-slate-800">
+                <span class="text-slate-500 mr-1.5">CMD Test &gt;</span>
+                <span x-text="currentExam.troubleshootingTask.testCommand"></span>
+              </div>
+            </div>
+          </div>
+        </template>
+
+      </div>
+    </div>
+
+    <!-- SUB-VIEW 3: PHIẾU CHẤM ĐIỂM RUBRIC 100Đ & XUẤT BIÊN BẢN (Hidden when printing) -->
+    <div x-show="practicalSubTab === 'rubric'" class="space-y-6 print:hidden">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-slate-900 text-white">
+              <span>⚖️</span>
+              <span>HỘI ĐỒNG BAN GIÁM KHẢO</span>
+            </div>
+            <h3 class="text-lg font-black text-slate-900 mt-1">Bảng Chấm Điểm Rubric Dự Án (Thang Điểm 100)</h3>
+            <p class="text-xs text-slate-500">Quy đổi thang điểm 10: Điểm số &ge; 8.0 đạt chuẩn Đội tuyển HSG</p>
+          </div>
+
+          <!-- Live Score Summary Card -->
+          <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-4 text-center shrink-0">
+            <div>
+              <div class="text-[10px] uppercase font-bold text-slate-500">Tổng Điểm / 100</div>
+              <div class="text-2xl font-black text-slate-900 font-mono" x-text="totalRubricPoints">0</div>
+            </div>
+            <div class="h-8 w-px bg-slate-200"></div>
+            <div>
+              <div class="text-[10px] uppercase font-bold text-slate-500">Hệ Điểm 10</div>
+              <div class="text-2xl font-black text-blue-600 font-mono" x-text="rubricScale10">0</div>
+            </div>
+            <div class="h-8 w-px bg-slate-200"></div>
+            <div>
+              <div class="text-[10px] uppercase font-bold text-slate-500">Xếp Loại</div>
+              <div :class="rubricRank.badgeClass" class="px-2.5 py-1 rounded text-xs font-bold mt-0.5" x-text="rubricRank.text"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 Criteria Sliders & Manual Inputs -->
+        <div class="space-y-5">
+          <template x-for="(crit, cIdx) in rubricList" :key="crit.id">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <span class="text-xs font-bold text-slate-400 font-mono mr-1" x-text="crit.code"></span>
+                  <span class="text-sm font-extrabold text-slate-900" x-text="crit.name"></span>
+                  <span class="text-xs text-slate-500 block sm:inline sm:ml-2" x-text="crit.description"></span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <span class="text-xs font-bold text-slate-500">Điểm:</span>
+                  <input
+                    type="number"
+                    step="0.5"
+                    min="0"
+                    :max="crit.maxPoints"
+                    x-model.number="rubricScores[crit.id]"
+                    class="w-20 px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white text-sm font-black font-mono text-center focus:ring-1 focus:ring-slate-900 focus:outline-none"
+                  />
+                  <span class="text-xs font-bold text-slate-500" x-text="'/ ' + crit.maxPoints + 'đ'"></span>
+                </div>
+              </div>
+
+              <!-- Slider control -->
+              <input
+                type="range"
+                min="0"
+                :max="crit.maxPoints"
+                step="0.5"
+                x-model.number="rubricScores[crit.id]"
+                class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
+              />
+
+              <!-- Level benchmarks -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] pt-1 border-t border-slate-200/60">
+                <template x-for="lvl in crit.levels" :key="lvl.range">
+                  <div class="p-2 rounded bg-white border border-slate-100 text-slate-600">
+                    <div class="flex items-center justify-between font-bold text-slate-800 mb-0.5">
+                      <span x-text="lvl.label"></span>
+                      <span class="font-mono text-[10px]" x-text="lvl.range + 'đ'"></span>
+                    </div>
+                    <p class="text-[10px] leading-tight text-slate-500" x-text="lvl.description"></p>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <!-- Remarks by Judge -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Nhận Xét Tổng Hợp Của Ban Giám Khảo:</label>
+          <textarea
+            x-model="judgeRemarks"
+            rows="3"
+            class="w-full p-3 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-1 focus:ring-slate-900 focus:outline-none"
+            placeholder="Nhập đánh giá về kỹ thuật, tốc độ thi công, tính thẩm mỹ và phần trả lời phản biện của đội thi..."
+          ></textarea>
+        </div>
+
+        <!-- Bottom Print Trigger -->
+        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+          <div class="text-xs text-slate-500">
+            * Đã hoàn thiện đánh giá theo chuẩn 5 tiêu chí Thông tư và Quy chế thi HSG.
+          </div>
+          <button
+            type="button"
+            @click="printJudgeRecord()"
+            class="min-h-[48px] px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <span>🖨️ Xuất & In Biên Bản Chấm Thi (A4)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRINTABLE A4 RECORD (Appears only during print or preview) -->
+    <div id="printable-hsg-record" class="hidden print:block bg-white text-black p-8 font-sans leading-normal">
+      <!-- Print Header -->
+      <div class="border-b-2 border-black pb-4 mb-6 text-center space-y-1">
+        <div class="text-xs font-bold uppercase tracking-widest text-gray-700">CỔNG HỌC TẬP & GIẢNG DẠY CNTT</div>
+        <div class="text-xl font-black uppercase tracking-tight">HỘI ĐỒNG THI HỌC SINH GIỎI PHẦN CỨNG & MẠNG</div>
+        <div class="text-sm font-semibold italic">BIÊN BẢN NGHIỆM THU DỰ ÁN THI CÔNG HẠ TẦNG VÀ ĐÁNH GIÁ KỸ NĂNG NGHỀ</div>
+        <div class="text-xs font-mono pt-1 text-gray-600">
+          Mã Biên Bản: <span class="font-bold">BB-HSG-2026-</span><span x-text="activeTeam.code"></span> · Thời gian thi: <span x-text="examDurationMinutes + ' Phút'"></span>
+        </div>
+      </div>
+
+      <!-- Team Details Grid -->
+      <div class="grid grid-cols-2 gap-4 text-xs mb-6 border border-black p-3.5">
+        <div>
+          <div>Đội thi: <strong class="text-sm" x-text="activeTeam.code"></strong></div>
+          <div>Cơ sở: <strong x-text="activeTeam.branch"></strong></div>
+          <div>Phương châm: <span class="italic" x-text="activeTeam.motto"></span></div>
+        </div>
+        <div class="space-y-0.5">
+          <div>1. Kỹ sư trưởng: <strong x-text="memberLead"></strong></div>
+          <div>2. KTV Cáp & Cơ khí: <strong x-text="memberCable"></strong></div>
+          <div>3. KTV Windows & Dịch vụ: <strong x-text="memberSys"></strong></div>
+          <div>4. KTV Mạng & Bảo mật: <strong x-text="memberNet"></strong></div>
+        </div>
+      </div>
+
+      <!-- Scores Table -->
+      <table class="w-full text-xs border border-black border-collapse mb-6">
+        <thead>
+          <tr class="bg-gray-100 border-b border-black text-left">
+            <th class="p-2 border-r border-black w-12 text-center">Mã</th>
+            <th class="p-2 border-r border-black">Tiêu Chí Đánh Giá Kỹ Năng Nghề</th>
+            <th class="p-2 border-r border-black w-24 text-center">Trọng Số</th>
+            <th class="p-2 w-24 text-right">Điểm Đạt</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-black">
+          <template x-for="crit in rubricList" :key="crit.id">
+            <tr>
+              <td class="p-2 border-r border-black text-center font-bold" x-text="crit.code"></td>
+              <td class="p-2 border-r border-black">
+                <div class="font-bold" x-text="crit.name"></div>
+                <div class="text-[11px] text-gray-600" x-text="crit.description"></div>
+              </td>
+              <td class="p-2 border-r border-black text-center font-mono" x-text="crit.maxPoints + 'đ'"></td>
+              <td class="p-2 text-right font-black font-mono text-sm" x-text="rubricScores[crit.id] || 0"></td>
+            </tr>
+          </template>
+          <tr class="bg-gray-100 font-bold border-t-2 border-black">
+            <td colspan="3" class="p-2 border-r border-black text-right uppercase">Tổng Điểm Đạt Được (Thang 100):</td>
+            <td class="p-2 text-right font-black font-mono text-base" x-text="totalRubricPoints + ' / 100đ'"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Result Summary Box -->
+      <div class="border border-black p-3.5 mb-6 text-xs flex justify-between items-center">
+        <div>
+          Điểm quy đổi hệ 10: <strong class="text-base font-mono" x-text="rubricScale10 + ' / 10.0'"></strong>
+        </div>
+        <div>
+          Kết Luận Đánh Giá: <strong class="text-base uppercase" x-text="rubricRank.text"></strong>
+        </div>
+      </div>
+
+      <!-- Remarks Box -->
+      <div class="border border-black p-3 mb-8 text-xs min-h-[70px]">
+        <div class="font-bold mb-1">Nhận xét chi tiết của Ban Giám Khảo:</div>
+        <div class="italic text-gray-800" x-text="judgeRemarks || 'Không có ghi chú thêm.'"></div>
+      </div>
+
+      <!-- Signatures Footer -->
+      <div class="grid grid-cols-2 text-center text-xs pt-4">
+        <div class="space-y-16">
+          <div class="font-bold uppercase">ĐẠI DIỆN ĐỘI THI CÔNG</div>
+          <div class="italic text-gray-500">(Ký và ghi rõ họ tên)</div>
+        </div>
+        <div class="space-y-16">
+          <div class="font-bold uppercase">TRƯỞNG BAN GIÁM KHẢO</div>
+          <div class="font-bold text-sm">CN. Phạm Tiến Đông</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- PHẦN 2: TÍNH NHẨM QUY HOẠCH IP & SUBNETTING TRONG 30 GIÂY                 -->
   <!-- ========================================================================= -->
   <section x-show="activeTab === 'subnetting'" class="space-y-6 print:hidden" x-transition>
     
@@ -868,504 +1643,6 @@ const hsgPayload = {
 
         </div>
       </template>
-    </div>
-
-  </section>
-
-  <!-- ========================================================================= -->
-  <!-- TAB 3: MODULE 3 - SA BÀN DỰ ÁN 5 CHẶNG & CHẤM RUBRIC 100 ĐIỂM            -->
-  <!-- ========================================================================= -->
-  <section x-show="activeTab === 'stages'" class="space-y-6" x-transition>
-    
-    <!-- Top Project Control Bar (Team Selection & Timer) (Hidden when printing) -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-5 print:hidden">
-      
-      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-4 border-b border-slate-100">
-        <!-- Team Selector -->
-        <div class="space-y-1.5">
-          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Chọn Đội Tuyển Đại Diện Cơ Sở:</label>
-          <div class="flex flex-wrap items-center gap-2">
-            <template x-for="team in teamsList" :key="team.id">
-              <button
-                type="button"
-                @click="selectedTeamId = team.id"
-                :class="selectedTeamId === team.id ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
-                class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[44px] cursor-pointer"
-              >
-                <span x-text="team.code"></span>
-                <span class="opacity-75 font-normal ml-1" x-text="'(' + team.branch.replace('Cơ sở ', '') + ')'"></span>
-              </button>
-            </template>
-          </div>
-        </div>
-
-        <!-- Overall Project Countdown Clock -->
-        <div class="flex flex-wrap items-center gap-3">
-          <div class="p-3 bg-slate-900 text-white rounded-xl flex items-center gap-3 shadow-inner">
-            <div>
-              <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Thời Gian Toàn Dự Án</div>
-              <div class="text-xl sm:text-2xl font-mono font-black" x-text="formatProjectTime()">03:00:00</div>
-            </div>
-            <div class="flex flex-col gap-1">
-              <button
-                type="button"
-                @click="projectTimerRunning ? pauseProjectTimer() : startProjectTimer()"
-                class="px-2.5 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-colors"
-                x-text="projectTimerRunning ? '⏸ Tạm dừng' : '▶ Bắt đầu'"
-              ></button>
-              <button
-                type="button"
-                @click="setProjectDuration(projectTotalMinutes === 180 ? 240 : 180)"
-                class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-mono transition-colors"
-                x-text="projectTotalMinutes + 'm (Đổi)'"
-              ></button>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            @click="printJudgeRecord()"
-            class="min-h-[48px] px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer"
-          >
-            <span>🖨️</span>
-            <span>Xuất Biên Bản A4</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Active Team Banner & Members Input -->
-      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-        <div>
-          <span class="text-slate-500 font-semibold block mb-1">1. Kỹ sư trưởng (Project Lead):</span>
-          <input type="text" x-model="memberLead" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
-        </div>
-        <div>
-          <span class="text-slate-500 font-semibold block mb-1">2. Kỹ sư Cáp & Hạ tầng:</span>
-          <input type="text" x-model="memberCable" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
-        </div>
-        <div>
-          <span class="text-slate-500 font-semibold block mb-1">3. Kỹ sư Windows & Dịch vụ:</span>
-          <input type="text" x-model="memberSys" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
-        </div>
-        <div>
-          <span class="text-slate-500 font-semibold block mb-1">4. Kỹ sư Mạng & Bảo mật:</span>
-          <input type="text" x-model="memberNet" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Stepper 5 Chặng Thi Công (Mô hình Nhà thầu công nghệ) (Hidden when printing) -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-6 print:hidden">
-      
-      <!-- Stepper Navigation Pills -->
-      <div class="space-y-2">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Quy Trình Thi Công 5 Chặng Liên Hoàn:</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-          <template x-for="(st, idx) in stagesList" :key="st.step">
-            <button
-              type="button"
-              @click="currentStageIndex = idx"
-              :class="currentStageIndex === idx ? 'border-slate-900 bg-slate-900 text-white shadow-sm' : 'border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-700'"
-              class="p-2.5 rounded-xl border text-left transition-all min-h-[52px] cursor-pointer flex flex-col justify-between"
-            >
-              <div class="flex items-center justify-between text-[11px]">
-                <span class="font-extrabold" x-text="st.name"></span>
-                <span class="text-[10px] opacity-80" x-text="st.timeLimit"></span>
-              </div>
-              <div class="text-[11px] font-medium truncate mt-1" x-text="st.title.split('&')[0]"></div>
-            </button>
-          </template>
-        </div>
-      </div>
-
-      <!-- Current Stage Active Panel -->
-      <template x-for="(st, idx) in stagesList" :key="st.step">
-        <div x-show="currentStageIndex === idx" class="space-y-5 animate-fadeIn">
-          
-          <!-- Stage Header -->
-          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 uppercase" x-text="'Vai trò: ' + st.role"></span>
-                <span class="text-xs text-slate-500" x-text="'Thời lượng chuẩn: ' + st.timeLimit"></span>
-              </div>
-              <h3 class="text-base sm:text-lg font-black text-slate-900 mt-1" x-text="st.title"></h3>
-              <p class="text-xs text-slate-600 mt-1 leading-relaxed" x-text="st.description"></p>
-            </div>
-            <div class="text-right shrink-0">
-              <span class="text-xs text-slate-500 uppercase">Trọng số</span>
-              <div class="text-xl font-black text-emerald-600" x-text="st.maxScore + ' Điểm'"></div>
-            </div>
-          </div>
-
-          <!-- Ảnh Minh Họa Kỹ Thuật Trực Quan Theo Từng Chặng -->
-          <template x-if="st.step === 1">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 my-2">
-              <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
-                <img src="/images/hsg-02/cable-tia-568ab-standard.svg" alt="Sơ đồ màu chuẩn TIA/EIA-568A và 568B" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
-                <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                  <span>📷 Sơ đồ chuẩn màu 8 sợi TIA/EIA-568A vs 568B Gigabit</span>
-                  <a href="/images/hsg-02/cable-tia-568ab-standard.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
-                </div>
-              </div>
-              <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
-                <img src="/images/hsg-02/cable-tester-gigabit.svg" alt="Máy test mạng thông mạch 8/8 sợi tuyệt đối" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
-                <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                  <span>📷 Máy test cáp mạng thông 8/8 sợi &amp; Cổng Switch 1Gbps</span>
-                  <a href="/images/hsg-02/cable-tester-gigabit.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
-                </div>
-              </div>
-            </div>
-          </template>
-
-          <template x-if="st.step === 2">
-            <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm my-2">
-              <img src="/images/hsg-02/topology-packet-tracer-vlsm.svg" alt="Sơ đồ nguyên lý logic trên Cisco Packet Tracer" class="w-full h-auto max-h-64 object-contain p-2" loading="lazy" />
-              <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                <span>📷 Sơ đồ mạng Cisco Packet Tracer: Router Core, Switch 24-Port &amp; 4 VLAN phòng ban</span>
-                <a href="/images/hsg-02/topology-packet-tracer-vlsm.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
-              </div>
-            </div>
-          </template>
-
-          <template x-if="st.step === 3">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 my-2">
-              <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
-                <img src="/images/hsg-02/win10-static-ip-config.svg" alt="Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
-                <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                  <span>📷 Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10</span>
-                  <a href="/images/hsg-02/win10-static-ip-config.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
-                </div>
-              </div>
-              <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
-                <img src="/images/hsg-02/ntfs-security-matrix.svg" alt="Ma trận phân quyền NTFS Security &amp; Share Permissions" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
-                <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                  <span>📷 Ma trận phân quyền nâng cao NTFS Security &amp; Share Permissions</span>
-                  <a href="/images/hsg-02/ntfs-security-matrix.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
-                </div>
-              </div>
-            </div>
-          </template>
-
-          <template x-if="st.step === 4">
-            <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm my-2 p-4 text-white space-y-3">
-              <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-                <span class="text-xs font-bold text-sky-400">📷 Cấu Hình Wi-Fi Router Doanh Nghiệp &amp; Bảo Mật AP</span>
-                <span class="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-300 font-mono">WPA2/WPA3 AES</span>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
-                  <div class="font-bold text-amber-400">SSID 1: MẠNG NỘI BỘ (DOANH NGHIEP)</div>
-                  <div class="text-slate-400 text-[11px]">• Chuẩn: WPA2/WPA3 Personal (AES)</div>
-                  <div class="text-slate-400 text-[11px]">• Cấp phát dải DHCP nội bộ riêng</div>
-                  <div class="text-slate-400 text-[11px]">• Cho phép thấy máy chủ &amp; máy in LAN</div>
-                </div>
-                <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
-                  <div class="font-bold text-rose-400">SSID 2: MẠNG KHÁCH (GUEST WI-FI)</div>
-                  <div class="text-slate-400 text-[11px]">• Kích hoạt: <strong>AP Isolation (Guest Network Isolation)</strong></div>
-                  <div class="text-slate-400 text-[11px]">• Ngăn chặn 100% điện thoại khách quét trộm IP LAN</div>
-                  <div class="text-slate-400 text-[11px]">• Giới hạn băng thông (Bandwidth Limit)</div>
-                </div>
-              </div>
-            </div>
-          </template>
-
-          <template x-if="st.step === 5">
-            <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm my-2">
-              <img src="/images/hsg-02/system-full-acceptance-ping.svg" alt="Nghiệm thu toàn diện hệ thống: Ping thông 100% và in ấn LAN" class="w-full h-auto max-h-64 object-contain p-2" loading="lazy" />
-              <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                <span>📷 Nghiệm thu toàn diện: Command Prompt CMD Ping thông suốt 0% packet loss &amp; In test page</span>
-                <a href="/images/hsg-02/system-full-acceptance-ping.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
-              </div>
-            </div>
-          </template>
-
-          <!-- Interactive Checklists -->
-          <div class="space-y-3">
-            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-600">Tiêu Chuẩn Kỹ Thuật Bắt Buộc Nghiệm Thu:</h4>
-            
-            <div class="space-y-2.5">
-              <template x-for="item in st.checklists" :key="item.id">
-                <div 
-                  @click="toggleChecklist(item.id)"
-                  :class="checklistState[item.id] ? 'bg-emerald-50/70 border-emerald-300' : 'bg-white border-slate-200 hover:border-slate-300'"
-                  class="p-3.5 rounded-xl border transition-colors flex items-start gap-3 cursor-pointer select-none"
-                >
-                  <input
-                    type="checkbox"
-                    :checked="checklistState[item.id]"
-                    @click.stop="toggleChecklist(item.id)"
-                    class="mt-1 w-4 h-4 rounded text-slate-900 border-slate-300 focus:ring-slate-900 cursor-pointer"
-                  />
-                  <div class="flex-1 text-xs sm:text-sm">
-                    <span :class="checklistState[item.id] ? 'text-emerald-950 font-medium' : 'text-slate-800'" class="leading-relaxed" x-text="item.label"></span>
-                    <template x-if="item.critical">
-                      <span class="inline-block ml-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200">Bắt buộc</span>
-                    </template>
-                  </div>
-                  <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-700 shrink-0" x-text="'+' + item.points + 'đ'"></span>
-                </div>
-              </template>
-            </div>
-          </div>
-
-          <!-- Applied Standards Badges -->
-          <div class="flex items-center gap-2 text-[11px] text-slate-500 pt-2 border-t border-slate-100">
-            <span class="font-bold">Tiêu chuẩn quốc tế áp dụng:</span>
-            <template x-for="std in st.standards" :key="std">
-              <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono" x-text="std"></span>
-            </template>
-          </div>
-
-        </div>
-      </template>
-
-    </div>
-
-    <!-- 100-Point Rubric Scoring Cockpit for Judges (Hidden when printing) -->
-    <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-6 print:hidden">
-      
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-        <div>
-          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-slate-900 text-white">
-            <span>⚖️</span>
-            <span>HỘI ĐỒNG BAN GIÁM KHẢO</span>
-          </div>
-          <h3 class="text-lg font-black text-slate-900 mt-1">Bảng Chấm Điểm Rubric Dự Án (Thang Điểm 100)</h3>
-          <p class="text-xs text-slate-500">Quy đổi thang điểm 10: Điểm số &ge; 8.0 đạt chuẩn Đội tuyển HSG</p>
-        </div>
-
-        <!-- Live Score Summary Card -->
-        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-4 text-center shrink-0">
-          <div>
-            <div class="text-[10px] uppercase font-bold text-slate-500">Tổng Điểm / 100</div>
-            <div class="text-2xl font-black text-slate-900 font-mono" x-text="totalRubricPoints">0</div>
-          </div>
-          <div class="h-8 w-px bg-slate-200"></div>
-          <div>
-            <div class="text-[10px] uppercase font-bold text-slate-500">Hệ Điểm 10</div>
-            <div class="text-2xl font-black text-blue-600 font-mono" x-text="rubricScale10">0</div>
-          </div>
-          <div class="h-8 w-px bg-slate-200"></div>
-          <div>
-            <div class="text-[10px] uppercase font-bold text-slate-500">Xếp Loại</div>
-            <div :class="rubricRank.badgeClass" class="px-2.5 py-1 rounded text-xs font-bold mt-0.5" x-text="rubricRank.text"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5 Criteria Sliders & Manual Inputs -->
-      <div class="space-y-5">
-        <template x-for="(crit, cIdx) in rubricList" :key="crit.id">
-          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <div>
-                <span class="text-xs font-bold text-slate-400 font-mono mr-1" x-text="crit.code"></span>
-                <span class="text-sm font-extrabold text-slate-900" x-text="crit.name"></span>
-                <span class="text-xs text-slate-500 block sm:inline sm:ml-2" x-text="crit.description"></span>
-              </div>
-              <div class="flex items-center gap-2 shrink-0">
-                <span class="text-xs font-bold text-slate-500">Điểm:</span>
-                <input
-                  type="number"
-                  step="0.5"
-                  min="0"
-                  :max="crit.maxPoints"
-                  x-model.number="rubricScores[crit.id]"
-                  class="w-20 px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white text-sm font-black font-mono text-center focus:ring-1 focus:ring-slate-900 focus:outline-none"
-                />
-                <span class="text-xs font-bold text-slate-500" x-text="'/ ' + crit.maxPoints + 'đ'"></span>
-              </div>
-            </div>
-
-            <!-- Slider control -->
-            <input
-              type="range"
-              min="0"
-              :max="crit.maxPoints"
-              step="0.5"
-              x-model.number="rubricScores[crit.id]"
-              class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
-            />
-
-            <!-- Level benchmarks -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] pt-1 border-t border-slate-200/60">
-              <template x-for="lvl in crit.levels" :key="lvl.range">
-                <div class="p-2 rounded bg-white border border-slate-100 text-slate-600">
-                  <div class="flex items-center justify-between font-bold text-slate-800 mb-0.5">
-                    <span x-text="lvl.label"></span>
-                    <span class="font-mono text-[10px]" x-text="lvl.range + 'đ'"></span>
-                  </div>
-                  <p class="text-[10px] leading-tight text-slate-500" x-text="lvl.description"></p>
-                </div>
-              </template>
-            </div>
-          </div>
-        </template>
-      </div>
-
-      <!-- Remarks by Judge -->
-      <div class="space-y-1.5">
-        <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Nhận Xét Tổng Hợp Của Ban Giám Khảo:</label>
-        <textarea
-          x-model="judgeRemarks"
-          rows="3"
-          class="w-full p-3 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-1 focus:ring-slate-900 focus:outline-none"
-          placeholder="Nhập đánh giá về kỹ thuật, tốc độ thi công, tính thẩm mỹ và phần trả lời phản biện của đội thi..."
-        ></textarea>
-      </div>
-
-      <!-- Bottom Print Trigger -->
-      <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-        <div class="text-xs text-slate-500">
-          * Đã hoàn thiện đánh giá theo chuẩn 5 tiêu chí Thông tư và Quy chế thi HSG.
-        </div>
-        <button
-          type="button"
-          @click="printJudgeRecord()"
-          class="min-h-[48px] px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer"
-        >
-          <span>🖨️ Xuất & In Biên Bản Chấm Thi (A4)</span>
-        </button>
-      </div>
-
-    </div>
-
-    <!-- ======================================================================= -->
-    <!-- PRINTABLE A4 BIÊN BẢN CHẤM THI HSG                                      -->
-    <!-- (Appears only during print or preview)                                  -->
-    <!-- ======================================================================= -->
-    <div id="printable-hsg-record" class="hidden print:block bg-white text-black p-8 font-sans leading-normal">
-      
-      <!-- Print Header -->
-      <div class="border-b-2 border-black pb-4 mb-6 text-center space-y-1">
-        <div class="text-xs font-bold uppercase tracking-widest text-gray-700">CỔNG HỌC TẬP & GIẢNG DẠY CNTT</div>
-        <div class="text-xl font-black uppercase tracking-tight">HỘI ĐỒNG THI HỌC SINH GIỎI PHẦN CỨNG & MẠNG</div>
-        <div class="text-sm font-semibold italic">BIÊN BẢN NGHIỆM THU DỰ ÁN THI CÔNG HẠ TẦNG VÀ ĐÁNH GIÁ KỸ NĂNG NGHỀ</div>
-        <div class="text-xs font-mono pt-1 text-gray-600">
-          Mã Biên Bản: <span class="font-bold">BB-HSG-2026-</span><span x-text="activeTeam.code"></span> · Thời gian thi: <span x-text="projectTotalMinutes + ' Phút'"></span>
-        </div>
-      </div>
-
-      <!-- Team Information Table -->
-      <div class="mb-5 space-y-2">
-        <div class="flex justify-between items-center text-sm">
-          <div>Đội Tuyển Thi Đấu: <strong class="text-base" x-text="activeTeam.code + ' (' + activeTeam.branch + ')'"></strong></div>
-          <div>Ngày Khảo Thí: <strong x-text="new Date().toLocaleDateString('vi-VN')"></strong></div>
-        </div>
-        <div class="border border-black p-3 rounded text-xs space-y-1 bg-gray-50/50">
-          <div class="font-bold uppercase text-[11px] mb-1">Thành viên Đội Tuyển Kỹ Sư:</div>
-          <div class="grid grid-cols-2 gap-2">
-            <div>1. Kỹ sư trưởng: <strong x-text="memberLead"></strong></div>
-            <div>2. Kỹ sư thi công cáp: <strong x-text="memberCable"></strong></div>
-            <div>3. Kỹ sư Windows & Dịch vụ: <strong x-text="memberSys"></strong></div>
-            <div>4. Kỹ sư Mạng & Bảo mật: <strong x-text="memberNet"></strong></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5 Rubric Criteria Score Table -->
-      <div class="mb-5">
-        <table class="w-full border-collapse border border-black text-xs">
-          <thead>
-            <tr class="bg-gray-100 text-center font-bold">
-              <th class="border border-black p-2 w-12">STT</th>
-              <th class="border border-black p-2 text-left">Tiêu Chí Đánh Giá Chuẩn HSG</th>
-              <th class="border border-black p-2 w-20">Trọng Số</th>
-              <th class="border border-black p-2 w-24">Điểm Tối Đa</th>
-              <th class="border border-black p-2 w-24">Điểm Đạt</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="border border-black p-2 text-center font-mono">1</td>
-              <td class="border border-black p-2">
-                <strong>Kỹ thuật Hạ tầng & Thi công Cáp mạng (TIA/EIA-568A/B)</strong>
-                <div class="text-[10px] text-gray-600">Đo thông mạch 8/8 sợi, nhận liên kết Gigabit 1Gbps, độ thẩm mỹ cơ khí</div>
-              </td>
-              <td class="border border-black p-2 text-center">25%</td>
-              <td class="border border-black p-2 text-center font-mono">25.0</td>
-              <td class="border border-black p-2 text-center font-bold font-mono text-sm" x-text="rubricScores.rubric_c1"></td>
-            </tr>
-            <tr>
-              <td class="border border-black p-2 text-center font-mono">2</td>
-              <td class="border border-black p-2">
-                <strong>Kiến trúc sư Sơ đồ & Quy hoạch IP VLSM</strong>
-                <div class="text-[10px] text-gray-600">Tính toán chia dải mạng con cho 4 phòng ban, vẽ sơ đồ logic Packet Tracer</div>
-              </td>
-              <td class="border border-black p-2 text-center">20%</td>
-              <td class="border border-black p-2 text-center font-mono">20.0</td>
-              <td class="border border-black p-2 text-center font-bold font-mono text-sm" x-text="rubricScores.rubric_c2"></td>
-            </tr>
-            <tr>
-              <td class="border border-black p-2 text-center font-mono">3</td>
-              <td class="border border-black p-2">
-                <strong>Quản trị Mạng Nội bộ & Dịch vụ Hệ thống Windows 10</strong>
-                <div class="text-[10px] text-gray-600">Thiết lập IP tĩnh, ma trận phân quyền NTFS Security, chia sẻ máy in LAN</div>
-              </td>
-              <td class="border border-black p-2 text-center">25%</td>
-              <td class="border border-black p-2 text-center font-mono">25.0</td>
-              <td class="border border-black p-2 text-center font-bold font-mono text-sm" x-text="rubricScores.rubric_c3"></td>
-            </tr>
-            <tr>
-              <td class="border border-black p-2 text-center font-mono">4</td>
-              <td class="border border-black p-2">
-                <strong>Cấu hình Mạng Không Dây Wi-Fi & Bảo Mật AP</strong>
-                <div class="text-[10px] text-gray-600">Đổi pass admin, chuẩn WPA2/WPA3 AES, kích hoạt AP Isolation tách mạng khách</div>
-              </td>
-              <td class="border border-black p-2 text-center">15%</td>
-              <td class="border border-black p-2 text-center font-mono">15.0</td>
-              <td class="border border-black p-2 text-center font-bold font-mono text-sm" x-text="rubricScores.rubric_c4"></td>
-            </tr>
-            <tr>
-              <td class="border border-black p-2 text-center font-mono">5</td>
-              <td class="border border-black p-2">
-                <strong>Nghiệm Thu Toàn Hệ Thống, Tốc Độ & Bảo Vệ 05 Phút</strong>
-                <div class="text-[10px] text-gray-600">Ping thông 100% 0 loss, in test page thành công, thuyết trình trước Ban Giám khảo</div>
-              </td>
-              <td class="border border-black p-2 text-center">15%</td>
-              <td class="border border-black p-2 text-center font-mono">15.0</td>
-              <td class="border border-black p-2 text-center font-bold font-mono text-sm" x-text="rubricScores.rubric_c5"></td>
-            </tr>
-            <tr class="bg-gray-100 font-bold">
-              <td class="border border-black p-2 text-center" colspan="2">TỔNG ĐIỂM DỰ ÁN TOÀN DIỆN</td>
-              <td class="border border-black p-2 text-center">100%</td>
-              <td class="border border-black p-2 text-center font-mono">100.0</td>
-              <td class="border border-black p-2 text-center font-black font-mono text-base" x-text="totalRubricPoints"></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Result Summary Box -->
-      <div class="border border-black p-3.5 mb-6 text-xs flex justify-between items-center">
-        <div>
-          Điểm quy đổi hệ 10: <strong class="text-base font-mono" x-text="rubricScale10 + ' / 10.0'"></strong>
-        </div>
-        <div>
-          Kết Luận Đánh Giá: <strong class="text-base uppercase" x-text="rubricRank.text"></strong>
-        </div>
-      </div>
-
-      <!-- Remarks Box -->
-      <div class="border border-black p-3 mb-8 text-xs min-h-[70px]">
-        <div class="font-bold mb-1">Nhận xét chi tiết của Ban Giám Khảo:</div>
-        <div class="italic text-gray-800" x-text="judgeRemarks || 'Không có ghi chú thêm.'"></div>
-      </div>
-
-      <!-- Signatures Footer -->
-      <div class="grid grid-cols-2 text-center text-xs pt-4">
-        <div class="space-y-16">
-          <div class="font-bold uppercase">ĐẠI DIỆN ĐỘI THI CÔNG</div>
-          <div class="italic text-gray-500">(Ký và ghi rõ họ tên)</div>
-        </div>
-        <div class="space-y-16">
-          <div class="font-bold uppercase">TRƯỞNG BAN GIÁM KHẢO</div>
-          <div class="font-bold text-sm">CN. Phạm Tiến Đông</div>
-        </div>
-      </div>
-
     </div>
 
   </section>

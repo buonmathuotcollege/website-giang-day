@@ -11,7 +11,7 @@ import {
 } from '@/data/hsgCurriculum';
 
 export default function HsgPhanCungMangPage() {
-  const [activeTab, setActiveTab] = useState<'subnetting' | 'mcq' | 'stages'>('subnetting');
+  const [activeTab, setActiveTab] = useState<'subnetting' | 'mcq' | 'stages'>('stages');
 
   // =========================================================================
   // MODULE 1: SUBNETTING REFLEX 30S
@@ -251,35 +251,35 @@ export default function HsgPhanCungMangPage() {
           <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
             <button
               type="button"
+              onClick={() => setActiveTab('stages')}
+              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px] cursor-pointer ${
+                activeTab === 'stages' ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-900' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+              }`}
+            >
+              <span>🛠️</span>
+              <span>Phần 1: Trạm Thực Hành Kỹ Năng Nghề (80% Điểm)</span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setActiveTab('subnetting')}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px] cursor-pointer ${
-                activeTab === 'subnetting' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                activeTab === 'subnetting' ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-900' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
               }`}
             >
               <span>⚡</span>
-              <span>Module 1: Phản Xạ Subnetting 30s</span>
+              <span>Phần 2: Tính Nhẩm Quy Hoạch IP 30s</span>
             </button>
 
             <button
               type="button"
               onClick={() => setActiveTab('mcq')}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px] cursor-pointer ${
-                activeTab === 'mcq' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                activeTab === 'mcq' ? 'bg-slate-900 text-white shadow-sm ring-2 ring-slate-900' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
               }`}
             >
               <span>📚</span>
-              <span>Module 2: 54 Câu Phân Loại Cao</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('stages')}
-              className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px] cursor-pointer ${
-                activeTab === 'stages' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-              }`}
-            >
-              <span>🛠️</span>
-              <span>Module 3: Sa Bàn 5 Chặng & Rubric 100đ</span>
+              <span>Phần 3: Kiến Thức Bổ Trợ & Vấn Đáp (54 Câu HSG)</span>
             </button>
           </div>
         </section>

@@ -65,6 +65,70 @@ export interface HsgRubricCriterion {
   }[];
 }
 
+// ----------------------------------------------------------------------------
+// GIAO DIỆN & DỮ LIỆU THỰC HÀNH TAY NGHỀ HSG (HANDS-ON PRACTICAL LAB)
+// ----------------------------------------------------------------------------
+export interface HsgPracticalStation {
+  id: string;
+  stationNumber: number;
+  name: string;
+  badge: string;
+  role: string;
+  timeLimit: string;
+  points: number;
+  objective: string;
+  equipment: string[];
+  steps: {
+    stepNum: number;
+    title: string;
+    action: string;
+    pokaYokeTip: string;
+    command?: string;
+  }[];
+  verificationCriteria: string[];
+  penaltyTraps: {
+    trap: string;
+    penalty: string;
+    howToAvoid: string;
+  }[];
+}
+
+export interface HsgPracticalExam {
+  id: string;
+  code: string;
+  title: string;
+  durationMinutes: number;
+  targetCompany: string;
+  scenarioDescription: string;
+  topologySummary: string;
+  ipTable: {
+    device: string;
+    interface: string;
+    ipAddress: string;
+    subnetMask: string;
+    defaultGateway: string;
+    note: string;
+  }[];
+  permissionMatrix?: {
+    folder: string;
+    group: string;
+    sharePerm: string;
+    ntfsPerm: string;
+  }[];
+  taskChecklist: {
+    id: string;
+    task: string;
+    points: number;
+    isCritical?: boolean;
+  }[];
+  troubleshootingTask?: {
+    symptom: string;
+    rootCause: string;
+    solution: string;
+    testCommand: string;
+  };
+}
+
 // Bảng công thức tính nhẩm Subnetting siêu tốc cho đội tuyển HSG
 export const SUBNET_CHEAT_SHEET: SubnetFormulaItem[] = [
   { cidr: '/24', subnetMask: '255.255.255.0', magicNumber: 256, totalHosts: 256, usableHosts: 254, usageContext: 'Mạng phòng máy chuẩn (1 phòng máy / 1 tầng)' },
@@ -1194,3 +1258,412 @@ export const SUBNET_PRACTICE_PROBLEMS: SubnetProblem[] = [
     explanationFormula: 'Prefix /26 mượn 2 bit ở Octet 4. Bước nhảy = 64. Số 85 thuộc dải [64-127]. Network ID: .64 | First Host: .65 | Last Host: .126 | Broadcast: .127.'
   }
 ];
+
+// ============================================================================
+// HỆ THỐNG 4 TRẠM THỰC HÀNH TAY NGHỀ THỰC CHIẾN (HANDS-ON PRACTICAL LAB)
+// Trọng tâm cốt lõi của kỳ thi HSG Kỹ năng nghề CNTT
+// ============================================================================
+export const HSG_PRACTICAL_STATIONS: HsgPracticalStation[] = [
+  {
+    id: 'station_cabling',
+    stationNumber: 1,
+    name: 'Cơ Khí & Thi Công Cáp Mạng Gigabit',
+    badge: 'HẠ TẦNG CÁP & CƠ KHÍ',
+    role: 'Kỹ sư Thi công Cáp (KTV 1)',
+    timeLimit: '20 phút',
+    points: 25,
+    objective: 'Bấm 02 đoạn cáp mạng UTP Cat5e/Cat6 (01 cáp thẳng, 01 cáp chéo), đảm bảo thông mạch 8/8 sợi và đạt tốc độ kết nối Gigabit 1000 Mbps khi cắm Switch.',
+    equipment: [
+      'Kìm bấm mạng RJ45 đa năng có cữ tước vỏ',
+      'Máy test cáp mạng LCD/LED chuyên dụng',
+      'Cáp mạng UTP Cat5e/Cat6 đồng nguyên chất',
+      'Hạt mạng RJ45 chân đồng mạ vàng + đầu chụp boot cao su',
+      'Dao cắt tuốt vỏ cáp mạng xoay tròn'
+    ],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Tuốt vỏ & Sắp xếp chuẩn màu TIA/EIA-568B',
+        action: 'Tuốt vỏ cáp khoảng 2.5 - 3cm. Tách 4 cặp xoắn, vuốt thẳng từng sợi theo đúng thứ tự chuẩn B: Cam trắng, Cam, Xanh lá trắng, Xanh dương, Xanh dương trắng, Xanh lá, Nâu trắng, Nâu.',
+        pokaYokeTip: 'Cặp Xanh lá bị tách đôi để kẹp ôm lấy cặp Xanh dương ở chân 4-5. Chân 1, 2, 3, 6 là 4 sợi truyền tín hiệu sống còn.',
+      },
+      {
+        stepNum: 2,
+        title: 'Cắt gọt & Canh độ sâu ngậm vỏ',
+        action: 'Xếp các sợi thật phẳng và sát nhau, dùng lưỡi dao kìm cắt bằng một góc vuông 90 độ, chừa lại độ dài lõi khoảng 1.2 - 1.4cm.',
+        pokaYokeTip: 'Vỏ bọc nhựa cáp bắt buộc phải chui sâu qua ngàm giữ của hạt mạng ít nhất 5mm để chống giật đứt khi kéo căng.',
+      },
+      {
+        stepNum: 3,
+        title: 'Bấm dập chốt tiếp xúc & Kiểm tra bằng máy test',
+        action: 'Đút thẳng các sợi vào rãnh hạt RJ45, ép kìm dứt khoát 1 lực đủ sâu. Đưa 2 đầu vào máy test cáp và bật nguồn kiểm tra.',
+        pokaYokeTip: 'Đèn LED máy test phải nhảy tuần tự từ 1 đến 8 (Cáp thẳng: 1-1, 2-2... 8-8; Cáp chéo: 1-3, 2-6, 3-1, 6-2). Bất kỳ đèn nào không sáng là mất điểm.',
+        command: 'Quan sát đèn LED máy test: 1 2 3 4 5 6 7 8 (Đạt chuẩn 8/8)'
+      },
+      {
+        stepNum: 4,
+        title: 'Cắm liên kết Switch & Xác thực Gigabit trên Windows 10',
+        action: 'Cắm cáp nối từ Card mạng máy PC vào cổng Switch Gigabit phòng lab. Mở Task Manager hoặc Network Status trên Win 10 để đọc tốc độ Link Speed.',
+        pokaYokeTip: 'Nếu Taskbar chỉ hiện "Speed: 100 Mbps", nghĩa là đã tuột hoặc đứt một trong các chân 4, 5, 7, 8. Phải cắt bấm lại ngay lập tức!',
+        command: 'netsh interface show interface & Get-NetAdapter | Select Name, LinkSpeed'
+      }
+    ],
+    verificationCriteria: [
+      'Máy test cáp mạng sáng đủ 8/8 đèn LED tuần tự không nhảy loạn.',
+      'Windows 10 hiển thị Link Speed: 1.0 Gbps (1000/1000 Mbps).',
+      'Đầu hạt mạng ngậm sâu vỏ bọc > 5mm, bấm chụp boot cao su gọn gàng.',
+      'Không để rơi mẩu dây vụn ra sàn phòng máy (tiêu chuẩn 5S).'
+    ],
+    penaltyTraps: [
+      {
+        trap: 'Tốc độ chỉ nhận 100 Mbps thay vì 1000 Mbps (Gigabit)',
+        penalty: 'Trừ 8 điểm (Chỉ được điểm thông mạch cơ bản)',
+        howToAvoid: 'Bấm dập kìm thật đều lực, kiểm tra chân số 4, 5, 7, 8 chạm kẹp chặt vào lõi đồng.'
+      },
+      {
+        trap: 'Vỏ bọc tuột ngoài hạt mạng, hở lõi đồng bên ngoài',
+        penalty: 'Trừ 5 điểm thẩm mỹ & cơ khí',
+        howToAvoid: 'Cắt dây chừa lõi 1.3cm để vỏ bọc chui qua gờ chốt nhựa trong hạt RJ45.'
+      },
+      {
+        trap: 'Đứt hoặc chạm chéo chân 1, 2 hoặc 3, 6',
+        penalty: '0 điểm toàn bộ sợi cáp (Điểm liệt thông mạng)',
+        howToAvoid: 'Soi kỹ mặt trên của hạt RJ45 trước khi bấm xem 8 đầu đồng đã chạm kịch mũi hạt chưa.'
+      }
+    ]
+  },
+  {
+    id: 'station_windows_sys',
+    stationNumber: 2,
+    name: 'Quản Trị Windows 10 & Dịch Vụ Mạng LAN',
+    badge: 'QUẢN TRỊ HỆ THỐNG',
+    role: 'Kỹ sư Windows & Hệ thống (KTV 2)',
+    timeLimit: '35 phút',
+    points: 30,
+    objective: 'Cấu hình hoàn chỉnh Windows 10: Đặt IP tĩnh, đổi Computer Name/Workgroup, quản lý tài khoản người dùng cục bộ, thiết lập ma trận bảo mật chia sẻ thư mục NTFS/Share và kết nối in ấn qua mạng LAN.',
+    equipment: [
+      'Máy trạm PC chạy Windows 10 Pro 64-bit chuẩn phòng lab',
+      'Máy in mạng (Network Printer hoặc máy in chia sẻ qua USB)',
+      'Tài liệu ma trận phân quyền phòng ban do Giám khảo cung cấp',
+      'USB cài đặt Driver máy in chuyên dụng'
+    ],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Định danh máy trạm & Thiết lập IP tĩnh (ncpa.cpl)',
+        action: 'Nhấn Windows+R, gõ ncpa.cpl. Chọn card mạng Ethernet ➔ Properties ➔ Internet Protocol Version 4 (TCP/IPv4). Đặt IP tĩnh, Subnet Mask, Gateway và DNS theo đề thi.',
+        pokaYokeTip: 'DNS 1 đặt về Default Gateway hoặc 8.8.8.8; DNS 2 đặt 1.1.1.1. Tắt IPv6 nếu đề bài yêu cầu tối ưu dải mạng.',
+        command: 'ncpa.cpl && sysdm.cpl (Đặt Computer Name: PC-KTV-01, Workgroup: EAHLEO-LAB)'
+      },
+      {
+        stepNum: 2,
+        title: 'Tạo tài khoản người dùng cục bộ (lusrmgr.msc)',
+        action: 'Nhấn Windows+R, gõ lusrmgr.msc. Vào mục Users ➔ Tạo các User tương ứng với phòng ban (Ví dụ: user_giamdoc, user_ketoan). Bỏ tick "User must change password", tick "Password never expires".',
+        pokaYokeTip: 'Không dùng tài khoản Administrator mặc định để làm việc hàng ngày. Đặt mật khẩu phức tạp gồm chữ hoa, chữ thường và số.',
+        command: 'net user user_ketoan P@ssw0rd2026 /add'
+      },
+      {
+        stepNum: 3,
+        title: 'Thiết lập thư mục dùng chung & Ma trận phân quyền NTFS',
+        action: 'Tạo thư mục D:\\DU_LIEU_CONG_TY. Chuột phải ➔ Properties: Tab Sharing (Share Permissions) cấp Change/Read; Tab Security (NTFS Permissions) gán quyền chi tiết từng User.',
+        pokaYokeTip: 'TUYỆT ĐỐI KHÔNG để Everyone Full Control. Nhóm Kế toán chỉ cấp Read/List; Giám đốc cấp Modify/Write. Xóa quyền thừa của nhóm Users.',
+        command: 'icacls "D:\\DU_LIEU_CONG_TY" /grant:r user_giamdoc:(OI)(CI)M'
+      },
+      {
+        stepNum: 4,
+        title: 'Bật tính năng chia sẻ máy in & Kết nối từ máy trạm 2',
+        action: 'Mở Control Panel ➔ Devices and Printers ➔ Chuột phải máy in chọn Printer properties ➔ Tab Sharing ➔ Tick "Share this printer". Từ máy trạm thứ hai, nhấn Windows+R gõ \\\\IP_May_Chu để kết nối in thử.',
+        pokaYokeTip: 'Bắt buộc mở Network and Sharing Center ➔ Turn on file and printer sharing, Turn off password protected sharing nếu đề cho phép.',
+        command: 'control printers && net start spooler'
+      }
+    ],
+    verificationCriteria: [
+      'Lệnh ipconfig /all hiển thị đúng IP, Subnet, Gateway, DNS và Computer Name.',
+      'Từ máy thứ 2 truy cập \\\\IP_May_Chu đăng nhập đúng User và thấy thư mục chia sẻ.',
+      'User Kế toán mở được file nhưng không xóa được; User Giám đốc sửa và tạo file mới thành công.',
+      'In thử bản Windows Printer Test Page thành công từ máy trạm qua mạng LAN.'
+    ],
+    penaltyTraps: [
+      {
+        trap: 'Để quyền Everyone - Full Control ở tab Sharing và Security',
+        penalty: 'Trừ 10 điểm (Vi phạm nghiêm trọng an toàn bảo mật)',
+        howToAvoid: 'Luôn xóa Everyone, chỉ add cụ thể nhóm hoặc User có thẩm quyền.'
+      },
+      {
+        trap: 'Tường lửa Windows Defender Firewall chặn chia sẻ file (SMB Port 445)',
+        penalty: 'Trừ 6 điểm do máy trạm khác không truy cập được',
+        howToAvoid: 'Bật rule "File and Printer Sharing (SMB-In)" trong Windows Firewall with Advanced Security.'
+      },
+      {
+        trap: 'Quên khởi động dịch vụ Print Spooler khiến máy in bị đơ hàng đợi',
+        penalty: 'Trừ 4 điểm',
+        howToAvoid: 'Chạy lệnh net start spooler trong CMD quyền Admin trước khi test in.'
+      }
+    ]
+  },
+  {
+    id: 'station_network_devices',
+    stationNumber: 3,
+    name: 'Cấu Hình Thiết Bị Mạng & Wi-Fi Doanh Nghiệp',
+    badge: 'THIẾT BỊ MẠNG & ROUTER',
+    role: 'Kỹ sư Mạng & Bảo mật (KTV 3)',
+    timeLimit: '25 phút',
+    points: 25,
+    objective: 'Cấu hình hoàn chỉnh Router/Access Point: Đổi mật khẩu quản trị, thiết lập mạng LAN/WAN, cấu hình DHCP Server Pool có Reservation, phát 2 SSID (Nội bộ & Khách) có cô lập AP Isolation.',
+    equipment: [
+      'Thiết bị Wi-Fi Router băng tần kép (Gigabit WAN/LAN ports)',
+      'Switch mạng 8/16 ports chuẩn Gigabit',
+      'Laptop hoặc PC kết nối trực tiếp cổng LAN Router',
+      'Phần mềm mô phỏng Cisco Packet Tracer (cho phần định tuyến VLAN)'
+    ],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Truy cập Web GUI & Đổi mật khẩu quản trị Router',
+        action: 'Mở trình duyệt, truy cập 192.168.1.1 (hoặc Default Gateway). Đăng nhập bằng tài khoản mặc định. Vào mục Quản trị hệ thống (Administration/System Tools) đổi mật khẩu admin mới.',
+        pokaYokeTip: 'Không bao giờ để mật khẩu mặc định admin/admin. Sau khi đổi, đăng xuất và đăng nhập lại bằng mật khẩu mới để kiểm tra.',
+      },
+      {
+        stepNum: 2,
+        title: 'Quy hoạch dải IP LAN & Cấu hình DHCP Server Pool',
+        action: 'Vào Network ➔ LAN. Đặt địa chỉ IP Router (ví dụ: 192.168.10.1, Subnet Mask: 255.255.255.192 /26). Bật DHCP Server, giới hạn dải cấp phát từ .10 đến .50, Lease Time 120 phút.',
+        pokaYokeTip: 'Dành các IP từ .2 đến .9 cho máy in, máy chủ và thiết bị cố định (Static IP range).',
+        command: 'DHCP Pool: 192.168.10.10 - 192.168.10.50 | Gateway: 192.168.10.1 | DNS: 8.8.8.8'
+      },
+      {
+        stepNum: 3,
+        title: 'Gán địa chỉ IP cố định theo MAC (DHCP Address Reservation)',
+        action: 'Tìm mục DHCP Reservation / Static Lease. Nhập địa chỉ MAC của Máy in mạng và gán cố định cho nó địa chỉ 192.168.10.5.',
+        pokaYokeTip: 'Nhờ có Reservation, máy in sẽ không bao giờ bị đổi IP khi tắt mở nguồn, tránh tình trạng rớt kết nối in ấn.',
+        command: 'getmac /v (Xem địa chỉ MAC card mạng)'
+      },
+      {
+        stepNum: 4,
+        title: 'Cấu hình Wi-Fi Doanh Nghiệp & Cách ly mạng khách (AP Isolation)',
+        action: 'Thiết lập SSID 1: "DOANH_NGHIEP_NOI_BO" chuẩn bảo mật WPA2-Personal (AES). Thiết lập SSID 2: "KHACH_HANG_GUEST" và BẬT tính năng AP Isolation (Guest Isolation).',
+        pokaYokeTip: 'AP Isolation ngăn các thiết bị khách bắt sóng Wi-Fi quét dòm ngó dữ liệu hoặc gửi gói tin tấn công vào máy trạm kế toán nội bộ.',
+      }
+    ],
+    verificationCriteria: [
+      'Đăng nhập Router thành công bằng mật khẩu quản trị mới, chặn truy cập admin cũ.',
+      'Máy trạm cắm cổng LAN nhận đúng dải IP do DHCP cấp (.10 đến .50).',
+      'Máy in nhận đúng địa chỉ IP cố định 192.168.10.5 theo địa chỉ MAC.',
+      'Thiết bị kết nối Wi-Fi Khách không ping được vào địa chỉ IP của Máy trạm nội bộ.'
+    ],
+    penaltyTraps: [
+      {
+        trap: 'Trùng dải IP mạng LAN của Router với dải IP modem cấp cổng WAN',
+        penalty: 'Trừ 8 điểm (Gây xung đột IP toàn mạng, mất kết nối Internet)',
+        howToAvoid: 'Nếu cổng WAN nhận 192.168.1.x thì mạng LAN Router phải đổi sang 192.168.10.x hoặc 172.16.x.x.'
+      },
+      {
+        trap: 'Không bật tính năng AP Isolation trên mạng Wi-Fi Khách',
+        penalty: 'Trừ 5 điểm an ninh mạng',
+        howToAvoid: 'Kiểm tra kỹ dấu tick "Enable AP Isolation" hoặc "Allow guests to access my local network = Disabled".'
+      },
+      {
+        trap: 'Quên nhấn nút "Save / Apply" sau khi đổi cấu hình DHCP',
+        penalty: 'Trừ 3 điểm',
+        howToAvoid: 'Reboot Router nhẹ nhàng sau khi Save và kiểm tra card mạng PC có renew được IP mới không.'
+      }
+    ]
+  },
+  {
+    id: 'station_troubleshooting_audit',
+    stationNumber: 4,
+    name: 'Bắt Pan Bệnh Sự Cố Mạng & Nghiệm Thu Hệ Thống',
+    badge: 'XỬ LÝ SỰ CỐ & NGHIỆM THU',
+    role: 'Toàn Đội & Kỹ sư Trưởng (Lead KTV)',
+    timeLimit: '20 phút',
+    points: 20,
+    objective: 'Sử dụng bộ công cụ dòng lệnh CMD (ping, tracert, ipconfig, arp, netstat) để chẩn đoán và khắc phục 01 pan bệnh thực tế do Giám khảo cài vào; bảo vệ sản phẩm trước Ban Giám khảo.',
+    equipment: [
+      'Toàn bộ hệ thống liên hoàn đã thi công: PC ↔ Switch ↔ Router ↔ Wi-Fi ↔ Máy in',
+      'Bộ tài liệu sơ đồ mạng và biên bản nghiệm thu kỹ thuật',
+      'Đồng hồ đếm ngược 05 phút vấn đáp của Ban Giám khảo'
+    ],
+    steps: [
+      {
+        stepNum: 1,
+        title: 'Chẩn đoán phân tầng OSI bằng bộ lệnh CMD chuẩn',
+        action: 'Mở cmd.exe trên Windows 10. Gõ ipconfig /all để kiểm tra tầng 3. Gõ ping 127.0.0.1 (kiểm tra card mạng nội tại) ➔ ping Default Gateway ➔ ping 8.8.8.8 ➔ ping google.com.',
+        pokaYokeTip: 'Nếu ping 8.8.8.8 được nhưng ping google.com báo lỗi ➔ Hỏng dịch vụ DNS. Nếu ping Gateway không được ➔ Lỗi cáp hoặc sai Subnet Mask.',
+        command: 'ping 127.0.0.1 && ping 192.168.10.1 && nslookup google.com'
+      },
+      {
+        stepNum: 2,
+        title: 'Định vị và giải quyết pan bệnh thực tế của Giám khảo',
+        action: 'Xác định nhanh 1 trong các pan bệnh kinh điển: Cáp mạng bị đứt ngầm sợi 1-2-3-6; địa chỉ IP bị gán trùng (IP Conflict); cổng dịch vụ Print Spooler bị dừng; Windows Firewall chặn ICMP.',
+        pokaYokeTip: 'Bình tĩnh kiểm tra đèn cổng Switch trước tiên (Tầng 1 Vật lý) ➔ Kiểm tra IP (Tầng 3) ➔ Kiểm tra Firewall & Dịch vụ (Tầng 7).',
+        command: 'arp -a & netstat -ano | findstr 445'
+      },
+      {
+        stepNum: 3,
+        title: 'Đo kiểm thông mạng 100% không rớt gói (0% Packet Loss)',
+        action: 'Thực hiện lệnh ping -n 20 từ máy trạm đến các điểm trọng yếu: Router, Máy trạm thứ 2, Máy in. Xác nhận 20/20 gói tin phản hồi thành công, độ trễ < 2ms.',
+        pokaYokeTip: 'Chụp ảnh màn hình cửa sổ ping sạch gói tin làm bằng chứng nghiệm thu kỹ thuật.',
+        command: 'ping -n 20 192.168.10.1 && ping -n 20 192.168.10.5'
+      },
+      {
+        stepNum: 4,
+        title: 'Bảo vệ đồ án & Trả lời vấn đáp 05 phút trước Ban Giám khảo',
+        action: 'Kỹ sư trưởng thuyết minh ngắn gọn về: Sơ đồ Topo, giải pháp chia IP VLSM tiết kiệm, chính sách phân quyền thư mục kế toán bảo mật và giải thích cách khắc phục pan bệnh vừa qua.',
+        pokaYokeTip: 'Tác phong tự tin, xưng hô chuẩn KTV, giải thích nguyên lý mạch lạc (RAM = mặt bàn học, Switch = bùng binh giao thông, IP = số nhà).',
+      }
+    ],
+    verificationCriteria: [
+      'Hệ thống mạng chạy ổn định, lệnh ping 20 gói đạt 0% Packet Loss.',
+      'Bắt trúng pan bệnh và khắc phục trong thời gian dưới 10 phút.',
+      'In thử thành công bản nghiệm thu qua mạng LAN.',
+      'Trả lời chính xác và tự tin 2/2 câu hỏi vấn đáp chuyên môn của Ban Giám khảo.'
+    ],
+    penaltyTraps: [
+      {
+        trap: 'Không dùng lệnh CMD để chẩn đoán mà mò mẫm cắm rút bừa bãi',
+        penalty: 'Trừ 5 điểm tác phong kỹ sư',
+        howToAvoid: 'Luôn mở CMD gõ ipconfig và ping để khoanh vùng sự cố theo thứ tự phân tầng OSI.'
+      },
+      {
+        trap: 'Lệnh ping chập chờn, rớt gói tin (> 5% Loss)',
+        penalty: 'Trừ 6 điểm độ ổn định hệ thống',
+        howToAvoid: 'Kiểm tra lại đầu cáp bấm lỏng chân hoặc cáp đi ngang qua nguồn điện 220V gây nhiễu điện từ.'
+      },
+      {
+        trap: 'Nói ấp úng, không giải thích được ý nghĩa dải Subnet Mask /26 hay /27',
+        penalty: 'Trừ 4 điểm phần vấn đáp',
+        howToAvoid: 'Nắm chắc công thức Magic Number = 256 - Subnet Mask để trả lời nhanh trong 3 giây.'
+      }
+    ]
+  }
+];
+
+// ============================================================================
+// BỘ 4 ĐỀ THI THỰC HÀNH TỔNG HỢP SA BÀN HSG (PRACTICAL EXAM SCENARIOS)
+// Mô phỏng chuẩn 100% đề thi tay nghề cấp trường & khu vực
+// ============================================================================
+export const HSG_PRACTICAL_EXAMS: HsgPracticalExam[] = [
+  {
+    id: 'exam_hsg_01',
+    code: 'ĐỀ THI 01',
+    title: 'Thi Công Mạng Văn Phòng Doanh Nghiệp Vận Tải (Cơ Sở Ea H\'leo)',
+    durationMinutes: 90,
+    targetCompany: 'Công ty TNHH Vận tải & Logistics Ea H\'leo',
+    scenarioDescription: 'Doanh nghiệp vận tải có trụ sở 2 tầng gồm 3 bộ phận: Ban Giám Đốc (4 máy), Phòng Kế Toán & Điều Vận (25 máy), Khu Vực Chờ Của Tài Xế & Khách Hàng (Wi-Fi 30 máy). Yêu cầu thi công tuyến cáp Gigabit, chia mạng con dải 192.168.10.0/24 tiết kiệm IP, thiết lập máy chủ tệp tin nội bộ bảo mật cao và phát Wi-Fi khách cách ly hoàn toàn.',
+    topologySummary: 'Internet ➔ Router Cân Bằng Tải ➔ Switch Gigabit Core ➔ PC Giám Đốc, PC Kế Toán, Máy In Mạng, Wi-Fi AP Khách.',
+    ipTable: [
+      { device: 'Router Core', interface: 'LAN Port 1', ipAddress: '192.168.10.1', subnetMask: '255.255.255.224 (/27)', defaultGateway: '-', note: 'Cổng Gateway cho Ban Giám Đốc' },
+      { device: 'PC Giám Đốc', interface: 'Ethernet', ipAddress: '192.168.10.2', subnetMask: '255.255.255.224 (/27)', defaultGateway: '192.168.10.1', note: 'Toàn quyền truy cập mọi thư mục' },
+      { device: 'PC Kế Toán 01', interface: 'Ethernet', ipAddress: '192.168.10.34', subnetMask: '255.255.255.224 (/27)', defaultGateway: '192.168.10.33', note: 'Chỉ đọc và sửa file kế toán' },
+      { device: 'Máy In Mạng LAN', interface: 'Ethernet', ipAddress: '192.168.10.35', subnetMask: '255.255.255.224 (/27)', defaultGateway: '192.168.10.33', note: 'Gán DHCP Reservation theo MAC' },
+      { device: 'Wi-Fi Khách Vãng Lai', interface: 'WLAN Guest', ipAddress: '192.168.10.65 - .94', subnetMask: '255.255.255.224 (/27)', defaultGateway: '192.168.10.65', note: 'Bật AP Isolation chặn quét mạng nội bộ' }
+    ],
+    permissionMatrix: [
+      { folder: 'D:\\HOP_DONG_KINH_DOANH', group: 'GiamDoc', sharePerm: 'Full Control', ntfsPerm: 'Full Control (Toàn quyền)' },
+      { folder: 'D:\\HOP_DONG_KINH_DOANH', group: 'KeToan', sharePerm: 'Change / Read', ntfsPerm: 'Read & Execute (Chỉ đọc hợp đồng)' },
+      { folder: 'D:\\SO_QUY_TIEN_MAT', group: 'KeToan', sharePerm: 'Change / Read', ntfsPerm: 'Modify (Sửa và nhập phiếu thu chi)' },
+      { folder: 'D:\\SO_QUY_TIEN_MAT', group: 'Users Khac', sharePerm: 'No Access', ntfsPerm: 'Deny All (Cấm tuyệt đối)' }
+    ],
+    taskChecklist: [
+      { id: 't1_cable', task: 'Bấm 02 đoạn cáp mạng Cat6 chuẩn B, test 8/8 LED, cắm Switch nhận Gigabit 1000 Mbps.', points: 25, isCritical: true },
+      { id: 't1_vlsm', task: 'Quy hoạch dải IP 3 phòng ban theo phương pháp VLSM không trùng dải, ghi chú vào bảng IP.', points: 15 },
+      { id: 't1_win10', task: 'Cài đặt IP tĩnh Windows 10, Computer Name PC-EAHLEO-01, Workgroup LOGISTICS.', points: 15 },
+      { id: 't1_ntfs', task: 'Tạo thư mục chia sẻ, phân quyền NTFS chuẩn ma trận bảo mật, cấm triệt để Everyone.', points: 20, isCritical: true },
+      { id: 't1_wifi', task: 'Đổi mật khẩu admin Router, cấu hình 2 SSID, bật AP Isolation cho mạng Wi-Fi Khách.', points: 15 },
+      { id: 't1_test', task: 'Đo kiểm lệnh ping 20 gói đạt 0% Packet Loss và in thử thành công bản Test Page qua mạng.', points: 10, isCritical: true }
+    ],
+    troubleshootingTask: {
+      symptom: 'Máy trạm Kế Toán cắm cáp nhưng đèn cổng mạng trên Switch chỉ sáng màu Cam, Windows báo tốc độ Link Speed: 100 Mbps thay vì 1.0 Gbps.',
+      rootCause: 'Sợi cáp mạng bị tuột hoặc ép chưa ngậm sâu ở chân số 4 và 5, khiến hệ thống tự động hạ chuẩn từ Gigabit xuống Fast Ethernet.',
+      solution: 'Dùng kìm cắt bỏ hạt mạng cũ, tuốt vỏ cáp chừa lõi 1.3cm, vuốt thẳng 8 sợi chuẩn B và bấm dập đều lực để ngậm tiếp xúc 8/8 sợi đồng.',
+      testCommand: 'powershell "Get-NetAdapter | Select Name, LinkSpeed, Status"'
+    }
+  },
+  {
+    id: 'exam_hsg_02',
+    code: 'ĐỀ THI 02',
+    title: 'Hạ Tầng Mạng Chi Nhánh Ngân Hàng & Phân Tách Mạng Bảo Mật',
+    durationMinutes: 90,
+    targetCompany: 'Phòng Giao Dịch Ngân Hàng TMCP Chi Nhánh Ea H\'leo',
+    scenarioDescription: 'Thiết kế và triển khai mạng nội bộ cho Phòng Giao Dịch Ngân Hàng gồm: Quầy Giao Dịch Viên (12 máy), Phòng Giám Đốc (3 máy), Hệ Thống ATM & Máy Chủ Giao Dịch (4 thiết bị). Đòi hỏi tính bảo mật cực cao, các máy giao dịch viên không được phép truy cập vào vùng máy chủ lõi, đường truyền dự phòng và mã hóa dữ liệu đường truyền.',
+    topologySummary: 'Router Gateway Firewall ➔ Switch Managed ➔ VLAN 10 (Giao Dịch Viên), VLAN 20 (Giám Đốc), VLAN 30 (Máy Chủ Core Banking).',
+    ipTable: [
+      { device: 'Router Gateway', interface: 'VLAN 10 Sub', ipAddress: '172.16.1.1', subnetMask: '255.255.255.240 (/28)', defaultGateway: '-', note: 'Gateway VLAN 10 Giao Dịch Viên' },
+      { device: 'Router Gateway', interface: 'VLAN 20 Sub', ipAddress: '172.16.1.17', subnetMask: '255.255.255.240 (/28)', defaultGateway: '-', note: 'Gateway VLAN 20 Giám Đốc' },
+      { device: 'PC Giao Dịch 01', interface: 'Ethernet', ipAddress: '172.16.1.2', subnetMask: '255.255.255.240 (/28)', defaultGateway: '172.16.1.1', note: 'Chỉ truy cập cổng thanh toán nội bộ' },
+      { device: 'Máy In Hóa Đơn Kim', interface: 'Print Server', ipAddress: '172.16.1.3', subnetMask: '255.255.255.240 (/28)', defaultGateway: '172.16.1.1', note: 'Chia sẻ cho cả quầy giao dịch' }
+    ],
+    taskChecklist: [
+      { id: 't2_cable', task: 'Bấm cáp mạng UTP Cat6 Gigabit chuẩn B, đo kiểm 8/8 sợi thông suốt, bọc nẹp thẩm mỹ.', points: 25, isCritical: true },
+      { id: 't2_ip_plan', task: 'Thiết lập dải địa chỉ IP theo chuẩn RFC 1918 Class B (172.16.x.x) tối ưu Subnet /28.', points: 15 },
+      { id: 't2_win_sec', task: 'Cấu hình Windows 10: Tắt chia sẻ không mật khẩu, kích hoạt tường lửa mở cổng port 445 cho SMB.', points: 20 },
+      { id: 't2_ntfs_bank', task: 'Thiết lập cây thư mục CHUNG_TU_NGAN_HANG với quyền Modify cho Giám Đốc và Read-Only cho nhân viên.', points: 20, isCritical: true },
+      { id: 't2_print_share', task: 'Cài đặt Driver và chia sẻ máy in qua địa chỉ IP tĩnh cố định, in thành công trang thử nghiệm.', points: 10 },
+      { id: 't2_defense', task: 'Bảo vệ phương án an ninh mạng chống nghe lén gói tin trước Hội đồng Giám khảo.', points: 10 }
+    ],
+    troubleshootingTask: {
+      symptom: 'Các máy giao dịch viên không ping được đến máy in hóa đơn mặc dù cả hai thiết bị đều sáng đèn liên kết cổng mạng.',
+      rootCause: 'Máy in bị đặt sai Default Gateway (đặt sang dải IP của VLAN 20 thay vì VLAN 10), khiến gói tin phản hồi ICMP bị định tuyến lạc đường.',
+      solution: 'Truy cập trang Web cấu hình card mạng máy in, chỉnh lại Default Gateway về đúng IP 172.16.1.1.',
+      testCommand: 'tracert 172.16.1.3'
+    }
+  },
+  {
+    id: 'exam_hsg_03',
+    code: 'ĐỀ THI 03',
+    title: 'Phòng Máy Tính Thực Hành & Quản Trị Máy Chủ File Server Nội Bộ',
+    durationMinutes: 90,
+    targetCompany: 'Phòng Lab Kỹ Thuật Máy Tính & Mạng Nội Bộ (Trạm Thực Nghiệm)',
+    scenarioDescription: 'Thiết lập hoàn thiện 01 cụm thực hành gồm Máy Chủ File Server (Windows 10 Pro) và các Máy Trạm KTV: Phân vùng ổ cứng SSD 256GB theo chuẩn UEFI/GPT (ổ C cài HĐH, ổ D chứa dữ liệu), cấu hình IP tĩnh, chia sẻ kho thư mục phần mềm kỹ thuật dung lượng lớn và chia sẻ máy in đa chức năng qua giao thức SMB.',
+    topologySummary: 'Máy Chủ File Server ↔ Switch Gigabit 24 Port ↔ Bàn Kỹ Thuật KTV 1, KTV 2, KTV 3 + Máy In LAN.',
+    ipTable: [
+      { device: 'Máy Chủ File Server', interface: 'Ethernet 1', ipAddress: '192.168.1.10', subnetMask: '255.255.255.0 (/24)', defaultGateway: '192.168.1.1', note: 'Chứa kho phần mềm cài đặt ISO' },
+      { device: 'Máy Trạm KTV 01', interface: 'Ethernet', ipAddress: '192.168.1.11', subnetMask: '255.255.255.0 (/24)', defaultGateway: '192.168.1.1', note: 'Bàn thao tác chính tháo lắp' },
+      { device: 'Máy Trạm KTV 02', interface: 'Ethernet', ipAddress: '192.168.1.12', subnetMask: '255.255.255.0 (/24)', defaultGateway: '192.168.1.1', note: 'Bàn kiểm soát an toàn Poka-Yoke' },
+      { device: 'Máy In Đa Năng LAN', interface: 'Ethernet', ipAddress: '192.168.1.50', subnetMask: '255.255.255.0 (/24)', defaultGateway: '192.168.1.1', note: 'In biên bản nghiệm thu KTV 3' }
+    ],
+    taskChecklist: [
+      { id: 't3_cable', task: 'Bấm cáp mạng Cat5e/Cat6 chiều dài 2 mét, thông mạch 8/8 sợi, Link Speed 1.0 Gbps.', points: 25, isCritical: true },
+      { id: 't3_storage', task: 'Khởi tạo ổ đĩa SSD chuẩn GPT, định dạng NTFS phân vùng DATA D: kích thước Allocation Unit 4KB.', points: 15 },
+      { id: 't3_server_setup', task: 'Đặt IP tĩnh cho File Server, kích hoạt dịch vụ Computer Browser, SMBDirect và Network Discovery.', points: 20 },
+      { id: 't3_share_matrix', task: 'Tạo thư mục KHO_PHAN_MEM, cấp quyền Modify cho tài khoản KTV, cấp quyền Read-Only cho tài khoản Guest.', points: 20, isCritical: true },
+      { id: 't3_printer', task: 'Chia sẻ máy in, cấu hình Client kết nối in test và lưu file log in ấn.', points: 10 },
+      { id: 't3_5s', task: 'Dọn dẹp bàn kỹ thuật phòng lab, sắp xếp dây gọn gàng đạt chuẩn 5S công nghiệp.', points: 10 }
+    ],
+    troubleshootingTask: {
+      symptom: 'Từ máy KTV truy cập vào \\\\192.168.1.10 bị báo lỗi: "The network path was not found (Error code: 0x80070035)".',
+      rootCause: 'Tính năng Network Discovery và File and Printer Sharing đang bị tắt ở chế độ mạng Public Network trên File Server.',
+      solution: 'Mở Network and Sharing Center, chuyển chế độ mạng sang Private Network và bật On cho cả hai tính năng trên.',
+      testCommand: 'net view \\\\192.168.1.10'
+    }
+  },
+  {
+    id: 'exam_hsg_04',
+    code: 'ĐỀ THI 04',
+    title: 'Khắc Phục Sự Cố Mạng Mất Kết Nối Diện Rộng & Phục Hồi Gigabit',
+    durationMinutes: 90,
+    targetCompany: 'Trụ Sở Cơ Quan Hành Chính & Dịch Vụ Công',
+    scenarioDescription: 'Hệ thống mạng cơ quan bất ngờ bị ngắt quãng liên tục: Một số phòng ban không vào được mạng nội bộ, máy in chia sẻ bị offline và một đường cáp chính bị sụt tốc độ nghiêm trọng từ Gigabit xuống 100 Mbps. Đội thi đóng vai trò Đội Phản Ứng Nhanh (Incident Response Team) đến hiện trường khám lỗi, xử lý 3 pan bệnh ẩn và bàn giao hệ thống đạt 100% chỉ số kỹ thuật.',
+    topologySummary: 'Router Core ➔ Switch Trung Tâm ➔ 3 Nhánh Mạng: Phòng Tiếp Dân, Phòng Lưu Trữ Hồ Sơ, Phòng Công Nghệ.',
+    ipTable: [
+      { device: 'Router Core', interface: 'LAN Port 1', ipAddress: '10.10.1.1', subnetMask: '255.255.255.192 (/26)', defaultGateway: '-', note: 'Dải mạng công cộng 62 host' },
+      { device: 'PC Tiếp Dân 01', interface: 'Ethernet', ipAddress: '10.10.1.10', subnetMask: '255.255.255.192 (/26)', defaultGateway: '10.10.1.1', note: 'Bị lỗi trùng IP với máy khác' },
+      { device: 'PC Lưu Trữ 01', interface: 'Ethernet', ipAddress: '10.10.1.15', subnetMask: '255.255.255.192 (/26)', defaultGateway: '10.10.1.1', note: 'Bị lỗi đứt cáp hạ tốc độ' },
+      { device: 'Máy In Hồ Sơ Tự Động', interface: 'Ethernet', ipAddress: '10.10.1.20', subnetMask: '255.255.255.192 (/26)', defaultGateway: '10.10.1.1', note: 'Bị dừng dịch vụ Spooler' }
+    ],
+    taskChecklist: [
+      { id: 't4_cable_diag', task: 'Dùng máy test phát hiện đầu cáp bị đứt sợi, cắt và bấm lại đầu cáp đạt chuẩn Gigabit 1000 Mbps.', points: 25, isCritical: true },
+      { id: 't4_arp_conflict', task: 'Dùng lệnh arp -a và xem Windows System Event Log để bắt lỗi trùng địa chỉ IP (IP Address Conflict).', points: 20 },
+      { id: 't4_spooler_fix', task: 'Xử lý lỗi hàng đợi in bị tắc nghẽn, xóa file rác trong System32\\spool\\PRINTERS và start lại Spooler.', points: 15 },
+      { id: 't4_security_audit', task: 'Kiểm tra và siết lại quyền truy cập thư mục HỒ SƠ LƯU TRỮ, xóa bỏ các User lạ không rõ nguồn gốc.', points: 20, isCritical: true },
+      { id: 't4_ping_cert', task: 'Chạy script đo kiểm ping -n 30 chứng minh 0% rớt gói tin và độ trễ trung bình < 1ms.', points: 10, isCritical: true },
+      { id: 't4_report', task: 'Lập Biên Bản Sự Cố Kỹ Thuật (Incident Report) ghi rõ Nguyên nhân, Hậu quả và Biện pháp phòng ngừa Poka-Yoke.', points: 10 }
+    ],
+    troubleshootingTask: {
+      symptom: 'Màn hình góc phải Windows xuất hiện tam giác vàng chấm than: "There is an IP address conflict with another system on the network".',
+      rootCause: 'KTV trước đó đã gán tĩnh địa chỉ 10.10.1.10 cho máy in nhưng đồng thời DHCP Pool trên Router lại chưa trừ địa chỉ này ra, khiến PC Tiếp Dân nhận trùng IP.',
+      solution: 'Vào Router thêm IP 10.10.1.10 vào dải DHCP Exclusion hoặc gán Reservation cố định cho máy in; trên PC gõ ipconfig /renew.',
+      testCommand: 'arp -a & ipconfig /renew'
+    }
+  }
+];
+
