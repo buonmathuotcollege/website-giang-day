@@ -360,6 +360,19 @@ export default function HsgPhanCungMangPage() {
                   </div>
                 </div>
 
+                {/* Sơ đồ Topo logic mạng phòng ban (Minh họa trực quan) */}
+                <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+                  <div className="relative group">
+                    <img src="/images/hsg-02/topology-packet-tracer-vlsm.svg" alt="Sơ đồ Topo nguyên lý mạng logic trên Cisco Packet Tracer" className="w-full h-auto max-h-56 object-cover" loading="lazy" />
+                    <div className="absolute bottom-0 inset-x-0 bg-slate-950/85 px-3 py-2 flex items-center justify-between text-[11px] text-white">
+                      <span>📷 Sơ đồ Topo nguyên lý logic Cisco Packet Tracer &amp; Quy hoạch dải IP VLSM</span>
+                      <a href="/images/hsg-02/topology-packet-tracer-vlsm.svg" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-bold inline-flex items-center gap-1">
+                        <span>Xem ảnh to ↗</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
                 {/* 5 Fast Inputs */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
@@ -952,6 +965,88 @@ export default function HsgPhanCungMangPage() {
                         <div className="text-xl font-black text-emerald-600">{currentStage.maxScore} Điểm</div>
                       </div>
                     </div>
+
+                    {/* Ảnh Minh Họa Kỹ Thuật Trực Quan Theo Từng Chặng */}
+                    {currentStage.step === 1 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-2">
+                        <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
+                          <img src="/images/hsg-02/cable-tia-568ab-standard.svg" alt="Sơ đồ màu chuẩn TIA/EIA-568A và 568B" className="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                          <div className="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                            <span>📷 Sơ đồ chuẩn màu 8 sợi TIA/EIA-568A vs 568B Gigabit</span>
+                            <a href="/images/hsg-02/cable-tia-568ab-standard.svg" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                          </div>
+                        </div>
+                        <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
+                          <img src="/images/hsg-02/cable-tester-gigabit.svg" alt="Máy test mạng thông mạch 8/8 sợi tuyệt đối" className="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                          <div className="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                            <span>📷 Máy test cáp mạng thông 8/8 sợi &amp; Cổng Switch 1Gbps</span>
+                            <a href="/images/hsg-02/cable-tester-gigabit.svg" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {currentStage.step === 2 && (
+                      <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm my-2">
+                        <img src="/images/hsg-02/topology-packet-tracer-vlsm.svg" alt="Sơ đồ nguyên lý logic trên Cisco Packet Tracer" className="w-full h-auto max-h-64 object-contain p-2" loading="lazy" />
+                        <div className="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                          <span>📷 Sơ đồ mạng Cisco Packet Tracer: Router Core, Switch 24-Port &amp; 4 VLAN phòng ban</span>
+                          <a href="/images/hsg-02/topology-packet-tracer-vlsm.svg" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                        </div>
+                      </div>
+                    )}
+
+                    {currentStage.step === 3 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-2">
+                        <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
+                          <img src="/images/hsg-02/win10-static-ip-config.svg" alt="Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10" className="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                          <div className="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                            <span>📷 Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10</span>
+                            <a href="/images/hsg-02/win10-static-ip-config.svg" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                          </div>
+                        </div>
+                        <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
+                          <img src="/images/hsg-02/ntfs-security-matrix.svg" alt="Ma trận phân quyền NTFS Security &amp; Share Permissions" className="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                          <div className="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                            <span>📷 Ma trận phân quyền nâng cao NTFS Security &amp; Share Permissions</span>
+                            <a href="/images/hsg-02/ntfs-security-matrix.svg" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {currentStage.step === 4 && (
+                      <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm my-2 p-4 text-white space-y-3">
+                        <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                          <span className="text-xs font-bold text-sky-400">📷 Cấu Hình Wi-Fi Router Doanh Nghiệp &amp; Bảo Mật AP</span>
+                          <span className="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-300 font-mono">WPA2/WPA3 AES</span>
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                          <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
+                            <div className="font-bold text-amber-400">SSID 1: MẠNG NỘI BỘ (DOANH NGHIEP)</div>
+                            <div className="text-slate-400 text-[11px]">• Chuẩn: WPA2/WPA3 Personal (AES)</div>
+                            <div className="text-slate-400 text-[11px]">• Cấp phát dải DHCP nội bộ riêng</div>
+                            <div className="text-slate-400 text-[11px]">• Cho phép thấy máy chủ &amp; máy in LAN</div>
+                          </div>
+                          <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 space-y-1">
+                            <div className="font-bold text-rose-400">SSID 2: MẠNG KHÁCH (GUEST WI-FI)</div>
+                            <div className="text-slate-400 text-[11px]">• Kích hoạt: <strong>AP Isolation (Guest Network Isolation)</strong></div>
+                            <div className="text-slate-400 text-[11px]">• Ngăn chặn 100% điện thoại khách quét trộm IP LAN</div>
+                            <div className="text-slate-400 text-[11px]">• Giới hạn băng thông (Bandwidth Limit)</div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {currentStage.step === 5 && (
+                      <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm my-2">
+                        <img src="/images/hsg-02/system-full-acceptance-ping.svg" alt="Nghiệm thu toàn diện hệ thống: Ping thông 100% và in ấn LAN" className="w-full h-auto max-h-64 object-contain p-2" loading="lazy" />
+                        <div className="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+                          <span>📷 Nghiệm thu toàn diện: Command Prompt CMD Ping thông suốt 0% packet loss &amp; In test page</span>
+                          <a href="/images/hsg-02/system-full-acceptance-ping.svg" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="space-y-3">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-slate-600">Tiêu Chuẩn Kỹ Thuật Bắt Buộc Nghiệm Thu:</h4>

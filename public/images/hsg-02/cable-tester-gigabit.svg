@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="1000" height="650">
+  <rect width="1000" height="650" fill="#0f172a"/>
+  
+  <rect x="40" y="30" width="920" height="70" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+  <text x="65" y="60" fill="#10b981" font-family="Segoe UI, Tahoma, sans-serif" font-size="12" font-weight="bold">TIÊU CHUẨN ĐO THÔNG MẠCH &amp; TỐC ĐỘ</text>
+  <text x="65" y="82" fill="#ffffff" font-family="Segoe UI, Tahoma, sans-serif" font-size="18" font-weight="900">MÁY TEST MẠNG RJ45 THÔNG MẠCH 8/8 SỢI &amp; ĐO LIÊN KẾT GIGABIT 1000 Mbps</text>
+  
+  <!-- Máy Master -->
+  <g transform="translate(100, 130)">
+    <rect width="240" height="380" rx="20" fill="#1e293b" stroke="#475569" stroke-width="3"/>
+    <rect x="25" y="25" width="190" height="40" rx="8" fill="#0f172a"/>
+    <text x="120" y="50" fill="#38bdf8" font-family="Segoe UI, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">MASTER TESTER</text>
+    
+    <!-- RJ45 Port on Top -->
+    <rect x="70" y="-15" width="100" height="25" rx="6" fill="#334155" stroke="#94a3b8"/>
+    
+    <!-- 8 LED Lights -->
+    <g transform="translate(45, 90)">
+      
+        <g transform="translate(0, 0)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 1 : THÔNG MẠCH</text>
+        </g>
+      
+        <g transform="translate(0, 32)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 2 : THÔNG MẠCH</text>
+        </g>
+      
+        <g transform="translate(0, 64)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 3 : THÔNG MẠCH</text>
+        </g>
+      
+        <g transform="translate(0, 96)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 4 : THÔNG MẠCH</text>
+        </g>
+      
+        <g transform="translate(0, 128)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 5 : THÔNG MẠCH</text>
+        </g>
+      
+        <g transform="translate(0, 160)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 6 : THÔNG MẠCH</text>
+        </g>
+      
+        <g transform="translate(0, 192)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 7 : THÔNG MẠCH</text>
+        </g>
+      
+        <g transform="translate(0, 224)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 8 : THÔNG MẠCH</text>
+        </g>
+      
+    </g>
+    
+    <!-- Power &amp; Status -->
+    <rect x="35" y="325" width="170" height="32" rx="8" fill="#10b981"/>
+    <text x="120" y="346" fill="#ffffff" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">✓ ĐẠT 8/8 SỢI THÔNG SUỐT</text>
+  </g>
+
+  <!-- Cáp mạng nối giữa 2 máy -->
+  <path d="M 340 260 C 450 260, 450 260, 560 260" stroke="#3b82f6" stroke-width="12" fill="none" stroke-linecap="round"/>
+  <rect x="400" y="235" width="100" height="50" rx="10" fill="#1d4ed8"/>
+  <text x="450" y="265" fill="#ffffff" font-family="monospace" font-size="12" font-weight="bold" text-anchor="middle">UTP CAT6</text>
+
+  <!-- Máy Remote -->
+  <g transform="translate(560, 130)">
+    <rect width="240" height="380" rx="20" fill="#1e293b" stroke="#475569" stroke-width="3"/>
+    <rect x="25" y="25" width="190" height="40" rx="8" fill="#0f172a"/>
+    <text x="120" y="50" fill="#38bdf8" font-family="Segoe UI, sans-serif" font-size="13" font-weight="bold" text-anchor="middle">REMOTE TERMINATOR</text>
+    
+    <!-- 8 LED Lights Remote -->
+    <g transform="translate(45, 90)">
+      
+        <g transform="translate(0, 0)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 1 : ĐÈN NHẢY ĐỀU</text>
+        </g>
+      
+        <g transform="translate(0, 32)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 2 : ĐÈN NHẢY ĐỀU</text>
+        </g>
+      
+        <g transform="translate(0, 64)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 3 : ĐÈN NHẢY ĐỀU</text>
+        </g>
+      
+        <g transform="translate(0, 96)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 4 : ĐÈN NHẢY ĐỀU</text>
+        </g>
+      
+        <g transform="translate(0, 128)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 5 : ĐÈN NHẢY ĐỀU</text>
+        </g>
+      
+        <g transform="translate(0, 160)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 6 : ĐÈN NHẢY ĐỀU</text>
+        </g>
+      
+        <g transform="translate(0, 192)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 7 : ĐÈN NHẢY ĐỀU</text>
+        </g>
+      
+        <g transform="translate(0, 224)">
+          <circle cx="15" cy="12" r="8" fill="#22c55e"/>
+          <circle cx="15" cy="12" r="3" fill="#ffffff"/>
+          <text x="40" y="17" fill="#ffffff" font-family="monospace" font-size="13" font-weight="bold">PIN 8 : ĐÈN NHẢY ĐỀU</text>
+        </g>
+      
+    </g>
+    
+    <rect x="35" y="325" width="170" height="32" rx="8" fill="#10b981"/>
+    <text x="120" y="346" fill="#ffffff" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">✓ KHÔNG ĐỨT NGẦM</text>
+  </g>
+
+  <!-- Card kết nối Switch Gigabit -->
+  <g transform="translate(830, 160)">
+    <rect width="130" height="320" rx="14" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+    <text x="65" y="35" fill="#38bdf8" font-family="Segoe UI, sans-serif" font-size="11" font-weight="bold" text-anchor="middle">CỔNG SWITCH</text>
+    <rect x="25" y="55" width="80" height="50" rx="8" fill="#1e293b" stroke="#64748b"/>
+    <circle cx="65" cy="130" r="14" fill="#10b981"/>
+    <text x="65" y="165" fill="#10b981" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">1000 Mbps</text>
+    <text x="65" y="185" fill="#cbd5e1" font-family="sans-serif" font-size="10" text-anchor="middle">Gigabit Link</text>
+    <rect x="15" y="220" width="100" height="75" rx="8" fill="#1e293b"/>
+    <text x="65" y="245" fill="#94a3b8" font-family="sans-serif" font-size="9" text-anchor="middle">Đèn LED cam xanh</text>
+    <text x="65" y="265" fill="#22c55e" font-family="sans-serif" font-size="10" font-weight="bold" text-anchor="middle">Sáng ổn định</text>
+  </g>
+
+  <!-- Footer -->
+  <rect x="40" y="540" width="920" height="80" rx="12" fill="#1e293b" stroke="#334155"/>
+  <text x="65" y="570" fill="#facc15" font-family="sans-serif" font-size="12" font-weight="bold">⚠️ QUY CHUẨN CHẤM THI CỦA GIÁM KHẢO:</text>
+  <text x="65" y="595" fill="#cbd5e1" font-family="sans-serif" font-size="11">
+    1. Máy test sáng tuần tự từ 1 đến 8 (không lộn xộn, không tắt đèn nào) ➔ Đạt trọn vẹn 8.0 điểm mạch cáp.
+    2. Cắm vào Switch phòng máy nhận tốc độ 1.0 Gbps (1000M Full Duplex) ➔ Đạt trọn vẹn 6.0 điểm tốc độ.
+  </text>
+</svg>

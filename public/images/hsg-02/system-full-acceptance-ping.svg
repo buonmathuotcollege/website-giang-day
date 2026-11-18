@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="1000" height="650">
+  <rect width="1000" height="650" fill="#0f172a"/>
+  
+  <rect x="30" y="20" width="940" height="60" rx="12" fill="#1e293b" stroke="#334155"/>
+  <text x="50" y="45" fill="#38bdf8" font-family="Segoe UI, sans-serif" font-size="11" font-weight="bold">CHẶNG 5: NGHIỆM THU TOÀN DIỆN DỰ ÁN HẠ TẦNG</text>
+  <text x="50" y="65" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="900">KIỂM THỬ THÔNG MẠNG 100% 0% PACKET LOSS &amp; IN TEST PAGE THÀNH CÔNG</text>
+
+  <!-- Left: Command Prompt CMD Window -->
+  <g transform="translate(40, 105)">
+    <rect width="520" height="490" rx="6" fill="#0c0c0c" stroke="#334155" stroke-width="2"/>
+    <!-- CMD Titlebar -->
+    <rect width="520" height="30" fill="#1f1f1f"/>
+    <text x="15" y="20" fill="#cccccc" font-family="Consolas, monospace" font-size="12">Command Prompt - ping 192.168.10.1 -t</text>
+    
+    <!-- Console Output -->
+    <g transform="translate(15, 55)" font-family="Consolas, monospace" font-size="12" fill="#cccccc">
+      <text y="0">Microsoft Windows [Version 10.0.19045.3803]</text>
+      <text y="18">(c) Microsoft Corporation. All rights reserved.</text>
+      
+      <text y="50" fill="#ffffff">C:UsersKySuTruong> ping 192.168.10.1 -t</text>
+      
+      <text y="80">Pinging 192.168.10.1 with 32 bytes of data:</text>
+      <text y="105" fill="#4ade80">Reply from 192.168.10.1: bytes=32 time&lt;1ms TTL=64</text>
+      <text y="125" fill="#4ade80">Reply from 192.168.10.1: bytes=32 time&lt;1ms TTL=64</text>
+      <text y="145" fill="#4ade80">Reply from 192.168.10.1: bytes=32 time&lt;1ms TTL=64</text>
+      <text y="165" fill="#4ade80">Reply from 192.168.10.1: bytes=32 time&lt;1ms TTL=64</text>
+      <text y="185" fill="#4ade80">Reply from 192.168.10.1: bytes=32 time&lt;1ms TTL=64</text>
+      <text y="205" fill="#4ade80">Reply from 192.168.10.1: bytes=32 time&lt;1ms TTL=64</text>
+      
+      <text y="240" fill="#ffffff">Ping statistics for 192.168.10.1:</text>
+      <text y="260">    Packets: Sent = 350, Received = 350, Lost = 0 (0% loss),</text>
+      <text y="280">Approximate round trip times in milli-seconds:</text>
+      <text y="300">    Minimum = 0ms, Maximum = 1ms, Average = 0ms</text>
+      
+      <!-- Test Page Printer LAN Status -->
+      <text y="340" fill="#38bdf8">C:UsersKySuTruong> net view \192.168.10.160</text>
+      <text y="365">Shared resources at \192.168.10.160</text>
+      <text y="385">Share name   Type   Used as  Comment</text>
+      <text y="405">-------------------------------------------------</text>
+      <text y="425" fill="#facc15">HP_LaserJet  Print           May in mang LAN phong ban</text>
+      <text y="445" fill="#34d399">DU_LIEU_NB   Disk            Thu muc chia se noi bo</text>
+    </g>
+  </g>
+
+  <!-- Right: Acceptance Report Checklist -->
+  <g transform="translate(585, 105)">
+    <rect width="380" height="490" rx="14" fill="#1e293b" stroke="#334155"/>
+    <text x="25" y="35" fill="#4ade80" font-family="Segoe UI" font-size="13" font-weight="bold">KẾT QUẢ NGHIỆM THU ĐẠT CHUẨN:</text>
+    
+    <g transform="translate(25, 60)" font-family="Segoe UI" font-size="12">
+      <!-- Item 1 -->
+      <g transform="translate(0, 0)">
+        <rect width="330" height="65" rx="8" fill="#0f172a" stroke="#22c55e"/>
+        <text x="15" y="25" fill="#4ade80" font-weight="bold">✓ 1. Thông Mạng Tuyệt Đối 100%</text>
+        <text x="15" y="45" fill="#cbd5e1" font-size="11">Rớt gói: 0% loss · Độ trễ &lt; 1ms (Switch Gigabit)</text>
+      </g>
+
+      <!-- Item 2 -->
+      <g transform="translate(0, 80)">
+        <rect width="330" height="65" rx="8" fill="#0f172a" stroke="#22c55e"/>
+        <text x="15" y="25" fill="#4ade80" font-weight="bold">✓ 2. In Test Page Thành Công</text>
+        <text x="15" y="45" fill="#cbd5e1" font-size="11">Lệnh in từ máy trạm in ngay không kẹt Spooler</text>
+      </g>
+
+      <!-- Item 3 -->
+      <g transform="translate(0, 160)">
+        <rect width="330" height="65" rx="8" fill="#0f172a" stroke="#22c55e"/>
+        <text x="15" y="25" fill="#4ade80" font-weight="bold">✓ 3. Bảo Mật Wi-Fi &amp; AP Isolation</text>
+        <text x="15" y="45" fill="#cbd5e1" font-size="11">Điện thoại khách không quét được IP máy trạm</text>
+      </g>
+
+      <!-- Item 4 -->
+      <g transform="translate(0, 240)">
+        <rect width="330" height="65" rx="8" fill="#0f172a" stroke="#22c55e"/>
+        <text x="15" y="25" fill="#4ade80" font-weight="bold">✓ 4. Thuyết Trình Phản Biện 05 Phút</text>
+        <text x="15" y="45" fill="#cbd5e1" font-size="11">Kỹ sư trưởng giải thích mạch lạc sơ đồ Topo</text>
+      </g>
+
+      <!-- Stamp -->
+      <g transform="translate(45, 330)">
+        <rect width="240" height="70" rx="8" fill="#064e3b" stroke="#34d399" stroke-width="2"/>
+        <text x="120" y="30" fill="#34d399" font-size="13" font-weight="900" text-anchor="middle">ĐỦ ĐIỀU KIỆN NGHIỆM THU</text>
+        <text x="120" y="52" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">XẾP HẠNG: GIẢI XUẤT SẮC</text>
+      </g>
+    </g>
+  </g>
+</svg>
