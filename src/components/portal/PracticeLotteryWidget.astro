@@ -1,0 +1,206 @@
+---
+// PracticeLotteryWidget.astro — Trạm Bốc Thăm Đề Sát Hạch & Tra Cứu Bàn Kỹ Thuật Trực Tuyến
+import { LAB_STATIONS, QUICK_PRACTICE_TICKETS } from '../../data/portalHub';
+
+const defaultStation = LAB_STATIONS[0];
+const defaultTicket = QUICK_PRACTICE_TICKETS[0];
+const payloadJson = JSON.stringify({
+  stations: LAB_STATIONS,
+  tickets: QUICK_PRACTICE_TICKETS,
+});
+---
+
+<!-- JSON Payload for Client Engine -->
+<script id="portal-lottery-data" type="application/json" set:html={payloadJson}></script>
+
+<!-- Engine Definition Ahead of DOM -->
+<script is:inline>
+  function practiceLotteryEngine() {
+    var raw = { stations: [], tickets: [] };
+    try {
+      var el = document.getElementById('portal-lottery-data');
+      if (el && el.textContent) {
+        raw = JSON.parse(el.textContent);
+      }
+    } catch(e) {}
+
+    return {
+      stations: raw.stations || [],
+      tickets: raw.tickets || [],
+      selectedStationId: 'station_01',
+      currentTicketIdx: 0,
+      isSpinning: false,
+
+      get currentStation() {
+        var self = this;
+        var found = self.stations.find(function(s) { return s.id === self.selectedStationId; });
+        return found || self.stations[0] || {};
+      },
+
+      get currentTicket() {
+        var self = this;
+        return self.tickets[self.currentTicketIdx] || self.tickets[0] || {};
+      },
+
+      selectStation: function(id) {
+        this.selectedStationId = id;
+      },
+
+      spinTicket: function() {
+        var self = this;
+        if (self.isSpinning || self.tickets.length === 0) return;
+        self.isSpinning = true;
+
+        var count = 0;
+        var maxSteps = 10;
+        var interval = setInterval(function() {
+          self.currentTicketIdx = Math.floor(Math.random() * self.tickets.length);
+          count++;
+          if (count >= maxSteps) {
+            clearInterval(interval);
+            self.isSpinning = false;
+          }
+        }, 80);
+      }
+    };
+  }
+  window.practiceLotteryEngine = practiceLotteryEngine;
+</script>
+
+<section class="max-w-6xl mx-auto px-4 sm:px-6 py-6" id="practice-station">
+  <div
+    class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200 shadow-sm"
+    id="lottery-widget-container"
+    x-data="practiceLotteryEngine()"
+  >
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100">
+      <div>
+        <div class="flex items-center gap-2 mb-1.5">
+          <span class="px-2.5 py-0.5 rounded-md text-[11px] font-black uppercase tracking-wider bg-amber-600 text-white">
+            TRẠM THỰC HÀNH 1-CHẠM
+          </span>
+          <span class="text-xs font-bold text-slate-800">
+            Tra Cứu Bàn Kỹ Thuật & Bốc Thăm Tình Huống
+          </span>
+        </div>
+        <h2 class="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">
+          Máy Tạo Đề Sát Hạch Thực Tế Tại Phòng Lab
+        </h2>
+      </div>
+
+      <button
+        type="button"
+        id="btn-spin-lottery"
+        @click="spinTicket()"
+        :disabled="isSpinning"
+        class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-amber-500 hover:bg-amber-600 active:scale-95 text-slate-950 font-black text-xs sm:text-sm shadow-md transition-all cursor-pointer min-h-[48px] shrink-0 disabled:opacity-70 disabled:cursor-not-allowed"
+      >
+        <span id="spin-icon" :class="isSpinning ? 'animate-spin text-base inline-block' : 'text-base inline-block'">🎲</span>
+        <span id="spin-label" x-text="isSpinning ? 'Đang quay số đề thi...' : 'Bốc Thăm Đề Thi Ngẫu Nhiên'">Bốc Thăm Đề Thi Ngẫu Nhiên</span>
+      </button>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="pt-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Cột Trái: Chọn Bàn Máy (5 cols) -->
+      <div class="lg:col-span-5 space-y-4">
+        <div>
+          <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">
+            1. Chọn Số Máy (Bàn Kỹ Thuật):
+          </label>
+          <div class="grid grid-cols-5 gap-1.5 max-h-[220px] overflow-y-auto p-1.5 border border-slate-200 rounded-2xl bg-slate-50" id="station-buttons-list">
+            {LAB_STATIONS.map((st) => (
+              <button
+                type="button"
+                id={`btn-station-${st.id}`}
+                data-station-id={st.id}
+                @click={`selectStation('${st.id}')`}
+                class="station-pick-btn py-2 rounded-xl text-xs text-center border transition-all cursor-pointer min-h-[40px] flex items-center justify-center font-bold"
+                :class={`selectedStationId === '${st.id}' ? 'bg-slate-900 text-white font-black shadow-sm ring-2 ring-slate-900 border-slate-900 active-station' : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'`}
+              >
+                <span>{st.name.replace('Máy ', 'M')}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <!-- Thông tin bàn máy đã chọn -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-black text-slate-900 text-sm" id="station-info-name" x-text="currentStation.name + ' (' + currentStation.assignedGroup + ')'">
+              {defaultStation.name} ({defaultStation.assignedGroup})
+            </span>
+            <span class="font-mono text-xs text-blue-600 font-bold" id="station-info-ip" x-text="currentStation.ipAddress">
+              {defaultStation.ipAddress}
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-600 pt-1">
+            <div>Main: <strong class="text-slate-800" id="station-info-main" x-text="currentStation.boardModel">{defaultStation.boardModel}</strong></div>
+            <div>RAM: <strong class="text-slate-800" id="station-info-ram" x-text="currentStation.ramSpec">{defaultStation.ramSpec}</strong></div>
+            <div>VGA: <strong class="text-slate-800" id="station-info-vga" x-text="currentStation.vgaSpec">{defaultStation.vgaSpec}</strong></div>
+            <div>HĐH: <strong class="text-slate-800">Win 10 Pro</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cột Phải: Thẻ Tình Huống Bốc Thăm (7 cols) -->
+      <div class="lg:col-span-7">
+        <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">
+          2. Đề Thi Sát Hạch / Tình Huống Kỹ Thuật Tiếp Nhận:
+        </label>
+
+        <div class="p-5 sm:p-6 rounded-2xl border-2 border-amber-300 bg-amber-50/40 space-y-3.5 shadow-sm" id="ticket-card">
+          <div class="flex items-center justify-between gap-2">
+            <span class="px-2.5 py-1 rounded-md text-xs font-black bg-amber-500 text-slate-950 font-mono tracking-wider" id="ticket-code" x-text="currentTicket.code">
+              {defaultTicket.code}
+            </span>
+            <span class="text-xs font-bold text-slate-500" id="ticket-mainboard" x-text="'Linh kiện: ' + currentTicket.mainboard">
+              Linh kiện: {defaultTicket.mainboard}
+            </span>
+          </div>
+
+          <h3 class="text-sm sm:text-base font-black text-slate-900 leading-snug" id="ticket-title" x-text="currentTicket.title">
+            {defaultTicket.title}
+          </h3>
+
+          <div class="space-y-2 text-xs">
+            <div class="p-3 rounded-xl bg-white border border-amber-200">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-0.5">Triệu chứng lâm sàng:</span>
+              <span class="text-slate-800 font-medium" id="ticket-symptom" x-text="currentTicket.symptom">{defaultTicket.symptom}</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-white border border-amber-200">
+              <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-0.5">Nguyên nhân gốc rễ:</span>
+              <span class="text-slate-800 font-medium" id="ticket-cause" x-text="currentTicket.cause">{defaultTicket.cause}</span>
+            </div>
+
+            <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950">
+              <span class="text-[10px] font-black text-emerald-700 uppercase tracking-wider block mb-0.5">Quy trình xử lý Poka-Yoke:</span>
+              <span class="font-medium" id="ticket-remedy" x-text="currentTicket.remedy">{defaultTicket.remedy}</span>
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center justify-between gap-3">
+            <span class="text-[11px] text-slate-500 font-semibold">
+              Thời gian sát hạch: <strong>15 - 30 phút</strong>
+            </span>
+
+            <a
+              id="ticket-action-btn"
+              :href="currentTicket.targetUrl"
+              href={defaultTicket.targetUrl}
+              class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs transition-all flex items-center gap-1.5 no-underline min-h-[44px]"
+            >
+              <span>Vào Xử Lý Tình Huống Này</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
