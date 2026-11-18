@@ -23,7 +23,7 @@ const {
 <html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content={description} />
     {noindex ? (
       <meta name="robots" content="noindex, nofollow" />
@@ -66,9 +66,9 @@ const {
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
     <title>{title}</title>
   </head>
-  <body class="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
+  <body class="min-h-screen flex flex-col bg-slate-50/60 text-slate-900 font-sans max-w-full overflow-x-hidden antialiased">
     <Header />
-    <main class="flex-1">
+    <main class="flex-1 max-w-full overflow-x-hidden">
       <slot />
     </main>
     <Footer />

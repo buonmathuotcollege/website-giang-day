@@ -111,14 +111,14 @@ const payloadJson = JSON.stringify({
           <label class="block text-xs font-black text-slate-700 uppercase tracking-wider mb-2">
             1. Chọn Số Máy (Bàn Kỹ Thuật):
           </label>
-          <div class="grid grid-cols-5 gap-1.5 max-h-[220px] overflow-y-auto p-1.5 border border-slate-200 rounded-2xl bg-slate-50" id="station-buttons-list">
+          <div class="grid grid-cols-4 sm:grid-cols-5 gap-1.5 max-h-[220px] overflow-y-auto p-1.5 border border-slate-200 rounded-2xl bg-slate-50" id="station-buttons-list">
             {LAB_STATIONS.map((st) => (
               <button
                 type="button"
                 id={`btn-station-${st.id}`}
                 data-station-id={st.id}
                 @click={`selectStation('${st.id}')`}
-                class="station-pick-btn py-2 rounded-xl text-xs text-center border transition-all cursor-pointer min-h-[40px] flex items-center justify-center font-bold"
+                class="station-pick-btn py-2 rounded-xl text-xs text-center border transition-all cursor-pointer min-h-[44px] flex items-center justify-center font-bold touch-manipulation"
                 :class={`selectedStationId === '${st.id}' ? 'bg-slate-900 text-white font-black shadow-sm ring-2 ring-slate-900 border-slate-900 active-station' : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'`}
               >
                 <span>{st.name.replace('Máy ', 'M')}</span>

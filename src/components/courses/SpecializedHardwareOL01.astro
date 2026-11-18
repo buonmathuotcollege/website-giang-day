@@ -1760,7 +1760,8 @@ const appDataPayload = {
       <!-- Rubric Summary Score Table -->
       <div class="space-y-2 text-xs">
         <div class="font-bold text-slate-900 uppercase text-[11px] tracking-wider text-slate-500">4. KẾT QUẢ ĐÁNH GIÁ THEO BẢNG CHẤM RUBRIC THÔNG TƯ 55</div>
-        <table class="w-full border-collapse border border-slate-300 text-left">
+        <div class="overflow-x-auto w-full">
+          <table class="w-full border-collapse border border-slate-300 text-left min-w-[500px]">
           <thead>
             <tr class="bg-slate-100 text-slate-900 font-bold">
               <th class="border border-slate-300 p-2 w-12 text-center">STT</th>
@@ -1810,6 +1811,7 @@ const appDataPayload = {
             </tr>
           </tbody>
         </table>
+        </div>
         
         <div class="flex items-center justify-between pt-1">
           <span class="text-slate-600">Đánh giá chung:</span>

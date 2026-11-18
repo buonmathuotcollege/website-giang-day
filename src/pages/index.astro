@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import EcosystemGrid from '../components/portal/EcosystemGrid.astro';
 import ClassScheduleWidget from '../components/portal/ClassScheduleWidget.astro';
 import PracticeLotteryWidget from '../components/portal/PracticeLotteryWidget.astro';
+import LessonQuickSearch from '../components/courses/LessonQuickSearch.astro';
 ---
 
 <BaseLayout title="Cổng Giảng Dạy & Ôn Luyện Chuyên Sâu CNTT · CN. Phạm Tiến Đông">
@@ -150,6 +151,11 @@ import PracticeLotteryWidget from '../components/portal/PracticeLotteryWidget.as
 
   <!-- PHÂN KHU 2: BẢNG TIN TIẾN ĐỘ PHÒNG MÁY & LỊCH TUẦN LỚP 04THA3 (EA H'LEO) -->
   <ClassScheduleWidget />
+
+  <!-- THANH TÌM KIẾM NHANH TỪ KHÓA BÀI HỌC (TOÀN HỆ THỐNG) -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+    <LessonQuickSearch />
+  </section>
 
   <!-- PHÂN KHU 3: LƯỚI HỆ SINH THÁI TÊN MIỀN PHỤ & CÁC TRANG CON (pc.phamtiendong.name.vn) -->
   <EcosystemGrid />

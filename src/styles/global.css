@@ -7,37 +7,47 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+    max-width: 100vw;
   }
   body {
-    @apply bg-slate-50/60 text-gray-900 font-sans;
+    @apply bg-slate-50/60 text-slate-900 font-sans;
+    overflow-x: clip;
+    max-width: 100vw;
   }
-  h1 { @apply text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight; }
-  h2 { @apply text-xl sm:text-2xl font-bold text-gray-800; }
-  h3 { @apply text-lg sm:text-xl font-semibold text-gray-800; }
+  h1 { @apply text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight; }
+  h2 { @apply text-xl sm:text-2xl font-bold text-slate-800; }
+  h3 { @apply text-lg sm:text-xl font-semibold text-slate-800; }
 }
 
 @layer components {
-  /* Minimalist buttons - Japanese Shibui styling */
+  /* Minimalist buttons - Japanese Shibui styling & Touch-friendly Mobile Target (≥ 44px) */
   .btn-primary {
-    @apply inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl
-           bg-primary-700 text-white font-semibold text-xs sm:text-sm
+    @apply inline-flex items-center justify-center px-4 sm:px-5 py-2.5 sm:py-2.5 rounded-xl
+           bg-primary-700 text-white font-semibold text-xs sm:text-sm min-h-[44px] touch-manipulation
            hover:bg-primary-800 active:scale-[0.98] transition-all duration-150 shadow-sm hover:shadow;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl
-           bg-white text-gray-700 font-semibold text-xs sm:text-sm border border-gray-200
-           hover:bg-gray-50 active:scale-[0.98] transition-all duration-150 shadow-sm;
+    @apply inline-flex items-center justify-center px-4 sm:px-5 py-2.5 sm:py-2.5 rounded-xl
+           bg-white text-slate-700 font-semibold text-xs sm:text-sm border border-slate-200 min-h-[44px] touch-manipulation
+           hover:bg-slate-50 active:scale-[0.98] transition-all duration-150 shadow-sm;
   }
   .card {
-    @apply bg-white rounded-2xl border border-gray-200/80 p-5 sm:p-6
-           hover:border-primary-300 hover:shadow-md transition-all duration-200;
+    @apply bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-6
+           hover:border-primary-300 hover:shadow-md transition-all duration-200 max-w-full;
   }
   .sidebar-link {
-    @apply block px-3 py-2 rounded-xl text-sm text-gray-700
+    @apply block px-3 py-2.5 rounded-xl text-sm text-slate-700 min-h-[44px] flex items-center
            hover:bg-primary-50 hover:text-primary-700 transition-colors duration-150;
   }
   .sidebar-link.active {
     @apply bg-primary-50 text-primary-700 font-semibold;
+  }
+
+  /* Responsive Table Container */
+  .table-responsive {
+    @apply w-full max-w-full overflow-x-auto my-4;
+    -webkit-overflow-scrolling: touch;
   }
 
   /* Keyboard shortcut badges (Kanso styling) */
@@ -60,22 +70,29 @@
            bg-rose-100 text-rose-900 border border-rose-300;
   }
 
-  /* Markdown content styling */
-  .prose h2 { @apply text-xl font-bold text-gray-800 mt-8 mb-3 pb-2 border-b border-gray-200; }
-  .prose h3 { @apply text-lg font-semibold text-gray-700 mt-6 mb-2; }
-  .prose p { @apply text-base text-gray-700 leading-relaxed mb-4; }
-  .prose ul { @apply list-disc pl-6 mb-4 space-y-1; }
-  .prose ol { @apply list-decimal pl-6 mb-4 space-y-1; }
-  .prose li { @apply text-gray-700; }
-  .prose table { @apply w-full border-collapse mb-4 text-sm; }
-  .prose th { @apply border border-gray-300 bg-gray-100 px-3 py-2 text-left font-semibold; }
-  .prose td { @apply border border-gray-300 px-3 py-2; }
-  .prose code { @apply bg-gray-100 px-1.5 py-0.5 rounded text-sm font-mono text-primary-800; }
-  .prose pre { @apply bg-gray-900 text-gray-100 p-4 rounded-xl overflow-x-auto mb-4; }
-  .prose pre code { @apply bg-transparent text-inherit p-0; }
-  .prose blockquote { @apply border-l-4 border-primary-300 bg-primary-50 pl-4 py-2 my-4 italic text-gray-700; }
-  .prose img { @apply rounded-xl shadow-sm my-4 max-w-full; }
-  .prose a { @apply text-primary-700 underline hover:text-primary-900; }
+  /* Markdown content styling with zero mobile overflow */
+  .prose { @apply max-w-full overflow-x-hidden; }
+  .prose h2 { @apply text-lg sm:text-xl font-bold text-slate-900 mt-6 sm:mt-8 mb-3 pb-2 border-b border-slate-200; }
+  .prose h3 { @apply text-base sm:text-lg font-bold text-slate-800 mt-5 sm:mt-6 mb-2; }
+  .prose p { @apply text-sm sm:text-base text-slate-700 leading-relaxed mb-4; }
+  .prose ul { @apply list-disc pl-5 sm:pl-6 mb-4 space-y-1.5 text-slate-700 text-sm sm:text-base; }
+  .prose ol { @apply list-decimal pl-5 sm:pl-6 mb-4 space-y-1.5 text-slate-700 text-sm sm:text-base; }
+  .prose li { @apply text-slate-700 leading-relaxed; }
+  .prose table {
+    @apply block w-full max-w-full overflow-x-auto border-collapse mb-4 text-xs sm:text-sm;
+    -webkit-overflow-scrolling: touch;
+  }
+  .prose th { @apply border border-slate-300 bg-slate-100 px-3 py-2 text-left font-bold text-slate-900 whitespace-nowrap; }
+  .prose td { @apply border border-slate-300 px-3 py-2 text-slate-800; }
+  .prose code { @apply bg-slate-100 px-1.5 py-0.5 rounded text-xs sm:text-sm font-mono text-slate-900 break-words; }
+  .prose pre {
+    @apply bg-slate-900 text-slate-100 p-3.5 sm:p-4 rounded-xl overflow-x-auto mb-4 max-w-full text-xs sm:text-sm;
+    -webkit-overflow-scrolling: touch;
+  }
+  .prose pre code { @apply bg-transparent text-inherit p-0 whitespace-pre; }
+  .prose blockquote { @apply border-l-4 border-blue-500 bg-blue-50/70 pl-3.5 sm:pl-4 py-2 my-4 italic text-slate-800 text-xs sm:text-sm rounded-r-xl; }
+  .prose img { @apply rounded-xl shadow-sm my-4 max-w-full h-auto; }
+  .prose a { @apply text-blue-700 underline font-semibold hover:text-blue-900; }
 
   /* Alert boxes */
   .alert-note { @apply bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl my-4 text-sm; }
