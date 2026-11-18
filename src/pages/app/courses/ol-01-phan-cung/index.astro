@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../../components/Breadcrumb.astro';
+import SpecializedHardwareOL01 from '../../../../components/courses/SpecializedHardwareOL01.astro';
+
+export const prerender = true;
+
+const title = "Đánh Giá Năng Lực Phần Cứng Máy Tính (Mã: OL-01_PHAN_CUNG)";
+const description = "Chuyên đề huấn luyện thực chiến Kỹ thuật viên 5 bước Poka-Yoke, ngân hàng 100 câu trắc nghiệm tình huống, sa bàn bốc thăm sát hạch 4 giờ và in phiếu nghiệm thu chuẩn A4.";
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div class="mb-4">
+      <Breadcrumb items={[
+        { label: 'Trang chủ', href: '/' },
+        { label: 'Đánh giá năng lực', href: '/assessment/phan-cung' },
+        { label: 'Chuyên đề OL-01 (Phần cứng)', href: '/app/courses/ol-01-phan-cung' },
+      ]} />
+    </div>
+
+    <SpecializedHardwareOL01 />
+  </main>
+</BaseLayout>

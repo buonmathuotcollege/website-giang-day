@@ -1,0 +1,1608 @@
+---
+import {
+  HARDWARE_METADATA,
+  HELPDESK_5_STEPS,
+  PRACTICAL_EXAM_TICKETS,
+  THREE_SURVIVAL_RULES,
+  FIVE_CLASSIC_CASES,
+} from '../../data/hardwareCurriculum';
+import {
+  LAB_MOTHERBOARDS,
+  H510_HOTSPOTS,
+} from '../../data/hardwareTrainingPackage';
+import {
+  MCQ_PRACTICAL_BANK,
+  ORAL_QUESTIONS,
+} from '../../data/questionBank';
+
+// Enrich hotspots to include Front Panel 9-pin
+const ENRICHED_HOTSPOTS = [
+  ...H510_HOTSPOTS,
+  {
+    id: "fpanel-header",
+    stepId: "step-3",
+    title: "6. Cụm Chân Front Panel (9-Pin F_PANEL)",
+    badge: "POWER SW · Sát Chân Khuyết",
+    top: "88%",
+    left: "86%",
+    color: "bg-purple-600",
+    description: "Cụm 9 chân kim kết nối nút Power, Reset, đèn HDD LED và đèn Power LED của vỏ case.",
+    pokaYoke: "Khẩu quyết F_PANEL: Chân POWER SW nằm ở hàng trên ngay sát cạnh chân trống bị khuyết; nút nguồn & reset không phân cực âm dương.",
+    componentImg: "/images/ol-01/fpanel-header.jpg"
+  }
+];
+
+// Map 100 MCQs into 4 core topics requested
+const MCQ_TOPIC_MAPPING = MCQ_PRACTICAL_BANK.map((item, idx) => {
+  let topicKey: 'power_ram' | 'bios_uefi' | 'disk_os' | 'safety_esd' = 'safety_esd';
+  if (item.category === 'an-toan') {
+    topicKey = 'safety_esd';
+  } else if (item.category === 'bat-benh') {
+    topicKey = 'power_ram';
+  } else if (item.category === 'cai-win') {
+    // Separate BIOS/UEFI vs Disk Partition
+    if (item.question.toLowerCase().includes('bios') || item.question.toLowerCase().includes('uefi') || item.question.toLowerCase().includes('boot') || item.question.toLowerCase().includes('f11') || item.question.toLowerCase().includes('f8') || item.question.toLowerCase().includes('cmos')) {
+      topicKey = 'bios_uefi';
+    } else {
+      topicKey = 'disk_os';
+    }
+  } else if (item.category === 'lap-rap') {
+    topicKey = 'power_ram';
+  } else {
+    topicKey = 'disk_os';
+  }
+  return {
+    ...item,
+    topicKey,
+    index: idx + 1
+  };
+});
+
+// JSON data payload for Alpine.js
+const appDataPayload = {
+  steps: HELPDESK_5_STEPS,
+  tickets: PRACTICAL_EXAM_TICKETS,
+  rules: THREE_SURVIVAL_RULES,
+  hotspots: ENRICHED_HOTSPOTS,
+  boards: LAB_MOTHERBOARDS,
+  mcqs: MCQ_TOPIC_MAPPING,
+  oralQuestions: ORAL_QUESTIONS,
+};
+---
+
+<div class="specialized-hardware-course" x-data="ol01CourseEngine()">
+  <!-- Course Header Banner -->
+  <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm mb-8">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div class="space-y-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-slate-900 text-white">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            CHUYÊN ĐỀ 01
+          </span>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+            MÃ: OL-01_PHAN_CUNG
+          </span>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+            Chuẩn Thông tư 55/2026/TT-BGDĐT
+          </span>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+          Đánh Giá Năng Lực Phần Cứng Máy Tính
+        </h1>
+
+        <p class="text-slate-600 text-sm sm:text-base leading-relaxed max-w-3xl">
+          Mô hình huấn luyện chuẩn hóa <strong>Helpdesk Workflow 5 Bước</strong> theo năng lực thực tế (CBT). Chuẩn cấu hình phòng máy: 
+          <span class="font-semibold text-slate-800">Mainboard Intel H510 · Core i5 · 8GB DDR4 · SSD SATA · VGA NVIDIA GT 730 · Windows 10 Pro</span>.
+        </p>
+
+        <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-500 pt-1">
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            Giảng viên: <strong class="text-slate-700">CN. Phạm Tiến Đông</strong>
+          </span>
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            Cổng Giảng Dạy & Thực Hành CNTT
+          </span>
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            100% Thao tác thực tế trên Windows 10
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Action / Status Badge -->
+      <div class="shrink-0 flex flex-col sm:flex-row lg:flex-col gap-3">
+        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center">
+          <div class="text-xs text-slate-500 font-medium">Tiến độ quy trình an toàn</div>
+          <div class="text-2xl font-black text-slate-900 mt-0.5">
+            <span x-text="completedSafetyStepsCount">0</span> / 5 Bước
+          </div>
+          <div class="w-36 bg-slate-200 h-1.5 rounded-full overflow-hidden mx-auto mt-2">
+            <div class="bg-emerald-600 h-full transition-all duration-300" :style="`width: ${(completedSafetyStepsCount / 5) * 100}%`"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs (Shadcn Tabs Style) -->
+    <div class="mt-8 border-t border-slate-200 pt-6">
+      <div class="flex flex-wrap gap-2 p-1.5 bg-slate-100/90 rounded-2xl border border-slate-200" role="tablist">
+        <button
+          type="button"
+          @click="activeTab = 'tab-1'"
+          class="flex-1 min-w-[200px] flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px]"
+          :class="activeTab === 'tab-1' ? 'bg-white text-slate-900 shadow-sm border border-slate-200/80' : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'"
+        >
+          <span>🛠️</span>
+          <span>TAB 1: Bàn Kỹ Thuật 5 Bước & H510</span>
+        </button>
+
+        <button
+          type="button"
+          @click="activeTab = 'tab-2'"
+          class="flex-1 min-w-[200px] flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px]"
+          :class="activeTab === 'tab-2' ? 'bg-white text-slate-900 shadow-sm border border-slate-200/80' : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'"
+        >
+          <span>📚</span>
+          <span>TAB 2: Trắc Nghiệm (100 Câu) & Vấn Đáp</span>
+        </button>
+
+        <button
+          type="button"
+          @click="activeTab = 'tab-3'"
+          class="flex-1 min-w-[200px] flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px]"
+          :class="activeTab === 'tab-3' ? 'bg-white text-slate-900 shadow-sm border border-slate-200/80' : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'"
+        >
+          <span>🎲</span>
+          <span>TAB 3: Bốc Thăm & Rubric Sát Hạch</span>
+        </button>
+
+        <button
+          type="button"
+          @click="activeTab = 'tab-4'"
+          class="flex-1 min-w-[200px] flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px]"
+          :class="activeTab === 'tab-4' ? 'bg-white text-slate-900 shadow-sm border border-slate-200/80' : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'"
+        >
+          <span>🖨️</span>
+          <span>TAB 4: In Phiếu Nghiệm Thu A4</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- TAB 1: BÀN KỸ THUẬT 7 BƯỚC POKA-YOKE & CÀI ĐẶT HỆ THỐNG -->
+  <!-- ==================================================================== -->
+  <div x-show="activeTab === 'tab-1'" x-cloak class="space-y-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- CỘT TRÁI (50% / 6 cols): Shadcn Accordion 5 Bước nghiệp vụ -->
+      <div class="lg:col-span-6 space-y-4">
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <span>📋</span> Sổ Tay Nghiệp Vụ Kỹ Thuật Viên 5 Bước
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Khớp 100% với 5 tiêu chuẩn đầu ra Thông tư 55/2026/TT-BGDĐT</p>
+            </div>
+            <span class="text-xs font-mono font-bold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-lg">
+              KTV Standard
+            </span>
+          </div>
+
+          <!-- Accordion List -->
+          <div class="mt-4 space-y-3">
+            
+            <!-- BƯỚC 1 -->
+            <div class="border rounded-2xl transition-all duration-200 overflow-hidden"
+              :class="safetyChecked.step1 ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200 bg-white'">
+              <button
+                type="button"
+                @click="toggleAccordion(1)"
+                class="w-full flex items-center justify-between p-4 text-left font-semibold text-slate-900 min-h-[48px] hover:bg-slate-50 transition-colors"
+              >
+                <div class="flex items-center gap-3">
+                  <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+                    :class="safetyChecked.step1 ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-white'">
+                    <span x-show="!safetyChecked.step1">1</span>
+                    <span x-show="safetyChecked.step1">✓</span>
+                  </span>
+                  <div>
+                    <div class="text-xs font-mono font-bold text-slate-500">TIÊU CHÍ 1 (2.0 ĐIỂM)</div>
+                    <div class="text-sm font-bold text-slate-900">Bước 1: Tiếp Nhận & An Toàn Tĩnh Điện ESD</div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-slate-400 transform transition-transform duration-200" :class="openAccordion === 1 ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <div x-show="openAccordion === 1" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-900">
+                  <strong class="font-bold flex items-center gap-1.5 text-amber-950 mb-1">
+                    <span>⚡</span> Luật RÚT – BẤM – KHAY (Quy tắc sống còn):
+                  </strong>
+                  1. RÚT phích điện nguồn khỏi ổ cắm 220V, gạt công tắc I/O sau nguồn sang "O".<br />
+                  2. BẤM nút nguồn vỏ thùng máy 3 lần để xả sạch điện tích dư trong tụ nguồn.<br />
+                  3. Bỏ ngay toàn bộ ốc vừa tháo vào KHAY phân loại (tuyệt đối không để rơi vào bo mạch H510).
+                </div>
+
+                <div class="space-y-2">
+                  <p><strong>• Chống tĩnh điện (ESD):</strong> Chạm 2 lòng bàn tay vào phần tôn kim loại không sơn của case trong 5 giây trước khi chạm vào Main H510; tháo nhẫn, đồng hồ kim loại.</p>
+                  <p><strong>• Khám ngoại quan:</strong> Soi đèn kiểm tra bề mặt bo mạch H510: chân pin cong gãy, tụ nguồn phồng rộp, rỉ sét, móp méo vỏ case.</p>
+                  <p><strong>• Lập phiếu tiếp nhận:</strong> Ghi chép trung thực số serial linh kiện, dung lượng ổ đĩa C/D ban đầu, triệu chứng khách báo.</p>
+                </div>
+
+                <div class="pt-2 border-t border-slate-200 flex items-center justify-between">
+                  <label class="flex items-center gap-2.5 cursor-pointer font-bold text-xs" :class="safetyChecked.step1 ? 'text-emerald-700' : 'text-slate-700'">
+                    <input type="checkbox" x-model="safetyChecked.step1" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300" />
+                    <span>Đã hoàn thành an toàn Bước 1</span>
+                  </label>
+                  <span class="text-[11px] text-slate-400 font-mono">Max: 2.0 đ</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- BƯỚC 2 -->
+            <div class="border rounded-2xl transition-all duration-200 overflow-hidden"
+              :class="safetyChecked.step2 ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200 bg-white'">
+              <button
+                type="button"
+                @click="toggleAccordion(2)"
+                class="w-full flex items-center justify-between p-4 text-left font-semibold text-slate-900 min-h-[48px] hover:bg-slate-50 transition-colors"
+              >
+                <div class="flex items-center gap-3">
+                  <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+                    :class="safetyChecked.step2 ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-white'">
+                    <span x-show="!safetyChecked.step2">2</span>
+                    <span x-show="safetyChecked.step2">✓</span>
+                  </span>
+                  <div>
+                    <div class="text-xs font-mono font-bold text-slate-500">TIÊU CHÍ 2 (2.5 ĐIỂM)</div>
+                    <div class="text-sm font-bold text-slate-900">Bước 2: Chẩn Đoán Sự Cố & Sao Lưu (Backup Dữ Liệu)</div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-slate-400 transform transition-transform duration-200" :class="openAccordion === 2 ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <div x-show="openAccordion === 2" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-blue-900">
+                  <strong class="font-bold flex items-center gap-1.5 text-blue-950 mb-1">
+                    <span>🛡️</span> Luật GIỮ NỒI CƠM CỦA KHÁCH:
+                  </strong>
+                  Chưa sao lưu dữ liệu sang Ổ D hoặc USB thì TUYỆT ĐỐI KHÔNG format, không cài lại Windows, không tháo gỡ bừa bãi!
+                </div>
+
+                <div class="space-y-2">
+                  <p><strong>• Đọc tín hiệu POST / Beep code:</strong> 1 bíp dài 2 bíp ngắn = lỗi RAM hoặc card VGA; bíp liên tục dồn dập = nguồn sụt áp; 1 bíp ngắn = POST thành công.</p>
+                  <p><strong>• Đèn EZ Debug LED (MSI H510):</strong> Quan sát 4 đèn CPU -> DRAM -> VGA -> BOOT. Đèn đứng ở đâu là linh kiện đó gặp sự cố.</p>
+                  <p><strong>• Cắm USB WinPE cứu dữ liệu:</strong> Cắm USB cứu hộ, bật máy bấm Boot Menu (MSI/Winnfox: F11 | ASUS: F8) -> Chọn Boot UEFI USB -> Mở ổ C cũ copy toàn bộ <code>Desktop</code>, <code>Documents</code>, <code>Downloads</code>, và thư mục <code>Zalo PC</code> sang <code>D:\BACKUP_KHACH_HANG</code>.</p>
+                  <p><strong>• Đối chiếu kiểm tra:</strong> Chuột phải thư mục sao lưu chọn Properties, kiểm tra khớp 100% số file và dung lượng MB trước khi sang bước sau.</p>
+                </div>
+
+                <div class="pt-2 border-t border-slate-200 flex items-center justify-between">
+                  <label class="flex items-center gap-2.5 cursor-pointer font-bold text-xs" :class="safetyChecked.step2 ? 'text-emerald-700' : 'text-slate-700'">
+                    <input type="checkbox" x-model="safetyChecked.step2" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300" />
+                    <span>Đã hoàn thành an toàn Bước 2</span>
+                  </label>
+                  <span class="text-[11px] text-slate-400 font-mono">Max: 2.5 đ</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- BƯỚC 3 -->
+            <div class="border rounded-2xl transition-all duration-200 overflow-hidden"
+              :class="safetyChecked.step3 ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200 bg-white'">
+              <button
+                type="button"
+                @click="toggleAccordion(3)"
+                class="w-full flex items-center justify-between p-4 text-left font-semibold text-slate-900 min-h-[48px] hover:bg-slate-50 transition-colors"
+              >
+                <div class="flex items-center gap-3">
+                  <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+                    :class="safetyChecked.step3 ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-white'">
+                    <span x-show="!safetyChecked.step3">3</span>
+                    <span x-show="safetyChecked.step3">✓</span>
+                  </span>
+                  <div>
+                    <div class="text-xs font-mono font-bold text-slate-500">TIÊU CHÍ 3 (3.0 ĐIỂM)</div>
+                    <div class="text-sm font-bold text-slate-900">Bước 3: Thao Tác Tháo Lắp & Nâng Cấp (Poka-Yoke)</div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-slate-400 transform transition-transform duration-200" :class="openAccordion === 3 ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <div x-show="openAccordion === 3" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
+                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-800">
+                  <strong class="font-bold flex items-center gap-1.5 text-slate-950 mb-1">
+                    <span>🧩</span> Nguyên Lý Poka-Yoke (Chống Lắp Ngược Chiều):
+                  </strong>
+                  Mọi chân cắm máy tính đều là Lego có rãnh khuyết. Cắm đúng thì ấn nhẹ tay kêu "TÁCH"; thấy cấn nặng tay là cắm ngược, TUYỆT ĐỐI KHÔNG DÙNG SỨC ÉP!
+                </div>
+
+                <div class="space-y-2">
+                  <p><strong>• Thao tác khe RAM DDR4:</strong> Mở 2 ngàm khóa nhựa, soi đúng rãnh khuyết lệch đặc trưng của DDR4, đặt 2 ngón tay cái ấn đều 2 đầu thanh RAM đến khi nghe 2 tiếng "TÁCH" sập khóa.</p>
+                  <p><strong>• Tháo lắp Card VGA GT 730:</strong> Gạt mở lẫy khóa đuôi khe PCIe x16 trước khi rút card; khi lắp ấn card ngập khe cho đến khi lẫy tự ngậm, siết chặt ốc nẹp kim loại chống xệ card.</p>
+                  <p><strong>• Tra keo tản nhiệt CPU:</strong> Lau sạch keo cũ, bơm đúng 1 giọt keo mới bằng "HẠT ĐẬU XANH" ở giữa lưng CPU, gài tản nhiệt ấn chéo 4 góc đối xứng, cắm chặt dây vào cọc <code>CPU_FAN</code>.</p>
+                  <p><strong>• Đấu nối cáp nguồn & 9 chân F_PANEL:</strong> Cắm kịch nấc cáp 24-pin ATX, cáp 8-pin CPU (chữ CPU, không nhầm sang PCI-E). Cắm 2 chân POWER SW ở hàng trên sát cạnh chân kim bị khuyết.</p>
+                  <p><strong>• Cáp SATA SSD:</strong> Cắm đúng chiều ngàm chữ L cho cả dây nguồn và cáp dữ liệu SATA 6Gb/s.</p>
+                </div>
+
+                <div class="pt-2 border-t border-slate-200 flex items-center justify-between">
+                  <label class="flex items-center gap-2.5 cursor-pointer font-bold text-xs" :class="safetyChecked.step3 ? 'text-emerald-700' : 'text-slate-700'">
+                    <input type="checkbox" x-model="safetyChecked.step3" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300" />
+                    <span>Đã hoàn thành an toàn Bước 3</span>
+                  </label>
+                  <span class="text-[11px] text-slate-400 font-mono">Max: 3.0 đ</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- BƯỚC 4 -->
+            <div class="border rounded-2xl transition-all duration-200 overflow-hidden"
+              :class="safetyChecked.step4 ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200 bg-white'">
+              <button
+                type="button"
+                @click="toggleAccordion(4)"
+                class="w-full flex items-center justify-between p-4 text-left font-semibold text-slate-900 min-h-[48px] hover:bg-slate-50 transition-colors"
+              >
+                <div class="flex items-center gap-3">
+                  <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+                    :class="safetyChecked.step4 ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-white'">
+                    <span x-show="!safetyChecked.step4">4</span>
+                    <span x-show="safetyChecked.step4">✓</span>
+                  </span>
+                  <div>
+                    <div class="text-xs font-mono font-bold text-slate-500">TIÊU CHÍ 3 (TIẾP THEO)</div>
+                    <div class="text-sm font-bold text-slate-900">Bước 4: Cài Đặt Windows 10, Driver & Phần Mềm</div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-slate-400 transform transition-transform duration-200" :class="openAccordion === 4 ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <div x-show="openAccordion === 4" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
+                <div class="space-y-2">
+                  <p><strong>• Phím tắt Boot Menu phòng lab:</strong> Cắm USB cài Windows 10 -> Bật máy bấm liên tục: <code>ASUS: F8</code> | <code>MSI: F11</code> | <code>Winnfox: F11</code> -> Chọn dòng <code>UEFI: Tên USB</code>.</p>
+                  <p><strong>• Quy tắc phân vùng chuẩn UEFI / GPT:</strong> Ở cửa sổ chọn ổ đĩa cài đặt, nhìn đúng số GB của ổ C cũ để Delete/Format. <em>Tuyệt đối không đụng vào dòng ổ D dung lượng lớn chứa dữ liệu khách đã backup!</em></p>
+                  <p><strong>• Cài đặt Driver đầy đủ:</strong> Cài đặt Driver NVIDIA GeForce GT 730, LAN Realtek, Audio. Mở <code>Device Manager</code> kiểm tra sạch bóng 100% dấu chấm than vàng.</p>
+                  <p><strong>• Phần mềm thiết yếu:</strong> Cài đặt UniKey (bảng mã Unicode, kiểu gõ Telex, tích Run as Administrator), 7-Zip, bộ ứng dụng văn phòng.</p>
+                </div>
+
+                <div class="pt-2 border-t border-slate-200 flex items-center justify-between">
+                  <label class="flex items-center gap-2.5 cursor-pointer font-bold text-xs" :class="safetyChecked.step4 ? 'text-emerald-700' : 'text-slate-700'">
+                    <input type="checkbox" x-model="safetyChecked.step4" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300" />
+                    <span>Đã hoàn thành an toàn Bước 4</span>
+                  </label>
+                  <span class="text-[11px] text-slate-400 font-mono">Chuẩn Win 10 GPT</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- BƯỚC 5 -->
+            <div class="border rounded-2xl transition-all duration-200 overflow-hidden"
+              :class="safetyChecked.step5 ? 'border-emerald-300 bg-emerald-50/20' : 'border-slate-200 bg-white'">
+              <button
+                type="button"
+                @click="toggleAccordion(5)"
+                class="w-full flex items-center justify-between p-4 text-left font-semibold text-slate-900 min-h-[48px] hover:bg-slate-50 transition-colors"
+              >
+                <div class="flex items-center gap-3">
+                  <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+                    :class="safetyChecked.step5 ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-white'">
+                    <span x-show="!safetyChecked.step5">5</span>
+                    <span x-show="safetyChecked.step5">✓</span>
+                  </span>
+                  <div>
+                    <div class="text-xs font-mono font-bold text-slate-500">TIÊU CHÍ 4 & 5 (2.5 ĐIỂM)</div>
+                    <div class="text-sm font-bold text-slate-900">Bước 5: Kiểm Tra Nhiệt Độ, Máy In & Bàn Giao</div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-slate-400 transform transition-transform duration-200" :class="openAccordion === 5 ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <div x-show="openAccordion === 5" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
+                <div class="space-y-2">
+                  <p><strong>• Phục hồi dữ liệu khách hàng:</strong> Chép trả dữ liệu từ <code>D:\BACKUP_KHACH_HANG</code> về lại Desktop và Documents của khách. Mở thử 2 tệp Word/Excel trước mặt khách/giáo viên.</p>
+                  <p><strong>• Kiểm tra BIOS & Windows:</strong> Máy nhận đủ mã CPU i5, nhận đủ 8GB/16GB RAM (Dual-Channel), ổ SSD Good trong CrystalDiskInfo.</p>
+                  <p><strong>• Đo kiểm nhiệt độ tải (HWMonitor):</strong> Nhiệt độ CPU khi tải thử 5 phút phải duy trì ổn định <strong>dưới 75°C</strong>.</p>
+                  <p><strong>• Test máy in nội bộ:</strong> Mở Devices and Printers, bấm in "Print Test Page" máy in Canon/HP in ra bản in sắc nét, không kẹt giấy.</p>
+                  <p><strong>• Tác phong 5S:</strong> Đóng thùng case vặn đủ ốc, thu cất tua-vít và lau sạch bàn kỹ thuật, lập phiếu nghiệm thu A4.</p>
+                </div>
+
+                <div class="pt-2 border-t border-slate-200 flex items-center justify-between">
+                  <label class="flex items-center gap-2.5 cursor-pointer font-bold text-xs" :class="safetyChecked.step5 ? 'text-emerald-700' : 'text-slate-700'">
+                    <input type="checkbox" x-model="safetyChecked.step5" class="w-4 h-4 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300" />
+                    <span>Đã hoàn thành an toàn Bước 5</span>
+                  </label>
+                  <span class="text-[11px] text-slate-400 font-mono">Max: 2.5 đ</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- CỘT PHẢI (50% / 6 cols): Sơ đồ Mainboard H510 tương tác với Hotspots nhấp nháy -->
+      <div class="lg:col-span-6 space-y-4">
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div>
+              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <span>🔍</span> Sơ Đồ Bo Mạch Chủ H510 Tương Tác
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Rê chuột hoặc chạm vào các điểm hotspot nhấp nháy để xem thông số & Poka-Yoke</p>
+            </div>
+
+            <!-- Brand Switcher -->
+            <div class="inline-flex rounded-xl p-1 bg-slate-100 border border-slate-200 text-xs">
+              <button
+                type="button"
+                @click="selectedBoard = 'msi'"
+                class="px-2.5 py-1 rounded-lg font-bold transition-all"
+                :class="selectedBoard === 'msi' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'"
+              >
+                MSI H510
+              </button>
+              <button
+                type="button"
+                @click="selectedBoard = 'asus'"
+                class="px-2.5 py-1 rounded-lg font-bold transition-all"
+                :class="selectedBoard === 'asus' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'"
+              >
+                ASUS H510
+              </button>
+              <button
+                type="button"
+                @click="selectedBoard = 'winnfox'"
+                class="px-2.5 py-1 rounded-lg font-bold transition-all"
+                :class="selectedBoard === 'winnfox' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'"
+              >
+                WINNFOX H510
+              </button>
+            </div>
+          </div>
+
+          <!-- Interactive Motherboard Viewport -->
+          <div class="relative mt-4 rounded-2xl overflow-hidden border border-slate-200 bg-slate-950 aspect-[4/3] select-none group">
+            <img
+              src="/images/ol-01/main-h510.jpg"
+              alt="Bo mạch chủ Intel H510 phòng lab thực tế"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            />
+
+            <!-- Dark overlay gradient for contrast -->
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-slate-950/20 pointer-events-none"></div>
+
+            <!-- Hotspot markers -->
+            {ENRICHED_HOTSPOTS.map((spot, sIdx) => (
+              <div
+                class="absolute cursor-pointer z-10 -translate-x-1/2 -translate-y-1/2 group/spot"
+                style={`top: ${spot.top}; left: ${spot.left};`}
+                x-on:click={`selectHotspot('${spot.id}')`}
+                x-on:mouseenter={`selectHotspot('${spot.id}')`}
+              >
+                <!-- Outer Pulse Ping -->
+                <span class="absolute inline-flex h-8 w-8 rounded-full bg-blue-500 opacity-75 animate-ping"></span>
+                <!-- Core Marker Button -->
+                <button
+                  type="button"
+                  class="relative inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white text-xs font-mono font-bold shadow-lg border-2 border-white transition-transform hover:scale-125 focus:outline-none"
+                  aria-label={spot.title}
+                >
+                  {sIdx + 1}
+                </button>
+              </div>
+            ))}
+
+            <!-- Floating HoverCard / Popover Card (Shadcn Style) -->
+            <div
+              x-show="activeHotspot"
+              x-cloak
+              x-transition
+              class="absolute bottom-3 left-3 right-3 sm:left-4 sm:right-4 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-4 shadow-xl text-xs z-20 text-slate-800"
+            >
+              <div class="flex items-start justify-between gap-3">
+                <div class="space-y-1">
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-slate-900 text-sm" x-text="activeHotspotData?.title"></span>
+                    <span class="px-2 py-0.5 rounded-full font-mono text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200" x-text="activeHotspotData?.badge"></span>
+                  </div>
+                  <p class="text-slate-600 leading-relaxed" x-text="activeHotspotData?.description"></p>
+                </div>
+                <button
+                  type="button"
+                  @click="activeHotspot = null"
+                  class="text-slate-400 hover:text-slate-600 text-sm font-bold p-1"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <!-- Poka-Yoke Highlight Box -->
+              <div class="mt-2.5 bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-amber-900 flex items-start gap-2">
+                <span class="text-amber-600 font-bold shrink-0">🛡️ Poka-Yoke:</span>
+                <span class="leading-relaxed" x-text="activeHotspotData?.pokaYoke"></span>
+              </div>
+            </div>
+
+            <!-- Hint overlay if no hotspot is selected -->
+            <div x-show="!activeHotspot" class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur text-white text-[11px] px-3 py-1.5 rounded-xl border border-slate-700 pointer-events-none">
+              💡 Chạm vào 6 điểm số nhấp nháy để xem chi tiết linh kiện
+            </div>
+          </div>
+
+          <!-- Lab Motherboard Comparison Details -->
+          <div class="mt-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+            <div class="font-bold text-slate-900 flex items-center justify-between">
+              <span class="flex items-center gap-1.5">
+                <span>📌</span> Đặc điểm nhận diện bo mạch phòng lab:
+              </span>
+              <span class="font-mono text-slate-500 uppercase" x-text="selectedBoard"></span>
+            </div>
+            
+            <template x-if="selectedBoard === 'msi'">
+              <p class="text-slate-600 leading-relaxed">
+                <strong>MSI H510M Pro:</strong> Trang bị 4 đèn <em>EZ Debug LED</em> (CPU, DRAM, VGA, BOOT) ở góc phải bo mạch. Khi bật nguồn máy sẽ kiểm tra tuần tự; nếu đèn đứng yên ở vị trí nào là linh kiện đó đang có sự cố.
+              </p>
+            </template>
+            <template x-if="selectedBoard === 'asus'">
+              <p class="text-slate-600 leading-relaxed">
+                <strong>ASUS Prime H510M-K:</strong> Sử dụng hệ thống đèn báo <em>Q-LED Core</em> nhấp nháy theo tần số và thông báo mã lỗi POST trực tiếp trên màn hình BIOS khi khởi động.
+              </p>
+            </template>
+            <template x-if="selectedBoard === 'winnfox'">
+              <p class="text-slate-600 leading-relaxed">
+                <strong>WINNFOX H510:</strong> Tích hợp loa báo hiệu <em>Buzzer Speaker</em>: 1 bíp dài 2 bíp ngắn (lỗi RAM / VGA); bíp liên tục dồn dập (sụt áp / chập tụ); 1 bíp ngắn ngân vang (máy khởi động POST thành công).
+              </p>
+            </template>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- TAB 2: NGÂN HÀNG TRẮC NGHIỆM TÌNH HUỐNG & VẤN ĐÁP TẠI BÀN MÁY -->
+  <!-- ==================================================================== -->
+  <div x-show="activeTab === 'tab-2'" x-cloak class="space-y-8">
+    
+    <!-- Tab 2 Sub-Navigation (Switch between MCQ & Oral) -->
+    <div class="flex items-center justify-between flex-wrap gap-4 bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+      <div>
+        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <span>🎯</span> Ngân Hàng Ôn Luyện Thực Chiến TT55
+        </h2>
+        <p class="text-xs text-slate-500 mt-0.5">Khung ngân hàng 100 câu trắc nghiệm tình huống & 20 câu vấn đáp trực tiếp tại bàn máy</p>
+      </div>
+
+      <div class="inline-flex p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-bold">
+        <button
+          type="button"
+          @click="quizViewMode = 'mcq'"
+          class="px-4 py-2 rounded-lg transition-all min-h-[40px]"
+          :class="quizViewMode === 'mcq' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'"
+        >
+          Trắc Nghiệm Tình Huống (100 Câu)
+        </button>
+        <button
+          type="button"
+          @click="quizViewMode = 'oral'"
+          class="px-4 py-2 rounded-lg transition-all min-h-[40px]"
+          :class="quizViewMode === 'oral' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'"
+        >
+          20 Câu Vấn Đáp Tại Bàn Máy
+        </button>
+      </div>
+    </div>
+
+    <!-- PHẦN 1: TRẮC NGHIỆM TÌNH HUỐNG 100 CÂU -->
+    <div x-show="quizViewMode === 'mcq'" class="space-y-6">
+      
+      <!-- Topic Filter Pills & Stats -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+          <!-- Filter Buttons -->
+          <div class="flex flex-wrap gap-2 text-xs font-semibold">
+            <button
+              type="button"
+              @click="mcqFilter = 'all'"
+              class="px-3 py-2 rounded-xl transition-all min-h-[40px]"
+              :class="mcqFilter === 'all' ? 'bg-slate-900 text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+            >
+              Tất Cả (100 Câu)
+            </button>
+            <button
+              type="button"
+              @click="mcqFilter = 'power_ram'"
+              class="px-3 py-2 rounded-xl transition-all min-h-[40px]"
+              :class="mcqFilter === 'power_ram' ? 'bg-slate-900 text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+            >
+              ⚡ Chẩn Đoán Nguồn & RAM
+            </button>
+            <button
+              type="button"
+              @click="mcqFilter = 'bios_uefi'"
+              class="px-3 py-2 rounded-xl transition-all min-h-[40px]"
+              :class="mcqFilter === 'bios_uefi' ? 'bg-slate-900 text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+            >
+              🖥️ BIOS / UEFI & Boot
+            </button>
+            <button
+              type="button"
+              @click="mcqFilter = 'disk_os'"
+              class="px-3 py-2 rounded-xl transition-all min-h-[40px]"
+              :class="mcqFilter === 'disk_os' ? 'bg-slate-900 text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+            >
+              💾 Phân Vùng Ổ Cứng & Dữ Liệu
+            </button>
+            <button
+              type="button"
+              @click="mcqFilter = 'safety_esd'"
+              class="px-3 py-2 rounded-xl transition-all min-h-[40px]"
+              :class="mcqFilter === 'safety_esd' ? 'bg-slate-900 text-white font-bold' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'"
+            >
+              🛡️ An Toàn Tĩnh Điện ESD
+            </button>
+          </div>
+
+          <!-- Stats Counter -->
+          <div class="flex items-center gap-3 text-xs font-mono">
+            <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-xl font-bold">
+              Đúng: <span x-text="mcqCorrectCount">0</span>
+            </span>
+            <span class="bg-slate-100 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-xl font-bold">
+              Đã làm: <span x-text="Object.keys(userAnswers).length">0</span> / <span x-text="filteredMCQs.length"></span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Questions List with Instant Feedback -->
+        <div class="mt-6 space-y-6">
+          <template x-for="(q, index) in filteredMCQs" :key="q.id">
+            <div class="p-5 sm:p-6 rounded-2xl border transition-all duration-200"
+              :class="userAnswers[q.id] !== undefined ? (userAnswers[q.id] === q.correctIndex ? 'border-emerald-300 bg-emerald-50/10' : 'border-rose-300 bg-rose-50/10') : 'border-slate-200 bg-white'">
+              
+              <!-- Question Header -->
+              <div class="flex items-start justify-between gap-4 mb-3">
+                <span class="font-mono text-xs font-bold text-slate-400" x-text="`Câu #${q.index}`"></span>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600 font-semibold" x-text="getCategoryLabel(q.category)"></span>
+              </div>
+
+              <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug" x-text="q.question"></h3>
+
+              <!-- Options Grid (Touch-friendly height >= 48px) -->
+              <div class="mt-4 grid grid-cols-1 gap-2.5">
+                <template x-for="(opt, optIdx) in q.options" :key="optIdx">
+                  <button
+                    type="button"
+                    @click="selectOption(q.id, optIdx, q.correctIndex)"
+                    class="w-full text-left p-3.5 sm:p-4 rounded-xl border text-xs sm:text-sm font-medium transition-all flex items-start gap-3 min-h-[48px]"
+                    :class="getOptionClass(q.id, optIdx, q.correctIndex)"
+                  >
+                    <span class="w-6 h-6 rounded-full border flex items-center justify-center shrink-0 font-mono text-xs font-bold"
+                      :class="getOptionBadgeClass(q.id, optIdx, q.correctIndex)">
+                      <span x-text="String.fromCharCode(65 + optIdx)"></span>
+                    </span>
+                    <span class="leading-relaxed" x-text="opt"></span>
+                  </button>
+                </template>
+              </div>
+
+              <!-- Instant Explanation Box -->
+              <div x-show="userAnswers[q.id] !== undefined" x-cloak class="mt-4 p-4 rounded-xl text-xs leading-relaxed"
+                :class="userAnswers[q.id] === q.correctIndex ? 'bg-emerald-50 border border-emerald-200 text-emerald-950' : 'bg-rose-50 border border-rose-200 text-rose-950'">
+                <div class="font-bold flex items-center gap-1.5 mb-1">
+                  <span x-text="userAnswers[q.id] === q.correctIndex ? '✓ Đúng chuẩn kỹ thuật:' : '✗ Chưa chính xác:'"></span>
+                </div>
+                <p x-text="q.explanation"></p>
+              </div>
+
+            </div>
+          </template>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PHẦN 2: 20 CÂU VẤN ĐÁP TẠI BÀN MÁY -->
+    <div x-show="quizViewMode === 'oral'" class="space-y-4">
+      <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+        <div class="pb-4 border-b border-slate-100">
+          <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+            <span>🗣️</span> 20 Câu Hỏi Vấn Đáp Chuyên Sâu Tại Bàn Kỹ Thuật
+          </h3>
+          <p class="text-xs text-slate-500 mt-0.5">Dành cho Giáo viên hỏi trực tiếp sinh viên tại bàn máy · Kèm gợi ý trả lời chuẩn KTV tập sự</p>
+        </div>
+
+        <div class="mt-6 space-y-4">
+          <template x-for="(item, idx) in oralQuestionsList" :key="item.id">
+            <div class="border border-slate-200 rounded-2xl overflow-hidden bg-white transition-all">
+              <button
+                type="button"
+                @click="toggleOralCard(item.id)"
+                class="w-full flex items-center justify-between p-4 sm:p-5 text-left font-semibold text-slate-900 min-h-[56px] hover:bg-slate-50 transition-colors"
+              >
+                <div class="flex items-start sm:items-center gap-3">
+                  <span class="w-8 h-8 rounded-xl bg-slate-900 text-white flex items-center justify-center font-mono text-xs font-bold shrink-0 mt-0.5 sm:mt-0" x-text="idx + 1"></span>
+                  <div>
+                    <div class="flex items-center gap-2 mb-0.5">
+                      <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold" x-text="item.category"></span>
+                    </div>
+                    <div class="text-sm font-bold text-slate-900" x-text="item.question"></div>
+                  </div>
+                </div>
+                <svg class="w-5 h-5 text-slate-400 shrink-0 transform transition-transform duration-200" :class="openOralCard === item.id ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              <!-- Collapsible Content -->
+              <div x-show="openOralCard === item.id" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-700">
+                <!-- Teacher Intent -->
+                <div class="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-amber-950">
+                  <strong class="font-bold flex items-center gap-1.5 mb-1 text-amber-900">
+                    <span>🎯</span> Ý đồ của Giảng viên khi đặt câu hỏi:
+                  </strong>
+                  <span x-text="item.teacherIntent"></span>
+                </div>
+
+                <!-- Standard Answer -->
+                <div class="p-3.5 bg-emerald-50/70 border border-emerald-200/80 rounded-xl text-emerald-950">
+                  <strong class="font-bold flex items-center gap-1.5 mb-1 text-emerald-900">
+                    <span>💡</span> Gợi ý câu trả lời chuẩn của Kỹ thuật viên:
+                  </strong>
+                  <p class="leading-relaxed" x-text="item.standardAnswer"></p>
+                </div>
+
+                <!-- Critical Keywords -->
+                <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span class="text-[11px] font-bold text-slate-500 mr-1">Từ khóa bắt buộc:</span>
+                  <template x-for="kw in item.criticalKeywords" :key="kw">
+                    <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-800 font-mono text-[11px] font-semibold border border-slate-200" x-text="kw"></span>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- TAB 3: SA BÀN SÁT HẠCH TỔNG HỢP & CHẤM RUBRIC (THANG ĐIỂM 10.0) -->
+  <!-- ==================================================================== -->
+  <div x-show="activeTab === 'tab-3'" x-cloak class="space-y-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- CỘT TRÁI (5 cols): Máy phát đề ngẫu nhiên & Thông tin thí sinh -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Random Ticket Card -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span>🎲</span> Máy Phát Đề Sát Hạch Thực Tế
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">Giả lập ca thi 15 - 180 phút (Bài kiểm tra tổng hợp 4 giờ)</p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            @click="drawRandomTicket()"
+            class="w-full py-3.5 px-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition-all flex items-center justify-center gap-2 shadow-sm min-h-[48px]"
+          >
+            <span>🎲</span>
+            <span>Bốc Thăm Tình Huống Sát Hạch Mới</span>
+          </button>
+
+          <!-- Current Ticket Details -->
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3 text-xs">
+            <div class="flex items-center justify-between">
+              <span class="font-mono font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg" x-text="currentTicket.code"></span>
+              <span class="text-slate-400 font-mono">15 - 180 phút</span>
+            </div>
+
+            <h4 class="font-bold text-slate-900 text-sm leading-snug" x-text="currentTicket.title"></h4>
+
+            <div class="space-y-2 pt-2 border-t border-slate-200 text-slate-600">
+              <p><strong>• Ca bệnh tiếp nhận:</strong> <span x-text="currentTicket.customerProblem"></span></p>
+              <p><strong>• Dữ liệu cần cứu:</strong> <span class="text-blue-700 font-semibold" x-text="currentTicket.dataTarget"></span></p>
+              <p><strong>• Thao tác phần cứng:</strong> <span x-text="currentTicket.hardwareTask"></span></p>
+              <p><strong>• Thao tác phần mềm:</strong> <span x-text="currentTicket.softwareTask"></span></p>
+              <p><strong>• Nghiệm thu xác nhận:</strong> <span x-text="currentTicket.verificationTask"></span></p>
+            </div>
+          </div>
+
+          <!-- Exam Timer Control -->
+          <div class="p-4 rounded-2xl bg-slate-900 text-white flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">⏱️</span>
+              <div>
+                <div class="text-[11px] text-slate-400 font-mono">ĐỒNG HỒ CA THI</div>
+                <div class="font-mono font-bold text-xl tracking-wider text-emerald-400" x-text="formattedTimer"></div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                @click="toggleTimer()"
+                class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold border border-slate-700"
+                x-text="timerRunning ? 'Tạm dừng' : 'Bắt đầu'"
+              ></button>
+              <button
+                type="button"
+                @click="resetTimer(14400)"
+                class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-400 border border-slate-700"
+              >
+                4h
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Form Info Card -->
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
+          <div class="pb-3 border-b border-slate-100">
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span>👤</span> Thông Tin Kỹ Thuật Viên Sát Hạch
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">Dữ liệu sẽ tự động đồng bộ sang Phiếu Nghiệm Thu A4</p>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Chọn Lớp:</label>
+              <select
+                x-model="candidateClass"
+                class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[48px]"
+              >
+                <option value="04THA2">Lớp 04THA2</option>
+                <option value="04THA3">Lớp 04THA3</option>
+                <option value="04THA4">Lớp 04THA4</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Chọn Số Máy (Bàn Kỹ Thuật):</label>
+              <select
+                x-model="candidateStation"
+                class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[48px]"
+              >
+                <template x-for="i in 36" :key="i">
+                  <option :value="`Máy ${i < 10 ? '0' + i : i}`" x-text="`Máy ${i < 10 ? '0' + i : i}`"></option>
+                </template>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Họ Và Tên Sinh Viên:</label>
+              <input
+                type="text"
+                x-model="candidateName"
+                placeholder="Nhập họ và tên thí sinh..."
+                class="w-full px-3 py-2.5 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 min-h-[48px]"
+              />
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CỘT PHẢI (7 cols): Bảng Chấm Điểm Rubric Thông Tư 55 (Thang điểm 10.0) -->
+      <div class="lg:col-span-7 space-y-6">
+        <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-5">
+          <div class="flex items-center justify-between pb-4 border-b border-slate-100 flex-wrap gap-2">
+            <div>
+              <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                <span>📝</span> Bảng Chấm Điểm Rubric (Chuẩn Thông Tư 55)
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">Thang điểm 10.0 · Giảng viên CN. Phạm Tiến Đông nghiệm thu</p>
+            </div>
+
+            <!-- Total Score & Status Badge -->
+            <div class="flex items-center gap-2">
+              <span class="text-xl font-black font-mono px-3 py-1 rounded-xl"
+                :class="rubricTotalScore >= 5.0 && !rubricSafetyDisqualified ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'">
+                <span x-text="rubricTotalScore.toFixed(1)"></span> / 10.0
+              </span>
+              <span class="text-xs font-bold px-3 py-1.5 rounded-xl uppercase font-mono"
+                :class="rubricTotalScore >= 5.0 && !rubricSafetyDisqualified ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'">
+                <span x-text="rubricTotalScore >= 5.0 && !rubricSafetyDisqualified ? 'ĐẠT' : 'CHƯA ĐẠT'"></span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Red Safety Warning Checkbox (Disqualification) -->
+          <div class="p-4 rounded-2xl border-2 transition-all"
+            :class="rubricSafetyDisqualified ? 'bg-rose-100 border-rose-500 text-rose-950' : 'bg-rose-50/40 border-rose-200 text-rose-900'">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                x-model="rubricSafetyDisqualified"
+                class="w-5 h-5 rounded text-rose-600 focus:ring-rose-500 border-rose-300 mt-0.5 shrink-0"
+              />
+              <div class="text-xs">
+                <span class="font-bold text-rose-950 uppercase tracking-wide">
+                  🚨 CẢNH BÁO ĐỎ: Vi phạm quy tắc an toàn điện / dữ liệu nghiêm trọng
+                </span>
+                <p class="text-rose-800 mt-0.5">
+                  (Thò tay tháo lắp linh kiện khi chưa rút điện nguồn hoặc làm mất/format nhầm dữ liệu khách hàng. 
+                  <em>Hệ thống sẽ lập tức khóa điểm an toàn về 0 và ĐÌNH CHỈ CA THI</em>).
+                </p>
+              </div>
+            </label>
+          </div>
+
+          <!-- 5 Criteria Steppers / Sliders -->
+          <div class="space-y-4">
+            
+            <!-- TIÊU CHÍ 1 (2.0 đ) -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-2">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-mono font-bold text-slate-500">TIÊU CHÍ 1 (TỐI ĐA 2.0 ĐIỂM)</div>
+                  <div class="text-sm font-bold text-slate-900">Quy trình và an toàn kỹ thuật</div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-base font-bold text-slate-900" x-text="rubricScores.safety.toFixed(1)"></span>
+                  <span class="text-xs text-slate-400 font-mono">/ 2.0 đ</span>
+                </div>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="2.0"
+                step="0.5"
+                x-model.number="rubricScores.safety"
+                :disabled="rubricSafetyDisqualified"
+                class="w-full accent-slate-900"
+              />
+              <div class="text-[11px] text-slate-500">
+                Xả tĩnh điện ESD, luật Rút - Bấm - Khay, bảo toàn dữ liệu 100% trước khi thao tác, tác phong 5S.
+              </div>
+            </div>
+
+            <!-- TIÊU CHÍ 2 (2.5 đ) -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-2">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-mono font-bold text-slate-500">TIÊU CHÍ 2 (TỐI ĐA 2.5 ĐIỂM)</div>
+                  <div class="text-sm font-bold text-slate-900">Chẩn đoán nguyên nhân sự cố</div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-base font-bold text-slate-900" x-text="rubricScores.diagnosis.toFixed(1)"></span>
+                  <span class="text-xs text-slate-400 font-mono">/ 2.5 đ</span>
+                </div>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="2.5"
+                step="0.5"
+                x-model.number="rubricScores.diagnosis"
+                class="w-full accent-slate-900"
+              />
+              <div class="text-[11px] text-slate-500">
+                Phân loại 4 kịch bản khởi động, đọc đèn EZ Debug LED / Beep code, khoanh vùng chính xác linh kiện lỗi.
+              </div>
+            </div>
+
+            <!-- TIÊU CHÍ 3 (3.0 đ) -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-2">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-mono font-bold text-slate-500">TIÊU CHÍ 3 (TỐI ĐA 3.0 ĐIỂM)</div>
+                  <div class="text-sm font-bold text-slate-900">Thao tác xử lý phần cứng & phần mềm</div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-base font-bold text-slate-900" x-text="rubricScores.operation.toFixed(1)"></span>
+                  <span class="text-xs text-slate-400 font-mono">/ 3.0 đ</span>
+                </div>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="3.0"
+                step="0.5"
+                x-model.number="rubricScores.operation"
+                class="w-full accent-slate-900"
+              />
+              <div class="text-[11px] text-slate-500">
+                Lắp RAM sập 2 khóa, gạt lẫy PCIe GT 730, tra keo hạt đậu xanh, cắm 9 chân F_PANEL, cài Win 10 GPT chỉ format ổ C.
+              </div>
+            </div>
+
+            <!-- TIÊU CHÍ 4 (1.5 đ) -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-2">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-mono font-bold text-slate-500">TIÊU CHÍ 4 (TỐI ĐA 1.5 ĐIỂM)</div>
+                  <div class="text-sm font-bold text-slate-900">Kiểm tra và xác nhận vận hành</div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-base font-bold text-slate-900" x-text="rubricScores.verification.toFixed(1)"></span>
+                  <span class="text-xs text-slate-400 font-mono">/ 1.5 đ</span>
+                </div>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1.5"
+                step="0.5"
+                x-model.number="rubricScores.verification"
+                class="w-full accent-slate-900"
+              />
+              <div class="text-[11px] text-slate-500">
+                Nhận đủ CPU/RAM trong BIOS & Windows, HWMonitor CPU &lt; 75°C khi tải, in Test Page máy in thành công.
+              </div>
+            </div>
+
+            <!-- TIÊU CHÍ 5 (1.0 đ) -->
+            <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 space-y-2">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-xs font-mono font-bold text-slate-500">TIÊU CHÍ 5 (TỐI ĐA 1.0 ĐIỂM)</div>
+                  <div class="text-sm font-bold text-slate-900">Bàn giao và hồ sơ kỹ thuật</div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-base font-bold text-slate-900" x-text="rubricScores.handover.toFixed(1)"></span>
+                  <span class="text-xs text-slate-400 font-mono">/ 1.0 đ</span>
+                </div>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="1.0"
+                step="0.5"
+                x-model.number="rubricScores.handover"
+                class="w-full accent-slate-900"
+              />
+              <div class="text-[11px] text-slate-500">
+                Khôi phục trả dữ liệu khách, đóng nắp thùng case đủ ốc, dọn sạch 5S bàn máy, ký phiếu nghiệm thu.
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <button
+              type="button"
+              @click="saveAssessmentResult()"
+              class="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-all flex items-center justify-center gap-2 min-h-[48px]"
+            >
+              <span>💾</span>
+              <span>Lưu Phiên Chấm Điểm</span>
+            </button>
+
+            <button
+              type="button"
+              @click="activeTab = 'tab-4'"
+              class="w-full sm:w-auto px-5 py-3 rounded-xl bg-emerald-700 text-white font-bold text-xs hover:bg-emerald-800 transition-all flex items-center justify-center gap-2 min-h-[48px]"
+            >
+              <span>🖨️</span>
+              <span>Chuyển Sang In Phiếu Nghiệm Thu A4 ➔</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- TAB 4: IN PHIẾU NGHIỆM THU CHUẨN A4 -->
+  <!-- ==================================================================== -->
+  <div x-show="activeTab === 'tab-4'" x-cloak class="space-y-6">
+    
+    <!-- Print Action Header (Hidden during print) -->
+    <div class="no-print bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <span>🖨️</span> Phiếu Tiếp Nhận, Xử Lý & Nghiệm Thu Kỹ Thuật (Khổ A4)
+        </h2>
+        <p class="text-xs text-slate-500 mt-0.5">Dữ liệu được tự động đồng bộ từ Sa bàn sát hạch (Tab 3) · Tối ưu chuẩn in 1 trang A4</p>
+      </div>
+
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <button
+          type="button"
+          @click="window.print()"
+          class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-sm flex items-center justify-center gap-2 min-h-[48px]"
+        >
+          <span>🖨️</span>
+          <span>In Phiếu Nghiệm Thu (Khổ A4)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Printable A4 Document Sheet -->
+    <div id="printable-certificate" class="bg-white border border-slate-300 rounded-2xl p-8 sm:p-12 shadow-sm text-slate-900 max-w-4xl mx-auto space-y-6 print:border-none print:shadow-none print:p-0 print:m-0">
+      
+      <!-- Official Header -->
+      <div class="flex items-start justify-between border-b-2 border-slate-900 pb-4">
+        <div>
+          <div class="text-xs uppercase tracking-wider font-bold text-slate-600">CỔNG HỌC TẬP & THỰC HÀNH KỸ THUẬT CNTT</div>
+          <div class="text-sm font-semibold text-slate-800">Bộ Môn Kỹ Thuật Phần Cứng & Mạng Máy Tính</div>
+        </div>
+        <div class="text-right text-xs">
+          <div class="font-mono font-bold text-slate-900" x-text="certificateCode">PKTV-2026-M01</div>
+          <div class="text-slate-500" x-text="certificateDate"></div>
+        </div>
+      </div>
+
+      <!-- Document Title -->
+      <div class="text-center space-y-1">
+        <h1 class="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900">
+          PHIẾU TIẾP NHẬN, XỬ LÝ VÀ NGHIỆM THU KỸ THUẬT
+        </h1>
+        <p class="text-xs italic text-slate-600">
+          (Ban hành kèm theo chuẩn Phụ lục II, Thông tư 55/2026/TT-BGDĐT)
+        </p>
+      </div>
+
+      <!-- Candidate & Station Info Table -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs border border-slate-300 rounded-xl p-4 bg-slate-50/50">
+        <div>
+          <span class="text-slate-500">Kỹ thuật viên tập sự:</span>
+          <div class="font-bold text-sm text-slate-900 uppercase" x-text="candidateName || '(Chưa nhập tên)'"></div>
+        </div>
+        <div>
+          <span class="text-slate-500">Lớp đào tạo:</span>
+          <div class="font-bold text-sm text-slate-900 font-mono" x-text="candidateClass"></div>
+        </div>
+        <div>
+          <span class="text-slate-500">Bàn kỹ thuật số:</span>
+          <div class="font-bold text-sm text-slate-900 font-mono" x-text="candidateStation"></div>
+        </div>
+      </div>
+
+      <!-- Intake Symptom & Practical Case -->
+      <div class="border border-slate-300 rounded-xl p-4 space-y-2 text-xs">
+        <div class="font-bold text-slate-900 uppercase text-[11px] tracking-wider text-slate-500">1. TÌNH TRẠNG TIẾP NHẬN & ĐỀ BÀI SÁT HẠCH</div>
+        <p><strong>Mã đề sát hạch:</strong> <span class="font-mono font-bold text-slate-800" x-text="currentTicket.code"></span> - <span class="font-semibold" x-text="currentTicket.title"></span></p>
+        <p><strong>Mô tả sự cố ban đầu:</strong> <span x-text="currentTicket.customerProblem"></span></p>
+        <p><strong>Mục tiêu sao lưu dữ liệu:</strong> <span class="font-semibold text-slate-800" x-text="currentTicket.dataTarget"></span></p>
+      </div>
+
+      <!-- Hardware Profile Handled -->
+      <div class="border border-slate-300 rounded-xl p-4 space-y-2 text-xs">
+        <div class="font-bold text-slate-900 uppercase text-[11px] tracking-wider text-slate-500">2. CẤU HÌNH THIẾT BỊ PHÒNG MÁY THỰC TẾ</div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div>• <strong>Mainboard:</strong> Intel H510 (LGA1200)</div>
+          <div>• <strong>Vi xử lý:</strong> Intel Core i5-10400</div>
+          <div>• <strong>Bộ nhớ RAM:</strong> 8GB DDR4 Bus 2666</div>
+          <div>• <strong>Ổ lưu trữ:</strong> SSD SATA 128/256GB</div>
+          <div>• <strong>Đồ họa:</strong> NVIDIA GT 730 2GB</div>
+          <div>• <strong>Hệ điều hành:</strong> Windows 10 Pro 64-bit</div>
+        </div>
+      </div>
+
+      <!-- Data Safety Signoff Checklist -->
+      <div class="border border-slate-300 rounded-xl p-4 space-y-2 text-xs bg-slate-50/30">
+        <div class="font-bold text-slate-900 uppercase text-[11px] tracking-wider text-slate-500">3. KIỂM SOÁT AN TOÀN & BẢO TOÀN DỮ LIỆU (POKA-YOKE)</div>
+        <div class="space-y-1.5 text-slate-800">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-emerald-700">✓ [X]</span>
+            <span>Đã rút phích nguồn AC, gạt công tắc I/O và bấm xả điện 3 lần trước khi chạm vào linh kiện.</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-emerald-700">✓ [X]</span>
+            <span>Đã sao lưu 100% dữ liệu Desktop, Documents sang Ổ D (Properties đối chiếu khớp dung lượng MB).</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-emerald-700">✓ [X]</span>
+            <span>Cài mới Windows 10 chuẩn UEFI/GPT (chỉ format ổ C, không chạm vào dữ liệu ổ D).</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-emerald-700">✓ [X]</span>
+            <span>Đã chép trả dữ liệu nguyên vẹn về Desktop và kiểm tra mở file Word/Excel bình thường.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rubric Summary Score Table -->
+      <div class="space-y-2 text-xs">
+        <div class="font-bold text-slate-900 uppercase text-[11px] tracking-wider text-slate-500">4. KẾT QUẢ ĐÁNH GIÁ THEO BẢNG CHẤM RUBRIC THÔNG TƯ 55</div>
+        <table class="w-full border-collapse border border-slate-300 text-left">
+          <thead>
+            <tr class="bg-slate-100 text-slate-900 font-bold">
+              <th class="border border-slate-300 p-2 w-12 text-center">STT</th>
+              <th class="border border-slate-300 p-2">Tiêu chí đánh giá chuẩn đầu ra</th>
+              <th class="border border-slate-300 p-2 w-24 text-center">Điểm tối đa</th>
+              <th class="border border-slate-300 p-2 w-28 text-center">Điểm đạt được</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border border-slate-300 p-2 text-center font-mono">1</td>
+              <td class="border border-slate-300 p-2">Quy trình và an toàn kỹ thuật (Tĩnh điện, xả tụ, an toàn dữ liệu, 5S)</td>
+              <td class="border border-slate-300 p-2 text-center font-mono">2.0 đ</td>
+              <td class="border border-slate-300 p-2 text-center font-mono font-bold" x-text="rubricScores.safety.toFixed(1)"></td>
+            </tr>
+            <tr>
+              <td class="border border-slate-300 p-2 text-center font-mono">2</td>
+              <td class="border border-slate-300 p-2">Chẩn đoán nguyên nhân sự cố (Phân loại kịch bản, Beep code, khoanh vùng)</td>
+              <td class="border border-slate-300 p-2 text-center font-mono">2.5 đ</td>
+              <td class="border border-slate-300 p-2 text-center font-mono font-bold" x-text="rubricScores.diagnosis.toFixed(1)"></td>
+            </tr>
+            <tr>
+              <td class="border border-slate-300 p-2 text-center font-mono">3</td>
+              <td class="border border-slate-300 p-2">Thao tác xử lý kỹ thuật (Tháo lắp RAM, PCIe GT 730, keo tản nhiệt, cài Win 10)</td>
+              <td class="border border-slate-300 p-2 text-center font-mono">3.0 đ</td>
+              <td class="border border-slate-300 p-2 text-center font-mono font-bold" x-text="rubricScores.operation.toFixed(1)"></td>
+            </tr>
+            <tr>
+              <td class="border border-slate-300 p-2 text-center font-mono">4</td>
+              <td class="border border-slate-300 p-2">Kiểm tra và xác nhận vận hành (BIOS/Win nhận đủ RAM, HWMonitor &lt; 75°C, in Test Page)</td>
+              <td class="border border-slate-300 p-2 text-center font-mono">1.5 đ</td>
+              <td class="border border-slate-300 p-2 text-center font-mono font-bold" x-text="rubricScores.verification.toFixed(1)"></td>
+            </tr>
+            <tr>
+              <td class="border border-slate-300 p-2 text-center font-mono">5</td>
+              <td class="border border-slate-300 p-2">Bàn giao và hồ sơ kỹ thuật (Khôi phục dữ liệu, dọn sạch bàn máy, lập biên bản A4)</td>
+              <td class="border border-slate-300 p-2 text-center font-mono">1.0 đ</td>
+              <td class="border border-slate-300 p-2 text-center font-mono font-bold" x-text="rubricScores.handover.toFixed(1)"></td>
+            </tr>
+            <tr class="bg-slate-100 font-bold text-slate-900">
+              <td class="border border-slate-300 p-2 text-center" colspan="2">TỔNG ĐIỂM CHUNG & KẾT LUẬN XẾP LOẠI</td>
+              <td class="border border-slate-300 p-2 text-center font-mono">10.0 đ</td>
+              <td class="border border-slate-300 p-2 text-center font-mono text-base font-black"
+                :class="rubricTotalScore >= 5.0 && !rubricSafetyDisqualified ? 'text-emerald-700' : 'text-rose-700'">
+                <span x-text="rubricTotalScore.toFixed(1)"></span> đ
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="flex items-center justify-between pt-1">
+          <span class="text-slate-600">Đánh giá chung:</span>
+          <span class="font-bold text-sm uppercase px-3 py-1 rounded-md"
+            :class="rubricTotalScore >= 5.0 && !rubricSafetyDisqualified ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'"
+            x-text="rubricTotalScore >= 5.0 && !rubricSafetyDisqualified ? 'ĐẠT (NĂNG LỰC NGHỀ KTV ĐẠT CHUẨN)' : 'CHƯA ĐẠT (CẦN RÈN LUYỆN LẠI)'">
+          </span>
+        </div>
+      </div>
+
+      <!-- Signatures Grid -->
+      <div class="grid grid-cols-2 gap-8 pt-8 text-xs text-center border-t border-slate-200">
+        <div class="space-y-16">
+          <div>
+            <div class="font-bold uppercase text-slate-900">KỸ THUẬT VIÊN TẬP SỰ</div>
+            <div class="text-slate-500 italic">(Ký và ghi rõ họ tên)</div>
+          </div>
+          <div class="font-bold text-slate-900 uppercase" x-text="candidateName || '...........................................'"></div>
+        </div>
+
+        <div class="space-y-16">
+          <div>
+            <div class="font-bold uppercase text-slate-900">GIÁO VIÊN HƯỚNG DẪN & NGHIỆM THU</div>
+            <div class="text-slate-500 italic">(Ký và ghi rõ họ tên)</div>
+          </div>
+          <div class="font-bold text-slate-900 uppercase">CN. PHẠM TIẾN ĐỒNG</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Pass backend data payload safely to Alpine.js -->
+<script type="application/json" id="ol01-data-payload" set:html={JSON.stringify(appDataPayload)}></script>
+
+<script is:inline>
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('ol01CourseEngine', () => {
+      const rawPayload = JSON.parse(document.getElementById('ol01-data-payload')?.textContent || '{}');
+      
+      return {
+        activeTab: 'tab-1',
+        quizViewMode: 'mcq',
+        selectedBoard: 'msi',
+        openAccordion: 1,
+        activeHotspot: null,
+        activeHotspotData: null,
+        
+        // Safety step checkboxes
+        safetyChecked: {
+          step1: false,
+          step2: false,
+          step3: false,
+          step4: false,
+          step5: false,
+        },
+
+        // MCQ State
+        mcqFilter: 'all',
+        userAnswers: {},
+        allMCQs: rawPayload.mcqs || [],
+        
+        // Oral State
+        openOralCard: null,
+        oralQuestionsList: rawPayload.oralQuestions || [],
+
+        // Sát hạch State (Tab 3)
+        ticketsList: rawPayload.tickets || [],
+        currentTicket: rawPayload.tickets ? rawPayload.tickets[0] : {},
+        candidateClass: '04THA2',
+        candidateStation: 'Máy 01',
+        candidateName: '',
+        
+        // Rubric Scores
+        rubricScores: {
+          safety: 2.0,
+          diagnosis: 2.5,
+          operation: 3.0,
+          verification: 1.5,
+          handover: 1.0,
+        },
+        rubricSafetyDisqualified: false,
+
+        // Timer
+        timerSeconds: 14400, // 4 hours
+        timerRunning: false,
+        timerInterval: null,
+
+        init() {
+          // Select default hotspot
+          if (rawPayload.hotspots && rawPayload.hotspots.length > 0) {
+            this.activeHotspotData = rawPayload.hotspots[0];
+          }
+
+          // Restore saved session if available
+          this.loadFromStorage();
+        },
+
+        toggleAccordion(step) {
+          this.openAccordion = this.openAccordion === step ? null : step;
+        },
+
+        selectHotspot(spotId) {
+          this.activeHotspot = spotId;
+          const found = rawPayload.hotspots.find(h => h.id === spotId);
+          if (found) {
+            this.activeHotspotData = found;
+          }
+        },
+
+        get completedSafetyStepsCount() {
+          return Object.values(this.safetyChecked).filter(Boolean).length;
+        },
+
+        // MCQ Helpers
+        get filteredMCQs() {
+          if (this.mcqFilter === 'all') return this.allMCQs;
+          return this.allMCQs.filter(q => q.topicKey === this.mcqFilter);
+        },
+
+        get mcqCorrectCount() {
+          let count = 0;
+          for (const q of this.allMCQs) {
+            if (this.userAnswers[q.id] === q.correctIndex) {
+              count++;
+            }
+          }
+          return count;
+        },
+
+        getCategoryLabel(cat) {
+          const map = {
+            'an-toan': 'An Toàn Kỹ Thuật',
+            'lap-rap': 'Lắp Ráp Cơ Khí',
+            'bat-benh': 'Chẩn Đoán Sự Cố',
+            'cai-win': 'Cài Đặt Windows 10',
+            'ngoai-vi': 'Thiết Bị Ngoại Vi'
+          };
+          return map[cat] || cat;
+        },
+
+        selectOption(questionId, optionIndex, correctIndex) {
+          this.userAnswers[questionId] = optionIndex;
+          this.saveToStorage();
+        },
+
+        getOptionClass(questionId, optIdx, correctIndex) {
+          const answered = this.userAnswers[questionId];
+          if (answered === undefined) {
+            return 'border-slate-200 bg-white hover:bg-slate-50 text-slate-800';
+          }
+          if (optIdx === correctIndex) {
+            return 'border-emerald-500 bg-emerald-50 text-emerald-950 font-bold';
+          }
+          if (answered === optIdx && optIdx !== correctIndex) {
+            return 'border-rose-500 bg-rose-50 text-rose-950 font-bold';
+          }
+          return 'border-slate-200 bg-slate-50 text-slate-400 opacity-60';
+        },
+
+        getOptionBadgeClass(questionId, optIdx, correctIndex) {
+          const answered = this.userAnswers[questionId];
+          if (answered === undefined) {
+            return 'bg-slate-100 text-slate-700 border-slate-300';
+          }
+          if (optIdx === correctIndex) {
+            return 'bg-emerald-600 text-white border-emerald-600';
+          }
+          if (answered === optIdx && optIdx !== correctIndex) {
+            return 'bg-rose-600 text-white border-rose-600';
+          }
+          return 'bg-slate-100 text-slate-400 border-slate-200';
+        },
+
+        toggleOralCard(cardId) {
+          this.openOralCard = this.openOralCard === cardId ? null : cardId;
+        },
+
+        // Exam Ticket Randomizer
+        drawRandomTicket() {
+          if (!this.ticketsList || this.ticketsList.length === 0) return;
+          const randIdx = Math.floor(Math.random() * this.ticketsList.length);
+          this.currentTicket = this.ticketsList[randIdx];
+          this.saveToStorage();
+        },
+
+        // Rubric Computations
+        get rubricTotalScore() {
+          if (this.rubricSafetyDisqualified) {
+            return 0;
+          }
+          const sum = (
+            (this.rubricScores.safety || 0) +
+            (this.rubricScores.diagnosis || 0) +
+            (this.rubricScores.operation || 0) +
+            (this.rubricScores.verification || 0) +
+            (this.rubricScores.handover || 0)
+          );
+          return Math.min(10.0, Math.max(0, sum));
+        },
+
+        // Printable Certificate Meta
+        get certificateCode() {
+          const stationClean = (this.candidateStation || 'M01').replace('Máy ', 'M');
+          const classClean = this.candidateClass || '04THA2';
+          return `PKTV-2026-${stationClean}-${classClean}`;
+        },
+
+        get certificateDate() {
+          const now = new Date();
+          const day = String(now.getDate()).padStart(2, '0');
+          const month = String(now.getMonth() + 1).padStart(2, '0');
+          const year = now.getFullYear();
+          return `Ngày ${day} tháng ${month} năm ${year}`;
+        },
+
+        // Timer
+        toggleTimer() {
+          if (this.timerRunning) {
+            clearInterval(this.timerInterval);
+            this.timerRunning = false;
+          } else {
+            this.timerRunning = true;
+            this.timerInterval = setInterval(() => {
+              if (this.timerSeconds > 0) {
+                this.timerSeconds--;
+              } else {
+                clearInterval(this.timerInterval);
+                this.timerRunning = false;
+                alert('Hết giờ làm bài sát hạch!');
+              }
+            }, 1000);
+          }
+        },
+
+        resetTimer(seconds) {
+          if (this.timerInterval) clearInterval(this.timerInterval);
+          this.timerRunning = false;
+          this.timerSeconds = seconds;
+        },
+
+        get formattedTimer() {
+          const h = Math.floor(this.timerSeconds / 3600);
+          const m = Math.floor((this.timerSeconds % 3600) / 60);
+          const s = this.timerSeconds % 60;
+          return `${h}h ${String(m).padStart(2, '0')}m ${String(s).padStart(2, '0')}s`;
+        },
+
+        // Dual-Layer Storage
+        saveAssessmentResult() {
+          this.saveToStorage();
+          alert('Đã lưu kết quả sát hạch thành công!');
+        },
+
+        saveToStorage() {
+          try {
+            const data = {
+              candidateName: this.candidateName,
+              candidateClass: this.candidateClass,
+              candidateStation: this.candidateStation,
+              ticketId: this.currentTicket?.id,
+              safetyChecked: this.safetyChecked,
+              userAnswers: this.userAnswers,
+              rubricScores: this.rubricScores,
+              rubricSafetyDisqualified: this.rubricSafetyDisqualified,
+              timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('ol01_assessment_session', JSON.stringify(data));
+          } catch (e) {
+            console.error('Storage save error:', e);
+          }
+        },
+
+        loadFromStorage() {
+          try {
+            const raw = localStorage.getItem('ol01_assessment_session');
+            if (raw) {
+              const data = JSON.parse(raw);
+              if (data.candidateName) this.candidateName = data.candidateName;
+              if (data.candidateClass) this.candidateClass = data.candidateClass;
+              if (data.candidateStation) this.candidateStation = data.candidateStation;
+              if (data.safetyChecked) this.safetyChecked = data.safetyChecked;
+              if (data.userAnswers) this.userAnswers = data.userAnswers;
+              if (data.rubricScores) this.rubricScores = data.rubricScores;
+              if (data.rubricSafetyDisqualified !== undefined) this.rubricSafetyDisqualified = data.rubricSafetyDisqualified;
+              if (data.ticketId && this.ticketsList) {
+                const found = this.ticketsList.find(t => t.id === data.ticketId);
+                if (found) this.currentTicket = found;
+              }
+            }
+          } catch (e) {
+            console.error('Storage load error:', e);
+          }
+        }
+      };
+    });
+  });
+</script>
+
+<style>
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    #printable-certificate, #printable-certificate * {
+      visibility: visible;
+    }
+    #printable-certificate {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      margin: 0 !important;
+      padding: 10mm 12mm !important;
+      box-shadow: none !important;
+      border: none !important;
+      background: white !important;
+      color: black !important;
+    }
+    .no-print {
+      display: none !important;
+    }
+  }
+</style>
