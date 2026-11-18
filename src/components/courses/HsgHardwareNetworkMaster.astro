@@ -1,0 +1,1301 @@
+---
+import {
+  HSG_QUESTION_BANK,
+  SUBNET_CHEAT_SHEET,
+  SUBNET_PRACTICE_PROBLEMS,
+  HSG_PROJECT_TEAMS,
+  HSG_PROJECT_STAGES,
+  HSG_RUBRIC_CRITERIA,
+} from '../../data/hsgCurriculum';
+
+// Group MCQs count for badges
+const countArch = HSG_QUESTION_BANK.filter(q => q.group === 'kien-truc-phan-cung').length;
+const countOsi = HSG_QUESTION_BANK.filter(q => q.group === 'osi-tcpip').length;
+const countSec = HSG_QUESTION_BANK.filter(q => q.group === 'routing-switching-security').length;
+
+// Payload for Alpine.js
+const hsgPayload = {
+  teams: HSG_PROJECT_TEAMS,
+  stages: HSG_PROJECT_STAGES,
+  rubric: HSG_RUBRIC_CRITERIA,
+  questions: HSG_QUESTION_BANK,
+  cheatSheet: SUBNET_CHEAT_SHEET,
+  subnetProblems: SUBNET_PRACTICE_PROBLEMS,
+};
+---
+
+<!-- JSON Data Payload -->
+<script type="application/json" id="hsg-data-payload" set:html={JSON.stringify(hsgPayload)}></script>
+
+<!-- Alpine Engine Setup Ahead of DOM -->
+<script is:inline>
+  function hsgMasterEngine() {
+    var rawPayload = {};
+    try {
+      var el = document.getElementById('hsg-data-payload');
+      if (el && el.textContent) {
+        rawPayload = JSON.parse(el.textContent);
+      }
+    } catch (e) {
+      console.error('HSG Payload parse error:', e);
+    }
+
+    var problems = rawPayload.subnetProblems || [];
+    var initialProblem = problems.length > 0 ? problems[0] : {
+      id: 'sp_default',
+      department: 'Phòng Kế Toán',
+      teamTarget: '04THA2 - Krông Pắc',
+      ipInput: '192.168.10.55/26',
+      requiredHosts: 58,
+      cidr: '/26',
+      correctMask: '255.255.255.192',
+      correctNetwork: '192.168.10.0',
+      correctFirstHost: '192.168.10.1',
+      correctLastHost: '192.168.10.62',
+      correctBroadcast: '192.168.10.63',
+      magicNumber: 64,
+      explanationFormula: 'Prefix /26 có bước nhảy = 256 - 192 = 64. Dải [0 - 63].'
+    };
+
+    return {
+      activeTab: 'subnetting', // 'subnetting' | 'mcq' | 'stages'
+      
+      // =======================================================================
+      // MODULE 1: SUBNETTING REFLEX 30s
+      // =======================================================================
+      problemsList: problems,
+      problemIndex: 0,
+      currentProblem: initialProblem,
+      
+      // User inputs
+      inputMask: '',
+      inputNetwork: '',
+      inputFirstHost: '',
+      inputLastHost: '',
+      inputBroadcast: '',
+      
+      // State
+      timerSeconds: 30,
+      timerRunning: false,
+      timerInterval: null,
+      isSubnetChecked: false,
+      subnetResults: { mask: null, net: null, first: null, last: null, bc: null },
+      subnetScore: 0,
+      showCheatSheet: false,
+      totalSolved: 0,
+      
+      startSubnetTimer() {
+        if (this.timerInterval) clearInterval(this.timerInterval);
+        this.timerSeconds = 30;
+        this.timerRunning = true;
+        var self = this;
+        this.timerInterval = setInterval(function() {
+          if (self.timerSeconds > 0) {
+            self.timerSeconds--;
+          } else {
+            self.stopSubnetTimer();
+            if (!self.isSubnetChecked) {
+              self.checkSubnetAnswers();
+            }
+          }
+        }, 1000);
+      },
+      
+      stopSubnetTimer() {
+        if (this.timerInterval) {
+          clearInterval(this.timerInterval);
+          this.timerInterval = null;
+        }
+        this.timerRunning = false;
+      },
+      
+      selectProblem(idx) {
+        this.problemIndex = idx;
+        this.currentProblem = this.problemsList[idx];
+        this.inputMask = '';
+        this.inputNetwork = '';
+        this.inputFirstHost = '';
+        this.inputLastHost = '';
+        this.inputBroadcast = '';
+        this.isSubnetChecked = false;
+        this.subnetResults = { mask: null, net: null, first: null, last: null, bc: null };
+        this.startSubnetTimer();
+      },
+      
+      nextSubnetProblem() {
+        var nextIdx = (this.problemIndex + 1) % this.problemsList.length;
+        this.selectProblem(nextIdx);
+      },
+
+      randomSubnetProblem() {
+        var randIdx = Math.floor(Math.random() * this.problemsList.length);
+        this.selectProblem(randIdx);
+      },
+      
+      checkSubnetAnswers() {
+        this.stopSubnetTimer();
+        this.isSubnetChecked = true;
+        
+        var clean = function(s) { return (s || '').trim(); };
+        var isMaskOk = clean(this.inputMask) === this.currentProblem.correctMask;
+        var isNetOk = clean(this.inputNetwork) === this.currentProblem.correctNetwork;
+        var isFirstOk = clean(this.inputFirstHost) === this.currentProblem.correctFirstHost;
+        var isLastOk = clean(this.inputLastHost) === this.currentProblem.correctLastHost;
+        var isBcOk = clean(this.inputBroadcast) === this.currentProblem.correctBroadcast;
+        
+        this.subnetResults = {
+          mask: isMaskOk,
+          net: isNetOk,
+          first: isFirstOk,
+          last: isLastOk,
+          bc: isBcOk
+        };
+        
+        var pointsEarned = 0;
+        if (isMaskOk) pointsEarned += 10;
+        if (isNetOk) pointsEarned += 10;
+        if (isFirstOk) pointsEarned += 10;
+        if (isLastOk) pointsEarned += 10;
+        if (isBcOk) pointsEarned += 10;
+        
+        this.subnetScore += pointsEarned;
+        this.totalSolved++;
+      },
+
+      // =======================================================================
+      // MODULE 2: MCQS 50+ HIGH-DIFFICULTY
+      // =======================================================================
+      questionsList: rawPayload.questions || [],
+      mcqFilter: 'all',
+      mcqAnswers: {},
+      
+      get filteredQuestions() {
+        if (this.mcqFilter === 'all') return this.questionsList;
+        var f = this.mcqFilter;
+        return this.questionsList.filter(function(q) { return q.group === f; });
+      },
+      
+      get mcqStats() {
+        var total = this.filteredQuestions.length;
+        var answered = 0;
+        var correct = 0;
+        var self = this;
+        this.filteredQuestions.forEach(function(q) {
+          if (self.mcqAnswers[q.id] !== undefined) {
+            answered++;
+            if (self.mcqAnswers[q.id] === q.correctIndex) {
+              correct++;
+            }
+          }
+        });
+        var percent = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+        return { total: total, answered: answered, correct: correct, percent: percent };
+      },
+      
+      pickMcqAnswer(qId, optIdx) {
+        if (this.mcqAnswers[qId] !== undefined) return; // Chỉ chọn 1 lần
+        this.mcqAnswers[qId] = optIdx;
+      },
+      
+      resetMcqAnswers() {
+        if (confirm('Bạn có muốn xóa toàn bộ kết quả làm bài trắc nghiệm này để làm lại từ đầu?')) {
+          this.mcqAnswers = {};
+        }
+      },
+
+      // =======================================================================
+      // MODULE 3: 5 STAGES PROJECT & 100-POINT RUBRIC
+      // =======================================================================
+      teamsList: rawPayload.teams || [],
+      stagesList: rawPayload.stages || [],
+      rubricList: rawPayload.rubric || [],
+      
+      selectedTeamId: 'team_04tha2',
+      currentStageIndex: 0,
+      checklistState: {},
+      
+      // Members roster
+      memberLead: 'Nguyễn Văn An (Kỹ sư trưởng)',
+      memberCable: 'Trần Thị Bình (Kỹ sư cáp & cơ khí)',
+      memberSys: 'Lê Hoàng Cường (Kỹ sư Windows & dịch vụ)',
+      memberNet: 'Phạm Minh Đức (Kỹ sư mạng & bảo mật)',
+      
+      // Project Overall Timer (180 mins default)
+      projectTotalMinutes: 180,
+      projectTimerSeconds: 180 * 60,
+      projectTimerRunning: false,
+      projectInterval: null,
+      
+      startProjectTimer() {
+        if (this.projectInterval) clearInterval(this.projectInterval);
+        this.projectTimerRunning = true;
+        var self = this;
+        this.projectInterval = setInterval(function() {
+          if (self.projectTimerSeconds > 0) {
+            self.projectTimerSeconds--;
+          } else {
+            self.pauseProjectTimer();
+            alert('Hết giờ làm bài thi tổng hợp! Mời Đội thi dừng tay để Ban Giám khảo chấm điểm Rubric.');
+          }
+        }, 1000);
+      },
+      
+      pauseProjectTimer() {
+        if (this.projectInterval) {
+          clearInterval(this.projectInterval);
+          this.projectInterval = null;
+        }
+        this.projectTimerRunning = false;
+      },
+      
+      setProjectDuration(mins) {
+        this.pauseProjectTimer();
+        this.projectTotalMinutes = mins;
+        this.projectTimerSeconds = mins * 60;
+      },
+      
+      formatProjectTime() {
+        var hrs = Math.floor(this.projectTimerSeconds / 3600);
+        var mins = Math.floor((this.projectTimerSeconds % 3600) / 60);
+        var secs = this.projectTimerSeconds % 60;
+        var pad = function(n) { return n < 10 ? '0' + n : n; };
+        return pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
+      },
+      
+      toggleChecklist(itemId) {
+        this.checklistState[itemId] = !this.checklistState[itemId];
+      },
+      
+      // Rubric Scores State (default good starting scores)
+      rubricScores: {
+        rubric_c1: 23,
+        rubric_c2: 18,
+        rubric_c3: 22,
+        rubric_c4: 14,
+        rubric_c5: 14
+      },
+      judgeRemarks: 'Đội thi công nhanh nhẹn, đường cáp đẹp thẩm mỹ, mạng nội bộ ping thông suốt 100%, bảo vệ đề tài tự tin.',
+      
+      get activeTeam() {
+        var id = this.selectedTeamId;
+        return this.teamsList.find(function(t) { return t.id === id; }) || this.teamsList[0];
+      },
+      
+      get totalRubricPoints() {
+        var s = this.rubricScores;
+        var total = (Number(s.rubric_c1) || 0) +
+                    (Number(s.rubric_c2) || 0) +
+                    (Number(s.rubric_c3) || 0) +
+                    (Number(s.rubric_c4) || 0) +
+                    (Number(s.rubric_c5) || 0);
+        return Math.round(total * 10) / 10;
+      },
+      
+      get rubricScale10() {
+        return Math.round((this.totalRubricPoints / 10) * 10) / 10;
+      },
+      
+      get rubricRank() {
+        var p = this.totalRubricPoints;
+        if (p >= 80) {
+          return { text: 'GIẢI XUẤT SẮC · ĐẠT CHUẨN HSG', badgeClass: 'bg-emerald-600 text-white', icon: '🏆' };
+        } else if (p >= 50) {
+          return { text: 'MỨC CẦN CỐ GẮNG', badgeClass: 'bg-amber-600 text-white', icon: '⚠️' };
+        } else {
+          return { text: 'MỨC CHƯA ĐẠT CHUẨN', badgeClass: 'bg-rose-600 text-white', icon: '❌' };
+        }
+      },
+      
+      printJudgeRecord() {
+        window.print();
+      },
+
+      init() {
+        // Auto start 30s timer for module 1
+        this.startSubnetTimer();
+      }
+    };
+  }
+
+  // Bind globally
+  window.hsgMasterEngine = hsgMasterEngine;
+</script>
+
+<div x-data="hsgMasterEngine()" class="space-y-6">
+
+  <!-- ========================================================================= -->
+  <!-- HERO BANNER & NAVIGATION TABS                                            -->
+  <!-- ========================================================================= -->
+  <section class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm print:hidden">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-5 border-b border-slate-100">
+      <div class="space-y-2">
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 text-blue-800 text-xs font-bold rounded-full">
+          <span class="inline-block w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+          CHUYÊN ĐỀ 02: HSG-02_PHAN_CUNG_MANG
+        </div>
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Thi Học Sinh Giỏi Phần Cứng & Mạng Máy Tính
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-3xl">
+          Chương trình bồi dưỡng Đội tuyển Học sinh Giỏi cấp trường: Huấn luyện phản xạ Subnetting trong 30 giây, 
+          ngân hàng 54 câu hỏi vận dụng cao và Sa bàn mô phỏng dự án thi công trọn gói 180 - 240 phút.
+        </p>
+      </div>
+
+      <!-- Quick stats badges -->
+      <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+        <div class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center min-w-[90px]">
+          <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Đội Tuyển</div>
+          <div class="text-sm font-black text-slate-800">3 Cơ Sở</div>
+        </div>
+        <div class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center min-w-[90px]">
+          <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Trắc Nghiệm</div>
+          <div class="text-sm font-black text-blue-600">54 Câu HSG</div>
+        </div>
+        <div class="px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-center min-w-[90px]">
+          <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Sa Bàn Dự Án</div>
+          <div class="text-sm font-black text-emerald-600">5 Chặng 100đ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 SHADCN TABS CONTROLLER (TOUCH TARGET >= 48px) -->
+    <div class="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+      <button
+        type="button"
+        @click="activeTab = 'subnetting'"
+        :class="activeTab === 'subnetting' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+        class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px] cursor-pointer"
+      >
+        <span class="text-base">⚡</span>
+        <span>Module 1: Phản Xạ Subnetting 30s</span>
+      </button>
+
+      <button
+        type="button"
+        @click="activeTab = 'mcq'"
+        :class="activeTab === 'mcq' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+        class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px] cursor-pointer"
+      >
+        <span class="text-base">📚</span>
+        <span>Module 2: 54 Câu Phân Loại Cao</span>
+      </button>
+
+      <button
+        type="button"
+        @click="activeTab = 'stages'"
+        :class="activeTab === 'stages' ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+        class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[48px] cursor-pointer"
+      >
+        <span class="text-base">🛠️</span>
+        <span>Module 3: Sa Bàn 5 Chặng & Rubric 100đ</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- TAB 1: MODULE 1 - LUYỆN PHẢN XẠ SUBNETTING & VLSM TRONG 30 GIÂY         -->
+  <!-- ========================================================================= -->
+  <section x-show="activeTab === 'subnetting'" class="space-y-6 print:hidden" x-transition>
+    
+    <!-- Header with 30s Timer -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200">
+              Đồng Hồ Tốc Độ 30 Giây
+            </span>
+            <span class="text-xs text-slate-500">Mục tiêu: Đạt tốc độ tính nhẩm chuẩn KTV</span>
+          </div>
+          <h2 class="text-lg font-bold text-slate-900 mt-1">Luyện Phản Xạ Chia Mạng IPv4 (Magic Number)</h2>
+        </div>
+
+        <!-- 30-Second Countdown Display -->
+        <div class="flex items-center gap-3">
+          <div 
+            :class="timerSeconds <= 5 ? 'bg-rose-500 text-white animate-pulse border-rose-600' : 'bg-slate-900 text-white border-slate-800'"
+            class="flex items-center gap-2 px-4 py-2.5 rounded-xl border font-mono text-xl sm:text-2xl font-black shadow-inner"
+          >
+            <span x-text="timerSeconds < 10 ? '0' + timerSeconds : timerSeconds">30</span>
+            <span class="text-xs font-sans font-bold uppercase tracking-wider">Giây</span>
+          </div>
+
+          <button
+            type="button"
+            @click="startSubnetTimer()"
+            class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors min-h-[44px]"
+            title="Đếm lại 30 giây"
+          >
+            🔄 Reset 30s
+          </button>
+        </div>
+      </div>
+
+      <!-- Visual progress bar -->
+      <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+        <div 
+          class="h-full transition-all duration-1000 ease-linear rounded-full"
+          :class="timerSeconds <= 5 ? 'bg-rose-500' : timerSeconds <= 15 ? 'bg-amber-500' : 'bg-blue-600'"
+          :style="'width: ' + ((timerSeconds / 30) * 100) + '%'"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Active Challenge Board & 5 Quick Inputs -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Left Column: Department Context & Inputs -->
+      <div class="lg:col-span-8 bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-6">
+        
+        <!-- Challenge details card -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] font-bold uppercase px-2 py-0.5 rounded bg-blue-100 text-blue-800" x-text="currentProblem.teamTarget"></span>
+              <span class="text-xs text-slate-500">Quy hoạch mạng phòng ban</span>
+            </div>
+            <div class="text-base sm:text-lg font-extrabold text-slate-900" x-text="currentProblem.department"></div>
+            <div class="text-xs text-slate-600">
+              Yêu cầu số lượng máy: <strong class="text-slate-900 font-bold" x-text="currentProblem.requiredHosts + ' thiết bị'"></strong>
+            </div>
+          </div>
+
+          <!-- Highlighted IP Input Box -->
+          <div class="p-3.5 rounded-xl bg-white border-2 border-slate-900 text-center shrink-0 shadow-sm">
+            <div class="text-[10px] uppercase font-bold text-slate-500">Địa Chỉ IP / Prefix Đề Bài</div>
+            <div class="text-xl sm:text-2xl font-black font-mono text-blue-700 mt-0.5" x-text="currentProblem.ipInput"></div>
+          </div>
+        </div>
+
+        <!-- 5 Fast Input Boxes (Shadcn style with verification status) -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-600">5 Thông Số Kỹ Thuật Cần Xác Định:</h3>
+            <span class="text-[11px] text-slate-500">Mỗi ô đúng = 10 điểm</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- 1. Subnet Mask -->
+            <div class="space-y-1.5">
+              <label class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <span>1. Subnet Mask (Dạng 255.255.255.xxx)</span>
+                <template x-if="isSubnetChecked">
+                  <span :class="subnetResults.mask ? 'text-emerald-600' : 'text-rose-600'" class="text-xs font-black">
+                    <span x-text="subnetResults.mask ? '✓ ĐÚNG' : '✗ SAI'"></span>
+                  </span>
+                </template>
+              </label>
+              <input
+                type="text"
+                x-model="inputMask"
+                placeholder="VD: 255.255.255.192"
+                :disabled="isSubnetChecked"
+                :class="isSubnetChecked ? (subnetResults.mask ? 'border-emerald-500 bg-emerald-50 text-emerald-900' : 'border-rose-500 bg-rose-50 text-rose-900') : 'border-slate-300 bg-white'"
+                class="w-full px-3.5 py-2.5 rounded-xl text-sm font-mono border focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
+              />
+              <template x-if="isSubnetChecked && !subnetResults.mask">
+                <div class="text-[11px] text-rose-600 font-mono">Đáp án đúng: <span class="font-bold" x-text="currentProblem.correctMask"></span></div>
+              </template>
+            </div>
+
+            <!-- 2. Network ID -->
+            <div class="space-y-1.5">
+              <label class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <span>2. Network ID (Địa chỉ mạng)</span>
+                <template x-if="isSubnetChecked">
+                  <span :class="subnetResults.net ? 'text-emerald-600' : 'text-rose-600'" class="text-xs font-black">
+                    <span x-text="subnetResults.net ? '✓ ĐÚNG' : '✗ SAI'"></span>
+                  </span>
+                </template>
+              </label>
+              <input
+                type="text"
+                x-model="inputNetwork"
+                placeholder="VD: 192.168.10.0"
+                :disabled="isSubnetChecked"
+                :class="isSubnetChecked ? (subnetResults.net ? 'border-emerald-500 bg-emerald-50 text-emerald-900' : 'border-rose-500 bg-rose-50 text-rose-900') : 'border-slate-300 bg-white'"
+                class="w-full px-3.5 py-2.5 rounded-xl text-sm font-mono border focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
+              />
+              <template x-if="isSubnetChecked && !subnetResults.net">
+                <div class="text-[11px] text-rose-600 font-mono">Đáp án đúng: <span class="font-bold" x-text="currentProblem.correctNetwork"></span></div>
+              </template>
+            </div>
+
+            <!-- 3. First Usable Host -->
+            <div class="space-y-1.5">
+              <label class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <span>3. First Host IP (Máy đầu tiên)</span>
+                <template x-if="isSubnetChecked">
+                  <span :class="subnetResults.first ? 'text-emerald-600' : 'text-rose-600'" class="text-xs font-black">
+                    <span x-text="subnetResults.first ? '✓ ĐÚNG' : '✗ SAI'"></span>
+                  </span>
+                </template>
+              </label>
+              <input
+                type="text"
+                x-model="inputFirstHost"
+                placeholder="VD: 192.168.10.1"
+                :disabled="isSubnetChecked"
+                :class="isSubnetChecked ? (subnetResults.first ? 'border-emerald-500 bg-emerald-50 text-emerald-900' : 'border-rose-500 bg-rose-50 text-rose-900') : 'border-slate-300 bg-white'"
+                class="w-full px-3.5 py-2.5 rounded-xl text-sm font-mono border focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
+              />
+              <template x-if="isSubnetChecked && !subnetResults.first">
+                <div class="text-[11px] text-rose-600 font-mono">Đáp án đúng: <span class="font-bold" x-text="currentProblem.correctFirstHost"></span></div>
+              </template>
+            </div>
+
+            <!-- 4. Last Usable Host -->
+            <div class="space-y-1.5">
+              <label class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <span>4. Last Host IP (Máy cuối cùng)</span>
+                <template x-if="isSubnetChecked">
+                  <span :class="subnetResults.last ? 'text-emerald-600' : 'text-rose-600'" class="text-xs font-black">
+                    <span x-text="subnetResults.last ? '✓ ĐÚNG' : '✗ SAI'"></span>
+                  </span>
+                </template>
+              </label>
+              <input
+                type="text"
+                x-model="inputLastHost"
+                placeholder="VD: 192.168.10.62"
+                :disabled="isSubnetChecked"
+                :class="isSubnetChecked ? (subnetResults.last ? 'border-emerald-500 bg-emerald-50 text-emerald-900' : 'border-rose-500 bg-rose-50 text-rose-900') : 'border-slate-300 bg-white'"
+                class="w-full px-3.5 py-2.5 rounded-xl text-sm font-mono border focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
+              />
+              <template x-if="isSubnetChecked && !subnetResults.last">
+                <div class="text-[11px] text-rose-600 font-mono">Đáp án đúng: <span class="font-bold" x-text="currentProblem.correctLastHost"></span></div>
+              </template>
+            </div>
+
+            <!-- 5. Broadcast IP (Spans 2 columns on tablet) -->
+            <div class="space-y-1.5 sm:col-span-2">
+              <label class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                <span>5. Broadcast IP (Địa chỉ quảng bá mạng con)</span>
+                <template x-if="isSubnetChecked">
+                  <span :class="subnetResults.bc ? 'text-emerald-600' : 'text-rose-600'" class="text-xs font-black">
+                    <span x-text="subnetResults.bc ? '✓ ĐÚNG' : '✗ SAI'"></span>
+                  </span>
+                </template>
+              </label>
+              <input
+                type="text"
+                x-model="inputBroadcast"
+                placeholder="VD: 192.168.10.63"
+                :disabled="isSubnetChecked"
+                :class="isSubnetChecked ? (subnetResults.bc ? 'border-emerald-500 bg-emerald-50 text-emerald-900' : 'border-rose-500 bg-rose-50 text-rose-900') : 'border-slate-300 bg-white'"
+                class="w-full px-3.5 py-2.5 rounded-xl text-sm font-mono border focus:ring-2 focus:ring-slate-900 focus:outline-none transition-colors"
+              />
+              <template x-if="isSubnetChecked && !subnetResults.bc">
+                <div class="text-[11px] text-rose-600 font-mono">Đáp án đúng: <span class="font-bold" x-text="currentProblem.correctBroadcast"></span></div>
+              </template>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Action Button Controls -->
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <template x-if="!isSubnetChecked">
+            <button
+              type="button"
+              @click="checkSubnetAnswers()"
+              class="flex-1 min-h-[48px] px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>✅ Kiểm Tra & Xem Bí Quyết</span>
+            </button>
+          </template>
+
+          <template x-if="isSubnetChecked">
+            <button
+              type="button"
+              @click="nextSubnetProblem()"
+              class="flex-1 min-h-[48px] px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-sm transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              <span>Tiếp Tục Bài Kế Tiếp ➔</span>
+            </button>
+          </template>
+
+          <button
+            type="button"
+            @click="randomSubnetProblem()"
+            class="min-h-[48px] px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs sm:text-sm transition-colors cursor-pointer"
+          >
+            🎲 Đổi Bài Ngẫu Nhiên
+          </button>
+        </div>
+
+        <!-- Magic Number Explanation Revealed after Check -->
+        <template x-if="isSubnetChecked">
+          <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-950 space-y-2 animate-fadeIn">
+            <div class="flex items-center gap-2 font-bold text-sm text-amber-900">
+              <span>💡</span>
+              <span>BÍ QUYẾT TÍNH NHẨM THẦN TỐC (MAGIC NUMBER):</span>
+            </div>
+            <p class="text-xs leading-relaxed text-amber-900" x-text="currentProblem.explanationFormula"></p>
+            <div class="pt-2 border-t border-amber-200/60 text-[11px] text-amber-800 font-mono">
+              Công thức cốt lõi: <strong>Magic Number = 256 - OctetMask</strong> = <span x-text="currentProblem.magicNumber"></span>. 
+              Các dải mạng con sẽ nhảy đều theo bội số của <span class="font-bold" x-text="currentProblem.magicNumber"></span> (0, <span x-text="currentProblem.magicNumber"></span>, <span x-text="currentProblem.magicNumber * 2"></span>, ...).
+            </div>
+          </div>
+        </template>
+
+      </div>
+
+      <!-- Right Column: Cheat Sheet & Practice Quick List -->
+      <div class="lg:col-span-4 space-y-5">
+        
+        <!-- Score & Stats Widget -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Thành Tích Luyện Phản Xạ</h3>
+          <div class="grid grid-cols-2 gap-3 text-center">
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <div class="text-[10px] text-slate-500 uppercase font-semibold">Tổng Điểm Tích Lũy</div>
+              <div class="text-2xl font-black text-slate-900 font-mono" x-text="subnetScore">0</div>
+            </div>
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <div class="text-[10px] text-slate-500 uppercase font-semibold">Số Bài Hoàn Thành</div>
+              <div class="text-2xl font-black text-blue-600 font-mono" x-text="totalSolved">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cheat Sheet Card -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
+              <span>📖</span>
+              <span>Bảng Bước Nhảy /24 ➔ /30</span>
+            </h3>
+            <span class="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono">Magic Number</span>
+          </div>
+
+          <div class="overflow-x-auto text-xs">
+            <table class="w-full border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 text-slate-500 text-[11px] text-left">
+                  <th class="py-1.5 font-bold">Prefix</th>
+                  <th class="py-1.5 font-bold">Octet Mask</th>
+                  <th class="py-1.5 font-bold text-center">Bước Nhảy</th>
+                  <th class="py-1.5 font-bold text-right">Host</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-mono text-[11px]">
+                {SUBNET_CHEAT_SHEET.map((item) => (
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-1.5 font-bold text-blue-700">{item.cidr}</td>
+                    <td class="py-1.5 text-slate-700">{item.subnetMask.split('.').pop()}</td>
+                    <td class="py-1.5 text-center font-bold text-amber-700">{item.magicNumber}</td>
+                    <td class="py-1.5 text-right text-slate-900">{item.usableHosts}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div class="text-[11px] text-slate-500 italic">
+            Quy tắc: Số host sử dụng = 2<sup>h</sup> - 2 (trừ 1 NetID và 1 Broadcast).
+          </div>
+        </div>
+
+        <!-- Department Problems Drawer -->
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">6 Tình Huống Đề Bài Mẫu:</h3>
+          <div class="space-y-2">
+            <template x-for="(prob, idx) in problemsList" :key="prob.id">
+              <button
+                type="button"
+                @click="selectProblem(idx)"
+                :class="problemIndex === idx ? 'border-slate-900 bg-slate-50 font-bold' : 'border-slate-200 hover:border-slate-300 text-slate-700'"
+                class="w-full text-left p-2.5 rounded-xl border text-xs transition-all flex items-center justify-between cursor-pointer"
+              >
+                <div class="truncate pr-2">
+                  <span class="text-slate-400 font-mono mr-1" x-text="'#' + (idx + 1)"></span>
+                  <span x-text="prob.department"></span>
+                </div>
+                <span class="font-mono text-[11px] bg-slate-200/70 px-1.5 py-0.5 rounded text-slate-800 shrink-0" x-text="prob.cidr"></span>
+              </button>
+            </template>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- TAB 2: MODULE 2 - NGÂN HÀNG 54 CÂU TRẮC NGHIỆM PHÂN LOẠI CAO            -->
+  <!-- ========================================================================= -->
+  <section x-show="activeTab === 'mcq'" class="space-y-6 print:hidden" x-transition>
+    
+    <!-- Filter bar & Progress Stats -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">Ngân Hàng 54 Câu Hỏi Phân Loại Cao (Đội Tuyển HSG)</h2>
+          <p class="text-xs text-slate-500">Kiểm tra tư duy giải thích bản chất kỹ thuật, sơ đồ khối và giao thức mạng chuẩn quốc tế</p>
+        </div>
+
+        <!-- Real-time performance pills -->
+        <div class="flex items-center gap-2">
+          <div class="px-3 py-1.5 rounded-xl bg-slate-100 text-xs font-semibold text-slate-700">
+            Đã làm: <strong class="text-slate-900" x-text="mcqStats.answered + '/' + mcqStats.total"></strong>
+          </div>
+          <div class="px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200">
+            Đúng: <strong x-text="mcqStats.correct"></strong> (<span x-text="mcqStats.percent + '%'"></span>)
+          </div>
+          <button
+            type="button"
+            @click="resetMcqAnswers()"
+            class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold transition-colors"
+            title="Làm lại từ đầu"
+          >
+            🔄 Reset
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Buttons (Touch targets >= 48px) -->
+      <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
+        <button
+          type="button"
+          @click="mcqFilter = 'all'"
+          :class="mcqFilter === 'all' ? 'bg-slate-900 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+          class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px] cursor-pointer"
+        >
+          Tất cả (54 câu)
+        </button>
+
+        <button
+          type="button"
+          @click="mcqFilter = 'kien-truc-phan-cung'"
+          :class="mcqFilter === 'kien-truc-phan-cung' ? 'bg-slate-900 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+          class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px] cursor-pointer"
+        >
+          Bo mạch & Vi xử lý ({countArch})
+        </button>
+
+        <button
+          type="button"
+          @click="mcqFilter = 'osi-tcpip'"
+          :class="mcqFilter === 'osi-tcpip' ? 'bg-slate-900 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+          class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px] cursor-pointer"
+        >
+          OSI 7 Tầng & TCP/IP ({countOsi})
+        </button>
+
+        <button
+          type="button"
+          @click="mcqFilter = 'routing-switching-security'"
+          :class="mcqFilter === 'routing-switching-security' ? 'bg-slate-900 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+          class="px-4 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px] cursor-pointer"
+        >
+          Định Tuyến & Bảo Mật ({countSec})
+        </button>
+      </div>
+    </div>
+
+    <!-- Questions Feed -->
+    <div class="space-y-4">
+      <template x-for="(q, index) in filteredQuestions" :key="q.id">
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4">
+          
+          <!-- Question Header -->
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-slate-900 text-white font-mono" x-text="'Câu ' + (index + 1)"></span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold uppercase bg-slate-100 text-slate-600" x-text="q.subtopic"></span>
+            </div>
+            <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-800" x-text="q.level === 'VanDungCao' ? 'Vận Dụng Cao' : q.level === 'VanDung' ? 'Vận Dụng' : 'Thông Hiểu'"></span>
+          </div>
+
+          <!-- Question Body -->
+          <div class="text-sm sm:text-base font-semibold text-slate-900 leading-relaxed" x-text="q.question"></div>
+
+          <!-- 4 Options -->
+          <div class="grid grid-cols-1 gap-2.5 pt-1">
+            <template x-for="(opt, optIdx) in q.options" :key="optIdx">
+              <button
+                type="button"
+                @click="pickMcqAnswer(q.id, optIdx)"
+                :disabled="mcqAnswers[q.id] !== undefined"
+                :class="mcqAnswers[q.id] === undefined 
+                  ? 'border-slate-200 hover:border-slate-400 hover:bg-slate-50 text-slate-800' 
+                  : optIdx === q.correctIndex 
+                    ? 'border-emerald-500 bg-emerald-50 text-emerald-900 font-bold shadow-sm' 
+                    : mcqAnswers[q.id] === optIdx 
+                      ? 'border-rose-500 bg-rose-50 text-rose-900' 
+                      : 'border-slate-100 bg-slate-50/50 text-slate-400 opacity-60'"
+                class="w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm transition-all flex items-start gap-3 min-h-[48px] cursor-pointer"
+              >
+                <span 
+                  :class="mcqAnswers[q.id] !== undefined && optIdx === q.correctIndex ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-700'"
+                  class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5 font-mono"
+                  x-text="String.fromCharCode(65 + optIdx)"
+                ></span>
+                <span class="leading-relaxed" x-text="opt"></span>
+              </button>
+            </template>
+          </div>
+
+          <!-- In-depth Technical Explanation -->
+          <template x-if="mcqAnswers[q.id] !== undefined">
+            <div 
+              :class="mcqAnswers[q.id] === q.correctIndex ? 'bg-emerald-50 border-emerald-200 text-emerald-950' : 'bg-slate-50 border-slate-200 text-slate-800'"
+              class="p-4 rounded-xl border space-y-1.5 animate-fadeIn"
+            >
+              <div class="flex items-center gap-1.5 font-bold text-xs">
+                <span x-text="mcqAnswers[q.id] === q.correctIndex ? '✅ GIẢI THÍCH KỸ THUẬT CHUẨN XÁC:' : '⚠️ BẢN CHẤT KỸ THUẬT CHUYÊN SÂU:'"></span>
+              </div>
+              <p class="text-xs leading-relaxed" x-text="q.explanation"></p>
+            </div>
+          </template>
+
+        </div>
+      </template>
+    </div>
+
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- TAB 3: MODULE 3 - SA BÀN DỰ ÁN 5 CHẶNG & CHẤM RUBRIC 100 ĐIỂM            -->
+  <!-- ========================================================================= -->
+  <section x-show="activeTab === 'stages'" class="space-y-6" x-transition>
+    
+    <!-- Top Project Control Bar (Team Selection & Timer) (Hidden when printing) -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-5 print:hidden">
+      
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 pb-4 border-b border-slate-100">
+        <!-- Team Selector -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Chọn Đội Tuyển Đại Diện Cơ Sở:</label>
+          <div class="flex flex-wrap items-center gap-2">
+            <template x-for="team in teamsList" :key="team.id">
+              <button
+                type="button"
+                @click="selectedTeamId = team.id"
+                :class="selectedTeamId === team.id ? 'bg-slate-900 text-white shadow-sm' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'"
+                class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all min-h-[44px] cursor-pointer"
+              >
+                <span x-text="team.code"></span>
+                <span class="opacity-75 font-normal ml-1" x-text="'(' + team.branch.replace('Cơ sở ', '') + ')'"></span>
+              </button>
+            </template>
+          </div>
+        </div>
+
+        <!-- Overall Project Countdown Clock -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="p-3 bg-slate-900 text-white rounded-xl flex items-center gap-3 shadow-inner">
+            <div>
+              <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Thời Gian Toàn Dự Án</div>
+              <div class="text-xl sm:text-2xl font-mono font-black" x-text="formatProjectTime()">03:00:00</div>
+            </div>
+            <div class="flex flex-col gap-1">
+              <button
+                type="button"
+                @click="projectTimerRunning ? pauseProjectTimer() : startProjectTimer()"
+                class="px-2.5 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-colors"
+                x-text="projectTimerRunning ? '⏸ Tạm dừng' : '▶ Bắt đầu'"
+              ></button>
+              <button
+                type="button"
+                @click="setProjectDuration(projectTotalMinutes === 180 ? 240 : 180)"
+                class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] font-mono transition-colors"
+                x-text="projectTotalMinutes + 'm (Đổi)'"
+              ></button>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            @click="printJudgeRecord()"
+            class="min-h-[48px] px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer"
+          >
+            <span>🖨️</span>
+            <span>Xuất Biên Bản A4</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Team Banner & Members Input -->
+      <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+        <div>
+          <span class="text-slate-500 font-semibold block mb-1">1. Kỹ sư trưởng (Project Lead):</span>
+          <input type="text" x-model="memberLead" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
+        </div>
+        <div>
+          <span class="text-slate-500 font-semibold block mb-1">2. Kỹ sư Cáp & Hạ tầng:</span>
+          <input type="text" x-model="memberCable" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
+        </div>
+        <div>
+          <span class="text-slate-500 font-semibold block mb-1">3. Kỹ sư Windows & Dịch vụ:</span>
+          <input type="text" x-model="memberSys" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
+        </div>
+        <div>
+          <span class="text-slate-500 font-semibold block mb-1">4. Kỹ sư Mạng & Bảo mật:</span>
+          <input type="text" x-model="memberNet" class="w-full px-2.5 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900" />
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Stepper 5 Chặng Thi Công (Mô hình Nhà thầu công nghệ) (Hidden when printing) -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-6 print:hidden">
+      
+      <!-- Stepper Navigation Pills -->
+      <div class="space-y-2">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">Quy Trình Thi Công 5 Chặng Liên Hoàn:</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+          <template x-for="(st, idx) in stagesList" :key="st.step">
+            <button
+              type="button"
+              @click="currentStageIndex = idx"
+              :class="currentStageIndex === idx ? 'border-slate-900 bg-slate-900 text-white shadow-sm' : 'border-slate-200 hover:border-slate-300 bg-slate-50 text-slate-700'"
+              class="p-2.5 rounded-xl border text-left transition-all min-h-[52px] cursor-pointer flex flex-col justify-between"
+            >
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="font-extrabold" x-text="st.name"></span>
+                <span class="text-[10px] opacity-80" x-text="st.timeLimit"></span>
+              </div>
+              <div class="text-[11px] font-medium truncate mt-1" x-text="st.title.split('&')[0]"></div>
+            </button>
+          </template>
+        </div>
+      </div>
+
+      <!-- Current Stage Active Panel -->
+      <template x-for="(st, idx) in stagesList" :key="st.step">
+        <div x-show="currentStageIndex === idx" class="space-y-5 animate-fadeIn">
+          
+          <!-- Stage Header -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 uppercase" x-text="'Vai trò: ' + st.role"></span>
+                <span class="text-xs text-slate-500" x-text="'Thời lượng chuẩn: ' + st.timeLimit"></span>
+              </div>
+              <h3 class="text-base sm:text-lg font-black text-slate-900 mt-1" x-text="st.title"></h3>
+              <p class="text-xs text-slate-600 mt-1 leading-relaxed" x-text="st.description"></p>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="text-xs text-slate-500 uppercase">Trọng số</span>
+              <div class="text-xl font-black text-emerald-600" x-text="st.maxScore + ' Điểm'"></div>
+            </div>
+          </div>
+
+          <!-- Interactive Checklists -->
+          <div class="space-y-3">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-600">Tiêu Chuẩn Kỹ Thuật Bắt Buộc Nghiệm Thu:</h4>
+            
+            <div class="space-y-2.5">
+              <template x-for="item in st.checklists" :key="item.id">
+                <div 
+                  @click="toggleChecklist(item.id)"
+                  :class="checklistState[item.id] ? 'bg-emerald-50/70 border-emerald-300' : 'bg-white border-slate-200 hover:border-slate-300'"
+                  class="p-3.5 rounded-xl border transition-colors flex items-start gap-3 cursor-pointer select-none"
+                >
+                  <input
+                    type="checkbox"
+                    :checked="checklistState[item.id]"
+                    @click.stop="toggleChecklist(item.id)"
+                    class="mt-1 w-4 h-4 rounded text-slate-900 border-slate-300 focus:ring-slate-900 cursor-pointer"
+                  />
+                  <div class="flex-1 text-xs sm:text-sm">
+                    <span :class="checklistState[item.id] ? 'text-emerald-950 font-medium' : 'text-slate-800'" class="leading-relaxed" x-text="item.label"></span>
+                    <template x-if="item.critical">
+                      <span class="inline-block ml-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200">Bắt buộc</span>
+                    </template>
+                  </div>
+                  <span class="text-xs font-bold font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-700 shrink-0" x-text="'+' + item.points + 'đ'"></span>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- Applied Standards Badges -->
+          <div class="flex items-center gap-2 text-[11px] text-slate-500 pt-2 border-t border-slate-100">
+            <span class="font-bold">Tiêu chuẩn quốc tế áp dụng:</span>
+            <template x-for="std in st.standards" :key="std">
+              <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono" x-text="std"></span>
+            </template>
+          </div>
+
+        </div>
+      </template>
+
+    </div>
+
+    <!-- 100-Point Rubric Scoring Cockpit for Judges (Hidden when printing) -->
+    <div class="bg-white border border-slate-200 rounded-2xl p-5 md:p-6 shadow-sm space-y-6 print:hidden">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded text-[11px] font-bold bg-slate-900 text-white">
+            <span>⚖️</span>
+            <span>HỘI ĐỒNG BAN GIÁM KHẢO</span>
+          </div>
+          <h3 class="text-lg font-black text-slate-900 mt-1">Bảng Chấm Điểm Rubric Dự Án (Thang Điểm 100)</h3>
+          <p class="text-xs text-slate-500">Quy đổi thang điểm 10: Điểm số &ge; 8.0 đạt chuẩn Đội tuyển HSG</p>
+        </div>
+
+        <!-- Live Score Summary Card -->
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center gap-4 text-center shrink-0">
+          <div>
+            <div class="text-[10px] uppercase font-bold text-slate-500">Tổng Điểm / 100</div>
+            <div class="text-2xl font-black text-slate-900 font-mono" x-text="totalRubricPoints">0</div>
+          </div>
+          <div class="h-8 w-px bg-slate-200"></div>
+          <div>
+            <div class="text-[10px] uppercase font-bold text-slate-500">Hệ Điểm 10</div>
+            <div class="text-2xl font-black text-blue-600 font-mono" x-text="rubricScale10">0</div>
+          </div>
+          <div class="h-8 w-px bg-slate-200"></div>
+          <div>
+            <div class="text-[10px] uppercase font-bold text-slate-500">Xếp Loại</div>
+            <div :class="rubricRank.badgeClass" class="px-2.5 py-1 rounded text-xs font-bold mt-0.5" x-text="rubricRank.text"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 Criteria Sliders & Manual Inputs -->
+      <div class="space-y-5">
+        <template x-for="(crit, cIdx) in rubricList" :key="crit.id">
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <span class="text-xs font-bold text-slate-400 font-mono mr-1" x-text="crit.code"></span>
+                <span class="text-sm font-extrabold text-slate-900" x-text="crit.name"></span>
+                <span class="text-xs text-slate-500 block sm:inline sm:ml-2" x-text="crit.description"></span>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="text-xs font-bold text-slate-500">Điểm:</span>
+                <input
+                  type="number"
+                  step="0.5"
+                  min="0"
+                  :max="crit.maxPoints"
+                  x-model.number="rubricScores[crit.id]"
+                  class="w-20 px-2.5 py-1.5 rounded-lg border border-slate-300 bg-white text-sm font-black font-mono text-center focus:ring-1 focus:ring-slate-900 focus:outline-none"
+                />
+                <span class="text-xs font-bold text-slate-500" x-text="'/ ' + crit.maxPoints + 'đ'"></span>
+              </div>
+            </div>
+
+            <!-- Slider control -->
+            <input
+              type="range"
+              min="0"
+              :max="crit.maxPoints"
+              step="0.5"
+              x-model.number="rubricScores[crit.id]"
+              class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
+            />
+
+            <!-- Level benchmarks -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px] pt-1 border-t border-slate-200/60">
+              <template x-for="lvl in crit.levels" :key="lvl.range">
+                <div class="p-2 rounded bg-white border border-slate-100 text-slate-600">
+                  <div class="flex items-center justify-between font-bold text-slate-800 mb-0.5">
+                    <span x-text="lvl.label"></span>
+                    <span class="font-mono text-[10px]" x-text="lvl.range + 'đ'"></span>
+                  </div>
+                  <p class="text-[10px] leading-tight text-slate-500" x-text="lvl.description"></p>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- Remarks by Judge -->
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">Nhận Xét Tổng Hợp Của Ban Giám Khảo:</label>
+        <textarea
+          x-model="judgeRemarks"
+          rows="3"
+          class="w-full p-3 rounded-xl border border-slate-300 text-xs sm:text-sm focus:ring-1 focus:ring-slate-900 focus:outline-none"
+          placeholder="Nhập đánh giá về kỹ thuật, tốc độ thi công, tính thẩm mỹ và phần trả lời phản biện của đội thi..."
+        ></textarea>
+      </div>
+
+      <!-- Bottom Print Trigger -->
+      <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+        <div class="text-xs text-slate-500">
+          * Đã hoàn thiện đánh giá theo chuẩn 5 tiêu chí Thông tư và Quy chế thi HSG.
+        </div>
+        <button
+          type="button"
+          @click="printJudgeRecord()"
+          class="min-h-[48px] px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm rounded-xl shadow-sm transition-all flex items-center gap-2 cursor-pointer"
+        >
+          <span>🖨️ Xuất & In Biên Bản Chấm Thi (A4)</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- PRINTABLE A4 BIÊN BẢN CHẤM THI HSG                                      -->
+    <!-- (Appears only during print or preview)                                  -->
+    <!-- ======================================================================= -->
+    <div id="printable-hsg-record" class="hidden print:block bg-white text-black p-8 font-sans leading-normal">
+      
+      <!-- Print Header -->
+      <div class="border-b-2 border-black pb-4 mb-6 text-center space-y-1">
+        <div class="text-xs font-bold uppercase tracking-widest text-gray-700">CỔNG HỌC TẬP & GIẢNG DẠY CNTT</div>
+        <div class="text-xl font-black uppercase tracking-tight">HỘI ĐỒNG THI HỌC SINH GIỎI PHẦN CỨNG & MẠNG</div>
+        <div class="text-sm font-semibold italic">BIÊN BẢN NGHIỆM THU DỰ ÁN THI CÔNG HẠ TẦNG VÀ ĐÁNH GIÁ KỸ NĂNG NGHỀ</div>
+        <div class="text-xs font-mono pt-1 text-gray-600">
+          Mã Biên Bản: <span class="font-bold">BB-HSG-2026-</span><span x-text="activeTeam.code"></span> · Thời gian thi: <span x-text="projectTotalMinutes + ' Phút'"></span>
+        </div>
+      </div>
+
+      <!-- Team Information Table -->
+      <div class="mb-5 space-y-2">
+        <div class="flex justify-between items-center text-sm">
+          <div>Đội Tuyển Thi Đấu: <strong class="text-base" x-text="activeTeam.code + ' (' + activeTeam.branch + ')'"></strong></div>
+          <div>Ngày Khảo Thí: <strong x-text="new Date().toLocaleDateString('vi-VN')"></strong></div>
+        </div>
+        <div class="border border-black p-3 rounded text-xs space-y-1 bg-gray-50/50">
+          <div class="font-bold uppercase text-[11px] mb-1">Thành viên Đội Tuyển Kỹ Sư:</div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>1. Kỹ sư trưởng: <strong x-text="memberLead"></strong></div>
+            <div>2. Kỹ sư thi công cáp: <strong x-text="memberCable"></strong></div>
+            <div>3. Kỹ sư Windows & Dịch vụ: <strong x-text="memberSys"></strong></div>
+            <div>4. Kỹ sư Mạng & Bảo mật: <strong x-text="memberNet"></strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 Rubric Criteria Score Table -->
+      <div class="mb-5">
+        <table class="w-full border-collapse border border-black text-xs">
+          <thead>
+            <tr class="bg-gray-100 text-center font-bold">
+              <th class="border border-black p-2 w-12">STT</th>
+              <th class="border border-black p-2 text-left">Tiêu Chí Đánh Giá Chuẩn HSG</th>
+              <th class="border border-black p-2 w-20">Trọng Số</th>
+              <th class="border border-black p-2 w-24">Điểm Tối Đa</th>
+              <th class="border border-black p-2 w-24">Điểm Đạt</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border border-black p-2 text-center font-mono">1</td>
+              <td class="border border-black p-2">
+                <strong>Kỹ thuật Hạ tầng & Thi công Cáp mạng (TIA/EIA-568A/B)</strong>
+                <div class="text-[10px] text-gray-600">Đo thông mạch 8/8 sợi, nhận liên kết Gigabit 1Gbps, độ thẩm mỹ cơ khí</div>
+              </td>
+              <td class="border border-black p-2 text-center">25%</td>
+              <td class="border border-black p-2 text-center font-mono">25.0</td>
+              <td class="border border-black p-2 text-center font-bold font-mono text-sm" x-text="rubricScores.rubric_c1"></td>
+            </tr>
+            <tr>
+              <td class="border border-black p-2 text-center font-mono">2</td>
+              <td class="border border-black p-2">
+                <strong>Kiến trúc sư Sơ đồ & Quy hoạch IP VLSM</strong>
+                <div class="text-[10px] text-gray-600">Tính toán chia dải mạng con cho 4 phòng ban, vẽ sơ đồ logic Packet Tracer</div>
+              </td>
+              <td class="border border-black p-2 text-center">20%</td>
+              <td class="border border-black p-2 text-center font-mono">20.0</td>
+              <td class="border border-black p-2 text-center font-bold font-mono text-sm" x-text="rubricScores.rubric_c2"></td>
+            </tr>
+            <tr>
+              <td class="border border-black p-2 text-center font-mono">3</td>
+              <td class="border border-black p-2">
+                <strong>Quản trị Mạng Nội bộ & Dịch vụ Hệ thống Windows 10</strong>
+                <div class="text-[10px] text-gray-600">Thiết lập IP tĩnh, ma trận phân quyền NTFS Security, chia sẻ máy in LAN</div>
+              </td>
+              <td class="border border-black p-2 text-center">25%</td>
+              <td class="border border-black p-2 text-center font-mono">25.0</td>
+              <td class="border border-black p-2 text-center font-bold font-mono text-sm" x-text="rubricScores.rubric_c3"></td>
+            </tr>
+            <tr>
+              <td class="border border-black p-2 text-center font-mono">4</td>
+              <td class="border border-black p-2">
+                <strong>Cấu hình Mạng Không Dây Wi-Fi & Bảo Mật AP</strong>
+                <div class="text-[10px] text-gray-600">Đổi pass admin, chuẩn WPA2/WPA3 AES, kích hoạt AP Isolation tách mạng khách</div>
+              </td>
+              <td class="border border-black p-2 text-center">15%</td>
+              <td class="border border-black p-2 text-center font-mono">15.0</td>
+              <td class="border border-black p-2 text-center font-bold font-mono text-sm" x-text="rubricScores.rubric_c4"></td>
+            </tr>
+            <tr>
+              <td class="border border-black p-2 text-center font-mono">5</td>
+              <td class="border border-black p-2">
+                <strong>Nghiệm Thu Toàn Hệ Thống, Tốc Độ & Bảo Vệ 05 Phút</strong>
+                <div class="text-[10px] text-gray-600">Ping thông 100% 0 loss, in test page thành công, thuyết trình trước Ban Giám khảo</div>
+              </td>
+              <td class="border border-black p-2 text-center">15%</td>
+              <td class="border border-black p-2 text-center font-mono">15.0</td>
+              <td class="border border-black p-2 text-center font-bold font-mono text-sm" x-text="rubricScores.rubric_c5"></td>
+            </tr>
+            <tr class="bg-gray-100 font-bold">
+              <td class="border border-black p-2 text-center" colspan="2">TỔNG ĐIỂM DỰ ÁN TOÀN DIỆN</td>
+              <td class="border border-black p-2 text-center">100%</td>
+              <td class="border border-black p-2 text-center font-mono">100.0</td>
+              <td class="border border-black p-2 text-center font-black font-mono text-base" x-text="totalRubricPoints"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Result Summary Box -->
+      <div class="border border-black p-3.5 mb-6 text-xs flex justify-between items-center">
+        <div>
+          Điểm quy đổi hệ 10: <strong class="text-base font-mono" x-text="rubricScale10 + ' / 10.0'"></strong>
+        </div>
+        <div>
+          Kết Luận Đánh Giá: <strong class="text-base uppercase" x-text="rubricRank.text"></strong>
+        </div>
+      </div>
+
+      <!-- Remarks Box -->
+      <div class="border border-black p-3 mb-8 text-xs min-h-[70px]">
+        <div class="font-bold mb-1">Nhận xét chi tiết của Ban Giám Khảo:</div>
+        <div class="italic text-gray-800" x-text="judgeRemarks || 'Không có ghi chú thêm.'"></div>
+      </div>
+
+      <!-- Signatures Footer -->
+      <div class="grid grid-cols-2 text-center text-xs pt-4">
+        <div class="space-y-16">
+          <div class="font-bold uppercase">ĐẠI DIỆN ĐỘI THI CÔNG</div>
+          <div class="italic text-gray-500">(Ký và ghi rõ họ tên)</div>
+        </div>
+        <div class="space-y-16">
+          <div class="font-bold uppercase">TRƯỞNG BAN GIÁM KHẢO</div>
+          <div class="font-bold text-sm">CN. Phạm Tiến Đông</div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+
+<style>
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.25s ease-out forwards;
+  }
+  
+  @media print {
+    body {
+      background: white !important;
+      color: black !important;
+    }
+    header, footer, nav, .print\:hidden {
+      display: none !important;
+    }
+    #printable-hsg-record {
+      display: block !important;
+    }
+  }
+</style>
