@@ -329,13 +329,27 @@
             })
           });
 
-          const data = await res.json();
-          if (res.ok && data.reply) {
+          let data = {};
+          try {
+            data = await res.json();
+          } catch (jsonErr) {
+            data = {};
+          }
+
+          if (data && data.reply) {
             this.messages.push({ role: 'assistant', content: data.reply, copied: false, feedback: null });
           } else {
+            let errorMsg = (data && (data.error || data.message)) || '';
+            if (typeof errorMsg === 'object') {
+              try { errorMsg = JSON.stringify(errorMsg); } catch(e) { errorMsg = ''; }
+            }
+            // Triệt tiêu hoàn toàn chuỗi JSON thô hoặc lỗi kỹ thuật địa chỉ IP/Location
+            if (typeof errorMsg === 'string' && (errorMsg.includes('{') || errorMsg.includes('location') || errorMsg.includes('FAILED_PRECONDITION') || errorMsg.includes('400'))) {
+              errorMsg = 'Hệ thống đang đồng bộ dữ liệu. Bạn hãy bấm vào các câu hỏi gợi ý nhanh bên trên hoặc hỏi về bo mạch chủ (ASUS, MSI, Winnfox), RAM, SSD để mình hỗ trợ ngay nhé!';
+            }
             this.messages.push({
               role: 'assistant',
-              content: '⚠️ ' + (data.error || 'Có lỗi khi kết nối với Trợ giảng AI. Vui lòng thử lại sau!')
+              content: errorMsg ? '💡 ' + errorMsg : '💡 Bạn có thể đặt câu hỏi về phím tắt Boot/BIOS, cách bấm cáp mạng, tra keo tản nhiệt hoặc tháo lắp linh kiện để mình giải đáp nhanh nhé!'
             });
           }
         } catch (err) {
