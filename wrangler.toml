@@ -12,10 +12,13 @@ binding = "ASSETS"
 
 # ==============================================================================
 # CẤU HÌNH CƠ SỞ DỮ LIỆU CLOUDFLARE D1
-# Lưu ý quan trọng: database_id BẮT BUỘC phải là mã UUID hợp lệ (36 ký tự)
-# Lấy mã UUID tại: Cloudflare Dashboard -> Storage & Databases -> D1 -> giang-day-db -> Database ID
+# Lưu ý: Khi chưa điền mã UUID thật từ Cloudflare Dashboard, tạm thời đóng comment mục này
+# để npx wrangler deploy không bị báo lỗi "database not found [code: 10181]".
+# Khi có mã UUID (36 ký tự) từ: Cloudflare Dashboard -> D1 -> giang-day-db -> Database ID,
+# hãy mở comment 4 dòng bên dưới và thay database_id bằng mã thật:
+#
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "giang-day-db"
+# database_id = "00000000-0000-0000-0000-000000000000"
 # ==============================================================================
-[[d1_databases]]
-binding = "DB"
-database_name = "giang-day-db"
-database_id = "00000000-0000-0000-0000-000000000000"
