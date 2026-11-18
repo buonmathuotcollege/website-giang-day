@@ -79,8 +79,8 @@ const KTV_7_STEPS: KtvStep[] = [
     title: "Tiếp Nhận Máy, Khám Bên Ngoài & Đọc Cấu Hình Ban Đầu",
     role: "KTV 3 (Ghi chép & Thông số)",
     timeEstimate: "15 phút",
-    imageSrc: "/images/ol-01/main-h510.jpg",
-    imageAlt: "Khảo sát bo mạch chủ MSI H510M-A PRO và khám vỏ thùng máy",
+    imageSrc: "/images/ol-01/step-1-kham-may.jpg",
+    imageAlt: "Khám ngoại quan case PC phòng lab, cắm nguồn AC và phân biệt cổng xuất hình GT 730",
     hotspotTarget: "socket-cpu",
     instructions: [
       "Khám vỏ ngoài: Quan sát móp méo, vỡ nhựa, thiếu ốc nắp hông hay đứt dây nguồn/cáp màn hình.",
@@ -107,8 +107,8 @@ const KTV_7_STEPS: KtvStep[] = [
       name: "Xác Nhận Dữ Liệu Khách & An Toàn Điện",
       requirement: "Thầy kiểm tra: Dữ liệu đã copy đủ 100% sang ổ D; dây nguồn AC đã rút và đã bấm xả điện 3 lần.",
     },
-    imageSrc: "/images/ol-01/main-h510.jpg",
-    imageAlt: "Ổ cứng lưu trữ SSD SATA và cấu trúc phân vùng dữ liệu an toàn",
+    imageSrc: "/images/ol-01/step-2-cuu-du-lieu-win10.jpg",
+    imageAlt: "Windows 10 File Explorer copy Desktop sang ổ D: SAO_LUU_KHACH, đếm số file Properties",
     hotspotTarget: "sata-m2",
     instructions: [
       "Xác định 3 vị trí sống còn: Toàn bộ file Word, Excel, ảnh quan trọng của khách nằm ở Desktop, Documents và Downloads (đều thuộc Ổ ĐĨA C).",
@@ -128,8 +128,8 @@ const KTV_7_STEPS: KtvStep[] = [
     title: "Chẩn Đoán ('Bắt Bệnh 60 Giây') & Cứu Sống Máy Không Hoạt Động",
     role: "KTV 1 (Thao tác kỹ thuật chính)",
     timeEstimate: "20 phút",
-    imageSrc: "/images/ol-01/ram-ddr4.jpg",
-    imageAlt: "Tuyệt chiêu chà tẩy trắng chân mạ vàng thanh RAM DDR4 cứu 80% máy lỗi",
+    imageSrc: "/images/ol-01/step-3-cha-ram-cuc-tay.jpg",
+    imageAlt: "Cận cảnh dùng cục tẩy trắng gôm học sinh chà sạch chân mạ vàng thanh RAM DDR4",
     hotspotTarget: "ram-slots",
     instructions: [
       "Ca 1 (Máy im re): Cắm chặt dây nguồn, gạt công tắc sau nguồn sang 'I'. Cắm lại dây POWER SW vào 2 chân kim sát cạnh chỗ mất kim trên cụm F_PANEL. Thử quẹt nhẹ tua vít vào 2 chân kim để kiểm tra nút bấm.",
@@ -155,8 +155,8 @@ const KTV_7_STEPS: KtvStep[] = [
       name: "Kiểm Soát Cơ Khí Trước Khi Cắm Điện",
       requirement: "Thầy kiểm tra 10 giây: (1) Hai ngàm RAM đã khóa sát khấc; (2) Dây quạt đã cắm CPU_FAN; (3) Không rơi ốc vít trên bo mạch.",
     },
-    imageSrc: "/images/ol-01/vga-gt730.jpg",
-    imageAlt: "Lắp ráp card rời GT 730 vào khe PCIe x16 và nâng cấp RAM/SSD",
+    imageSrc: "/images/ol-01/step-4-tra-keo-hat-dau-xanh.jpg",
+    imageAlt: "Tra đúng 01 giọt keo tản nhiệt hạt đậu xanh vào giữa CPU và vặn 4 chốt đối xứng đường chéo",
     hotspotTarget: "pcie-x16",
     instructions: [
       "Quét và thổi bụi: Dùng cọ mềm và bóng thổi làm sạch hốc nguồn, quạt CPU, mặt Mainboard. BẮT BUỘC dùng tay giữ đứng cánh quạt khi thổi (không để quạt quay tít mù sinh điện ngược hỏng mạch).",
@@ -177,8 +177,8 @@ const KTV_7_STEPS: KtvStep[] = [
     title: "Cài Mới Windows 10, Đầy Đủ Driver & Phần Mềm Hợp Lệ",
     role: "KTV 1 (Cài đặt hệ điều hành)",
     timeEstimate: "35 phút",
-    imageSrc: "/images/ol-01/main-h510.jpg",
-    imageAlt: "Giao diện cài đặt Windows 10 chuẩn UEFI và kiểm tra Device Manager sạch chấm than",
+    imageSrc: "/images/ol-01/step-5-cai-win10-partition.jpg",
+    imageAlt: "Giao diện phân vùng Windows 10 Setup quy tắc nhìn số GB chọn ổ C và Device Manager sạch chấm than",
     instructions: [
       "Boot từ USB cài Windows: Cắm USB -> Bật máy bấm liên tục F11 (MSI) -> Chọn dòng 'UEFI: Tên USB' -> Bấm Enter.",
       "QUY TẮC NHÌN SỐ GB CHỌN Ổ C: Đến bảng chọn phân vùng, đối chiếu số GB đã ghi ở Bước 1. Dòng dung lượng nhỏ (60GB–120GB) là Ổ C để cài Win; dòng dung lượng lớn (200GB–500GB) là Ổ D chứa tài liệu của khách. Chỉ bấm Format vào dòng Ổ C -> Next. Tuyệt đối không đụng vào Ổ D!",
@@ -199,8 +199,8 @@ const KTV_7_STEPS: KtvStep[] = [
     title: "Kiểm Tra Ngoại Vi & 3 Bước Chữa Máy In 'Cắm Vào Không Chịu In'",
     role: "KTV 3 (Kiểm thử ngoại vi)",
     timeEstimate: "15 phút",
-    imageSrc: "/images/ol-01/main-h510.jpg",
-    imageAlt: "Kiểm tra cổng kết nối ngoại vi, cài đặt máy in và in trang Test Page",
+    imageSrc: "/images/ol-01/step-6-may-in-test-page.jpg",
+    imageAlt: "Windows 10 Devices and Printers máy in mặc định dấu tích xanh và in trang Print Test Page",
     instructions: [
       "Kiểm tra ngoại vi: Mở Notepad gõ thử 1 câu tiếng Việt có dấu; bấm thử chuột trái, phải, con lăn; cắm dây mạng kiểm tra biểu tượng mạng có Internet.",
       "Cài đặt máy in qua cáp USB: Cắm cáp USB của máy in vào thùng máy, bật đèn nguồn máy in, cài đặt Driver tương ứng.",
@@ -224,8 +224,8 @@ const KTV_7_STEPS: KtvStep[] = [
       name: "Nghiệm Thu Bàn Giao Ca Máy",
       requirement: "Thầy kiểm tra 3 màn hình: (1) Device Manager sạch chấm than; (2) HWMonitor nhiệt độ CPU <75°C; (3) Dữ liệu khách nguyên vẹn.",
     },
-    imageSrc: "/images/ol-01/main-h510.jpg",
-    imageAlt: "Đo nhiệt độ CPU bằng HWMonitor và hoàn tất phiếu nghiệm thu bàn giao 5 điểm",
+    imageSrc: "/images/ol-01/step-7-hwmonitor-nhiet-do.jpg",
+    imageAlt: "Đo nhiệt độ CPU bằng HWMonitor mát 38°C và hoàn tất biên bản nghiệm thu bàn giao 5 tiêu chí",
     instructions: [
       "Tự dò đúng 5 tiêu chí trước khi đóng nắp thùng máy:",
       "1. Trong thùng máy: Quạt CPU quay êm, dây nguồn đã dùng dây rút buộc gọn không chạm cánh quạt, không bỏ quên ốc vít hay dụng cụ trong máy.",
@@ -251,6 +251,8 @@ interface DiagnosticCase {
   rootCause: string;
   quickFix: string[];
   tool: string;
+  imageSrc: string;
+  imageAlt: string;
 }
 
 const DIAGNOSTIC_CASES: DiagnosticCase[] = [
@@ -259,6 +261,8 @@ const DIAGNOSTIC_CASES: DiagnosticCase[] = [
     name: "Ca 1: Máy Im Re (Không Điện)",
     symptom: "Bấm nút nguồn mà máy im lìm 100%: Quạt không quay, đèn không sáng.",
     rootCause: "Điện chưa vào được máy, công tắc nguồn tắt hoặc tuột dây nút bấm POWER SW.",
+    imageSrc: "/images/ol-01/diag-case-1-fpanel-power.jpg",
+    imageAlt: "Kích nguồn bằng đầu tua vít vào 2 chân kim POWER SW trên cụm F_PANEL bo mạch H510",
     quickFix: [
       "1. Kiểm tra dây điện đen sau đít máy đã cắm chặt; gạt công tắc nguồn sau lưng sang vạch 'I'.",
       "2. Mở nắp máy, nhìn góc dưới phải Mainboard (cụm F_PANEL): Cắm lại dây 'POWER SW' vào 2 chân kim sát cạnh chỗ trống mất kim.",
@@ -271,6 +275,8 @@ const DIAGNOSTIC_CASES: DiagnosticCase[] = [
     name: "Ca 2: Quạt Quay, Màn Hình Đen (80% Máy Lỗi)",
     symptom: "Bật máy quạt trong thùng quay vù vù nhưng màn hình đen thui (báo No Signal), đèn bàn phím không sáng.",
     rootCause: "Chân mạ vàng của thanh RAM bị bụi bẩn, ẩm mốc hoặc lỏng chốt ngàm (Thủ phạm số 1 của phòng máy!).",
+    imageSrc: "/images/ol-01/diag-case-2-ram-vga.jpg",
+    imageAlt: "Tuyệt chiêu chà tẩy trắng chân mạ vàng thanh RAM DDR4 cứu 80% máy lỗi",
     quickFix: [
       "1. Kiểm tra dây màn hình đã cắm chặt vào cổng xuất hình của card rời GT 730 chưa.",
       "2. TUYỆT CHIÊU CỤC TẨY: Rút điện, bấm nút nguồn 3 lần xả điện -> Bẻ 2 ngàm tháo thanh RAM ra.",
@@ -285,6 +291,8 @@ const DIAGNOSTIC_CASES: DiagnosticCase[] = [
     name: "Ca 3: Lỗi 'No Bootable Device'",
     symptom: "Bật máy lên logo rồi dừng lại ở màn hình đen có chữ trắng: 'No Bootable Device' hoặc 'Reboot and Select proper Boot device'.",
     rootCause: "Bo mạch chủ không nhìn thấy ổ cứng SSD/HDD chứa hệ điều hành Windows (lỏng dây hoặc sai thứ tự boot).",
+    imageSrc: "/images/ol-01/diag-case-3-sata-boot.jpg",
+    imageAlt: "Cáp dữ liệu SATA lẫy kim loại và cáp nguồn dẹt chữ L cắm vào đít ổ SSD",
     quickFix: [
       "1. Rút điện nguồn -> Nhìn vào đít ổ cứng SSD: Cắm chặt lại cả 2 sợi dây chữ L (dây nguồn dẹt và cáp SATA nhỏ). Có thể đổi cáp SATA sang cổng bên cạnh trên bo mạch.",
       "2. Bật máy, bấm phím Delete hoặc F2 liên tục để vào BIOS.",
@@ -298,6 +306,8 @@ const DIAGNOSTIC_CASES: DiagnosticCase[] = [
     name: "Ca 4: Sai Ngày Giờ & Báo 'Press F1'",
     symptom: "Bật máy hiện dòng chữ 'Press F1 to Continue', ngày giờ bị nhảy lùi về năm cũ (2009, 2015...), trình duyệt không vào được web.",
     rootCause: "Viên pin đồng xu nuôi đồng hồ CMOS (mã số CR2032) trên bo mạch chủ đã cạn sạch điện.",
+    imageSrc: "/images/ol-01/diag-case-4-pin-cmos.jpg",
+    imageAlt: "Viên pin đồng xu nuôi đồng hồ CMOS CR2032 3V trên bo mạch chủ H510",
     quickFix: [
       "1. Rút phích cắm điện nguồn AC.",
       "2. Lấy ngón tay bấm nhẹ vào lẫy kim loại cạnh viên pin tròn màu bạc trên bo mạch, viên pin tự bật lên.",
@@ -311,6 +321,8 @@ const DIAGNOSTIC_CASES: DiagnosticCase[] = [
     name: "Ca 5: Máy Nóng Rực, Chạy 10 Phút Tự Tắt",
     symptom: "Máy khởi động được nhưng chạy được 5-10 phút thì máy rất chậm, quạt gầm to, sờ vỏ máy nóng rực rồi tự động sập nguồn tắt phụt.",
     rootCause: "CPU bị quá nhiệt (>90°C) do quạt không quay, tuột dây quạt, bung chốt quạt hoặc lớp keo tản nhiệt đã khô trắng như vôi.",
+    imageSrc: "/images/ol-01/diag-case-5-cpu-overheat.jpg",
+    imageAlt: "Tra keo tản nhiệt hạt đậu xanh và gắn chặt 4 chốt quạt CPU_FAN đối xứng chéo",
     quickFix: [
       "1. Mở nắp máy quan sát xem quạt CPU có quay êm không; dây quạt đã cắm vào chân 'CPU_FAN' chưa.",
       "2. Rút điện, tháo quạt CPU ra -> Lấy khăn giấy khô lau thật sạch lớp keo khô cũ trên lưng CPU và đáy quạt.",
@@ -1214,6 +1226,51 @@ export default function CompleteHardwareTrainingPage() {
                       ))}
                     </ul>
                   </div>
+
+                  {/* Ảnh thực tế của ca chẩn đoán */}
+                  <div className="space-y-2 pt-2 border-t border-slate-800">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-slate-300">
+                        Minh Họa Thao Tác Chữa Bệnh Phòng Lab:
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          setZoomedImage({
+                            src: activeCase.imageSrc,
+                            alt: activeCase.imageAlt,
+                            title: activeCase.name,
+                          })
+                        }
+                        className="h-7 px-2.5 text-[11px] font-bold text-slate-200 border-slate-700 bg-slate-800 hover:bg-slate-700 cursor-pointer"
+                      >
+                        <ZoomIn className="w-3 h-3 mr-1 text-emerald-400" />
+                        Phóng to máy chiếu
+                      </Button>
+                    </div>
+                    <div
+                      onClick={() =>
+                        setZoomedImage({
+                          src: activeCase.imageSrc,
+                          alt: activeCase.imageAlt,
+                          title: activeCase.name,
+                        })
+                      }
+                      className="relative w-full aspect-[16/10] bg-slate-950 rounded-2xl overflow-hidden border border-slate-700 cursor-pointer group"
+                    >
+                      <Image
+                        src={activeCase.imageSrc}
+                        alt={activeCase.imageAlt}
+                        fill
+                        className="object-contain p-2 group-hover:scale-102 transition-transform duration-300"
+                        sizes="(max-width: 640px) 100vw, 60vw"
+                      />
+                    </div>
+                    <p className="text-[11px] text-slate-400 italic text-center">
+                      {activeCase.imageAlt}
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -1249,45 +1306,83 @@ export default function CompleteHardwareTrainingPage() {
                         sub: "Trái tim bơm điện",
                         desc: "Hộp sắt vuông to ở góc thùng máy có chùm dây thò ra. Công tắc sau lưng: bật sang 'I' là có điện, 'O' là tắt điện.",
                         bad: "Công tắc ở 'O' hoặc đứt dây làm máy im re.",
+                        imageSrc: "/images/ol-01/comp-psu.jpg",
+                        imageAlt: "Bộ nguồn máy tính ATX PSU với công tắc I/O và chùm dây cáp",
                       },
                       {
                         title: "2. Bo Mạch Chủ (Mainboard)",
                         sub: "Nền nhà & đường đi",
-                        desc: "Tấm bảng to nhất áp sát vách máy. Giữa bảng in chữ trắng to (H510, H410...). Có viên pin đồng xu CMOS CR2032 nuôi đồng hồ.",
+                        desc: "Tấm bảng to nhất áp sát vách máy (MSI H510). Có socket CPU LGA1200, 2 khe RAM DDR4 và viên pin đồng xu CMOS CR2032 nuôi đồng hồ.",
                         bad: "Cháy tụ, hết pin CMOS làm sai ngày giờ.",
+                        imageSrc: "/images/ol-01/main-h510.jpg",
+                        imageAlt: "Bo mạch chủ MSI H510M-A PRO chuẩn phòng lab thực hành",
                       },
                       {
                         title: "3. CPU & Quạt Tản Nhiệt",
                         sub: "Bộ não tính toán",
-                        desc: "Miếng kim loại vuông nhỏ dưới đáy quạt. Giữa lưng CPU và đáy quạt có lớp keo tản nhiệt xám. Quạt cắm chân CPU_FAN.",
+                        desc: "Miếng kim loại vuông nhỏ dưới đáy quạt. Giữa lưng CPU và đáy quạt có lớp keo tản nhiệt xám. Dây quạt cắm chân CPU_FAN.",
                         bad: "Khô keo, kẹt quạt làm máy nóng tự tắt.",
+                        imageSrc: "/images/ol-01/comp-cpu-fan.jpg",
+                        imageAlt: "CPU Intel và cụm quạt tản nhiệt nhôm stock heatsink fan",
                       },
                       {
                         title: "4. Thanh RAM (DDR4 8GB)",
                         sub: "Mặt bàn làm việc",
                         desc: "Thanh mạch dài bằng ngón tay cái, chân vàng mạ đồng, rãnh khuyết lệch một bên và 2 tai khóa ở 2 đầu khe cắm.",
                         bad: "Bẩn chân vàng làm màn hình đen (80% ca bệnh).",
+                        imageSrc: "/images/ol-01/ram-ddr4.jpg",
+                        imageAlt: "Thanh RAM DDR4 8GB Bus 2666/3200MHz với rãnh khuyết lệch",
                       },
                       {
                         title: "5. Ổ Cứng SSD 128/256GB",
                         sub: "Tủ cất hồ sơ",
                         desc: "Hộp mỏng nhẹ bằng bàn tay chứa Windows 10 và toàn bộ tài liệu của khách. Đít ổ có 2 khe cắm hình chữ L.",
                         bad: "Cấm làm rơi và cấm format nhầm ổ chứa dữ liệu.",
+                        imageSrc: "/images/ol-01/comp-ssd-sata.jpg",
+                        imageAlt: "Ổ cứng SSD 2.5 inch SATA III và cổng kết nối chữ L",
                       },
                       {
                         title: "Card Đồ Họa Rời GT 730",
                         sub: "Cửa sổ xuất hình",
                         desc: "Card màn hình rời NVIDIA GT 730 2GB cắm vào khe PCIe x16. BẮT BUỘC cắm dây màn hình vào card này mới lên hình.",
                         bad: "Cắm nhầm dây lên cổng Mainboard làm màn đen.",
+                        imageSrc: "/images/ol-01/vga-gt730.jpg",
+                        imageAlt: "Card màn hình rời NVIDIA GeForce GT 730 2GB GDDR5",
                       },
                     ].map((item, i) => (
-                      <div key={i} className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-1.5">
-                        <div className="flex items-center justify-between">
-                          <div className="font-extrabold text-xs sm:text-sm text-slate-900">{item.title}</div>
-                          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">{item.sub}</span>
+                      <div key={i} className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-2 flex flex-col justify-between">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <div className="font-extrabold text-xs sm:text-sm text-slate-900">{item.title}</div>
+                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">{item.sub}</span>
+                          </div>
+                          
+                          {/* Real component image preview */}
+                          <div
+                            onClick={() =>
+                              setZoomedImage({
+                                src: item.imageSrc,
+                                alt: item.imageAlt,
+                                title: item.title,
+                              })
+                            }
+                            className="relative w-full aspect-[16/10] bg-white rounded-xl overflow-hidden border border-slate-200 cursor-pointer group"
+                          >
+                            <Image
+                              src={item.imageSrc}
+                              alt={item.imageAlt}
+                              fill
+                              className="object-contain p-1.5 group-hover:scale-105 transition-transform duration-200"
+                              sizes="(max-width: 640px) 100vw, 30vw"
+                            />
+                            <div className="absolute top-1.5 right-1.5 bg-slate-900/70 text-white rounded-md p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <ZoomIn className="w-3.5 h-3.5" />
+                            </div>
+                          </div>
+
+                          <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
                         </div>
-                        <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
-                        <div className="text-[11px] text-rose-700 font-semibold pt-0.5">
+                        <div className="text-[11px] text-rose-700 font-semibold pt-1 border-t border-slate-200">
                           ⚠️ Hay lỗi: {item.bad}
                         </div>
                       </div>
@@ -1307,33 +1402,67 @@ export default function CompleteHardwareTrainingPage() {
                         pin: "24 lỗ",
                         plug: "Cắm vào ổ 24 lỗ ở mép phải bo mạch Mainboard.",
                         warn: "Quên cắm là máy không lên điện.",
+                        imageSrc: "/images/ol-01/wire-24pin-atx.jpg",
+                        imageAlt: "Đầu cáp nguồn chính 24-pin ATX có lẫy khóa an toàn",
                       },
                       {
                         name: "Dây 2: Cấp nguồn CPU 4/8 chân",
                         pin: "4 hoặc 8 lỗ vuông (Vàng-Đen)",
                         plug: "Cắm vào ổ góc trên cùng, sát cạnh quạt CPU.",
                         warn: "Quên cắm là quạt quay mà máy không lên hình!",
+                        imageSrc: "/images/ol-01/wire-8pin-cpu.jpg",
+                        imageAlt: "Cáp nguồn phụ CPU 4/8-pin ATX12V vàng đen",
                       },
                       {
                         name: "Dây 3: Cặp dây chữ L ở đít Ổ cứng",
                         pin: "1 dây nguồn dẹt + 1 cáp SATA nhỏ",
                         plug: "Cắm khớp khe chữ L đít ổ; đầu cáp nhỏ nối xuống cổng SATA bo mạch.",
                         warn: "Quên cắm là báo lỗi No Bootable Device.",
+                        imageSrc: "/images/ol-01/wire-sata.jpg",
+                        imageAlt: "Cáp dữ liệu SATA lẫy kim loại và cáp nguồn SATA dẹt",
                       },
                       {
                         name: "Dây 4: Dây nút bấm mở máy (POWER SW)",
                         pin: "Đầu nhựa nhỏ chữ POWER SW",
                         plug: "Cắm vào ĐÚNG 2 chân kim sát cạnh chỗ trống mất kim trên cụm F_PANEL.",
                         warn: "Cắm sai là bấm nút mở máy ngoài vỏ không phản ứng.",
+                        imageSrc: "/images/ol-01/wire-fpanel-power-sw.jpg",
+                        imageAlt: "Cụm chân kim F_PANEL và dây cắm POWER SW",
                       },
                     ].map((wire, idx) => (
-                      <div key={idx} className="p-3 sm:p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-1">
-                        <div className="flex items-center justify-between">
-                          <span className="font-extrabold text-xs sm:text-sm text-slate-900">{wire.name}</span>
-                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">{wire.pin}</span>
+                      <div key={idx} className="p-3 sm:p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-2 flex flex-col justify-between">
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="font-extrabold text-xs sm:text-sm text-slate-900">{wire.name}</span>
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">{wire.pin}</span>
+                          </div>
+
+                          {/* Wire image preview */}
+                          <div
+                            onClick={() =>
+                              setZoomedImage({
+                                src: wire.imageSrc,
+                                alt: wire.imageAlt,
+                                title: wire.name,
+                              })
+                            }
+                            className="relative w-full aspect-[16/9] bg-slate-50 rounded-xl overflow-hidden border border-slate-100 cursor-pointer group"
+                          >
+                            <Image
+                              src={wire.imageSrc}
+                              alt={wire.imageAlt}
+                              fill
+                              className="object-contain p-1.5 group-hover:scale-105 transition-transform duration-200"
+                              sizes="(max-width: 640px) 100vw, 50vw"
+                            />
+                            <div className="absolute top-1.5 right-1.5 bg-slate-900/70 text-white rounded-md p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <ZoomIn className="w-3.5 h-3.5" />
+                            </div>
+                          </div>
+
+                          <p className="text-xs text-slate-600">{wire.plug}</p>
                         </div>
-                        <p className="text-xs text-slate-600">{wire.plug}</p>
-                        <div className="text-[11px] text-amber-700 font-medium">⚠️ {wire.warn}</div>
+                        <div className="text-[11px] text-amber-700 font-medium pt-1 border-t border-slate-100">⚠️ {wire.warn}</div>
                       </div>
                     ))}
                   </div>
