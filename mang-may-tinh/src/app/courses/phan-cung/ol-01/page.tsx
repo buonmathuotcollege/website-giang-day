@@ -113,7 +113,7 @@ const KTV_7_STEPS: KtvStep[] = [
     instructions: [
       "Xác định 3 vị trí sống còn: Toàn bộ file Word, Excel, ảnh quan trọng của khách nằm ở Desktop, Documents và Downloads (đều thuộc Ổ ĐĨA C).",
       "Nếu máy còn vào được Windows: Bấm chuột phải vào thư mục tài liệu ngoài Desktop -> chọn Properties ghi lại số Files và số MB. Mở ổ D tạo thư mục SAO_LUU_KHACH rồi COPY (tuyệt đối không Cut) toàn bộ dữ liệu sang.",
-      "Nếu máy hỏng Windows: Cắm USB Cứu hộ WinPE -> Bật máy bấm liên tục F11 (MSI) chọn UEFI: Tên USB -> Vào WinPE mở ổ C:Users Desktop copy hết sang ổ D.",
+      "Nếu máy hỏng Windows: Cắm USB Cứu hộ WinPE -> Bật máy bấm liên tục phím Boot Menu (MSI & Winnfox: F11 | ASUS: F8) chọn dòng 'UEFI: Tên USB' -> Vào WinPE mở ổ C:Users Desktop copy hết sang ổ D.",
       "Đối chiếu Properties thư mục ở ổ D đảm bảo khớp 100% số file gốc và mở thử 2 file bất kỳ.",
     ],
     pokaYoke:
@@ -180,7 +180,7 @@ const KTV_7_STEPS: KtvStep[] = [
     imageSrc: "/images/ol-01/step-5-cai-win10-partition.jpg",
     imageAlt: "Giao diện phân vùng Windows 10 Setup quy tắc nhìn số GB chọn ổ C và Device Manager sạch chấm than",
     instructions: [
-      "Boot từ USB cài Windows: Cắm USB -> Bật máy bấm liên tục F11 (MSI) -> Chọn dòng 'UEFI: Tên USB' -> Bấm Enter.",
+      "Boot từ USB cài Windows: Cắm USB -> Bật máy bấm liên tục phím Boot Menu (MSI & Winnfox: F11 | ASUS: F8) -> Chọn dòng 'UEFI: Tên USB' -> Bấm Enter.",
       "QUY TẮC NHÌN SỐ GB CHỌN Ổ C: Đến bảng chọn phân vùng, đối chiếu số GB đã ghi ở Bước 1. Dòng dung lượng nhỏ (60GB–120GB) là Ổ C để cài Win; dòng dung lượng lớn (200GB–500GB) là Ổ D chứa tài liệu của khách. Chỉ bấm Format vào dòng Ổ C -> Next. Tuyệt đối không đụng vào Ổ D!",
       "Thiết lập lần đầu: Đặt tên máy theo số bàn (VD: PC-BAN01), chỉnh múi giờ (UTC+07:00) Bangkok, Hanoi, Jakarta và kiểm tra ngày giờ đúng.",
       "QUY TẮC SẠCH BÓNG CHẤM THAN VÀNG (!): Chuột phải nút Start -> Device Manager. Còn tam giác vàng chấm than (!) là đang thiếu Driver -> Chạy bộ cài Driver (Chipset, VGA GT 730, Audio, LAN) đến khi Device Manager sạch bóng 100%.",
@@ -334,7 +334,124 @@ const DIAGNOSTIC_CASES: DiagnosticCase[] = [
 ];
 
 /**
- * 5 Điểm Hotspot trên Bo Mạch MSI H510
+ * 3 Dòng Bo Mạch Chủ H510 Thực Tế Phòng Máy (MSI · ASUS · WINNFOX) & Bản Đồ So Sánh
+ */
+interface MotherboardModel {
+  id: "msi" | "asus" | "winnfox" | "compare";
+  name: string;
+  brand: string;
+  badge: string;
+  color: string;
+  imageSrc: string;
+  imageAlt: string;
+  bootKey: string;
+  biosKey: string;
+  debugMethod: string;
+  ramLatchType: string;
+  fpanelLabel: string;
+  ktvTip: string;
+  specs: {
+    socket: string;
+    ram: string;
+    pcie: string;
+    storage: string;
+    videoOut: string;
+  };
+}
+
+const LAB_MOTHERBOARDS: MotherboardModel[] = [
+  {
+    id: "msi",
+    name: "MSI H510M-A PRO",
+    brand: "MSI (Micro-Star International)",
+    badge: "Phòng Lab · Chuẩn Phổ Biến #1",
+    color: "rose",
+    imageSrc: "/images/ol-01/main-h510.jpg",
+    imageAlt: "Bo mạch chủ MSI H510M-A PRO Socket LGA1200",
+    bootKey: "F11",
+    biosKey: "Delete (Del)",
+    debugMethod: "EZ Debug LED (4 đèn CPU - DRAM - VGA - BOOT góc trên phải)",
+    ramLatchType: "1-Side Latch (1 ngàm trên gạt, ngàm dưới cố định)",
+    fpanelLabel: "Cụm JFP1 (Chuẩn 9 chân kim quốc tế)",
+    ktvTip: "Khi máy không lên hình, nhìn ngay cụm 4 đèn EZ Debug LED: đèn dừng ở linh kiện nào thì xử lý ngay chỗ đó (dừng ở DRAM = vệ sinh chân RAM).",
+    specs: {
+      socket: "LGA1200 (Intel Core Gen 10 & 11)",
+      ram: "2 khe DDR4 tối đa 64GB, Bus 2666/2933/3200MHz",
+      pcie: "1 khe PCIe 4.0/3.0 x16 bọc thép Steel Armor + 1 khe PCIe 3.0 x1",
+      storage: "1 khe M.2 NVMe PCIe 3.0 x4 + 4 cổng SATA III 6Gb/s",
+      videoOut: "HDMI 2.0b & VGA D-Sub",
+    },
+  },
+  {
+    id: "asus",
+    name: "ASUS PRIME H510M-K",
+    brand: "ASUS (ASUSTeK Computer)",
+    badge: "Phòng Lab · Siêu Bền 5X Protection",
+    color: "blue",
+    imageSrc: "/images/ol-01/main-asus-h510.jpg",
+    imageAlt: "Bo mạch chủ ASUS PRIME H510M-K Socket LGA1200",
+    bootKey: "F8 (Đặc trưng ASUS - Tuyệt đối không bấm F11)",
+    biosKey: "Delete (Del) hoặc F2",
+    debugMethod: "Q-LED Core (Nháy nhịp đèn Power) / Chân cắm Loa Buzzer SPEAKER",
+    ramLatchType: "Q-DIMM (Ngàm gạt 1 đầu chống kẹt đuôi card đồ họa)",
+    fpanelLabel: "Cụm PANEL (10-1 chân kim có in rõ sơ đồ)",
+    ktvTip: "Khi boot USB cứu hộ WinPE hoặc cài Win, BẮT BUỘC bấm phím F8. Học sinh quen tay bấm F11 của MSI sẽ không hiện Boot Menu trên main ASUS!",
+    specs: {
+      socket: "LGA1200 (Intel Core Gen 10 & 11)",
+      ram: "2 khe DDR4 tối đa 64GB, công nghệ OptiMem",
+      pcie: "1 khe PCIe 4.0/3.0 x16 SafeSlot Core chịu lực + 1 khe PCIe 3.0 x1",
+      storage: "1 khe M.2 PCIe 3.0 x4 32Gbps + 4 cổng SATA III 6Gb/s",
+      videoOut: "HDMI 1.4b & D-Sub (VGA)",
+    },
+  },
+  {
+    id: "winnfox",
+    name: "WINNFOX H510G / PRO D4",
+    brand: "Winnfox (Efang Intelligent Technology)",
+    badge: "Phòng Lab · Tối Ưu Chi Phí Nghề",
+    color: "emerald",
+    imageSrc: "/images/ol-01/main-winnfox-h510.jpg",
+    imageAlt: "Bo mạch chủ Winnfox H510G Socket LGA1200 giá rẻ phổ thông",
+    bootKey: "F11 (hoặc F7 ở một số bản AMI BIOS)",
+    biosKey: "Delete (Del)",
+    debugMethod: "BẮT BUỘC cắm Loa Buzzer vào chân J_SPEAKER để nghe mã tiếng bíp",
+    ramLatchType: "2 ngàm gạt truyền thống ở 2 đầu khe RAM",
+    fpanelLabel: "Cụm F_PANEL (9 chân kim in chữ rõ nét)",
+    ktvTip: "Mainboard Winnfox không trang bị dàn đèn EZ Debug, nên KTV bắt buộc phải cắm Loa Buzzer (Loa bíp) vào chân Speaker để bắt bệnh qua tiếng bíp.",
+    specs: {
+      socket: "LGA1200 (Intel Core Gen 10 & 11)",
+      ram: "2 khe DDR4 tối đa 64GB, Bus 2400/2666/3200MHz",
+      pcie: "1 khe PCIe 3.0 x16 + 1 khe PCIe x1",
+      storage: "1 khe M.2 NVMe/SATA + 4 cổng SATA III 6Gb/s",
+      videoOut: "HDMI & VGA D-Sub",
+    },
+  },
+  {
+    id: "compare",
+    name: "Bản Đồ So Sánh 3 Main (MSI · ASUS · WINNFOX)",
+    brand: "Bảng Đối Chiếu 3 Dòng Bo Mạch H510 Thực Tế Phòng Máy",
+    badge: "Infographic Độc Quyền KTV",
+    color: "amber",
+    imageSrc: "/images/ol-01/main-h510-compare.jpg",
+    imageAlt: "Bảng so sánh 3 dòng Mainboard H510 MSI vs ASUS vs Winnfox phòng lab",
+    bootKey: "MSI: F11 | ASUS: F8 | Winnfox: F11/F7",
+    biosKey: "Tất cả đều vào BIOS bằng phím Delete (Del)",
+    debugMethod: "MSI: 4 Đèn EZ Debug | ASUS: Q-LED & Buzzer | Winnfox: Loa Buzzer bíp",
+    ramLatchType: "MSI & ASUS: 1 lẫy trên | Winnfox: 2 lẫy hai đầu",
+    fpanelLabel: "MSI: JFP1 | ASUS: PANEL | Winnfox: F_PANEL",
+    ktvTip: "Ghi nhớ bảng đối chiếu này giúp học viên KTV làm chủ mọi bàn kỹ thuật trong phòng máy thực hành mà không bị lúng túng khi đổi máy!",
+    specs: {
+      socket: "Đều sử dụng Socket LGA1200 cho CPU Intel Gen 10 & 11",
+      ram: "Đều hỗ trợ 2 khe RAM DDR4 Bus 2666 / 3200MHz",
+      pcie: "Đều có 1 khe PCIe x16 cho card màn hình rời GT 730",
+      storage: "Đều có khe M.2 SSD tốc độ cao và 4 cổng SATA III",
+      videoOut: "Đều hỗ trợ xuất hình qua cổng HDMI và VGA",
+    },
+  },
+];
+
+/**
+ * 5 Điểm Hotspot trên Bo Mạch H510 (Có thể áp dụng cho các dòng Mainboard Socket LGA1200)
  */
 interface HotspotInfo {
   id: string;
@@ -828,6 +945,10 @@ export default function CompleteHardwareTrainingPage() {
 
   // Chế độ xem cột phải trên desktop
   const [rightViewMode, setRightViewMode] = React.useState<"interactive" | "stepImage">("interactive");
+
+  // Dòng Bo Mạch Chủ đang chọn hiển thị (MSI, ASUS, Winnfox, So Sánh)
+  const [selectedBoardId, setSelectedBoardId] = React.useState<"msi" | "asus" | "winnfox" | "compare">("msi");
+  const currentBoard = LAB_MOTHERBOARDS.find((b) => b.id === selectedBoardId) || LAB_MOTHERBOARDS[0];
 
   // Điểm Hotspot đang chọn trên sơ đồ
   const [selectedHotspot, setSelectedHotspot] = React.useState<HotspotInfo>(H510_HOTSPOTS[1]);
@@ -1422,9 +1543,9 @@ export default function CompleteHardwareTrainingPage() {
                     size="sm"
                     onClick={() =>
                       setZoomedImage({
-                        src: rightViewMode === "interactive" ? "/images/ol-01/main-h510.jpg" : activeStep.imageSrc,
-                        alt: rightViewMode === "interactive" ? "Sơ đồ bo mạch H510" : activeStep.imageAlt,
-                        title: rightViewMode === "interactive" ? "Sơ Đồ Bo Mạch MSI H510M-A PRO" : activeStep.title,
+                        src: rightViewMode === "interactive" ? currentBoard.imageSrc : activeStep.imageSrc,
+                        alt: rightViewMode === "interactive" ? currentBoard.imageAlt : activeStep.imageAlt,
+                        title: rightViewMode === "interactive" ? currentBoard.name : activeStep.title,
                       })
                     }
                     className="flex items-center gap-1.5 text-xs font-bold border-slate-300 h-8 cursor-pointer"
@@ -1465,64 +1586,129 @@ export default function CompleteHardwareTrainingPage() {
                   <CardContent className="p-4 space-y-3">
                     {rightViewMode === "interactive" ? (
                       <div className="space-y-3">
+                        {/* Thanh chọn 3 thương hiệu Mainboard phòng lab + So sánh */}
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between text-[11px]">
+                            <span className="font-extrabold text-slate-700">Dòng Main Phòng Lab:</span>
+                            <span className="font-mono text-slate-500 font-bold">{currentBoard.badge}</span>
+                          </div>
+                          <div className="grid grid-cols-4 gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs">
+                            {LAB_MOTHERBOARDS.map((board) => {
+                              const isSelected = selectedBoardId === board.id;
+                              return (
+                                <button
+                                  key={board.id}
+                                  type="button"
+                                  onClick={() => setSelectedBoardId(board.id)}
+                                  className={`py-1.5 px-1 rounded-lg font-bold text-center transition-all cursor-pointer text-[11px] truncate ${
+                                    isSelected
+                                      ? "bg-slate-900 text-white shadow-xs font-black"
+                                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
+                                  }`}
+                                  title={board.name}
+                                >
+                                  {board.id === "compare" ? "📊 So Sánh" : board.name.split(" ")[0]}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        {/* Khung hiển thị ảnh Bo Mạch */}
                         <div className="relative w-full aspect-[1010/889] bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-inner group">
                           <Image
-                            src="/images/ol-01/main-h510.jpg"
-                            alt="Sơ đồ tương tác bo mạch chủ MSI H510M-A PRO Socket LGA1200"
+                            src={currentBoard.imageSrc}
+                            alt={currentBoard.imageAlt}
                             fill
                             className="object-contain p-2"
                             sizes="40vw"
                             priority
                           />
 
-                          {/* 5 Hotspots */}
-                          {H510_HOTSPOTS.map((spot) => {
-                            const isSelected = selectedHotspot.id === spot.id;
-                            return (
-                              <div
-                                key={spot.id}
-                                className="absolute -translate-x-1/2 -translate-y-1/2 z-20"
-                                style={{ top: spot.top, left: spot.left }}
-                              >
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setSelectedHotspot(spot);
-                                    setActiveStepId(spot.stepId);
-                                  }}
-                                  onMouseEnter={() => setSelectedHotspot(spot)}
-                                  className={`relative flex items-center justify-center w-8 h-8 rounded-full focus:outline-none cursor-pointer transition-transform ${
-                                    isSelected ? "scale-125 ring-4 ring-slate-900/30" : "hover:scale-110"
-                                  }`}
-                                  title={`Chạm xem ${spot.title}`}
+                          {/* 5 Hotspots (hiển thị khi chọn MSI) */}
+                          {selectedBoardId === "msi" &&
+                            H510_HOTSPOTS.map((spot) => {
+                              const isSelected = selectedHotspot.id === spot.id;
+                              return (
+                                <div
+                                  key={spot.id}
+                                  className="absolute -translate-x-1/2 -translate-y-1/2 z-20"
+                                  style={{ top: spot.top, left: spot.left }}
                                 >
-                                  <span className={`animate-ping absolute inline-flex h-7 w-7 rounded-full opacity-75 ${spot.color}`}></span>
-                                  <span className={`relative inline-flex items-center justify-center rounded-full h-6 w-6 text-white text-[11px] font-black shadow-md border-2 border-white ${spot.color}`}>
-                                    {spot.title.charAt(0)}
-                                  </span>
-                                </button>
-                              </div>
-                            );
-                          })}
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setSelectedHotspot(spot);
+                                      setActiveStepId(spot.stepId);
+                                    }}
+                                    onMouseEnter={() => setSelectedHotspot(spot)}
+                                    className={`relative flex items-center justify-center w-8 h-8 rounded-full focus:outline-none cursor-pointer transition-transform ${
+                                      isSelected ? "scale-125 ring-4 ring-slate-900/30" : "hover:scale-110"
+                                    }`}
+                                    title={`Chạm xem ${spot.title}`}
+                                  >
+                                    <span className={`animate-ping absolute inline-flex h-7 w-7 rounded-full opacity-75 ${spot.color}`}></span>
+                                    <span className={`relative inline-flex items-center justify-center rounded-full h-6 w-6 text-white text-[11px] font-black shadow-md border-2 border-white ${spot.color}`}>
+                                      {spot.title.charAt(0)}
+                                    </span>
+                                  </button>
+                                </div>
+                              );
+                            })}
                         </div>
 
-                        {/* Hộp thông tin Hotspot ghim cố định */}
+                        {/* Thông số kỹ thuật & Kinh nghiệm thực chiến của Mainboard đang chọn */}
                         <div className="p-3.5 rounded-xl bg-slate-900 text-white space-y-2 border border-slate-700 shadow-md">
                           <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                             <div className="font-extrabold text-sm text-emerald-400">
-                              {selectedHotspot.title}
+                              {currentBoard.name}
                             </div>
-                            <span className="px-2 py-0.5 rounded bg-slate-800 text-[10px] font-mono text-slate-300 font-bold">
-                              {selectedHotspot.badge}
+                            <span className="px-2 py-0.5 rounded bg-slate-800 text-[10px] font-mono text-amber-300 font-bold">
+                              Boot: {currentBoard.bootKey}
                             </span>
                           </div>
-                          <p className="text-xs text-slate-300 leading-relaxed">
-                            {selectedHotspot.description}
-                          </p>
-                          <div className="p-2 rounded-lg bg-rose-950/60 border border-rose-800/80 text-rose-200 text-[11px] leading-relaxed">
-                            <strong>⚠️ Poka-Yoke:</strong> {selectedHotspot.pokaYoke}
+
+                          <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-300">
+                            <div>
+                              <strong className="text-slate-400 block">🔑 Phím Vào BIOS:</strong>
+                              <span className="font-mono text-cyan-300 font-bold">{currentBoard.biosKey}</span>
+                            </div>
+                            <div>
+                              <strong className="text-slate-400 block">🚀 Phím Boot Menu:</strong>
+                              <span className="font-mono text-amber-300 font-bold">{currentBoard.bootKey}</span>
+                            </div>
+                            <div className="col-span-2">
+                              <strong className="text-slate-400 block">💡 Cơ Chế Báo Lỗi:</strong>
+                              <span>{currentBoard.debugMethod}</span>
+                            </div>
+                            <div className="col-span-2">
+                              <strong className="text-slate-400 block">🕹️ Kiểu Lẫy Khe RAM:</strong>
+                              <span>{currentBoard.ramLatchType}</span>
+                            </div>
+                          </div>
+
+                          <div className="p-2 rounded-lg bg-slate-800 border border-slate-700 text-amber-200 text-[11px] leading-relaxed">
+                            <strong>⚠️ Kinh nghiệm KTV:</strong> {currentBoard.ktvTip}
                           </div>
                         </div>
+
+                        {/* Hộp thông tin Hotspot (nếu chọn MSI) */}
+                        {selectedBoardId === "msi" && (
+                          <div className="p-3 rounded-xl bg-slate-100 border border-slate-300 text-slate-900 space-y-1.5 text-xs">
+                            <div className="flex items-center justify-between font-bold text-slate-900">
+                              <span>Hotspot {selectedHotspot.title}</span>
+                              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-slate-200 text-slate-700">
+                                {selectedHotspot.badge}
+                              </span>
+                            </div>
+                            <p className="text-slate-700 text-[11px] leading-relaxed">
+                              {selectedHotspot.description}
+                            </p>
+                            <p className="text-rose-700 text-[11px] font-semibold">
+                              ⚠️ Poka-Yoke: {selectedHotspot.pokaYoke}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <div className="space-y-3">
@@ -2283,12 +2469,12 @@ export default function CompleteHardwareTrainingPage() {
                         imageAlt: "Bộ nguồn máy tính ATX PSU với công tắc I/O và chùm dây cáp",
                       },
                       {
-                        title: "2. Bo Mạch Chủ (Mainboard)",
+                        title: "2. Bo Mạch Chủ (Mainboard H510)",
                         sub: "Nền nhà & đường đi",
-                        desc: "Tấm bảng to nhất áp sát vách máy (MSI H510). Có socket CPU LGA1200, 2 khe RAM DDR4 và viên pin đồng xu CMOS CR2032 nuôi đồng hồ.",
+                        desc: "Tấm bảng to nhất áp sát vách máy (MSI, ASUS, Winnfox). Có socket CPU LGA1200, 2 khe RAM DDR4 và viên pin đồng xu CMOS CR2032 nuôi đồng hồ.",
                         bad: "Cháy tụ, hết pin CMOS làm sai ngày giờ.",
-                        imageSrc: "/images/ol-01/main-h510.jpg",
-                        imageAlt: "Bo mạch chủ MSI H510M-A PRO chuẩn phòng lab thực hành",
+                        imageSrc: "/images/ol-01/main-h510-compare.jpg",
+                        imageAlt: "3 Dòng bo mạch chủ MSI, ASUS, Winnfox H510 chuẩn phòng thực hành",
                       },
                       {
                         title: "3. CPU & Quạt Tản Nhiệt",
@@ -2438,6 +2624,199 @@ export default function CompleteHardwareTrainingPage() {
                         <div className="text-[11px] text-amber-700 font-medium pt-1 border-t border-slate-100">⚠️ {wire.warn}</div>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                {/* 2. CHUYÊN ĐỀ 3 DÒNG MAINBOARD PHÒNG THỰC HÀNH (MSI · ASUS · WINNFOX) */}
+                <div className="space-y-3 pt-3 border-t border-slate-200">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                    <h4 className="font-black text-xs sm:text-sm uppercase tracking-wide text-slate-900 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-md bg-slate-900 text-white flex items-center justify-center font-mono text-[11px] font-black">2</span>
+                      <span>Chuyên Đề: 3 Dòng Bo Mạch H510 Phòng Thực Hành (MSI · ASUS · WINNFOX)</span>
+                    </h4>
+                    <span className="text-[11px] font-mono text-slate-500 font-bold">Chuẩn Socket LGA1200 · DDR4</span>
+                  </div>
+
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Phòng máy thực hành được trang bị 3 thương hiệu bo mạch chủ chipset Intel H510: <strong>MSI</strong>, <strong>ASUS</strong> và <strong>Winnfox</strong>. Học viên cần phân biệt rõ phím tắt Boot Menu/BIOS, cơ chế báo lỗi và kiểu lẫy khe RAM để thao tác chính xác tại mọi bàn kỹ thuật:
+                  </p>
+
+                  {/* 3 Cards chọn thương hiệu */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {LAB_MOTHERBOARDS.filter((b) => b.id !== "compare").map((b) => (
+                      <div
+                        key={b.id}
+                        className="p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-slate-400 transition-all flex flex-col justify-between space-y-3 shadow-xs"
+                      >
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-black text-slate-900">{b.name}</span>
+                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+                              {b.badge.split(" · ")[1] || "Phổ thông"}
+                            </span>
+                          </div>
+
+                          <div
+                            onClick={() =>
+                              setZoomedImage({
+                                src: b.imageSrc,
+                                alt: b.imageAlt,
+                                title: b.name,
+                              })
+                            }
+                            className="relative w-full aspect-[4/3] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 cursor-pointer group shadow-inner"
+                          >
+                            <Image
+                              src={b.imageSrc}
+                              alt={b.imageAlt}
+                              fill
+                              className="object-contain p-2 group-hover:scale-105 transition-transform duration-200"
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                            />
+                            <div className="absolute top-2 right-2 bg-slate-900/80 text-white rounded-md p-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <ZoomIn className="w-3.5 h-3.5" />
+                            </div>
+                          </div>
+
+                          <div className="space-y-1.5 text-xs">
+                            <div className="flex items-center justify-between p-1.5 rounded-lg bg-slate-50 border border-slate-200">
+                              <span className="text-slate-500 font-bold">🚀 Boot Menu:</span>
+                              <span className="font-mono font-black text-rose-600">{b.bootKey}</span>
+                            </div>
+                            <div className="flex items-center justify-between p-1.5 rounded-lg bg-slate-50 border border-slate-200">
+                              <span className="text-slate-500 font-bold">🔑 Vào BIOS:</span>
+                              <span className="font-mono font-bold text-slate-800">{b.biosKey}</span>
+                            </div>
+                            <div className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-700 leading-snug">
+                              <strong className="text-slate-900 block font-bold mb-0.5">💡 Báo Lỗi:</strong>
+                              <span>{b.debugMethod}</span>
+                            </div>
+                            <div className="p-2 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-700 leading-snug">
+                              <strong className="text-slate-900 block font-bold mb-0.5">🕹️ Lẫy RAM &amp; F_PANEL:</strong>
+                              <span>{b.ramLatchType} · {b.fpanelLabel}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="p-2.5 rounded-xl bg-amber-50/80 border border-amber-200 text-[11px] text-amber-900 leading-snug">
+                          <strong>⚠️ Mẹo KTV:</strong> {b.ktvTip}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Banner Infographic So Sánh Tổng Hợp */}
+                  <div
+                    onClick={() =>
+                      setZoomedImage({
+                        src: "/images/ol-01/main-h510-compare.jpg",
+                        alt: "Bản đồ đối chiếu so sánh 3 dòng bo mạch chủ MSI vs ASUS vs Winnfox H510",
+                        title: "Bản Đồ Đối Chiếu 3 Dòng Bo Mạch H510 Phòng Thực Hành (MSI · ASUS · WINNFOX)",
+                      })
+                    }
+                    className="p-3 sm:p-4 rounded-2xl bg-slate-900 text-white flex flex-col md:flex-row items-center justify-between gap-3 cursor-pointer group hover:bg-slate-800 transition-colors shadow-md border border-slate-700"
+                  >
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-mono text-[10px] font-black uppercase">
+                          INFOGRAPHIC KTV ĐỘC QUYỀN
+                        </span>
+                        <span className="text-xs text-amber-300 font-bold">Chạm để phóng to máy chiếu 🔍</span>
+                      </div>
+                      <div className="text-sm sm:text-base font-black text-white">
+                        Bảng Đối Chiếu So Sánh 3 Dòng Bo Mạch H510 (MSI · ASUS · WINNFOX)
+                      </div>
+                      <p className="text-xs text-slate-400">
+                        Đối chiếu chi tiết phím tắt Boot/BIOS, 4 đèn EZ Debug LED vs Loa Buzzer, kiểu lẫy khóa RAM và chân kim F_PANEL.
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0 bg-white/10 px-3 py-2 rounded-xl text-xs font-bold text-white group-hover:bg-amber-400 group-hover:text-slate-950 transition-colors">
+                      <ZoomIn className="w-4 h-4" />
+                      <span>Xem Sơ Đồ So Sánh</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. BẢN ĐỒ MỞ RỘNG KIẾN THỨC THỊ TRƯỜNG CHO HỌC SINH 9+3 */}
+                <div className="space-y-3 pt-3 border-t border-slate-200">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                    <h4 className="font-black text-xs sm:text-sm uppercase tracking-wide text-slate-900 flex items-center gap-1.5">
+                      <span className="w-5 h-5 rounded-md bg-slate-900 text-white flex items-center justify-center font-mono text-[11px] font-black">3</span>
+                      <span>Bản Đồ Mở Rộng Kiến Thức Thị Trường Cho Học Sinh 9+3</span>
+                    </h4>
+                    <span className="text-[11px] font-mono text-slate-500 font-bold">H · B · Z | CPU K, F, H | DDR3, DDR4, DDR5</span>
+                  </div>
+
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    Ngoài cấu hình phòng máy thực hành (H510 + i5 Gen 10/11 + RAM DDR4 + GT 730), khi đi làm thực tế ngoài thị trường, kỹ thuật viên sẽ gặp rất nhiều cấu hình phân khúc khác nhau tùy vào túi tiền và nhu cầu của khách hàng:
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                    {/* Phân khúc Mainboard */}
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                      <div className="font-extrabold text-slate-900 flex items-center gap-1.5">
+                        <Cpu className="w-4 h-4 text-blue-600" />
+                        <span>Phân Khúc Bo Mạch Chủ (Mainboard)</span>
+                      </div>
+                      <div className="space-y-1.5 text-slate-700 leading-relaxed">
+                        <div className="p-2 rounded-lg bg-white border border-slate-200">
+                          <strong className="text-slate-900">Dòng H (H510, H610):</strong> Phổ thông, văn phòng, phòng lab thực hành, giá rẻ, tính năng cơ bản.
+                        </div>
+                        <div className="p-2 rounded-lg bg-white border border-slate-200">
+                          <strong className="text-slate-900">Dòng B (B560, B660, B760):</strong> Tầm trung, gaming, đồ họa, tản nhiệt VRM tốt, hỗ trợ nhiều khe M.2 và 4 khe RAM.
+                        </div>
+                        <div className="p-2 rounded-lg bg-white border border-slate-200">
+                          <strong className="text-slate-900">Dòng Z (Z590, Z690, Z790):</strong> Cao cấp, cho phép ép xung (Overclock), nhiều cổng kết nối, linh kiện chuẩn quân đội.
+                        </div>
+                        <div className="p-2 rounded-lg bg-white border border-slate-200 text-[11px]">
+                          <strong className="text-slate-900">Phân khúc AMD:</strong> A520 (phổ thông), B550 (tầm trung), X570 (cao cấp).
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Quy tắc đọc CPU */}
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                      <div className="font-extrabold text-slate-900 flex items-center gap-1.5">
+                        <Zap className="w-4 h-4 text-amber-500" />
+                        <span>Quy Tắc Đọc Tên CPU &amp; Hậu Tố</span>
+                      </div>
+                      <div className="space-y-1.5 text-slate-700 leading-relaxed">
+                        <div className="p-2 rounded-lg bg-white border border-slate-200">
+                          <strong className="text-slate-900">Thế hệ CPU (Gen):</strong> Số hàng nghìn đầu tiên (Core i5-<strong>10</strong>400 là Gen 10, i5-<strong>11</strong>400 là Gen 11, i5-<strong>12</strong>400 là Gen 12).
+                        </div>
+                        <div className="p-2 rounded-lg bg-white border border-slate-200">
+                          <strong className="text-rose-600">Hậu tố F (i5-10400F):</strong> KHÔNG tích hợp đồ họa. Bắt buộc phải cắm Card màn hình rời GT 730 mới lên hình!
+                        </div>
+                        <div className="p-2 rounded-lg bg-white border border-slate-200">
+                          <strong className="text-slate-900">Hậu tố K / KF:</strong> Cho phép ép xung mở khóa nhân (Unlocked). KF vừa ép xung vừa không có GPU.
+                        </div>
+                        <div className="p-2 rounded-lg bg-white border border-slate-200 text-[11px]">
+                          <strong className="text-slate-900">H / HX / U (Laptop):</strong> H/HX là chip hiệu năng cao cho laptop gaming/đồ họa; U là chip tiết kiệm điện cho văn phòng.
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Đời RAM & Bus */}
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                      <div className="font-extrabold text-slate-900 flex items-center gap-1.5">
+                        <Layers className="w-4 h-4 text-emerald-600" />
+                        <span>Các Đời RAM, Tần Số Bus &amp; Dual-Channel</span>
+                      </div>
+                      <div className="space-y-1.5 text-slate-700 leading-relaxed">
+                        <div className="p-2 rounded-lg bg-white border border-slate-200">
+                          <strong className="text-slate-900">DDR3:</strong> Khe cắm cũ, khuyết chính giữa, Bus 1333 / 1600 MHz.
+                        </div>
+                        <div className="p-2 rounded-lg bg-white border border-slate-200">
+                          <strong className="text-emerald-700">DDR4 (Chuẩn phòng lab):</strong> Rãnh khuyết lệch một bên, Bus 2400 / 2666 / 3200 MHz.
+                        </div>
+                        <div className="p-2 rounded-lg bg-white border border-slate-200">
+                          <strong className="text-slate-900">DDR5 (Thế hệ mới):</strong> Rãnh khuyết gần giữa, tích hợp chip quản lý nguồn PMIC, Bus 4800 / 5600 / 6000+ MHz.
+                        </div>
+                        <div className="p-2 rounded-lg bg-white border border-slate-200 text-[11px]">
+                          <strong className="text-slate-900">Dual-Channel:</strong> Cắm 2 thanh cùng dung lượng và bus để tăng gấp đôi băng thông truyền dữ liệu (mặt bàn 2 làn xe).
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
