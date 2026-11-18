@@ -1,150 +1,186 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import CourseCard from '../components/CourseCard.astro';
-import { COURSES } from '../data/courses';
-
-const ASSESSMENTS = [
-  {
-    slug: 'phan-cung',
-    name: 'Phần cứng Máy tính (OL-01)',
-    icon: '🛠️',
-    desc: 'Mô phỏng bàn kỹ thuật 7 bước, 100 câu trắc nghiệm tình huống, 20 câu vấn đáp & chuẩn in ấn A4',
-    badge: 'Chuẩn TT55 - Mới',
-    time: '15 - 180',
-  },
-  {
-    slug: 'mang',
-    name: 'Mạng Máy tính Căn bản',
-    icon: '🌐',
-    desc: 'Kiểm tra mô hình OSI, IP subnetting, dịch vụ mạng DHCP/DNS và định tuyến',
-    badge: 'Trắc nghiệm 30 câu',
-    time: '45',
-  },
-];
 ---
 
-<BaseLayout title="Cổng Giảng Dạy & Thực Hành CNTT · CN. Phạm Tiến Đông">
-  <!-- Hero Section -->
-  <section class="bg-gradient-to-b from-primary-800 to-primary-900 text-white py-12 sm:py-16">
+<BaseLayout title="Cổng Giảng Dạy & Ôn Luyện Chuyên Sâu CNTT · CN. Phạm Tiến Đông">
+  <!-- Hero Section Minimalist Slate / Deep Navy -->
+  <section class="bg-slate-900 text-white py-12 sm:py-16 border-b border-slate-800">
     <div class="max-w-5xl mx-auto px-4 text-center">
-      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-700/60 border border-primary-500/40 text-xs font-semibold text-primary-200 mb-3">
-        <span>💻</span>
-        <span>Website Giảng Dạy Chuyên Ngành CNTT · CN. Phạm Tiến Đông</span>
+      <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 mb-4 shadow-xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Hệ Thống Huấn Luyện & Sát Hạch Chuyên Sâu · CN. Phạm Tiến Đông</span>
       </span>
-      <h1 class="text-3xl sm:text-5xl font-black mb-3 text-white tracking-tight">Cổng Giảng Dạy & Thực Hành CNTT</h1>
-      <p class="text-primary-100 text-sm sm:text-base max-w-2xl mx-auto font-medium leading-relaxed">
-        Giảng dạy chuyên ngành thực hành · Sát hạch đánh giá năng lực nghề · Quản lý hồ sơ lớp học & điểm số
+      
+      <h1 class="text-3xl sm:text-5xl font-black mb-3 text-white tracking-tight leading-tight">
+        Cổng Ôn Luyện Chuyên Ngành CNTT
+      </h1>
+      
+      <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto font-medium leading-relaxed">
+        Tập trung huấn luyện tay nghề thực chiến & bồi dưỡng năng lực đỉnh cao theo tiêu chuẩn kỹ thuật viên chuyên nghiệp.
       </p>
 
-      <!-- 2 NÚT THAO TÁC 1-CHẠM NHANH CHO HỌC SINH -->
-      <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto text-left">
-        <!-- Nút 1: Vào bàn thực hành -->
-        <a 
-          href="/practice" 
-          class="p-4 sm:p-5 rounded-2xl bg-white text-gray-900 shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all no-underline group flex items-center gap-4 border-2 border-indigo-200"
-        >
-          <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition-transform">
-            🛠️
-          </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-xs font-black text-indigo-700 uppercase tracking-wide">Điểm Danh & Học Tập</span>
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            </div>
-            <h3 class="text-base sm:text-lg font-black text-gray-900 group-hover:text-indigo-700 transition-colors">
-              Bàn Thực Hành Kỹ Thuật
-            </h3>
-            <p class="text-xs text-gray-500 mt-0.5 line-clamp-2">
-              Điểm danh theo buổi học, quy trình an toàn bàn máy & nộp kết quả thực hành tại xưởng.
-            </p>
-          </div>
-        </a>
-
-        <!-- Nút 2: Vào sát hạch đánh giá -->
-        <a 
-          href="/assessment/phan-cung" 
-          class="p-4 sm:p-5 rounded-2xl bg-white text-gray-900 shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all no-underline group flex items-center gap-4 border-2 border-amber-200"
-        >
-          <div class="w-14 h-14 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center text-3xl shrink-0 group-hover:scale-110 transition-transform">
-            📝
-          </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-xs font-black text-amber-700 uppercase tracking-wide">Sát Hạch Trực Tuyến</span>
-              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">Chuẩn TT55</span>
-            </div>
-            <h3 class="text-base sm:text-lg font-black text-gray-900 group-hover:text-amber-700 transition-colors">
-              Đánh Giá Năng Lực Nghề
-            </h3>
-            <p class="text-xs text-gray-500 mt-0.5 line-clamp-2">
-              Bộ 100 câu trắc nghiệm tình huống, bốc thăm ca thi & có Trợ giảng AI giải thích câu sai.
-            </p>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Courses Grid -->
-  <section class="max-w-5xl mx-auto px-4 py-10">
-    <div class="flex items-center justify-between mb-6">
-      <div>
-        <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Chương trình Môn học</h2>
-        <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Mỗi môn học được hỗ trợ một cổng tên miền phụ (subdomain) riêng biệt</p>
-      </div>
-      <a href="/courses" class="text-sm font-semibold text-primary-700 hover:underline">
-        Tất cả môn →
-      </a>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      {COURSES.map((course) => (
-        <CourseCard
-          title={course.name}
-          slug={course.slug}
-          description={course.desc}
-          icon={course.icon}
-          chapterCount={course.chapters.length}
-          subdomain={course.subdomain}
-        />
-      ))}
-    </div>
-  </section>
-
-  <!-- Assessment Section -->
-  <section class="max-w-5xl mx-auto px-4 pb-14">
-    <div class="flex items-center justify-between mb-6">
-      <div>
-        <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Đánh giá năng lực chuyên môn</h2>
-        <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Kiểm tra trắc nghiệm kiến thức và chẩn đoán kỹ thuật theo chuẩn đầu ra</p>
-      </div>
-      <a href="/assessment" class="text-sm font-semibold text-primary-700 hover:underline">
-        Xem chi tiết →
-      </a>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-      {ASSESSMENTS.map((exam) => (
-        <a href={`/assessment/${exam.slug}`} class="card flex items-start gap-4 no-underline group hover:border-primary-400">
-          <span class="text-3xl shrink-0 p-2.5 rounded-2xl bg-primary-50">{exam.icon}</span>
-          <div class="flex-1">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="text-[11px] font-mono font-bold text-primary-800 bg-primary-50 px-2 py-0.5 rounded-full">
-                {exam.badge}
+      <!-- 2 KHỐI CHUYÊN ĐỀ TRỌNG ĐIỂM CỦA HỆ THỐNG -->
+      <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-4xl mx-auto">
+        
+        <!-- CHUYÊN ĐỀ 1: ĐÁNH GIÁ NĂNG LỰC PHẦN CỨNG (OL-01) -->
+        <div class="p-6 sm:p-7 rounded-3xl bg-white text-slate-900 shadow-xl hover:shadow-2xl hover:scale-[1.01] transition-all border-2 border-indigo-200/80 flex flex-col justify-between group">
+          <div class="space-y-3.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-full uppercase tracking-wider">
+                🛠️ CHUYÊN ĐỀ 01
+              </span>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-900">
+                Chuẩn TT55
               </span>
             </div>
-            <h3 class="text-base font-bold text-gray-900 group-hover:text-primary-700 transition-colors mb-1">
-              {exam.name}
-            </h3>
-            <p class="text-xs text-gray-500 mb-3 leading-relaxed">{exam.desc}</p>
-            <div class="flex items-center gap-3 text-xs text-gray-500 font-medium">
-              <span>⏱️ Thời gian: {exam.time} phút</span>
-              <span>•</span>
-              <span>🎯 Điểm đạt: ≥ 5.0</span>
+
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-700 flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 transition-transform">
+                🔧
+              </div>
+              <div>
+                <h2 class="text-lg sm:text-xl font-black text-slate-900 group-hover:text-indigo-700 transition-colors">
+                  Đánh Giá Năng Lực Phần Cứng Máy Tính
+                </h2>
+                <span class="text-xs text-slate-500 font-mono font-medium block mt-0.5">
+                  MÃ MÔN: OL-01_PHAN_CUNG
+                </span>
+              </div>
+            </div>
+
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Mô phỏng bàn kỹ thuật 7 bước chuẩn Poka-Yoke, ngân hàng 100 câu trắc nghiệm tình huống, 20 câu vấn đáp tại bàn máy, nhận diện linh kiện thực tế (ASUS, MSI, WINNFOX) và in phiếu nghiệm thu chuẩn A4.
+            </p>
+
+            <div class="grid grid-cols-2 gap-2 pt-1 text-xs text-slate-700">
+              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center gap-2">
+                <span>⏱️</span>
+                <span><strong>15 - 180</strong> phút</span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center gap-2">
+                <span>🎯</span>
+                <span>Thang điểm <strong>10.0</strong></span>
+              </div>
             </div>
           </div>
-        </a>
-      ))}
+
+          <div class="pt-5 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              Đang mở luyện tập
+            </span>
+            <a
+              href="/assessment/phan-cung"
+              class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-black transition-colors shadow-md flex items-center gap-1.5 no-underline"
+            >
+              <span>Vào Ôn Luyện</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- CHUYÊN ĐỀ 2: ÔN THI HỌC SINH GIỎI PHẦN CỨNG & MẠNG -->
+        <div class="p-6 sm:p-7 rounded-3xl bg-white text-slate-900 shadow-xl hover:shadow-2xl hover:scale-[1.01] transition-all border-2 border-amber-200/80 flex flex-col justify-between group">
+          <div class="space-y-3.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full uppercase tracking-wider">
+                🏆 CHUYÊN ĐỀ 02
+              </span>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-purple-100 text-purple-900">
+                Đội Tuyển HSG
+              </span>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center text-2xl shrink-0 group-hover:scale-110 transition-transform">
+                🥇
+              </div>
+              <div>
+                <h2 class="text-lg sm:text-xl font-black text-slate-900 group-hover:text-amber-800 transition-colors">
+                  Thi Học Sinh Giỏi Phần Cứng & Mạng
+                </h2>
+                <span class="text-xs text-slate-500 font-mono font-medium block mt-0.5">
+                  CHUYÊN SÂU NÂNG CAO
+                </span>
+              </div>
+            </div>
+
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Bồi dưỡng đội tuyển HSG: Bí quyết tính nhẩm Subnetting IPv4 & VLSM trong 30 giây, phân tích kiến trúc bo mạch & CPU, mô hình OSI/TCP-IP và ngân hàng 50+ câu trắc nghiệm phân loại cao.
+            </p>
+
+            <div class="grid grid-cols-2 gap-2 pt-1 text-xs text-slate-700">
+              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center gap-2">
+                <span>⚡</span>
+                <span>Subnetting <strong>30 giây</strong></span>
+              </div>
+              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center gap-2">
+                <span>📊</span>
+                <span><strong>50+</strong> Câu nâng cao</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-5 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500 flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              Đang mở luyện thi
+            </span>
+            <a
+              href="/assessment/hsg"
+              class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-black transition-colors shadow-md flex items-center gap-1.5 no-underline"
+            >
+              <span>Vào Luyện Thi</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Cam kết chất lượng đào tạo (Minimalist Slate) -->
+  <section class="max-w-4xl mx-auto px-4 py-12 text-slate-800">
+    <div class="text-center max-w-xl mx-auto mb-8">
+      <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+        Quy Chuẩn Huấn Luyện Kỹ Thuật Viên Thực Chiến
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-500 mt-1">
+        Áp dụng nguyên lý Poka-Yoke (chống sai lỗi) và phương pháp sư phạm trực quan "Mắt thấy - Tay làm"
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+      <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+        <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center text-lg font-bold">
+          🛡️
+        </div>
+        <h3 class="font-bold text-slate-900 text-sm">3 Điểm Dừng An Toàn</h3>
+        <p class="text-slate-500 leading-relaxed">
+          Rút điện xả tụ, bóc nilon mặt tản nhiệt, chống cắm ngược chân RAM và Card đồ họa. Tuyệt đối không dùng sức ép mạnh khi thấy kẹt.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+        <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center text-lg font-bold">
+          🤖
+        </div>
+        <h3 class="font-bold text-slate-900 text-sm">Trợ Lý AI Phản Hồi Tức Thì</h3>
+        <p class="text-slate-500 leading-relaxed">
+          Tích hợp bộ Engine tri thức cục bộ phản hồi 5ms, giải thích cặn kẽ câu sai và hiển thị ảnh thực tế linh kiện ngay trong cuộc trò chuyện.
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-2">
+        <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-800 flex items-center justify-center text-lg font-bold">
+          📋
+        </div>
+        <h3 class="font-bold text-slate-900 text-sm">Chuẩn Nghiệm Thu Thực Tế</h3>
+        <p class="text-slate-500 leading-relaxed">
+          Phiếu nghiệm thu chuẩn A4, rèn luyện tác phong công nghiệp: KTV 1 thao tác, KTV 2 kiểm soát an toàn, KTV 3 ghi chép thông số.
+        </p>
+      </div>
     </div>
   </section>
 </BaseLayout>

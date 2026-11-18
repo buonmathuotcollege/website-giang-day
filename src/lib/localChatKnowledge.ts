@@ -246,6 +246,38 @@ export function matchKnowledge(rawQuery: string, history: any[] = []): string | 
   // 3. MẠNG MÁY TÍNH & BẤM CÁP MẠNG
   // =========================================================================
 
+  // CÔNG THỨC TÍNH NHẨM SUBNETTING 30S CHO ĐỘI TUYỂN HSG
+  if (qNoAccent.includes('subnet') || qNoAccent.includes('magic number') || qNoAccent.includes('chia mang con')) {
+    return [
+      'Bí quyết tính nhẩm Subnetting IPv4 trong 30 giây (Quy tắc Magic Number):',
+      '• **Bước 1:** Xác định Octet thay đổi từ Prefix /n (ví dụ: /26 có Subnet Mask 255.255.255.192).',
+      '• **Bước 2 (Magic Number):** Lấy `256 - Octet = 256 - 192 = 64`. Mỗi mạng con cách nhau đúng 64 IP.',
+      '• **Bước 3:** Dải mạng: Mạng 1 [0..63], Mạng 2 [64..127]. IP mạng là số đầu, Broadcast là số cuối.',
+      '• **Số Host dùng được:** Công thức $2^h - 2$ (ví dụ /26 mượn 2 bit, còn 6 bit host: $2^6 - 2 = 62$ máy).'
+    ].join('\n');
+  }
+
+  // 4 BƯỚC DHCP DORA
+  if (qNoAccent.includes('dora') || qNoAccent.includes('dhcp') || qNoAccent.includes('cap ip tu dong')) {
+    return [
+      'Quy trình cấp phát IP tự động DHCP 4 bước (D-O-R-A):',
+      '1. **Discover (Khám phá):** Client phát gói tin quảng bá Broadcast tìm kiếm DHCP Server.',
+      '2. **Offer (Đề xuất):** DHCP Server gửi lại gói tin đề xuất địa chỉ IP kèm cấu hình mạng.',
+      '3. **Request (Yêu cầu):** Client chấp nhận và xin thuê chính thức địa chỉ IP đó.',
+      '4. **Acknowledge (Xác nhận - ACK):** DHCP Server đóng dấu xác nhận cho thuê và cấp IP thành công.'
+    ].join('\n');
+  }
+
+  // CÁP THẲNG VS CÁP CHÉO
+  if (qNoAccent.includes('cap cheo') || qNoAccent.includes('cap thang') || qNoAccent.includes('crossover')) {
+    return [
+      'Phân biệt Cáp Thẳng (Straight-Through) và Cáp Chéo (Crossover):',
+      '• **Cáp Thẳng (2 đầu T568B):** Nối 2 thiết bị KHÁC LOẠI (PC nối vào Switch, Switch nối vào Router).',
+      '• **Cáp Chéo (1 đầu T568A, 1 đầu T568B):** Nối 2 thiết bị CÙNG LOẠI (PC nối PC, Switch nối Switch, Router nối Router).',
+      '• **Chân truyền 100Mbps:** Chỉ dùng 4 chân kim 1, 2 (TX truyền) và 3, 6 (RX nhận).'
+    ].join('\n');
+  }
+
   // BẤM DÂY MẠNG CHUẨN B
   if (qNoAccent.includes('chuan b') || qNoAccent.includes('bam day mang') || qNoAccent.includes('568b') || qNoAccent.includes('mau mang')) {
     return [

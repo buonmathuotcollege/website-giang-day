@@ -1,0 +1,526 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { SUBNET_CHEAT_SHEET, HSG_QUESTION_BANK } from '../../data/hsgCurriculum';
+
+export const prerender = true;
+
+const title = "Ôn Luyện Thi Học Sinh Giỏi: Phần Cứng & Mạng Máy Tính";
+---
+
+<BaseLayout title={`${title} - Chuyên Đề Bồi Dưỡng Chuyên Sâu`}>
+  <div x-data="hsgTrainingApp()" class="max-w-6xl mx-auto px-4 py-6 sm:py-8 font-sans">
+    
+    <!-- Breadcrumb -->
+    <Breadcrumb items={[
+      { label: 'Trang chủ', href: '/' },
+      { label: 'Chuyên đề HSG', href: '/assessment/hsg' },
+      { label: 'Phần Cứng & Mạng Máy Tính', href: '' },
+    ]} />
+
+    <!-- Top Hero Banner (Minimalist Slate / Deep Navy) -->
+    <div class="mt-4 mb-6 p-6 sm:p-8 rounded-3xl bg-slate-900 text-white shadow-xl relative overflow-hidden border border-slate-800">
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2.5 max-w-2xl">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-amber-950 text-xs font-black uppercase tracking-wider">
+              🏆 ĐỘI TUYỂN HỌC SINH GIỎI
+            </span>
+            <span class="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 text-xs font-mono border border-slate-700">
+              CHUYÊN ĐỀ 02: PHẦN CỨNG & MẠNG
+            </span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
+            Ôn Luyện Thi Học Sinh Giỏi CNTT
+          </h1>
+          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+            Hệ thống bồi dưỡng kiến thức chuyên sâu: Phân tích kiến trúc bo mạch & CPU, kỹ thuật tính nhẩm Subnetting IPv4 trong 30 giây, mô hình OSI/TCP-IP và ngân hàng đề thi trắc nghiệm thực chiến xáo trộn ngẫu nhiên.
+          </p>
+        </div>
+
+        <!-- Quick Stats Cards -->
+        <div class="grid grid-cols-2 gap-3 shrink-0 text-center text-xs">
+          <div class="p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700/80">
+            <div class="text-xl sm:text-2xl font-black text-amber-400">50+</div>
+            <div class="text-slate-400 text-[11px] mt-0.5">Câu hỏi HSG chuyên sâu</div>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-slate-800/90 border border-slate-700/80">
+            <div class="text-xl sm:text-2xl font-black text-emerald-400">30s</div>
+            <div class="text-slate-400 text-[11px] mt-0.5">Công thức Subnetting</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs (Progressive Disclosure) -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-200 no-scrollbar mb-6">
+      <button
+        type="button"
+        @click="activeTab = 'exam'"
+        :class="activeTab === 'exam' 
+          ? 'bg-slate-900 text-white shadow-sm' 
+          : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200'"
+        class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer"
+      >
+        <span>📝</span>
+        <span>Luyện Đề Thi HSG</span>
+      </button>
+
+      <button
+        type="button"
+        @click="activeTab = 'subnet'"
+        :class="activeTab === 'subnet' 
+          ? 'bg-slate-900 text-white shadow-sm' 
+          : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200'"
+        class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer"
+      >
+        <span>⚡</span>
+        <span>Công Thức Subnetting 30s</span>
+      </button>
+
+      <button
+        type="button"
+        @click="activeTab = 'hardware'"
+        :class="activeTab === 'hardware' 
+          ? 'bg-slate-900 text-white shadow-sm' 
+          : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200'"
+        class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer"
+      >
+        <span>🔬</span>
+        <span>Kiến Trúc Phần Cứng</span>
+      </button>
+
+      <button
+        type="button"
+        @click="activeTab = 'cases'"
+        :class="activeTab === 'cases' 
+          ? 'bg-slate-900 text-white shadow-sm' 
+          : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200'"
+        class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer"
+      >
+        <span>🛠️</span>
+        <span>Ca Thực Hành & Bẫy Đề</span>
+      </button>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 1: LUYỆN ĐỀ THI HSG THỰC CHIẾN -->
+    <!-- ==================================================================== -->
+    <div x-show="activeTab === 'exam'" x-cloak class="space-y-6">
+      
+      <!-- Cockpit điều khiển bài thi -->
+      <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-900">Mô Phỏng Phòng Thi Trắc Nghiệm HSG</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Hệ thống bốc ngẫu nhiên 20 câu hỏi phân loại cao (Phần cứng & Mạng máy tính)</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <div class="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-800 text-xs font-mono font-bold border border-slate-200 flex items-center gap-1.5">
+            <span>⏱️</span>
+            <span x-text="formatTime(timeRemaining)"></span>
+          </div>
+
+          <button
+            type="button"
+            @click="resetExam()"
+            class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+          >
+            🔄 Đổi Đề Mới
+          </button>
+
+          <template x-if="!isSubmitted">
+            <button
+              type="button"
+              @click="submitExam()"
+              class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black transition-colors shadow-sm cursor-pointer"
+            >
+              ✅ Nộp Bài Thi
+            </button>
+          </template>
+        </div>
+      </div>
+
+      <!-- Bảng điểm tổng kết sau khi nộp bài -->
+      <div x-show="isSubmitted" x-transition class="p-6 rounded-2xl bg-emerald-50 border-2 border-emerald-400 text-emerald-950 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-black flex items-center gap-2">
+            <span>🎉</span>
+            <span>KẾT QUẢ BÀI THI HỌC SINH GIỎI</span>
+          </h3>
+          <span class="text-2xl font-black text-emerald-700" x-text="scoreText"></span>
+        </div>
+        <p class="text-xs text-emerald-800 leading-relaxed" x-text="resultFeedback"></p>
+      </div>
+
+      <!-- Danh sách câu hỏi -->
+      <div class="space-y-4">
+        <template x-for="(q, index) in currentQuestions" :key="q.id">
+          <div class="p-5 sm:p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-3.5 transition-all">
+            <div class="flex items-start justify-between gap-3">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold font-mono">
+                <span>Câu</span>
+                <span x-text="index + 1"></span>
+                <span>/</span>
+                <span x-text="currentQuestions.length"></span>
+              </span>
+
+              <span 
+                class="text-[11px] px-2 py-0.5 rounded-full font-bold uppercase"
+                :class="q.category === 'mang-may-tinh' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'"
+                x-text="q.category === 'mang-may-tinh' ? '🌐 Mạng máy tính' : '🔧 Phần cứng PC'"
+              ></span>
+            </div>
+
+            <p class="text-sm sm:text-base font-bold text-slate-900 leading-snug" x-text="q.question"></p>
+
+            <!-- 4 Đáp án lựa chọn -->
+            <div class="grid grid-cols-1 gap-2 pt-1">
+              <template x-for="(opt, optIdx) in q.options" :key="optIdx">
+                <button
+                  type="button"
+                  @click="selectOption(index, optIdx)"
+                  :disabled="isSubmitted"
+                  class="p-3 sm:p-3.5 rounded-xl text-xs sm:text-sm text-left transition-all flex items-start gap-2.5 cursor-pointer border"
+                  :class="getOptionClass(index, optIdx)"
+                >
+                  <span 
+                    class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5 border"
+                    :class="answers[index] === optIdx ? 'bg-slate-900 text-white border-slate-900' : 'bg-slate-100 text-slate-600 border-slate-300'"
+                    x-text="['A', 'B', 'C', 'D'][optIdx]"
+                  ></span>
+                  <span class="flex-1 leading-relaxed" x-text="opt"></span>
+                </button>
+              </template>
+            </div>
+
+            <!-- Giải thích chi tiết bản chất khi đã nộp bài -->
+            <div 
+              x-show="isSubmitted" 
+              x-transition 
+              class="p-3.5 rounded-xl text-xs leading-relaxed border"
+              :class="answers[index] === q.correctIndex ? 'bg-emerald-50 text-emerald-900 border-emerald-200' : 'bg-rose-50 text-rose-900 border-rose-200'"
+            >
+              <div class="font-bold flex items-center gap-1.5 mb-1">
+                <span x-text="answers[index] === q.correctIndex ? '✅ Giải thích đúng:' : '⚠️ Bản chất kỹ thuật:'"></span>
+              </div>
+              <p x-text="q.explanation"></p>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 2: CÔNG THỨC TÍNH NHẨM SUBNETTING 30S -->
+    <!-- ==================================================================== -->
+    <div x-show="activeTab === 'subnet'" x-cloak class="space-y-6">
+      
+      <!-- Hướng dẫn phương pháp Magic Number -->
+      <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-xl font-black">
+            ⚡
+          </div>
+          <div>
+            <h2 class="text-base sm:text-lg font-black text-slate-900">Bí Quyết Tính Nhẩm Subnetting Trong 30 Giây</h2>
+            <p class="text-xs text-slate-500">Quy tắc bước nhảy Magic Number (Không cần đổi nhị phân)</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+            <span class="font-black text-slate-900 uppercase">Bước 1: Tìm Octet Thay Đổi</span>
+            <p class="text-slate-600 leading-relaxed">
+              Xác định Prefix /n. Ví dụ /26 nằm ở Octet thứ 4 (24 bit đầu cố định 255.255.255, Octet 4 mượn 2 bit = 192).
+            </p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+            <span class="font-black text-slate-900 uppercase">Bước 2: Tìm Bước Nhảy (Magic)</span>
+            <p class="text-slate-600 leading-relaxed font-mono">
+              <strong>Magic Number = 256 - Octet</strong><br/>
+              Ví dụ: 256 - 192 = <strong>64</strong>. Mỗi mạng con sẽ cách nhau đúng 64 đơn vị.
+            </p>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
+            <span class="font-black text-slate-900 uppercase">Bước 3: Xác Định Dải Mạng</span>
+            <p class="text-slate-600 leading-relaxed">
+              Mạng 1: .0 đến .63<br/>
+              Mạng 2: .64 đến .127<br/>
+              IP đầu = Network + 1; IP cuối = Broadcast - 1.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bảng tra cứu chuẩn -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
+          <h3 class="text-sm font-bold flex items-center gap-2">
+            <span>📊</span>
+            <span>BẢNG TRA CỨU NHANH CÁC PREFIX MẠNG CON PHỔ BIẾN (/24 ĐẾN /30)</span>
+          </h3>
+          <span class="text-xs text-slate-400 font-mono">Chuẩn thi HSG CNTT</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+              <tr>
+                <th class="p-3.5">CIDR</th>
+                <th class="p-3.5">Subnet Mask</th>
+                <th class="p-3.5">Bước Nhảy (Magic)</th>
+                <th class="p-3.5">Tổng IP</th>
+                <th class="p-3.5">Host Dùng Được</th>
+                <th class="p-3.5">Ứng Dụng Thực Tế Phòng Máy</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 text-slate-800 font-medium">
+              {SUBNET_CHEAT_SHEET.map((item) => (
+                <tr class="hover:bg-slate-50/80 transition-colors">
+                  <td class="p-3.5 font-mono font-bold text-blue-700">{item.cidr}</td>
+                  <td class="p-3.5 font-mono">{item.subnetMask}</td>
+                  <td class="p-3.5 font-mono font-bold text-amber-700">{item.magicNumber}</td>
+                  <td class="p-3.5 font-mono">{item.totalHosts}</td>
+                  <td class="p-3.5 font-mono font-black text-emerald-700">{item.usableHosts}</td>
+                  <td class="p-3.5 text-slate-600">{item.usageContext}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 3: KIẾN TRÚC PHẦN CỨNG CHUYÊN SÂU -->
+    <!-- ==================================================================== -->
+    <div x-show="activeTab === 'hardware'" x-cloak class="space-y-6">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        <!-- Module 1: Bus & Chipset -->
+        <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-3.5">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center text-base">🔌</span>
+            <h3 class="text-sm font-black text-slate-900 uppercase">1. Phân Cấp Chipset & Đường Truyền Bus</h3>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Mỗi thế hệ CPU Intel kết nối với Chipset qua đường truyền DMI (Direct Media Interface). Dòng bo mạch chủ được phân tầng rõ rệt:
+          </p>
+          <ul class="text-xs space-y-2 text-slate-700">
+            <li>• <strong>Dòng H (H510, H610):</strong> Phổ thông, cấp nguồn VRM cơ bản, 2 khe RAM, tối đa 1 khe M.2 NVMe, không cho phép ép xung CPU/RAM.</li>
+            <li>• <strong>Dòng B (B560, B660, B760):</strong> Tầm trung, tản nhiệt VRM nhôm khối, hỗ trợ Bus RAM cao hơn (XMP), nhiều khe cắm PCIe mở rộng.</li>
+            <li>• <strong>Dòng Z (Z590, Z690, Z790):</strong> Cao cấp, mở khóa nhân ép xung CPU đuôi K, mạch nguồn 14-20 Phase chất lượng quân đội.</li>
+          </ul>
+        </div>
+
+        <!-- Module 2: Bộ nhớ RAM & Băng thông -->
+        <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-3.5">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center text-base">⚡</span>
+            <h3 class="text-sm font-black text-slate-900 uppercase">2. Băng Thông RAM & Kỹ Thuật Dual-Channel</h3>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed font-mono">
+            <strong>Công thức tính Băng thông lý thuyết:</strong><br/>
+            Bandwidth (MB/s) = (Bus Speed × Độ rộng Bus) / 8
+          </p>
+          <ul class="text-xs space-y-2 text-slate-700">
+            <li>• <strong>Single-Channel:</strong> Độ rộng 64-bit. RAM DDR4 2666MHz cho băng thông ~ 21.3 GB/s.</li>
+            <li>• <strong>Dual-Channel:</strong> Độ rộng mở lên 128-bit. Cắm 2 thanh cùng bus cho băng thông lên ~ 42.6 GB/s (gấp đôi xa lộ dữ liệu).</li>
+            <li>• <strong>Độ trễ CAS Latency (CL):</strong> Số chu kỳ xung nhịp CPU phải chờ để lấy dữ liệu từ RAM. CL càng nhỏ, RAM phản hồi càng tức thì.</li>
+          </ul>
+        </div>
+
+        <!-- Module 3: Chuẩn Phân Vùng GPT vs MBR -->
+        <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-3.5">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-base">💾</span>
+            <h3 class="text-sm font-black text-slate-900 uppercase">3. Chuẩn Bảng Phân Vùng UEFI / GPT</h3>
+          </div>
+          <ul class="text-xs space-y-2 text-slate-700 leading-relaxed">
+            <li>• <strong>MBR (Master Boot Record):</strong> Lưu trữ bảng phân vùng tại sector đầu tiên (LBA 0). Giới hạn tối đa 2.2 TB và 4 phân vùng Primary. Nếu sector đầu bị hỏng, đĩa mất boot.</li>
+            <li>• <strong>GPT (GUID Partition Table):</strong> Hỗ trợ đĩa tới 9.4 ZB (hàng tỷ TB), 128 phân vùng chính. Lưu bản sao lưu bảng phân vùng ở cuối đĩa giúp tự phục hồi khi có lỗi.</li>
+            <li>• <strong>Phân vùng EFI (ESP):</strong> Phân vùng FAT32 dung lượng 100-260MB chứa các file khởi động `.efi` độc lập với hệ điều hành.</li>
+          </ul>
+        </div>
+
+        <!-- Module 4: Mạch nguồn VRM & Hiệu suất -->
+        <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-3.5">
+          <div class="flex items-center gap-2.5">
+            <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center text-base">🛡️</span>
+            <h3 class="text-sm font-black text-slate-900 uppercase">4. Mạch Điều Áp VRM & An Toàn Poka-Yoke</h3>
+          </div>
+          <ul class="text-xs space-y-2 text-slate-700 leading-relaxed">
+            <li>• <strong>Thành phần VRM:</strong> Gồm MOSFET (đóng ngắt), Cuộn cảm Choke (lọc dòng), Tụ điện (san phẳng điện áp).</li>
+            <li>• <strong>Giắc 8-pin CPU:</strong> Cung cấp tối đa 384W dòng điện 12V. Luôn kiểm tra cắm chặt giắc này trước khi bật máy.</li>
+            <li>• <strong>Nguyên tắc xả tụ:</strong> Sau khi rút điện 220V, các tụ nguồn cỡ lớn vẫn tích trữ năng lượng trong 15-30 giây. Bắt buộc bấm nút Power 3 lần để triệt tiêu hoàn toàn điện áp thừa.</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 4: CA THỰC HÀNH & BẪY ĐỀ THI HSG -->
+    <!-- ==================================================================== -->
+    <div x-show="activeTab === 'cases'" x-cloak class="space-y-6">
+      
+      <div class="space-y-4">
+        
+        <!-- Ca 1 -->
+        <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono font-bold text-amber-800 bg-amber-100 px-3 py-1 rounded-full uppercase">
+              BẪY ĐỀ THI HSG 01: SỰ CỐ BẤM CÁP MẠNG
+            </span>
+            <span class="text-xs text-slate-500 font-mono">Độ khó: Vận dụng cao</span>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">
+            Tình huống: Cáp mạng bấm chuẩn B cắm vào Switch 1Gbps chỉ nhận tốc độ 100 Mbps
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            <strong>Hiện tượng:</strong> KTV bấm 1 sợi cáp mạng Cat6 dài 15 mét cắm từ Switch Gigabit vào máy tính PC. Đèn mạng sáng màu cam và Windows báo tốc độ Link Speed là 100/100 Mbps thay vì 1000/1000 Mbps. Kiểm tra bằng máy test cáp mạng đèn chạy đủ từ 1 đến 8.
+          </p>
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-800 space-y-1.5">
+            <strong class="text-emerald-700 block font-bold">Chẩn đoán & Xử lý chuẩn KTV giỏi:</strong>
+            <p>
+              • Dù máy test mạng sáng đủ 8 đèn (chứng tỏ thông mạch không đứt), nhưng nếu KTV vuốt dây không chuẩn hoặc xếp lộn xộn các cặp xoắn đôi (xoắn khử nhiễu chống Crosstalk), tín hiệu tần số cao của Gigabit (1000 Mbps) sẽ bị suy hao nghiêm trọng.<br/>
+              • Switch tự động thương lượng lùi về chuẩn 100 Mbps (Auto-Negotiation Fallback) để duy trì kết nối.<br/>
+              • <strong>Biện pháp:</strong> Cắt bỏ đầu hạt mạng cũ, giữ nguyên độ xoắn của các cặp dây sát đáy hạt mạng nhất có thể (dưới 1.2 cm), xếp chuẩn T568B và bấm lại bằng kìm bấm lực đều.
+            </p>
+          </div>
+        </div>
+
+        <!-- Ca 2 -->
+        <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono font-bold text-blue-800 bg-blue-100 px-3 py-1 rounded-full uppercase">
+              BẪY ĐỀ THI HSG 02: XUNG ĐỘT IP TĨNH & DHCP
+            </span>
+            <span class="text-xs text-slate-500 font-mono">Độ khó: Vận dụng cao</span>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">
+            Tình huống: Máy in mạng văn phòng thỉnh thoảng bị mất kết nối và in chập chờn
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            <strong>Hiện tượng:</strong> Một máy in Canon kết nối mạng LAN qua IP tĩnh `192.168.1.25`. Buổi sáng máy in hoạt động bình thường, nhưng đến đầu giờ chiều khi nhân viên vào đông thì máy in không nhận lệnh và báo lỗi Offline.
+          </p>
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-800 space-y-1.5">
+            <strong class="text-emerald-700 block font-bold">Chẩn đoán & Xử lý chuẩn KTV giỏi:</strong>
+            <p>
+              • <strong>Nguyên nhân gốc rễ:</strong> Quản trị viên đặt IP tĩnh cho máy in nằm ngay bên trong dải cấp phát tự động (DHCP Pool: 192.168.1.10 - 192.168.1.100). Khi nhân viên cắm máy tính hoặc điện thoại vào mạng, Router đã cấp IP `192.168.1.25` cho thiết bị đó, gây ra xung đột địa chỉ IP (IP Conflict).<br/>
+              • <strong>Giải pháp chuẩn nghề:</strong> Quy hoạch lại mạng: Dời IP máy in sang dải tĩnh độc lập ngoài DHCP Pool (ví dụ: `192.168.1.200` trở lên) HOẶC cấu hình DHCP Reservation (khóa IP theo địa chỉ MAC máy in trên Router).
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</BaseLayout>
+
+<script is:inline define:vars={{ initialQuestions: HSG_QUESTION_BANK }}>
+  function hsgTrainingApp() {
+    return {
+      activeTab: 'exam',
+      allQuestions: initialQuestions || [],
+      currentQuestions: [],
+      answers: {},
+      isSubmitted: false,
+      timeRemaining: 1800, // 30 phút
+      timerInterval: null,
+      score: 0,
+      scoreText: '',
+      resultFeedback: '',
+
+      init() {
+        this.resetExam();
+      },
+
+      resetExam() {
+        // Bốc ngẫu nhiên 20 câu hỏi từ ngân hàng
+        const shuffled = [...this.allQuestions].sort(() => 0.5 - Math.random());
+        this.currentQuestions = shuffled.slice(0, 20);
+        this.answers = {};
+        this.isSubmitted = false;
+        this.timeRemaining = 1800;
+        this.score = 0;
+        this.scoreText = '';
+        this.resultFeedback = '';
+
+        if (this.timerInterval) clearInterval(this.timerInterval);
+        this.timerInterval = setInterval(() => {
+          if (this.timeRemaining > 0 && !this.isSubmitted) {
+            this.timeRemaining--;
+          } else if (this.timeRemaining <= 0 && !this.isSubmitted) {
+            this.submitExam();
+          }
+        }, 1000);
+      },
+
+      formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      },
+
+      selectOption(questionIdx, optionIdx) {
+        if (this.isSubmitted) return;
+        this.answers[questionIdx] = optionIdx;
+      },
+
+      getOptionClass(questionIdx, optionIdx) {
+        if (!this.isSubmitted) {
+          return this.answers[questionIdx] === optionIdx
+            ? 'bg-slate-900 text-white border-slate-900 shadow-xs'
+            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50';
+        }
+
+        const q = this.currentQuestions[questionIdx];
+        const isCorrect = q.correctIndex === optionIdx;
+        const isSelected = this.answers[questionIdx] === optionIdx;
+
+        if (isCorrect) {
+          return 'bg-emerald-50 text-emerald-950 border-emerald-500 font-bold';
+        }
+        if (isSelected && !isCorrect) {
+          return 'bg-rose-50 text-rose-950 border-rose-400 font-medium';
+        }
+        return 'bg-slate-50 text-slate-400 border-slate-200 opacity-60';
+      },
+
+      submitExam() {
+        if (this.isSubmitted) return;
+        this.isSubmitted = true;
+        if (this.timerInterval) clearInterval(this.timerInterval);
+
+        let correctCount = 0;
+        this.currentQuestions.forEach((q, idx) => {
+          if (this.answers[idx] === q.correctIndex) {
+            correctCount++;
+          }
+        });
+
+        // Tính điểm trên thang điểm 10.0
+        const grade10 = Number(((correctCount / this.currentQuestions.length) * 10).toFixed(1));
+        this.score = grade10;
+        this.scoreText = `${grade10} / 10.0 điểm (${correctCount}/${this.currentQuestions.length} câu đúng)`;
+
+        if (grade10 >= 8.5) {
+          this.resultFeedback = `Xuất sắc! Bạn đạt kết quả xuất sắc với ${grade10} điểm. Năng lực tư duy phần cứng và phân tích mạng máy tính của bạn hoàn toàn sẵn sàng cho kỳ thi Học sinh giỏi các cấp.`;
+        } else if (grade10 >= 6.5) {
+          this.resultFeedback = `Khá tốt! Bạn đạt ${grade10} điểm. Hãy nghiên cứu kỹ phần giải thích bản chất ở các câu sai bên dưới và ôn lại công thức tính Subnetting 30s ở Tab 2 nhé!`;
+        } else {
+          this.resultFeedback = `Bạn đạt ${grade10} điểm. Cần ôn luyện thêm kiến thức chuyên sâu về mô hình OSI, dải IP và kiến trúc bo mạch chủ. Đừng nản lòng, bấm "Đổi Đề Mới" để luyện tập lại ngay!`;
+        }
+      }
+    };
+  }
+</script>
