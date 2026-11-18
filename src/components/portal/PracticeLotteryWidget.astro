@@ -30,6 +30,11 @@ const payloadJson = JSON.stringify({
       selectedStationId: 'station_01',
       currentTicketIdx: 0,
       isSpinning: false,
+      showHint: false,
+
+      toggleHint: function() {
+        this.showHint = !this.showHint;
+      },
 
       get currentStation() {
         var self = this;
@@ -50,6 +55,7 @@ const payloadJson = JSON.stringify({
         var self = this;
         if (self.isSpinning || self.tickets.length === 0) return;
         self.isSpinning = true;
+        self.showHint = false;
 
         var count = 0;
         var maxSteps = 10;
@@ -59,6 +65,7 @@ const payloadJson = JSON.stringify({
           if (count >= maxSteps) {
             clearInterval(interval);
             self.isSpinning = false;
+            self.showHint = false;
           }
         }, 80);
       }
@@ -166,20 +173,50 @@ const payloadJson = JSON.stringify({
             {defaultTicket.title}
           </h3>
 
-          <div class="space-y-2 text-xs">
+          <div class="space-y-2.5 text-xs">
+            <!-- 1. Triệu chứng lâm sàng (Luôn hiện để KTV chẩn đoán) -->
             <div class="p-3 rounded-xl bg-white border border-amber-200">
               <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-0.5">Triệu chứng lâm sàng:</span>
               <span class="text-slate-800 font-medium" id="ticket-symptom" x-text="currentTicket.symptom">{defaultTicket.symptom}</span>
             </div>
 
-            <div class="p-3 rounded-xl bg-white border border-amber-200">
-              <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-0.5">Nguyên nhân gốc rễ:</span>
-              <span class="text-slate-800 font-medium" id="ticket-cause" x-text="currentTicket.cause">{defaultTicket.cause}</span>
+            <!-- Nút bật/tắt gợi ý nguyên nhân & quy trình Poka-Yoke -->
+            <div>
+              <button
+                type="button"
+                id="btn-toggle-ticket-hint"
+                @click="toggleHint()"
+                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer border border-amber-300 bg-amber-100/80 hover:bg-amber-200/90 text-amber-950 min-h-[40px] touch-manipulation shadow-sm"
+                :class="showHint ? 'bg-amber-200/90 border-amber-400' : 'bg-amber-100/80'"
+              >
+                <span>💡</span>
+                <span x-text="showHint ? 'Ẩn gợi ý kỹ thuật' : 'Xem gợi ý nguyên nhân & quy trình Poka-Yoke'">
+                  Xem gợi ý nguyên nhân & quy trình Poka-Yoke
+                </span>
+                <span class="text-[10px] font-mono opacity-70" x-text="showHint ? '▲' : '▼'">▼</span>
+              </button>
             </div>
 
-            <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950">
-              <span class="text-[10px] font-black text-emerald-700 uppercase tracking-wider block mb-0.5">Quy trình xử lý Poka-Yoke:</span>
-              <span class="font-medium" id="ticket-remedy" x-text="currentTicket.remedy">{defaultTicket.remedy}</span>
+            <!-- Khối gợi ý giải thích: Mặc định ẩn để học sinh tự tư duy chẩn đoán -->
+            <div
+              id="ticket-hint-container"
+              x-show="showHint"
+              x-transition:enter="transition ease-out duration-200"
+              x-transition:enter-start="opacity-0 -translate-y-1"
+              x-transition:enter-end="opacity-100 translate-y-0"
+              x-cloak
+              class="space-y-2 pt-0.5"
+              style="display: none;"
+            >
+              <div class="p-3 rounded-xl bg-white border border-amber-200">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-0.5">Nguyên nhân gốc rễ:</span>
+                <span class="text-slate-800 font-medium" id="ticket-cause" x-text="currentTicket.cause">{defaultTicket.cause}</span>
+              </div>
+
+              <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950">
+                <span class="text-[10px] font-black text-emerald-700 uppercase tracking-wider block mb-0.5">Quy trình xử lý Poka-Yoke:</span>
+                <span class="font-medium" id="ticket-remedy" x-text="currentTicket.remedy">{defaultTicket.remedy}</span>
+              </div>
             </div>
           </div>
 
