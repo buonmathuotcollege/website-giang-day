@@ -15,11 +15,11 @@
       <!-- Desktop nav: Tập trung 2 Chuyên đề trọng điểm -->
       <nav class="hidden md:flex items-center gap-1.5">
         <a href="/" class="px-3 py-1.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors no-underline">Trang chủ</a>
-        <a href="/assessment/phan-cung" class="px-3 py-1.5 rounded-lg text-sm font-bold text-indigo-700 hover:bg-indigo-50 transition-colors no-underline flex items-center gap-1.5">
+        <a href="/courses/ol-01-phan-cung" class="px-3 py-1.5 rounded-lg text-sm font-bold text-indigo-700 hover:bg-indigo-50 transition-colors no-underline flex items-center gap-1.5">
           <span>🛠️</span>
           <span>Đánh Giá Phần Cứng</span>
         </a>
-        <a href="/assessment/hsg" class="px-3 py-1.5 rounded-lg text-sm font-bold text-amber-700 hover:bg-amber-50 transition-colors no-underline flex items-center gap-1.5">
+        <a href="/courses/hsg-phan-cung-mang" class="px-3 py-1.5 rounded-lg text-sm font-bold text-amber-700 hover:bg-amber-50 transition-colors no-underline flex items-center gap-1.5">
           <span>🏆</span>
           <span>Thi HSG Phần Cứng & Mạng</span>
         </a>
@@ -58,8 +58,8 @@
     <!-- Mobile menu: Tập trung 2 Chuyên đề trọng điểm -->
     <div x-show="open" x-cloak x-transition class="md:hidden border-t border-gray-100 py-2.5 pb-3 space-y-1">
       <a href="/" class="block px-3 py-2 rounded-lg text-sm text-slate-700 hover:bg-slate-100 no-underline">🏠 Trang chủ</a>
-      <a href="/assessment/phan-cung" class="block px-3 py-2 rounded-lg text-sm font-bold text-indigo-700 hover:bg-indigo-50 no-underline">🛠️ Chuyên đề 1: Đánh Giá Năng Lực Phần Cứng (OL-01)</a>
-      <a href="/assessment/hsg" class="block px-3 py-2 rounded-lg text-sm font-bold text-amber-700 hover:bg-amber-50 no-underline">🏆 Chuyên đề 2: Thi Học Sinh Giỏi Phần Cứng & Mạng</a>
+      <a href="/courses/ol-01-phan-cung" class="block px-3 py-2 rounded-lg text-sm font-bold text-indigo-700 hover:bg-indigo-50 no-underline">🛠️ Chuyên đề 1: Đánh Giá Năng Lực Phần Cứng (OL-01)</a>
+      <a href="/courses/hsg-phan-cung-mang" class="block px-3 py-2 rounded-lg text-sm font-bold text-amber-700 hover:bg-amber-50 no-underline">🏆 Chuyên đề 2: Thi Học Sinh Giỏi Phần Cứng & Mạng</a>
       <template x-if="isTeacherLoggedIn">
         <a href="/admin" class="block px-3 py-2 rounded-xl text-sm font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 no-underline mt-2">
           👨‍🏫 Vào Bảng Giảng Viên (Đã xác thực)
