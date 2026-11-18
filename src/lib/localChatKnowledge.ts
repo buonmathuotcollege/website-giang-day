@@ -254,18 +254,50 @@ export function matchKnowledge(rawQuery: string): string | null {
     ].join('\n');
   }
 
+  // VỆ SINH CHÂN RAM, KHE CẮM, CARD ĐỒ HỌA
+  if (qNoAccent.includes('ve sinh') || qNoAccent.includes('cha gom') || qNoAccent.includes('lau chan')) {
+    return [
+      'Quy chuẩn vệ sinh chân RAM và khe cắm linh kiện:',
+      '• **Chân đồng mạ vàng (RAM, VGA):** Dùng cục gôm tẩy trắng học sinh chà nhẹ nhàng đều 2 mặt chân tiếp xúc đến khi sáng bóng, dùng chổi cọ quét sạch mạt gôm vụn.',
+      '• **Khe cắm trên bo mạch (Slot RAM, PCIe):** Dùng bình xịt khí nén hoặc bóng bóp cao su thổi bay bụi bẩn trong rãnh. Tuyệt đối không dùng tua vít sắt cào làm cong gãy chân đồng.',
+      '⚠️ *Quy tắc an toàn Poka-Yoke:* Luôn rút phích cắm 220V và bấm giữ nút nguồn 10 giây để tụ điện xả sạch trước khi thao tác.'
+    ].join('\n');
+  }
+
+  // TẠO USB BOOT & CÀI ĐẶT WINDOWS 10
+  if (qNoAccent.includes('rufus') || qNoAccent.includes('tao usb boot') || qNoAccent.includes('cai win 10') || qNoAccent.includes('cai windows')) {
+    return [
+      'Quy chuẩn tạo USB Boot và cài đặt Windows 10 thực chiến:',
+      '• **Tạo USB Boot (Rufus):** Chọn phân vùng **GPT** và hệ thống đích **UEFI (non CSM)**, định dạng NTFS.',
+      '• **Phím Boot USB:** ASUS bấm **F8**, MSI & Winnfox bấm **F11**, Gigabyte bấm **F12**.',
+      '• **An toàn dữ liệu khách hàng (Zero Data Loss):** Chỉ chọn đúng phân vùng ổ C (ổ đang cài Win cũ) để Format. Tuyệt đối không chạm vào ổ D/E chứa dữ liệu.',
+      '• **Driver:** Sau khi vào Windows 10, mở Device Manager (`devmgmt.msc`) kiểm tra không còn dấu chấm than vàng.'
+    ].join('\n');
+  }
+
   // =========================================================================
   // 4. GUARDRAILS TỪ CHỐI LỊCH SỰ CÁC CHỦ ĐỀ NGOÀI PHẠM VI
   // =========================================================================
-  const outOfScopeKeywords = [
-    'toan', 'ly', 'hoa', 'sinh', 'van', 'tho', 'bai tho', 'viet van', 'giai toan',
-    'yeu', 'to tinh', 'ban gai', 'ban trai', 'nguoi yeu', 'game', 'lien quan', 'free fire',
-    'showbiz', 'ca si', 'dien vien', 'tu vi', 'boi toan', 'cung hoang dao'
-  ];
+  const hasTechKeyword = /ram|cpu|main|mainboard|o cung|ssd|hdd|vga|card|boot|bios|usb|win|windows|linux|mang|ip|lan|wan|router|switch|fpanel|cmos|ve sinh|nguon|psu|fan|tiet bi|phan mem|cai dat|thao lap/i.test(qNoAccent);
 
-  for (const kw of outOfScopeKeywords) {
-    if (qNoAccent.includes(kw)) {
-      return 'Mình là Trợ lý AI hỗ trợ học tập chuyên ngành CNTT nên chỉ giải đáp các kiến thức về máy tính, phần cứng, mạng và thực hành thôi nè! Bạn tập trung vào bài học nghề nhé, có chỗ nào chưa hiểu về máy tính cứ hỏi mình giải thích ngay!';
+  if (!hasTechKeyword) {
+    const outOfScopePatterns = [
+      /\b(toan|giai toan|hinh hoc|dai so)\b/,
+      /\b(mon ly|vat ly|bai ly)\b/,
+      /\b(mon hoa|hoa hoc|phuong trinh hoa)\b/,
+      /\b(mon sinh|sinh hoc)\b/,
+      /\b(mon van|ngu van|viet van|tap lam van)\b/,
+      /\b(lam tho|bai tho|cau tho)\b/,
+      /\b(yeu|to tinh|nguoi yeu|ban trai|ban gai|hen ho)\b/,
+      /\b(lien quan mobile|free fire|pubg|choi game)\b/,
+      /\b(showbiz|ca si|dien vien|nghe si)\b/,
+      /\b(tu vi|boi toan|cung hoang dao|boi tinh duyen)\b/
+    ];
+
+    for (const pattern of outOfScopePatterns) {
+      if (pattern.test(qNoAccent)) {
+        return 'Mình là Trợ lý AI hỗ trợ học tập chuyên ngành CNTT nên chỉ giải đáp các kiến thức về máy tính, phần cứng, mạng và thực hành thôi nè! Bạn tập trung vào bài học nghề nhé, có chỗ nào chưa hiểu về máy tính cứ hỏi mình giải thích ngay!';
+      }
     }
   }
 
