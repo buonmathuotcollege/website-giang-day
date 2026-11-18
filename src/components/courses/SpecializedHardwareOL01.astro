@@ -227,7 +227,7 @@ const appDataPayload = {
                 </svg>
               </button>
 
-              <div x-show="openAccordion === 1" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
+              <div x-show="openAccordion === 1" x-transition class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
                 <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-900">
                   <strong class="font-bold flex items-center gap-1.5 text-amber-950 mb-1">
                     <span>⚡</span> Luật RÚT – BẤM – KHAY (Quy tắc sống còn):
@@ -277,7 +277,7 @@ const appDataPayload = {
                 </svg>
               </button>
 
-              <div x-show="openAccordion === 2" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
+              <div x-show="openAccordion === 2" x-transition class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
                 <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-blue-900">
                   <strong class="font-bold flex items-center gap-1.5 text-blue-950 mb-1">
                     <span>🛡️</span> Luật GIỮ NỒI CƠM CỦA KHÁCH:
@@ -326,7 +326,7 @@ const appDataPayload = {
                 </svg>
               </button>
 
-              <div x-show="openAccordion === 3" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
+              <div x-show="openAccordion === 3" x-transition class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-slate-800">
                   <strong class="font-bold flex items-center gap-1.5 text-slate-950 mb-1">
                     <span>🧩</span> Nguyên Lý Poka-Yoke (Chống Lắp Ngược Chiều):
@@ -376,7 +376,7 @@ const appDataPayload = {
                 </svg>
               </button>
 
-              <div x-show="openAccordion === 4" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
+              <div x-show="openAccordion === 4" x-transition class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
                 <div class="space-y-2">
                   <p><strong>• Phím tắt Boot Menu phòng lab:</strong> Cắm USB cài Windows 10 -> Bật máy bấm liên tục: <code>ASUS: F8</code> | <code>MSI: F11</code> | <code>Winnfox: F11</code> -> Chọn dòng <code>UEFI: Tên USB</code>.</p>
                   <p><strong>• Quy tắc phân vùng chuẩn UEFI / GPT:</strong> Ở cửa sổ chọn ổ đĩa cài đặt, nhìn đúng số GB của ổ C cũ để Delete/Format. <em>Tuyệt đối không đụng vào dòng ổ D dung lượng lớn chứa dữ liệu khách đã backup!</em></p>
@@ -418,7 +418,7 @@ const appDataPayload = {
                 </svg>
               </button>
 
-              <div x-show="openAccordion === 5" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
+              <div x-show="openAccordion === 5" x-transition class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-600">
                 <div class="space-y-2">
                   <p><strong>• Phục hồi dữ liệu khách hàng:</strong> Chép trả dữ liệu từ <code>D:\BACKUP_KHACH_HANG</code> về lại Desktop và Documents của khách. Mở thử 2 tệp Word/Excel trước mặt khách/giáo viên.</p>
                   <p><strong>• Kiểm tra BIOS & Windows:</strong> Máy nhận đủ mã CPU i5, nhận đủ 8GB/16GB RAM (Dual-Channel), ổ SSD Good trong CrystalDiskInfo.</p>
@@ -505,6 +505,8 @@ const appDataPayload = {
                 <!-- Core Marker Button -->
                 <button
                   type="button"
+                  x-on:click={`selectHotspot('${spot.id}')`}
+                  x-on:mouseenter={`selectHotspot('${spot.id}')`}
                   class="relative inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white text-xs font-mono font-bold shadow-lg border-2 border-white transition-transform hover:scale-125 focus:outline-none"
                   aria-label={spot.title}
                 >
@@ -757,7 +759,7 @@ const appDataPayload = {
               </button>
 
               <!-- Collapsible Content -->
-              <div x-show="openOralCard === item.id" x-collapse class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-700">
+              <div x-show="openOralCard === item.id" x-transition class="px-5 pb-5 pt-2 border-t border-slate-100 space-y-3 text-xs leading-relaxed text-slate-700">
                 <!-- Teacher Intent -->
                 <div class="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-amber-950">
                   <strong class="font-bold flex items-center gap-1.5 mb-1 text-amber-900">
@@ -1318,17 +1320,21 @@ const appDataPayload = {
 <script type="application/json" id="ol01-data-payload" set:html={JSON.stringify(appDataPayload)}></script>
 
 <script is:inline>
-  document.addEventListener('alpine:init', () => {
-    Alpine.data('ol01CourseEngine', () => {
+  function setupOL01CourseEngine() {
+    if (window.Alpine && !window.__ol01EngineRegistered) {
+      window.__ol01EngineRegistered = true;
       const rawPayload = JSON.parse(document.getElementById('ol01-data-payload')?.textContent || '{}');
+      const firstHotspot = rawPayload.hotspots && rawPayload.hotspots.length > 0 ? rawPayload.hotspots[0] : null;
+
+      window.Alpine.data('ol01CourseEngine', () => ({
       
       return {
         activeTab: 'tab-1',
         quizViewMode: 'mcq',
         selectedBoard: 'msi',
         openAccordion: 1,
-        activeHotspot: null,
-        activeHotspotData: null,
+        activeHotspot: firstHotspot ? firstHotspot.id : null,
+        activeHotspotData: firstHotspot,
         
         // Safety step checkboxes
         safetyChecked: {
@@ -1578,7 +1584,13 @@ const appDataPayload = {
         }
       };
     });
-  });
+  }
+
+  if (window.Alpine) {
+    setupOL01CourseEngine();
+  } else {
+    document.addEventListener('alpine:init', setupOL01CourseEngine);
+  }
 </script>
 
 <style>
