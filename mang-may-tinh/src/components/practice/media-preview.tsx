@@ -19,27 +19,201 @@ export function MediaPreview({ currentStep }: MediaPreviewProps) {
 
   // Render sơ đồ mô phỏng theo từng bước kỹ thuật
   const renderDiagramContent = () => {
-    // Nếu bước có ảnh minh họa cục bộ cụ thể
-    if (currentStep.imageUrl) {
-      return (
-        <div className="space-y-4 text-center">
-          <div className="relative w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-700 shadow-md">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={currentStep.imageUrl}
-              alt={currentStep.title}
-              className="w-full h-auto max-h-[360px] object-contain mx-auto"
-            />
-          </div>
-          <div className="flex items-center justify-center gap-2 text-xs font-mono font-bold text-slate-800 bg-slate-100 border border-slate-200 p-2.5 rounded-xl">
-            <span>🖼️ Minh họa kỹ thuật:</span>
-            <span>Đối chiếu hình ảnh chuẩn hệ thống trước khi cấu hình</span>
-          </div>
-        </div>
-      );
-    }
-
     switch (currentStep.diagramType) {
+      case "share_private_network":
+        return (
+          <div className="space-y-4">
+            <div className="bg-slate-900 rounded-2xl p-4 sm:p-5 text-white border border-slate-700 space-y-3">
+              <div className="flex items-center justify-between text-xs font-mono border-b border-slate-800 pb-2 text-slate-400">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                  WINDOWS SETTINGS &gt; NETWORK PROFILE
+                </span>
+                <span className="text-emerald-400 font-bold">Step 1 / 5</span>
+              </div>
+
+              {/* Public option */}
+              <div className="p-3 rounded-xl bg-slate-800/60 border border-slate-700 flex items-start gap-3 opacity-60">
+                <div className="w-4 h-4 rounded-full border border-slate-400 mt-1 shrink-0"></div>
+                <div className="space-y-0.5 text-xs">
+                  <div className="font-bold text-slate-300">Public (Mạng công cộng - Đang chặn)</div>
+                  <div className="text-[11px] text-slate-400">
+                    Máy tính bị ẩn, tường lửa tự động khóa toàn bộ chia sẻ file và máy in.
+                  </div>
+                </div>
+              </div>
+
+              {/* Private option (Selected) */}
+              <div className="p-3.5 rounded-xl bg-slate-800 border-2 border-emerald-500 flex items-start gap-3 shadow-lg shadow-emerald-950/50">
+                <div className="w-4 h-4 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center mt-1 shrink-0">
+                  <div className="w-1.5 h-1.5 rounded-full bg-white"></div>
+                </div>
+                <div className="space-y-1 text-xs">
+                  <div className="font-bold text-emerald-400 flex items-center gap-2">
+                    <span>Private (Mạng riêng tư - Bắt buộc chọn)</span>
+                    <span className="px-1.5 py-0.5 rounded bg-emerald-900/80 text-emerald-200 text-[10px] font-mono">
+                      ✓ ĐÃ CHỌN
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-300 leading-relaxed">
+                    Cho phép các máy tính trong phòng thực hành nhìn thấy nhau và truyền tệp qua giao thức SMB (Cổng 445).
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-xs font-mono font-bold text-emerald-900 bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl text-center">
+              ✓ Cả máy phát và máy nhận đều phải chuyển sang Private Network!
+            </div>
+          </div>
+        );
+
+      case "share_advanced_settings":
+        return (
+          <div className="space-y-4">
+            <div className="bg-slate-900 rounded-2xl p-4 sm:p-5 text-white border border-slate-700 space-y-3 font-mono text-xs">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2 text-slate-400">
+                <span>CONTROL PANEL &gt; ADVANCED SHARING</span>
+                <span className="text-emerald-400 font-bold">Step 2 / 5</span>
+              </div>
+
+              <div className="space-y-2">
+                <div className="p-2.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-slate-200">
+                    <span className="w-4 h-4 rounded bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold">✓</span>
+                    <span>Turn on network discovery</span>
+                  </div>
+                  <span className="text-[10px] text-emerald-400 font-bold">BẬT</span>
+                </div>
+
+                <div className="p-2.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-slate-200">
+                    <span className="w-4 h-4 rounded bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold">✓</span>
+                    <span>Turn on file and printer sharing</span>
+                  </div>
+                  <span className="text-[10px] text-emerald-400 font-bold">BẬT</span>
+                </div>
+
+                <div className="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/80 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-amber-200 font-bold">
+                    <span className="w-4 h-4 rounded bg-amber-500 text-slate-950 flex items-center justify-center text-[10px] font-black">✓</span>
+                    <span>Turn off password protected sharing</span>
+                  </div>
+                  <span className="text-[10px] text-amber-400 font-black">TẮT MẬT KHẨU</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-xs font-mono font-bold text-amber-900 bg-amber-50 border border-amber-200 p-2.5 rounded-xl text-center">
+              💡 Tắt mật khẩu giúp học sinh trong bàn kỹ thuật truy cập thẳng không cần User/Pass!
+            </div>
+          </div>
+        );
+
+      case "share_permissions":
+        return (
+          <div className="space-y-4">
+            <div className="bg-slate-900 rounded-2xl p-4 sm:p-5 text-white border border-slate-700 space-y-3 font-mono text-xs">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2 text-slate-400">
+                <span>TAB SHARING &gt; PERMISSIONS</span>
+                <span className="text-emerald-400 font-bold">Step 3 / 5</span>
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300">
+                <span className="text-slate-400">Group or user: </span>
+                <strong className="text-white font-bold">Everyone</strong>
+              </div>
+
+              <div className="space-y-1.5 pt-1">
+                {[
+                  { name: "Full Control (Toàn quyền đọc/ghi/xóa)", allow: true },
+                  { name: "Change (Chỉnh sửa và thêm file mới)", allow: true },
+                  { name: "Read (Xem và sao chép dữ liệu)", allow: true },
+                ].map((p, idx) => (
+                  <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-slate-800/80 border border-slate-700">
+                    <span className="text-slate-300 text-[11px]">{p.name}</span>
+                    <span className="w-5 h-5 rounded bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">
+                      ✓
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="text-xs font-mono font-bold text-blue-900 bg-blue-50 border border-blue-200 p-2.5 rounded-xl text-center">
+              🚪 Cấp quyền tầng mạng: Cho phép mở rào đón dữ liệu từ toàn bộ mạng LAN!
+            </div>
+          </div>
+        );
+
+      case "share_security_tab":
+        return (
+          <div className="space-y-4">
+            <div className="bg-slate-900 rounded-2xl p-4 sm:p-5 text-white border border-slate-700 space-y-3 font-mono text-xs">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <span className="text-red-400 font-bold flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse"></span>
+                  TAB SECURITY (NTFS) - POKA-YOKE
+                </span>
+                <span className="text-emerald-400 font-bold">Step 4 / 5</span>
+              </div>
+
+              <div className="p-3 rounded-xl bg-red-950/40 border border-red-500/60 text-red-200 text-[11px] leading-relaxed">
+                <strong>BẮT BUỘC:</strong> Nhấn nút <strong>Edit...</strong> ➔ Nhấn <strong>Add...</strong> ➔ Gõ <strong>Everyone</strong> ➔ Tích <strong>Full Control</strong>!
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-slate-800 border border-slate-700 space-y-1.5">
+                <div className="flex justify-between text-slate-300">
+                  <span>Permissions for Everyone:</span>
+                  <span className="text-emerald-400 font-bold">ALLOW</span>
+                </div>
+                <div className="grid grid-cols-2 gap-1 text-[10px] text-slate-400">
+                  <div>✓ Full control</div>
+                  <div>✓ Modify</div>
+                  <div>✓ Read &amp; execute</div>
+                  <div>✓ Write (Ghi file)</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-xs font-mono font-bold text-red-900 bg-red-50 border border-red-200 p-2.5 rounded-xl text-center">
+              ⚠️ 99% trường hợp bị lỗi &quot;Access Denied&quot; là do quên cấp quyền tại Tab Security này!
+            </div>
+          </div>
+        );
+
+      case "share_run_ip":
+        return (
+          <div className="space-y-4">
+            <div className="bg-slate-900 rounded-2xl p-4 sm:p-5 text-white border border-slate-700 space-y-3 font-mono text-xs">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2 text-slate-400">
+                <span>WINDOWS + R &gt; RUN DIALOG</span>
+                <span className="text-emerald-400 font-bold">Step 5 / 5</span>
+              </div>
+
+              {/* Mô phỏng hộp thoại Run */}
+              <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-700 space-y-2">
+                <span className="text-[11px] text-slate-400">Nhập đường dẫn IP máy chủ chia sẻ:</span>
+                <div className="p-2.5 rounded-lg bg-slate-800 border-2 border-emerald-500 text-white font-mono text-sm font-bold flex items-center justify-between">
+                  <span className="text-emerald-400">\\192.168.1.50</span>
+                  <span className="text-[10px] bg-emerald-600 px-2 py-0.5 rounded text-white font-sans">
+                    Nhấn Enter
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 flex items-center gap-2">
+                <span className="text-base">📁</span>
+                <span className="font-bold text-white">D:\TAI_LIEU_THUC_HANH</span>
+                <span className="text-emerald-400 ml-auto font-bold">✓ ĐÃ KẾT NỐI</span>
+              </div>
+            </div>
+
+            <div className="text-xs font-mono font-bold text-emerald-900 bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl text-center">
+              🎉 Thư mục đã mở thành công! Bạn có thể kéo thả copy file trực tiếp qua mạng LAN.
+            </div>
+          </div>
+        );
       case "strip_cable":
         return (
           <div className="space-y-4 text-center">

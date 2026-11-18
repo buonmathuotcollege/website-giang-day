@@ -29,7 +29,12 @@ export interface LabStep {
     | "subnetting"            // Phân chia mạng con Subnetting
     | "switch_vlan"           // Phân chia VLAN trên Switch tủ Rack
     | "router_dhcp"           // Cấu hình Router & DHCP Pool
-    | "troubleshoot_cmd";     // Lệnh CMD chẩn đoán lỗi mạng (Ping/Tracert)
+    | "troubleshoot_cmd"      // Lệnh CMD chẩn đoán lỗi mạng (Ping/Tracert)
+    | "share_private_network" // Chuyển mạng sang Private Network
+    | "share_advanced_settings"// Bật Network Discovery & Tắt Password
+    | "share_permissions"     // Cấp quyền Everyone ở Tab Sharing
+    | "share_security_tab"    // Cấp quyền Everyone ở Tab Security (NTFS)
+    | "share_run_ip";         // Truy cập qua lệnh Run \\IP
 }
 
 export interface LabLesson {
