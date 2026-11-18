@@ -553,7 +553,7 @@ export const ALL_COURSES_CURRICULUM: Record<string, Record<string, LessonContent
       stepNum: 8,
       title: 'Chương 8: Kỹ thuật Kết nối Mạng diện rộng (WAN) & Đường hầm VPN',
       summary: 'Các công nghệ đường truyền WAN Leased-line, cáp quang FTTH, và thiết lập đường hầm ảo VPN IPsec Site-to-Site mã hóa an toàn qua Internet.',
-      analogy: 'VPN Site-to-Site giống như một đường hầm bọc thép ngầm chạy xuyên qua lòng thành phố công cộng: Chi nhánh Buôn Ma Thuột và trụ sở TP. Hồ Chí Minh truyền hồ sơ mật qua Internet công cộng nhưng dữ liệu được đóng vào hòm sắt mã hóa, người ngoài nhìn vào chỉ thấy các khối ký tự xáo trộn vô nghĩa.',
+      analogy: 'VPN Site-to-Site giống như một đường hầm bọc thép ngầm chạy xuyên qua lòng thành phố công cộng: Chi nhánh Tây Nguyên và trụ sở TP. Hồ Chí Minh truyền hồ sơ mật qua Internet công cộng nhưng dữ liệu được đóng vào hòm sắt mã hóa, người ngoài nhìn vào chỉ thấy các khối ký tự xáo trộn vô nghĩa.',
       actions: [
         'Phân loại công nghệ WAN: Kênh thuê riêng Leased-Line (đắt đỏ, bảo mật cao), Đường truyền Internet băng rộng FTTH (tiết kiệm), Mạng diện rộng ảo SD-WAN.',
         'Nguyên lý VPN IPsec: Tạo đường hầm ảo (Tunneling), Xác thực danh tính 2 đầu (Authentication) và Mã hóa dữ liệu bằng thuật toán AES.',

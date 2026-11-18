@@ -7,7 +7,10 @@ import {
 export const prerender = false;
 ---
 
-<BaseLayout title="Xưởng Thực Hành Kỹ Thuật - 10 Bàn Máy 3 Người">
+<BaseLayout
+  title="Phòng Máy Thực Hành Kỹ Thuật · CN. Phạm Tiến Đông"
+  description="Phòng máy thực hành huấn luyện KTV 10 bàn máy theo chu trình 3 KTV/bàn, trạm xoay vòng Poka-Yoke và phiếu chấm điểm thực chiến."
+>
   <section class="max-w-5xl mx-auto px-4 py-6 sm:py-8" x-data="workshopEngine">
     
     <!-- TOP MINIMALIST BAR (SHADCN / DUB STYLE) -->
@@ -713,7 +716,7 @@ export const prerender = false;
         this.showTeacherModal = true;
         this.teacherAuthError = '';
         const token = sessionStorage.getItem('CNTT_ADMIN_TOKEN') || localStorage.getItem('CNTT_ADMIN_TOKEN') ||
-                      sessionStorage.getItem('BMTC_ADMIN_TOKEN') || localStorage.getItem('BMTC_ADMIN_TOKEN');
+                      sessionStorage.getItem('TEACHER_ADMIN_TOKEN') || localStorage.getItem('TEACHER_ADMIN_TOKEN');
         if (token) {
           try {
             const res = await fetch('/api/auth', { headers: { 'Authorization': 'Bearer ' + token } });
@@ -800,7 +803,7 @@ export const prerender = false;
 
       async loadClasses() {
         try {
-          const raw = localStorage.getItem('CNTT_CLASSES') || localStorage.getItem('BMTC_CLASSES');
+          const raw = localStorage.getItem('CNTT_CLASSES');
           if (raw) this.availableClasses = JSON.parse(raw);
           const res = await fetch('/api/classes');
           const data = await res.json();
@@ -820,7 +823,7 @@ export const prerender = false;
         if (!this.selectedClassName) return;
         const tCls = (this.availableClasses || []).find(c => c.class_name === this.selectedClassName || c.class_code === this.selectedClassName || c.id === this.selectedClassName);
         try {
-          const allStore = JSON.parse(localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('BMTC_STUDENTS') || '{}');
+          const allStore = JSON.parse(localStorage.getItem('CNTT_STUDENTS') || '{}');
           if (tCls && allStore[tCls.id]) {
             this.studentsInClass = allStore[tCls.id];
           }
@@ -872,7 +875,7 @@ export const prerender = false;
         }
 
         const token = sessionStorage.getItem('CNTT_ADMIN_TOKEN') || localStorage.getItem('CNTT_ADMIN_TOKEN') ||
-                      sessionStorage.getItem('BMTC_ADMIN_TOKEN') || localStorage.getItem('BMTC_ADMIN_TOKEN');
+                      sessionStorage.getItem('TEACHER_ADMIN_TOKEN') || localStorage.getItem('TEACHER_ADMIN_TOKEN');
         if (!token) {
           alert('Yêu cầu quyền Giảng viên để lưu điểm! Vui lòng nhập mã bí mật để xác thực.');
           this.isTeacherUnlocked = false;
@@ -932,7 +935,7 @@ export const prerender = false;
 
       loadSaved() {
         try {
-          const raw = localStorage.getItem('CNTT_WORKSHOP_CREWS') || localStorage.getItem('BMTC_WORKSHOP_CREWS');
+          const raw = localStorage.getItem('CNTT_WORKSHOP_CREWS');
           if (raw) {
             const data = JSON.parse(raw);
             if (data && Array.isArray(data.crews)) {

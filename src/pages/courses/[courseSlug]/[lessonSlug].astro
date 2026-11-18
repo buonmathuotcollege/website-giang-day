@@ -82,7 +82,7 @@ const assessmentSlug = course.slug.includes('mang') || course.slug.includes('lan
       {isHardware && stepData && (
         <div class="space-y-6 text-gray-800 text-sm sm:text-base">
           <div class="p-4 rounded-xl bg-amber-50 border-l-4 border-amber-500 text-amber-900 text-xs sm:text-sm">
-            <strong>🛠️ Tác phong kỹ thuật viên:</strong> Đây là bài học thực hành xưởng, tuyệt đối không học vẹt lý thuyết suông. Học sinh cầm cẩm nang trên tay, đọc tới đâu tự tay làm trên máy thật tới đó. Chưa rõ thao tác nào phải báo ngay cho Giáo viên hướng dẫn.
+            <strong>🛠️ Tác phong kỹ thuật viên:</strong> Đây là bài học thực hành kỹ thuật phòng máy, tuyệt đối không học vẹt lý thuyết suông. Học sinh cầm cẩm nang trên tay, đọc tới đâu tự tay làm trên máy thật tới đó. Chưa rõ thao tác nào phải báo ngay cho Giảng viên hướng dẫn.
           </div>
 
           <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
@@ -397,7 +397,7 @@ const assessmentSlug = course.slug.includes('mang') || course.slug.includes('lan
         {prevChapter ? (
           <a
             href={`/courses/${course.slug}/${prevChapter.slug}`}
-            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors no-underline"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors no-underline min-h-[44px] touch-manipulation"
           >
             <span>←</span>
             <span class="truncate max-w-[200px]">{prevChapter.title}</span>
@@ -405,7 +405,7 @@ const assessmentSlug = course.slug.includes('mang') || course.slug.includes('lan
         ) : (
           <a
             href={`/courses/${course.slug}`}
-            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors no-underline"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors no-underline min-h-[44px] touch-manipulation"
           >
             ← Danh sách chương
           </a>
@@ -413,7 +413,7 @@ const assessmentSlug = course.slug.includes('mang') || course.slug.includes('lan
 
         <a
           href={`/courses/${course.slug}`}
-          class="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors no-underline hidden sm:inline-block"
+          class="text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors no-underline hidden sm:inline-flex items-center min-h-[44px]"
         >
           {course.icon} {course.name}
         </a>
@@ -421,7 +421,7 @@ const assessmentSlug = course.slug.includes('mang') || course.slug.includes('lan
         {nextChapter ? (
           <a
             href={`/courses/${course.slug}/${nextChapter.slug}`}
-            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors no-underline"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors no-underline min-h-[44px] touch-manipulation shadow-xs"
           >
             <span class="truncate max-w-[200px]">{nextChapter.title}</span>
             <span>→</span>
@@ -429,7 +429,7 @@ const assessmentSlug = course.slug.includes('mang') || course.slug.includes('lan
         ) : (
           <a
             href={`/assessment/${assessmentSlug}`}
-            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors no-underline"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-700 transition-colors no-underline min-h-[44px] touch-manipulation shadow-xs"
           >
             <span>Làm bài sát hạch →</span>
           </a>

@@ -135,7 +135,7 @@ export async function checkAdminAuth(request: Request, env: any): Promise<boolea
     }
     
     // Chuẩn 3: Tạm thời tương thích ngược token legacy (chỉ chấp nhận nếu còn trong hạn 7 ngày)
-    const legacyPrefixes = ["cntt_sec_", "bmtc_sec_"];
+    const legacyPrefixes = ["cntt_sec_", "teacher_sec_"];
     for (const prefix of legacyPrefixes) {
       if (token.startsWith(prefix)) {
         try {

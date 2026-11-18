@@ -84,7 +84,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     // Handle feedback rating (thumbs up / down)
     if (action === 'feedback') {
-      console.log(`[Chat Feedback] rating=${rating}`);
       return new Response(
         JSON.stringify({ ok: true, message: 'Cảm ơn bạn đã gửi phản hồi giúp Trợ lý AI học tốt hơn!' }),
         { status: 200, headers: { 'Content-Type': 'application/json' } }

@@ -5,7 +5,7 @@
 <div
   x-data="aiChatbot()"
   x-cloak
-  class="fixed bottom-5 right-5 z-50 font-sans"
+  class="fixed bottom-3 right-3 sm:bottom-5 sm:right-5 z-50 font-sans"
   @keydown.escape.window="isOpen = false"
 >
   <!-- Nút mở chat nổi ở góc màn hình -->
@@ -16,7 +16,7 @@
     x-transition:enter-end="opacity-100 scale-100 translate-y-0"
     @click="openChat()"
     type="button"
-    class="group flex items-center gap-2.5 px-4 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-slate-700 cursor-pointer"
+    class="group flex items-center gap-2.5 px-4 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-slate-700 cursor-pointer min-h-[48px] touch-manipulation"
     aria-label="Mở Trợ lý AI"
   >
     <div class="relative flex items-center justify-center w-8 h-8 rounded-full bg-slate-800 border border-slate-700">
@@ -65,7 +65,8 @@
         <button
           @click="resetChat()"
           title="Xóa hội thoại"
-          class="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+          aria-label="Xóa hội thoại"
+          class="min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors cursor-pointer touch-manipulation"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -74,7 +75,8 @@
         <button
           @click="isOpen = false"
           title="Thu nhỏ"
-          class="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+          aria-label="Thu nhỏ cửa sổ chat"
+          class="min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors cursor-pointer touch-manipulation"
         >
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

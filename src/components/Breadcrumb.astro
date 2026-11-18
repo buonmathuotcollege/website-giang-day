@@ -12,15 +12,15 @@ const allItems = items[0]?.href === '/' && items[0]?.label === 'Trang chủ'
   : [{ label: 'Trang chủ', href: '/' }, ...items];
 ---
 
-<nav aria-label="Breadcrumb" class="text-sm text-gray-500 mb-4">
-  <ol class="flex flex-wrap items-center gap-1">
+<nav aria-label="Breadcrumb" class="text-xs sm:text-sm text-slate-600 mb-4">
+  <ol class="flex flex-wrap items-center gap-1.5">
     {allItems.map((item, i) => (
-      <li class="flex items-center gap-1">
-        {i > 0 && <span class="text-gray-400">/</span>}
+      <li class="flex items-center gap-1.5">
+        {i > 0 && <span class="text-slate-400">/</span>}
         {i < allItems.length - 1 && item.href ? (
-          <a href={item.href} class="hover:text-primary-700 hover:underline transition-colors">{item.label}</a>
+          <a href={item.href} class="text-slate-700 hover:text-primary-800 hover:underline transition-colors font-medium py-1 min-h-[36px] inline-flex items-center touch-manipulation">{item.label}</a>
         ) : (
-          <span class="text-gray-700 font-medium">{item.label}</span>
+          <span class="text-slate-900 font-bold">{item.label}</span>
         )}
       </li>
     ))}

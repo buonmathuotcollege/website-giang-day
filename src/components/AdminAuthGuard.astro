@@ -131,7 +131,7 @@ const { pageTitle = "Bảng điều khiển Giảng viên" } = Astro.props;
     const originalFetch = window.fetch;
     window.fetch = function(url, options = {}) {
       const token = sessionStorage.getItem('CNTT_ADMIN_TOKEN') || localStorage.getItem('CNTT_ADMIN_TOKEN') ||
-                    sessionStorage.getItem('BMTC_ADMIN_TOKEN') || localStorage.getItem('BMTC_ADMIN_TOKEN');
+                    sessionStorage.getItem('TEACHER_ADMIN_TOKEN') || localStorage.getItem('TEACHER_ADMIN_TOKEN');
       const isInternalApi = typeof url === 'string' && (
         url.startsWith('/api/') || 
         (typeof window !== 'undefined' && url.startsWith(window.location.origin + '/api/'))
@@ -166,7 +166,7 @@ const { pageTitle = "Bảng điều khiển Giảng viên" } = Astro.props;
 
       async init() {
         const storedToken = sessionStorage.getItem('CNTT_ADMIN_TOKEN') || localStorage.getItem('CNTT_ADMIN_TOKEN') ||
-                            sessionStorage.getItem('BMTC_ADMIN_TOKEN') || localStorage.getItem('BMTC_ADMIN_TOKEN');
+                            sessionStorage.getItem('TEACHER_ADMIN_TOKEN') || localStorage.getItem('TEACHER_ADMIN_TOKEN');
         if (!storedToken) {
           this.isAuthenticated = false;
           return;
@@ -174,7 +174,7 @@ const { pageTitle = "Bảng điều khiển Giảng viên" } = Astro.props;
 
         try {
           const rawTeacher = sessionStorage.getItem('CNTT_TEACHER_INFO') || localStorage.getItem('CNTT_TEACHER_INFO') ||
-                             sessionStorage.getItem('BMTC_TEACHER_INFO') || localStorage.getItem('BMTC_TEACHER_INFO');
+                             sessionStorage.getItem('TEACHER_INFO') || localStorage.getItem('TEACHER_INFO');
           if (rawTeacher) this.teacherInfo = JSON.parse(rawTeacher);
         } catch(e) {}
 
@@ -229,10 +229,10 @@ const { pageTitle = "Bảng điều khiển Giảng viên" } = Astro.props;
               localStorage.removeItem('CNTT_TEACHER_INFO');
             }
             // Dọn sạch các key cũ nếu có
-            sessionStorage.removeItem('BMTC_ADMIN_TOKEN');
-            sessionStorage.removeItem('BMTC_TEACHER_INFO');
-            localStorage.removeItem('BMTC_ADMIN_TOKEN');
-            localStorage.removeItem('BMTC_TEACHER_INFO');
+            sessionStorage.removeItem('TEACHER_ADMIN_TOKEN');
+            sessionStorage.removeItem('TEACHER_INFO');
+            localStorage.removeItem('TEACHER_ADMIN_TOKEN');
+            localStorage.removeItem('TEACHER_INFO');
             this.secretInput = '';
           } else {
             this.errorMessage = data.error || 'Mã bí mật không chính xác. Quyền truy cập bị từ chối!';
@@ -251,10 +251,10 @@ const { pageTitle = "Bảng điều khiển Giảng viên" } = Astro.props;
         sessionStorage.removeItem('CNTT_TEACHER_INFO');
         localStorage.removeItem('CNTT_ADMIN_TOKEN');
         localStorage.removeItem('CNTT_TEACHER_INFO');
-        sessionStorage.removeItem('BMTC_ADMIN_TOKEN');
-        sessionStorage.removeItem('BMTC_TEACHER_INFO');
-        localStorage.removeItem('BMTC_ADMIN_TOKEN');
-        localStorage.removeItem('BMTC_TEACHER_INFO');
+        sessionStorage.removeItem('TEACHER_ADMIN_TOKEN');
+        sessionStorage.removeItem('TEACHER_INFO');
+        localStorage.removeItem('TEACHER_ADMIN_TOKEN');
+        localStorage.removeItem('TEACHER_INFO');
         this.isAuthenticated = false;
         this.secretInput = '';
       }

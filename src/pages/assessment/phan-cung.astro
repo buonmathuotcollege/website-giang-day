@@ -1662,7 +1662,7 @@ const exam = {
         },
 
         async loadClasses() {
-          const localClasses = localStorage.getItem('CNTT_CLASSES') || localStorage.getItem('BMTC_CLASSES');
+          const localClasses = localStorage.getItem('CNTT_CLASSES');
           if (localClasses) {
             try {
               this.availableClasses = JSON.parse(localClasses);
@@ -1696,7 +1696,7 @@ const exam = {
           let foundLocal = false;
           const targetCls = (this.availableClasses || []).find(c => c.class_name === this.student.className || c.class_code === this.student.className || c.id === this.student.className);
           try {
-            const allStudentsStore = JSON.parse(localStorage.getItem('CNTT_STUDENTS') || localStorage.getItem('BMTC_STUDENTS') || '{}');
+            const allStudentsStore = JSON.parse(localStorage.getItem('CNTT_STUDENTS') || '{}');
             if (targetCls && allStudentsStore[targetCls.id]) {
               this.classStudentsList = allStudentsStore[targetCls.id];
               foundLocal = true;
@@ -1812,7 +1812,7 @@ const exam = {
 
         checkSavedSession() {
           try {
-            const raw = localStorage.getItem('cntt_hardware_state_v2') || localStorage.getItem('bmtc_hardware_state_v2');
+            const raw = localStorage.getItem('cntt_hardware_state_v2');
             if (raw) {
               const data = JSON.parse(raw);
               if (data && (data.student?.name || Object.keys(data.mcqAnswers || {}).length > 0)) {
@@ -1828,7 +1828,7 @@ const exam = {
 
         restoreSavedSession() {
           try {
-            const raw = localStorage.getItem('cntt_hardware_state_v2') || localStorage.getItem('bmtc_hardware_state_v2');
+            const raw = localStorage.getItem('cntt_hardware_state_v2');
             if (raw) {
               const data = JSON.parse(raw);
               if (data.student) this.student = data.student;
@@ -1859,7 +1859,6 @@ const exam = {
         discardSavedSession() {
           try {
             localStorage.removeItem('cntt_hardware_state_v2');
-            localStorage.removeItem('bmtc_hardware_state_v2');
           } catch (e) {}
           this.showRecoveryBanner = false;
         },

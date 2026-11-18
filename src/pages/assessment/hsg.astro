@@ -5,10 +5,11 @@ import { SUBNET_CHEAT_SHEET, HSG_QUESTION_BANK } from '../../data/hsgCurriculum'
 
 export const prerender = true;
 
-const title = "Ôn Luyện Thi Học Sinh Giỏi: Phần Cứng & Mạng Máy Tính";
+const title = "Bồi Dưỡng Đội Tuyển Học Sinh Giỏi CNTT · CN. Phạm Tiến Đông";
+const description = "Hệ thống bồi dưỡng kiến thức chuyên sâu: Phân tích kiến trúc bo mạch & CPU, kỹ thuật tính nhẩm Subnetting IPv4 trong 30 giây, mô hình OSI/TCP-IP và trắc nghiệm thực chiến.";
 ---
 
-<BaseLayout title={`${title} - Chuyên Đề Bồi Dưỡng Chuyên Sâu`}>
+<BaseLayout title={title} description={description}>
   <div x-data="hsgTrainingApp()" class="max-w-6xl mx-auto px-4 py-6 sm:py-8 font-sans">
     
     <!-- Breadcrumb -->
