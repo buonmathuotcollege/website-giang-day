@@ -10,6 +10,9 @@ command = "npm run build"
 directory = "dist"
 binding = "ASSETS"
 
+[vars]
+GEMINI_MODEL = "gemini-3.5-flash-lite"
+
 # ==============================================================================
 # CẤU HÌNH CƠ SỞ DỮ LIỆU CLOUDFLARE D1
 # Lưu ý: Khi chưa điền mã UUID thật từ Cloudflare Dashboard, tạm thời đóng comment mục này

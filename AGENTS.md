@@ -117,3 +117,22 @@
   6. `/speckit-implement` & `/speckit-converge`: Thực thi từng nhiệm vụ và kiểm định chất lượng (`npm run build` 0 lỗi, kiểm thử di động).
 * **Vị trí lưu trữ tài liệu đặc tả:** Toàn bộ các bản đặc tả được lưu tập trung trong thư mục `/specs/[###-ten-tinh-nang]/`.
 
+---
+
+## 9. QUY CHUẨN VẬN HÀNH AI AGENT (CHUẨN LAUREN TAN - VERIFICATION FIRST & WINDOWS SYSTEM ENGINEERING)
+* **Mô hình phân tầng Kim tự tháp Lauren Tan (Harness Engineering):**
+  1. **Codebase (Mã nguồn):** Thiết kế API tốt, kiến trúc rõ ràng, module hóa, phân tách Menu UI và các hàm `:API_*`. Quản lý biến với `setlocal`/`endlocal`.
+  2. **Phân tích tĩnh (Static Analysis):** Linter tự động, cấm 100% `wmic`, cấm tiếng Việt có dấu trong các dòng `echo` (chỉ dùng ASCII), kiểm tra cân bằng cặp ngoặc `()`, kiểm tra toàn vẹn nhãn `goto`/`call`.
+  3. **Xác minh (Verification):** Kiểm thử thực nghiệm tự động qua dry-run và kiểm tra CMD parser, tương thích CIM/PowerShell engine. Cấm chạy lệnh phá hủy hệ thống khi test.
+  4. **Hướng dẫn & quy tắc (Prose):** Quy định trong `AGENTS.md`, `GEMINI.md`, `.agents/rules/` và `.agents/skills/`.
+  5. **Con người kiểm duyệt (Human Review):** Báo cáo minh bạch, bắt buộc đính kèm log kiểm thử thực tế trước khi bàn giao.
+* **Quy trình 3 bước bắt buộc trong mọi phiên làm việc (3-Step Discipline):**
+  - **Bước 1 (UNDERSTAND):** Đọc kỹ toàn bộ file trước khi sửa, tra cứu tài liệu lệnh Windows nếu chưa chắc chắn 100%.
+  - **Bước 2 (PLAN):** Lập kế hoạch ngắn gọn nêu rõ khối lệnh sẽ thêm/sửa, tác động hệ thống và cách kiểm chứng.
+  - **Bước 3 (BUILD & VERIFY):** Cấm báo cáo xong suông. Sau khi sửa file `.bat`, bắt buộc phải tự kiểm tra cú pháp và chạy thử an toàn qua Terminal bằng lệnh:
+    ```powershell
+    powershell -NoProfile -ExecutionPolicy Bypass -File ".agents\skills\test-batch-script\verify_batch.ps1" -TargetPath "TOOL_IT_HELPDESK_PRO_V3.5_CLEAN_LTS.bat"
+    ```
+    Chỉ khi kết quả đạt **100% PASS** mới được đính kèm log thực tế khi bàn giao cho Human Review.
+
+
