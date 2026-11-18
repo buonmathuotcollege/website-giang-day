@@ -39,9 +39,14 @@ export default function HomePage() {
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <a href="/thuc-hanh/bam-cap-rj45/">
+              <Button size="touch" className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md">
+                <span>📖 Mở Bài Lab iFixit (Bấm Cáp LAB-01)</span>
+              </Button>
+            </a>
             <a href="#bam-cap-rj45">
               <Button size="touch" className="bg-slate-900 hover:bg-slate-800 text-white font-bold">
-                Bấm Cáp RJ45 (KTV 1)
+                Mô Phỏng 8 Màu RJ45
               </Button>
             </a>
             <a href="#chia-subnet">
