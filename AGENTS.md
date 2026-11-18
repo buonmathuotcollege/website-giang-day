@@ -102,3 +102,18 @@
     - DDR4: Khe cắm hiện đại, khuyết hơi lệch, Bus 2400/2666/3200 MHz (cấu hình phòng máy thực tế).
     - DDR5: Thế hệ mới nhất, khuyết gần chính giữa, tích hợp chip quản lý nguồn PMIC, Bus 4800/5600/6000+ MHz.
     - Kỹ thuật Dual-Channel: Cắm 2 thanh cùng dung lượng/bus để tăng gấp đôi băng thông truyền dữ liệu (mặt bàn 2 làn xe).
+
+---
+
+## 8. QUY TRÌNH PHÁT TRIỂN HƯỚNG ĐẶC TẢ (SPEC-DRIVEN DEVELOPMENT - SPEC-KIT MANDATE)
+* **Khung chuẩn áp dụng:** Dự án chính thức chuẩn hóa theo quy trình **Spec-Driven Development** của **GitHub Spec Kit** (`github/spec-kit`).
+* **Nguồn chân lý tối cao:** Hiến chương dự án được lưu tại `.specify/memory/constitution.md` (đồng bộ 100% với `AGENTS.md`).
+* **Chu trình triển khai tính năng:** Mọi AI Agent khi thực hiện công việc lập trình hoặc bổ sung giáo trình/học liệu BẮT BUỘC tuân theo các bước:
+  1. `/speckit-constitution`: Kiểm tra và đối chiếu các nguyên tắc của Hiến chương.
+  2. `/speckit-specify`: Soạn thảo đặc tả tính năng (`specs/[###-ten-tinh-nang]/spec.md`) với các User Story ưu tiên P1 (MVP).
+  3. `/speckit-clarify`: Đặt câu hỏi phỏng vấn để làm rõ các điểm mơ hồ, giả định ngầm.
+  4. `/speckit-plan`: Lập kế hoạch kỹ thuật (`plan.md`, `data-model.md`, `contracts/`), kiểm tra cổng Hiến chương.
+  5. `/speckit-tasks`: Phân rã danh sách nhiệm vụ nguyên tử (`tasks.md`).
+  6. `/speckit-implement` & `/speckit-converge`: Thực thi từng nhiệm vụ và kiểm định chất lượng (`npm run build` 0 lỗi, kiểm thử di động).
+* **Vị trí lưu trữ tài liệu đặc tả:** Toàn bộ các bản đặc tả được lưu tập trung trong thư mục `/specs/[###-ten-tinh-nang]/`.
+
