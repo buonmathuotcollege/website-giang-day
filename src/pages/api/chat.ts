@@ -27,7 +27,22 @@ RANH GIỚI PHẠM VI (GUARDRAILS) - BẮT BUỘC TUÂN THỦ 100%:
 4. PHONG CÁCH TRẢ LỜI CHO CÂU HỎI HỢP LỆ:
    - Siêu ngắn gọn: từ 2 đến 4 gạch đầu dòng (dưới 80 từ).
    - Dùng ví dụ quen thuộc (RAM là mặt bàn, SSD là tủ sách, IP là số nhà, CPU là bộ não).
-   - Tự xưng là "mình" hoặc "Trợ lý AI", gọi người học là "bạn", thân thiện, khách quan, khích lệ tinh thần học tập. TUYỆT ĐỐI KHÔNG đóng vai hay xưng là "Thầy Đồng" hoặc "thầy".`;
+   - Tự xưng là "mình" hoặc "Trợ lý AI", gọi người học là "bạn", thân thiện, khách quan, khích lệ tinh thần học tập. TUYỆT ĐỐI KHÔNG đóng vai hay xưng là "Thầy Đồng" hoặc "thầy".
+
+5. KHO HÌNH ẢNH THỰC TẾ (CHÈN VÀO CUỐI KHI CẦN MINH HỌA TRỰC QUAN):
+   Nếu câu hỏi liên quan đến linh kiện hoặc quy trình thực hành, bạn CÓ THỂ chèn thẻ ảnh Markdown sau vào cuối câu trả lời:
+   - Main ASUS: ![Bo mạch chủ ASUS H510M-K](/images/ol-01/main-asus-h510.jpg)
+   - Main MSI: ![Bo mạch chủ MSI H510M-A PRO](/images/ol-01/main-h510.jpg)
+   - Main Winnfox: ![Bo mạch chủ WINNFOX H510G](/images/ol-01/main-winnfox-h510.jpg)
+   - Keo tản nhiệt hạt đậu xanh: ![Tra keo tản nhiệt hạt đậu xanh](/images/ol-01/step-4-tra-keo-hat-dau-xanh.jpg)
+   - Sơ đồ F_PANEL: ![Sơ đồ 9 chân Front Panel](/images/ol-01/guide-fpanel-diagram.jpg)
+   - Pin CMOS: ![Tháo pin CMOS và vị trí JBAT1](/images/ol-01/guide-clear-cmos-pin.jpg)
+   - Vệ sinh RAM: ![Chà chân RAM bằng gôm tẩy](/images/ol-01/step-3-cha-ram-cuc-tay.jpg)
+   - RAM DDR4: ![Thanh RAM DDR4 chân khuyết lệch](/images/ol-01/ram-ddr4.jpg)
+   - VGA GT 730: ![Card đồ họa NVIDIA GeForce GT 730](/images/ol-01/vga-gt730.jpg)
+   - Tháo máy: ![Sơ đồ quy trình tháo máy](/images/ol-01/workflow-thao-may.jpg)
+   - Lắp máy: ![Sơ đồ quy trình lắp máy](/images/ol-01/workflow-lap-may.jpg)
+   - Cài Win 10: ![Phân vùng cài đặt Windows 10](/images/ol-01/step-5-cai-win10-partition.jpg)`;
 
 function getGeminiKey(env: any): string {
   return (env?.GEMINI_API_KEY || (typeof process !== 'undefined' ? (process as any).env?.GEMINI_API_KEY : '') || '').trim();
@@ -95,7 +110,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // LỚP 1: KIỂM TRA BỘ ENGINE TRI THỨC CỤC BỘ (PHẢN HỒI SIÊU TỐC 5MS)
     // Miễn nhiễm 100% với lỗi User Location / Cloudflare Geoblocking / Rớt mạng API
     // =========================================================================
-    const instantKnowledge = matchKnowledge(cleanMsg);
+    const instantKnowledge = matchKnowledge(cleanMsg, history);
     if (instantKnowledge) {
       return new Response(
         JSON.stringify({ reply: instantKnowledge, fromKnowledgeEngine: true }),

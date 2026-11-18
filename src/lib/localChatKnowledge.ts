@@ -18,42 +18,76 @@ function removeAccents(str: string): string {
     .toLowerCase();
 }
 
-export function matchKnowledge(rawQuery: string): string | null {
+export function matchKnowledge(rawQuery: string, history: any[] = []): string | null {
   if (!rawQuery || typeof rawQuery !== 'string') return null;
-  const q = rawQuery.trim().toLowerCase();
-  const qNoAccent = removeAccents(q);
+  let q = rawQuery.trim().toLowerCase();
+  let qNoAccent = removeAccents(q);
+
+  // KẾ THỪA NGỮ CẢNH TỪ LỊCH SỬ HỘI THOẠI TRONG PHIÊN (SESSION MEMORY)
+  if (Array.isArray(history) && history.length > 0) {
+    const recentText = history.slice(-2).map((h: any) => String(h.text || h.content || '')).join(' ').toLowerCase();
+    const recentNoAccent = removeAccents(recentText);
+    
+    // Nếu câu hỏi hiện tại ngắn hoặc có tính chất tiếp nối đại từ
+    const isFollowUp = qNoAccent.includes('con') || qNoAccent.includes('o dau') || qNoAccent.includes('the nao') || qNoAccent.includes('phim gi') || qNoAccent.length < 25;
+    if (isFollowUp) {
+      if (recentNoAccent.includes('asus') && !qNoAccent.includes('msi') && !qNoAccent.includes('winnfox')) {
+        qNoAccent += ' asus';
+      } else if (recentNoAccent.includes('msi') && !qNoAccent.includes('asus') && !qNoAccent.includes('winnfox')) {
+        qNoAccent += ' msi';
+      } else if ((recentNoAccent.includes('winnfox') || recentNoAccent.includes('winfox')) && !qNoAccent.includes('asus')) {
+        qNoAccent += ' winnfox';
+      } else if (recentNoAccent.includes('ram') && !qNoAccent.includes('o cung')) {
+        qNoAccent += ' ram';
+      }
+    }
+  }
 
   // =========================================================================
   // 1. PHÍM BOOT USB & PHÍM VÀO BIOS CÁC DÒNG BO MẠCH & MÁY TÍNH
   // =========================================================================
 
-  // ASUS
-  if ((qNoAccent.includes('boot') || qNoAccent.includes('usb') || qNoAccent.includes('bios')) && qNoAccent.includes('asus')) {
+  // SO SÁNH 3 DÒNG MAINBOARD
+  if (qNoAccent.includes('so sanh main') || (qNoAccent.includes('asus') && qNoAccent.includes('msi') && qNoAccent.includes('winnfox'))) {
     return [
-      'Phím tắt Boot USB và BIOS của bo mạch chủ **ASUS**:',
+      'So sánh nhanh 3 bo mạch chủ Intel H510 phòng máy:',
+      '• **ASUS H510M-K:** Phím boot **F8**, chất lượng linh kiện bền bỉ, BIOS tiếng Việt trực quan.',
+      '• **MSI H510M-A PRO:** Phím boot **F11**, có 4 đèn **EZ Debug LED** báo lỗi thông minh (CPU-DRAM-VGA-BOOT).',
+      '• **WINNFOX H510G:** Phím boot **F11**, bo mạch tối giản, bắt buộc cắm loa Buzzer bíp để chẩn đoán sự cố.',
+      '\n![Bảng so sánh 3 dòng bo mạch chủ ASUS - MSI - WINNFOX H510](/images/ol-01/main-h510-compare.jpg)'
+    ].join('\n');
+  }
+
+  // ASUS
+  if ((qNoAccent.includes('boot') || qNoAccent.includes('usb') || qNoAccent.includes('bios') || qNoAccent.includes('main')) && qNoAccent.includes('asus')) {
+    return [
+      'Phím tắt Boot USB và BIOS của bo mạch chủ **ASUS** (chuẩn H510M-K):',
       '• **Phím Boot Menu (chọn USB Boot):** Bấm phím **F8** liên tục ngay khi vừa bật nguồn.',
       '• **Phím vào BIOS:** Bấm phím **Delete (Del)** hoặc **F2**.',
-      '⚠️ *Lưu ý KTV phòng thực hành:* Tuyệt đối không bấm phím F11 (F11 là của MSI, bấm trên main ASUS sẽ không lên Boot Menu).'
+      '⚠️ *Lưu ý KTV phòng thực hành:* Tuyệt đối không bấm phím F11 (F11 là của MSI, bấm trên main ASUS sẽ không lên Boot Menu).',
+      '\n![Bo mạch chủ ASUS Prime H510M-K phòng máy](/images/ol-01/main-asus-h510.jpg)'
     ].join('\n');
   }
 
   // MSI
-  if ((qNoAccent.includes('boot') || qNoAccent.includes('usb') || qNoAccent.includes('bios')) && qNoAccent.includes('msi')) {
+  if ((qNoAccent.includes('boot') || qNoAccent.includes('usb') || qNoAccent.includes('bios') || qNoAccent.includes('main')) && qNoAccent.includes('msi')) {
     return [
       'Phím tắt Boot USB và BIOS của bo mạch chủ **MSI** (chuẩn H510M-A PRO):',
       '• **Phím Boot Menu (chọn USB Boot):** Bấm phím **F11** liên tục ngay khi vừa bật nguồn.',
       '• **Phím vào BIOS:** Bấm phím **Delete (Del)**.',
-      '💡 *Mẹo KTV:* Khi máy không lên hình, nhìn ngay cụm 4 đèn **EZ Debug LED** ở góc trên bo mạch (CPU - DRAM - VGA - BOOT) để khoanh vùng bệnh ngay.'
+      '💡 *Mẹo KTV:* Khi máy không lên hình, nhìn ngay cụm 4 đèn **EZ Debug LED** ở góc trên bo mạch (CPU - DRAM - VGA - BOOT) để khoanh vùng bệnh ngay.',
+      '\n![Bo mạch chủ MSI H510M-A PRO với 4 đèn EZ Debug](/images/ol-01/main-h510.jpg)'
     ].join('\n');
   }
 
   // WINNFOX
-  if ((qNoAccent.includes('boot') || qNoAccent.includes('usb') || qNoAccent.includes('bios')) && (qNoAccent.includes('winnfox') || qNoAccent.includes('winfox'))) {
+  if ((qNoAccent.includes('boot') || qNoAccent.includes('usb') || qNoAccent.includes('bios') || qNoAccent.includes('main')) && (qNoAccent.includes('winnfox') || qNoAccent.includes('winfox'))) {
     return [
       'Phím tắt Boot USB và BIOS của bo mạch chủ **WINNFOX** (chuẩn H510G):',
       '• **Phím Boot Menu (chọn USB Boot):** Bấm phím **F11** (hoặc **F7** ở một số bản AMI BIOS).',
       '• **Phím vào BIOS:** Bấm phím **Delete (Del)**.',
-      '⚠️ *Lưu ý KTV:* Bo mạch Winnfox không có đèn debug, bắt buộc phải cắm **Loa Buzzer (Loa bíp)** vào chân J_SPEAKER để nghe mã tiếng bíp chẩn đoán lỗi.'
+      '⚠️ *Lưu ý KTV:* Bo mạch Winnfox không có đèn debug, bắt buộc phải cắm **Loa Buzzer (Loa bíp)** vào chân J_SPEAKER để nghe mã tiếng bíp chẩn đoán lỗi.',
+      '\n![Bo mạch chủ WINNFOX H510G phòng thực hành](/images/ol-01/main-winnfox-h510.jpg)'
     ].join('\n');
   }
 
@@ -136,7 +170,8 @@ export function matchKnowledge(rawQuery: string): string | null {
       'Quy chuẩn tra keo tản nhiệt CPU chuẩn Poka-Yoke:',
       '• **Định lượng chuẩn:** Chỉ bơm **1 chấm nhỏ bằng hạt đậu xanh** vào chính giữa mặt lưng CPU.',
       '• **Cách tản keo:** Đặt đế nhôm quạt tản nhiệt thẳng đứng xuống và siết ốc đều tay (lực nén cơ học sẽ tự ép keo dàn đều mặt tiếp xúc).',
-      '🔴 **Tuyệt đối cấm:** Không lấy tay bôi quệt lem nhem, không bơm quá nhiều làm keo tràn ra viền socket chập chân vi mạch.'
+      '🔴 **Tuyệt đối cấm:** Không lấy tay bôi quệt lem nhem, không bơm quá nhiều làm keo tràn ra viền socket chập chân vi mạch.',
+      '\n![Kỹ thuật tra keo tản nhiệt hạt đậu xanh](/images/ol-01/step-4-tra-keo-hat-dau-xanh.jpg)'
     ].join('\n');
   }
 
@@ -147,7 +182,8 @@ export function matchKnowledge(rawQuery: string): string | null {
       '• **Điểm mốc:** Tìm vị trí chân số 9 bị khuyết (ở hàng dưới cùng bên phải).',
       '• **HÀNG TRÊN:** 2 chân bên phải (ngay sát cạnh chân khuyết) là **POWER SW** (nút bật nguồn). 2 chân bên trái là **POWER LED**.',
       '• **HÀNG DƯỚI:** 2 chân đối diện với POWER SW là **RESET SW** (nút khởi động lại). 2 chân bên trái là **HDD LED**.',
-      '💡 **Khẩu quyết:** Nút POWER SW và RESET SW là công tắc đóng ngắt tiếp điểm, cắm chiều nào cũng chạy bình thường (không phân biệt âm dương)!'
+      '💡 **Khẩu quyết:** Nút POWER SW và RESET SW là công tắc đóng ngắt tiếp điểm, cắm chiều nào cũng chạy bình thường (không phân biệt âm dương)!',
+      '\n![Sơ đồ chi tiết cụm 9 chân F_PANEL chuẩn quốc tế](/images/ol-01/guide-fpanel-diagram.jpg)'
     ].join('\n');
   }
 
@@ -158,7 +194,8 @@ export function matchKnowledge(rawQuery: string): string | null {
       '• **Tháo pin:** Rút điện 220V, bấm nút nguồn 3 lần xả tụ, lấy đầu que nhựa ấn nhẹ lẫy vành để pin nảy 45 độ lên.',
       '• **Clear CMOS nhanh:** Dùng đầu tua vít chập 2 chân kim **JBAT1 / CLR_CMOS** trong 10 giây để xả sạch thiết lập BIOS cũ (sửa lỗi treo logo, quên pass BIOS).',
       '• **Lắp lại:** Mặt chữ in dấu **(+)** và tên **CR2032** luôn ngửa lên trên nhìn thấy.',
-      '⚠️ Nếu máy bật lên liên tục bị sai ngày giờ hoặc bắt nhấn F1/F2 ➔ Thay ngay pin CMOS mới (chuẩn 3V).'
+      '⚠️ Nếu máy bật lên liên tục bị sai ngày giờ hoặc bắt nhấn F1/F2 ➔ Thay ngay pin CMOS mới (chuẩn 3V).',
+      '\n![Kỹ thuật tháo pin CMOS và vị trí chân cắm JBAT1](/images/ol-01/guide-clear-cmos-pin.jpg)'
     ].join('\n');
   }
 
@@ -260,7 +297,8 @@ export function matchKnowledge(rawQuery: string): string | null {
       'Quy chuẩn vệ sinh chân RAM và khe cắm linh kiện:',
       '• **Chân đồng mạ vàng (RAM, VGA):** Dùng cục gôm tẩy trắng học sinh chà nhẹ nhàng đều 2 mặt chân tiếp xúc đến khi sáng bóng, dùng chổi cọ quét sạch mạt gôm vụn.',
       '• **Khe cắm trên bo mạch (Slot RAM, PCIe):** Dùng bình xịt khí nén hoặc bóng bóp cao su thổi bay bụi bẩn trong rãnh. Tuyệt đối không dùng tua vít sắt cào làm cong gãy chân đồng.',
-      '⚠️ *Quy tắc an toàn Poka-Yoke:* Luôn rút phích cắm 220V và bấm giữ nút nguồn 10 giây để tụ điện xả sạch trước khi thao tác.'
+      '⚠️ *Quy tắc an toàn Poka-Yoke:* Luôn rút phích cắm 220V và bấm giữ nút nguồn 10 giây để tụ điện xả sạch trước khi thao tác.',
+      '\n![Kỹ thuật chà sạch chân đồng RAM bằng gôm tẩy học sinh](/images/ol-01/step-3-cha-ram-cuc-tay.jpg)'
     ].join('\n');
   }
 
@@ -271,7 +309,57 @@ export function matchKnowledge(rawQuery: string): string | null {
       '• **Tạo USB Boot (Rufus):** Chọn phân vùng **GPT** và hệ thống đích **UEFI (non CSM)**, định dạng NTFS.',
       '• **Phím Boot USB:** ASUS bấm **F8**, MSI & Winnfox bấm **F11**, Gigabyte bấm **F12**.',
       '• **An toàn dữ liệu khách hàng (Zero Data Loss):** Chỉ chọn đúng phân vùng ổ C (ổ đang cài Win cũ) để Format. Tuyệt đối không chạm vào ổ D/E chứa dữ liệu.',
-      '• **Driver:** Sau khi vào Windows 10, mở Device Manager (`devmgmt.msc`) kiểm tra không còn dấu chấm than vàng.'
+      '• **Driver:** Sau khi vào Windows 10, mở Device Manager (`devmgmt.msc`) kiểm tra không còn dấu chấm than vàng.',
+      '\n![Phân vùng cài đặt hệ điều hành Windows 10](/images/ol-01/step-5-cai-win10-partition.jpg)'
+    ].join('\n');
+  }
+
+  // QUY TRÌNH THÁO MÁY
+  if (qNoAccent.includes('thao may') || qNoAccent.includes('quy trinh thao')) {
+    return [
+      'Quy trình 5 bước tháo máy tính an toàn chuẩn KTV:',
+      '1. **Rút nguồn 220V & Xả tụ:** Bấm giữ nút nguồn 10 giây để bo mạch xả hết điện tích.',
+      '2. **Tháo dây kết nối ngoại vi:** Dây nguồn, dây màn hình, cáp mạng, chuột phím.',
+      '3. **Tháo Card đồ họa rời (VGA):** Mở ốc cố định đuôi case, gạt chốt lẫy PCIe trước khi rút thẳng đứng.',
+      '4. **Tháo ổ cứng & RAM:** Rút cáp SATA, mở 2 lẫy ngàm RAM.',
+      '5. **Tháo tản nhiệt CPU & bo mạch chủ:** Tháo 4 chốt tản nhiệt chéo đối xứng, mở 6 ốc bắt main.',
+      '\n![Sơ đồ quy trình tháo máy chuẩn KTV](/images/ol-01/workflow-thao-may.jpg)'
+    ].join('\n');
+  }
+
+  // QUY TRÌNH LẮP MÁY
+  if (qNoAccent.includes('lap may') || qNoAccent.includes('rap may') || qNoAccent.includes('quy trinh lap')) {
+    return [
+      'Quy trình 6 bước lắp ráp máy tính chuẩn KTV:',
+      '1. **Lắp ngoại vi lên mainboard trước:** Đặt main lên hộp carton, lắp CPU (căn 2 vết khuyết), khóa cần gạt, tra 1 hạt đậu xanh keo tản nhiệt và gắn quạt CPU_FAN.',
+      '2. **Lắp RAM:** Căn đúng rãnh khuyết lệch DDR4, ấn đều 2 đầu nghe 2 tiếng "tách" đanh gọn.',
+      '3. **Lắp chặn main (I/O Shield) & Đặt main vào thùng:** Siết đủ ốc đệm cách điện.',
+      '4. **Lắp nguồn (PSU) & Cắm dây nguồn:** Cắm dây 24-pin bo mạch và 4/8-pin CPU.',
+      '5. **Cắm cụm F_PANEL:** POWER SW, RESET SW, HDD LED, POWER LED.',
+      '6. **Cắm Card đồ họa (VGA) & Ổ cứng SSD/HDD:** Khóa chốt PCIe, cắm cáp SATA.',
+      '\n![Sơ đồ quy trình lắp máy chuẩn KTV](/images/ol-01/workflow-lap-may.jpg)'
+    ].join('\n');
+  }
+
+  // THANH RAM DDR4
+  if (qNoAccent.includes('ram ddr4') || qNoAccent.includes('ranh khuyet') || qNoAccent.includes('chan ram')) {
+    return [
+      'Đặc điểm nhận diện thanh RAM DDR4 phòng máy:',
+      '• **Rãnh khuyết chân cắm:** Thiết kế lệch hẳn sang một bên (khác DDR3 ở giữa), giúp chống cắm ngược chiều.',
+      '• **Chân mạ vàng cong nhẹ:** Các chân pin ở giữa hơi dài hơn 2 bên mép để giảm lực cắm.',
+      '• **Tần số Bus phổ biến:** 2666 MHz hoặc 3200 MHz.',
+      '\n![Thanh RAM DDR4 với rãnh khuyết lệch chống cắm ngược](/images/ol-01/ram-ddr4.jpg)'
+    ].join('\n');
+  }
+
+  // CARD ĐỒ HỌA GT 730
+  if (qNoAccent.includes('gt 730') || qNoAccent.includes('gt730') || qNoAccent.includes('card roi') || qNoAccent.includes('vga roi')) {
+    return [
+      'Card đồ họa rời NVIDIA GeForce GT 730 phòng máy:',
+      '• **Chân cắm:** Chuẩn khe cắm PCIe x16 (có chốt lẫy khóa ở đuôi khe).',
+      '• **Xuất hình:** Có cổng HDMI, DVI và VGA (D-Sub). Luôn cắm dây màn hình vào card này khi máy dùng CPU đuôi F!',
+      '• **Nguồn:** Không cần nguồn phụ, lấy trực tiếp 75W từ khe PCIe.',
+      '\n![Card đồ họa rời NVIDIA GeForce GT 730 2GB GDDR5](/images/ol-01/vga-gt730.jpg)'
     ].join('\n');
   }
 

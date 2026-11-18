@@ -242,6 +242,25 @@
         'Vì sao máy tính bị đơ, giật lag?'
       ],
 
+      init() {
+        try {
+          const saved = sessionStorage.getItem('ai_chat_messages');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              this.messages = parsed;
+            }
+          }
+        } catch (e) {}
+      },
+
+      saveHistory() {
+        try {
+          // Lưu tối đa 20 tin nhắn gần nhất trong phiên
+          sessionStorage.setItem('ai_chat_messages', JSON.stringify(this.messages.slice(-20)));
+        } catch (e) {}
+      },
+
       openChat() {
         this.isOpen = true;
         this.$nextTick(() => {
@@ -255,6 +274,7 @@
       resetChat() {
         if (confirm('Bạn có muốn xóa cuộc trò chuyện này và bắt đầu lại?')) {
           this.messages = [];
+          try { sessionStorage.removeItem('ai_chat_messages'); } catch (e) {}
         }
       },
 
@@ -281,8 +301,17 @@
 
       formatMessage(text) {
         if (!text) return '';
-        // Escape HTML cơ bản để an toàn
-        let safe = text
+
+        // Trích xuất các thẻ ảnh Markdown ![mô tả](đường_dẫn)
+        const images = [];
+        let processed = text.replace(/!\[(.*?)\]\((.*?)\)/g, (match, alt, src) => {
+          const placeholder = `__CHAT_IMG_TOKEN_${images.length}__`;
+          images.push({ alt: alt || 'Hình ảnh minh họa', src: src.trim() });
+          return placeholder;
+        });
+
+        // Escape HTML các đoạn text thông thường để đảm bảo an toàn
+        let safe = processed
           .replace(/&/g, '&amp;')
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;');
@@ -290,9 +319,32 @@
         // Định dạng in đậm **text**
         safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         // Định dạng inline code `code`
-        safe = safe.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 bg-gray-100 text-pink-600 rounded text-xs font-mono">$1</code>');
+        safe = safe.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 bg-slate-100 text-slate-800 rounded text-xs font-mono">$1</code>');
         // Xuống dòng
         safe = safe.replace(/\n/g, '<br/>');
+
+        // Phục hồi và render thẻ hình ảnh minh họa thực tế trực quan
+        images.forEach((img, idx) => {
+          const token = `__CHAT_IMG_TOKEN_${idx}__`;
+          const cleanSrc = img.src.replace(/[^\w\d\.\-\_\/\:\?]/g, '');
+          const cleanAlt = img.alt.replace(/[<>"']/g, '');
+          const imgHtml = `
+            <div class="my-2 rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
+              <a href="${cleanSrc}" target="_blank" rel="noopener noreferrer" class="block relative group" title="Bấm vào để xem ảnh phóng to">
+                <img src="${cleanSrc}" alt="${cleanAlt}" loading="lazy" class="w-full h-auto max-h-48 object-cover group-hover:opacity-90 transition-opacity duration-200" />
+                <div class="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/0 transition-colors flex items-center justify-center">
+                  <span class="opacity-0 group-hover:opacity-100 bg-slate-900/90 text-white text-[10px] font-medium px-2.5 py-1 rounded-full shadow-md transition-opacity">🔍 Bấm để xem ảnh to</span>
+                </div>
+              </a>
+              <div class="px-2.5 py-1.5 bg-slate-900 text-white flex items-center justify-between text-[11px]">
+                <span class="font-medium truncate pr-2">📷 ${cleanAlt}</span>
+                <a href="${cleanSrc}" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 text-[10px] shrink-0 underline">Mở ảnh ↗</a>
+              </div>
+            </div>
+          `;
+          safe = safe.replace(token, imgHtml);
+        });
+
         return safe;
       },
 
@@ -302,6 +354,7 @@
 
         // Thêm câu hỏi của user
         this.messages.push({ role: 'user', content: text });
+        this.saveHistory();
         this.inputMessage = '';
         this.isLoading = true;
         this.scrollToBottom();
@@ -338,6 +391,7 @@
 
           if (data && data.reply) {
             this.messages.push({ role: 'assistant', content: data.reply, copied: false, feedback: null });
+            this.saveHistory();
           } else {
             let errorMsg = (data && (data.error || data.message)) || '';
             if (typeof errorMsg === 'object') {
@@ -351,6 +405,7 @@
               role: 'assistant',
               content: errorMsg ? '💡 ' + errorMsg : '💡 Bạn có thể đặt câu hỏi về phím tắt Boot/BIOS, cách bấm cáp mạng, tra keo tản nhiệt hoặc tháo lắp linh kiện để mình giải đáp nhanh nhé!'
             });
+            this.saveHistory();
           }
         } catch (err) {
           this.messages.push({
