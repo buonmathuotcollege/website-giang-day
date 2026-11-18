@@ -40,6 +40,7 @@ import {
   FileCheck2,
   Clock,
   CheckSquare,
+  ZoomIn,
 } from "lucide-react";
 
 /**
@@ -241,7 +242,7 @@ const KTV_7_STEPS: KtvStep[] = [
 ];
 
 /**
- * Danh sách 5 ca bệnh 60 giây cứu sống máy không lên
+ * 5 Ca bệnh 60s
  */
 interface DiagnosticCase {
   id: string;
@@ -394,7 +395,7 @@ const H510_HOTSPOTS: HotspotInfo[] = [
 ];
 
 export default function CompleteHardwareTrainingPage() {
-  // Tab điều hướng chính: 'workflow7' (Quy trình 7 bước) | 'diagnostics' (Bắt bệnh 60s) | 'components' (5 món 4 dây) | 'report' (Nghiệm thu)
+  // Tab điều hướng chính
   const [activeMainTab, setActiveMainTab] = React.useState<"workflow7" | "diagnostics" | "components" | "report">("workflow7");
 
   // Bước đang chọn trong quy trình 7 bước
@@ -411,7 +412,7 @@ export default function CompleteHardwareTrainingPage() {
     "step-7": false,
   });
 
-  // Chế độ xem cột phải: 'interactive' (Sơ đồ bo mạch H510) | 'stepImage' (Ảnh linh kiện theo bước)
+  // Chế độ xem cột phải trên desktop
   const [rightViewMode, setRightViewMode] = React.useState<"interactive" | "stepImage">("interactive");
 
   // Điểm Hotspot đang chọn trên sơ đồ
@@ -444,7 +445,7 @@ export default function CompleteHardwareTrainingPage() {
     } catch {}
   }, []);
 
-  // Xử lý bật/tắt Checkbox 1-chạm (chống xung đột event)
+  // Xử lý bật/tắt Checkbox 1-chạm
   const handleToggleStep = (stepId: string) => {
     setCheckedSteps((prev) => {
       const updated = {
@@ -466,6 +467,7 @@ export default function CompleteHardwareTrainingPage() {
 
   const activeStepIndex = KTV_7_STEPS.findIndex((s) => s.id === activeStepId);
   const activeStep = KTV_7_STEPS[activeStepIndex >= 0 ? activeStepIndex : 0];
+  const isActiveStepDone = Boolean(checkedSteps[activeStep.id]);
 
   const activeCase = DIAGNOSTIC_CASES.find((c) => c.id === selectedCaseId) || DIAGNOSTIC_CASES[1];
 
@@ -475,6 +477,7 @@ export default function CompleteHardwareTrainingPage() {
       const nextStep = KTV_7_STEPS[activeStepIndex + 1];
       setActiveStepId(nextStep.id);
       setRightViewMode("stepImage");
+      window.scrollTo({ top: 120, behavior: "smooth" });
     }
   };
 
@@ -484,6 +487,7 @@ export default function CompleteHardwareTrainingPage() {
       const prevStep = KTV_7_STEPS[activeStepIndex - 1];
       setActiveStepId(prevStep.id);
       setRightViewMode("stepImage");
+      window.scrollTo({ top: 120, behavior: "smooth" });
     }
   };
 
@@ -530,47 +534,48 @@ export default function CompleteHardwareTrainingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans overflow-x-hidden">
       <Header />
 
-      <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+      {/* Main container: padding-bottom dự phòng cho thanh điều hướng đáy di động */}
+      <main className="flex-1 max-w-7xl mx-auto w-full px-3 sm:px-6 py-4 sm:py-8 space-y-4 sm:space-y-6 pb-28 sm:pb-8">
         {/* ==================================================================== */}
         {/* 1. THANH TIÊU ĐỀ & ĐỊNH HƯỚNG SƯ PHẠM NGHỀ                             */}
         {/* ==================================================================== */}
         <Card className="border-slate-200 bg-white shadow-xs">
-          <CardHeader className="pb-4">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-              <div className="space-y-1.5">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-3 py-1 rounded-full bg-slate-900 text-white font-mono text-xs font-black tracking-wider">
+          <CardHeader className="p-4 sm:p-6 pb-3 sm:pb-4">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-4">
+              <div className="space-y-1">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                  <span className="px-2.5 py-0.5 rounded-full bg-slate-900 text-white font-mono text-[11px] sm:text-xs font-black tracking-wider">
                     CHUẨN NGHỀ: OL-01
                   </span>
-                  <span className="text-xs font-bold text-slate-600 uppercase tracking-tight">
-                    Cẩm Nang Kỹ Thuật Viên Máy Tính · Hệ Trung Cấp 9+3 · Đào Tạo Từ Con Số 0
+                  <span className="text-[11px] sm:text-xs font-bold text-slate-600 uppercase tracking-tight">
+                    Cẩm Nang KTV Máy Tính · Hệ 9+3 · Từ Con Số 0
                   </span>
                 </div>
-                <CardTitle className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                  Quy Trình 7 Bước Thực Chiến: Từ Tiếp Nhận Đến Bàn Giao Máy
+                <CardTitle className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight leading-snug">
+                  Quy Trình 7 Bước Thực Chiến: Tiếp Nhận Đến Bàn Giao
                 </CardTitle>
                 <p className="text-xs sm:text-sm text-slate-500 font-medium">
-                  Giảng viên hướng dẫn: <strong className="text-slate-800">CN. Phạm Tiến Đông</strong> · Cầm tay chỉ việc 100% tại Bàn Kỹ Thuật · Không bài tập về nhà
+                  Giảng viên: <strong className="text-slate-800">CN. Phạm Tiến Đông</strong> · Cầm tay chỉ việc 100% tại Bàn Kỹ Thuật
                 </p>
               </div>
 
               {/* Tiến độ hoàn thành */}
-              <div className="flex sm:flex-col items-end justify-between sm:justify-center border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100 min-w-[220px]">
+              <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 pt-2.5 sm:pt-0 border-slate-100 min-w-[200px]">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
                   <CheckCircle2 className={`w-4 h-4 ${isAllCompleted ? "text-emerald-600" : "text-slate-400"}`} />
-                  <span>Tiến độ 7 bước KTV:</span>
+                  <span>Tiến độ thực hành:</span>
                 </div>
-                <div className="text-xl sm:text-3xl font-black font-mono text-slate-900">
+                <div className="text-lg sm:text-3xl font-black font-mono text-slate-900">
                   {completedCount} / {totalSteps} bước ({progressPercent}%)
                 </div>
               </div>
             </div>
 
             {/* Thanh Progress Bar */}
-            <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden mt-3 border border-slate-200">
+            <div className="w-full h-2.5 sm:h-3 bg-slate-100 rounded-full overflow-hidden mt-2.5 sm:mt-3 border border-slate-200">
               <div
                 className={`h-full transition-all duration-500 rounded-full ${
                   isAllCompleted ? "bg-emerald-600" : "bg-blue-600"
@@ -581,29 +586,29 @@ export default function CompleteHardwareTrainingPage() {
           </CardHeader>
 
           {/* 3 KHẨU QUYẾT SỐNG CÒN CỦA KTV */}
-          <CardContent className="pt-0">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-              <div className="p-3 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-950 flex items-start gap-2.5">
+          <CardContent className="p-4 sm:p-6 pt-0">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 text-xs">
+              <div className="p-2.5 sm:p-3 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-950 flex items-start gap-2.5">
                 <span className="w-5 h-5 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-black text-xs shrink-0 mt-0.5">1</span>
                 <div>
-                  <strong className="font-extrabold text-amber-900">RÚT – BẤM – KHAY (An toàn điện):</strong>
-                  <p className="text-[11px] text-amber-800 mt-0.5">Rút phích điện đen sau máy, bấm nút nguồn 3 lần xả điện tụ, ốc tháo ra bỏ ngay vào khay.</p>
+                  <strong className="font-extrabold text-amber-900">RÚT – BẤM – KHAY (An toàn):</strong>
+                  <p className="text-[11px] text-amber-800 mt-0.5">Rút phích điện đen, bấm nút nguồn 3 lần xả tụ, ốc tháo bỏ ngay vào khay.</p>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-emerald-50/80 border border-emerald-200 text-emerald-950 flex items-start gap-2.5">
+              <div className="p-2.5 sm:p-3 rounded-xl bg-emerald-50/80 border border-emerald-200 text-emerald-950 flex items-start gap-2.5">
                 <span className="w-5 h-5 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xs shrink-0 mt-0.5">2</span>
                 <div>
                   <strong className="font-extrabold text-emerald-900">RÃNH KHUYẾT, KHÔNG ẤN CỐ:</strong>
-                  <p className="text-[11px] text-emerald-800 mt-0.5">Linh kiện có rãnh chống ngược chiều; cộm tay là xoay lại, tuyệt đối không dùng sức đè.</p>
+                  <p className="text-[11px] text-emerald-800 mt-0.5">Linh kiện có rãnh chống ngược; cộm tay là xoay lại, cấm dùng sức đè.</p>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-blue-50/80 border border-blue-200 text-blue-950 flex items-start gap-2.5">
+              <div className="p-2.5 sm:p-3 rounded-xl bg-blue-50/80 border border-blue-200 text-blue-950 flex items-start gap-2.5">
                 <span className="w-5 h-5 rounded-lg bg-blue-600 text-white flex items-center justify-center font-black text-xs shrink-0 mt-0.5">3</span>
                 <div>
                   <strong className="font-extrabold text-blue-900">DỮ LIỆU TRƯỚC, MÁY SAU:</strong>
-                  <p className="text-[11px] text-blue-800 mt-0.5">Máy hỏng thì sửa được; mất dữ liệu khách là không đền được. Luôn sao lưu Desktop sang ổ D!</p>
+                  <p className="text-[11px] text-blue-800 mt-0.5">Mất dữ liệu là đền tiền. Luôn sao lưu Desktop &amp; Documents sang ổ D!</p>
                 </div>
               </div>
             </div>
@@ -611,70 +616,70 @@ export default function CompleteHardwareTrainingPage() {
         </Card>
 
         {/* ==================================================================== */}
-        {/* 2. THANH TAB CHUYỂN ĐỔI CHẾ ĐỘ ÔN LUYỆN (TAB CHÍNH)                  */}
+        {/* 2. THANH TAB ĐIỀU HƯỚNG CHÍNH (VUỐT NGANG SIÊU MƯỢT TRÊN MOBILE)     */}
         {/* ==================================================================== */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-3 px-3 sm:mx-0 sm:px-0">
           <button
             type="button"
             onClick={() => setActiveMainTab("workflow7")}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer shrink-0 min-h-[44px] ${
               activeMainTab === "workflow7"
                 ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
                 : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
             }`}
           >
             <Layers className="w-4 h-4" />
-            <span>📖 Quy Trình 7 Bước KTV</span>
+            <span>📖 Quy Trình 7 Bước</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveMainTab("diagnostics")}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer shrink-0 min-h-[44px] ${
               activeMainTab === "diagnostics"
                 ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
                 : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
             }`}
           >
             <Zap className="w-4 h-4 text-amber-500" />
-            <span>⚡ Bản Đồ Bắt Bệnh 60 Giây</span>
+            <span>⚡ Bắt Bệnh 60s</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveMainTab("components")}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer shrink-0 min-h-[44px] ${
               activeMainTab === "components"
                 ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
                 : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
             }`}
           >
             <Cpu className="w-4 h-4 text-blue-600" />
-            <span>🧩 5 Món Đồ &amp; 4 Sợi Dây</span>
+            <span>🧩 5 Món &amp; 4 Dây</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveMainTab("report")}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer shrink-0 ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer shrink-0 min-h-[44px] ${
               activeMainTab === "report"
                 ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
                 : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
             }`}
           >
             <FileCheck2 className="w-4 h-4 text-emerald-600" />
-            <span>📋 Phiếu Nghiệm Thu (3 Điểm Dừng)</span>
+            <span>📋 Phiếu Nghiệm Thu</span>
           </button>
         </div>
 
         {/* ==================================================================== */}
-        {/* PHÂN HỆ 1: QUY TRÌNH 7 BƯỚC THỰC CHIẾN (IFIXIT SPLIT VIEW)            */}
+        {/* PHÂN HỆ 1: QUY TRÌNH 7 BƯỚC THỰC CHIẾN (TỐI ƯU CẢ MOBILE & DESKTOP) */}
         {/* ==================================================================== */}
         {activeMainTab === "workflow7" && (
           <div className="space-y-4">
-            {/* Dàn nút chuyển nhanh 7 bước */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-1">
-              <span className="text-xs font-bold text-slate-500 shrink-0 hidden sm:inline">
+            {/* Dàn nút chuyển nhanh 7 bước vuốt ngang */}
+            <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1 -mx-3 px-3 sm:mx-0 sm:px-0">
+              <span className="text-xs font-bold text-slate-500 shrink-0 hidden md:inline">
                 Chuyển bước nhanh:
               </span>
               {KTV_7_STEPS.map((s, idx) => {
@@ -688,7 +693,7 @@ export default function CompleteHardwareTrainingPage() {
                       setActiveStepId(s.id);
                       setRightViewMode("stepImage");
                     }}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer min-h-[40px] sm:min-h-[44px] ${
                       isCurrent
                         ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
                         : isDone
@@ -713,10 +718,10 @@ export default function CompleteHardwareTrainingPage() {
               })}
             </div>
 
-            {/* Bố cục 2 cột iFixit */}
+            {/* Bố cục 2 cột: Trên Desktop 2 cột bên nhau; Trên Mobile tích hợp ảnh trực quan ngay trong bước */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-              {/* CỘT TRÁI (7/12): HƯỚNG DẪN TỪNG BƯỚC */}
-              <div className="lg:col-span-7 space-y-4">
+              {/* CỘT TRÁI (7/12 CỘT): HƯỚNG DẪN TỪNG BƯỚC */}
+              <div className="lg:col-span-7 space-y-3 sm:space-y-4">
                 <Accordion
                   type="single"
                   collapsible
@@ -742,10 +747,10 @@ export default function CompleteHardwareTrainingPage() {
                             : "border-slate-200 hover:border-slate-300"
                         }`}
                       >
-                        <AccordionTrigger className="px-4 sm:px-5 py-4 hover:no-underline text-left cursor-pointer">
-                          <div className="flex items-start gap-3 w-full pr-2">
+                        <AccordionTrigger className="px-3.5 sm:px-5 py-3.5 sm:py-4 hover:no-underline text-left cursor-pointer min-h-[56px]">
+                          <div className="flex items-start gap-2.5 sm:gap-3 w-full pr-2">
                             <div
-                              className={`w-8 h-8 rounded-xl flex items-center justify-center font-mono font-black text-sm shrink-0 transition-colors ${
+                              className={`w-7 h-7 sm:w-8 sm:h-8 rounded-xl flex items-center justify-center font-mono font-black text-xs sm:text-sm shrink-0 transition-colors mt-0.5 ${
                                 isStepDone
                                   ? "bg-emerald-600 text-white"
                                   : activeStepId === step.id
@@ -757,15 +762,15 @@ export default function CompleteHardwareTrainingPage() {
                             </div>
 
                             <div className="space-y-1 flex-1">
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[11px] font-bold">
+                              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                                <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 text-[10px] sm:text-[11px] font-bold">
                                   {step.role}
                                 </span>
-                                <span className="text-[11px] text-slate-400 font-medium">
+                                <span className="text-[10px] sm:text-[11px] text-slate-400 font-medium">
                                   ⏱️ {step.timeEstimate}
                                 </span>
                                 {step.checkpoint && (
-                                  <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 text-[11px] font-black border border-rose-200">
+                                  <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 text-[10px] sm:text-[11px] font-black border border-rose-200">
                                     🛑 {step.checkpoint.code}
                                   </span>
                                 )}
@@ -777,28 +782,74 @@ export default function CompleteHardwareTrainingPage() {
                           </div>
                         </AccordionTrigger>
 
-                        <AccordionContent className="px-4 sm:px-5 pb-5 pt-1 space-y-4 text-slate-700 border-t border-slate-100">
+                        <AccordionContent className="px-3.5 sm:px-5 pb-4 sm:pb-5 pt-1 space-y-3 sm:space-y-4 text-slate-700 border-t border-slate-100">
+                          {/* =================================================== */}
+                          {/* ĐẶC BIỆT CHO MOBILE: THẺ ẢNH THỰC TẾ NGAY TRONG BƯỚC */}
+                          {/* Giúp học sinh trên điện thoại không phải cuộn xuống đáy */}
+                          {/* =================================================== */}
+                          <div className="block lg:hidden rounded-2xl overflow-hidden border border-slate-200 bg-white p-2.5 space-y-2">
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="font-bold text-slate-800 flex items-center gap-1">
+                                <span>📷 Ảnh linh kiện bước {step.stepNumber}</span>
+                              </span>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                  setZoomedImage({
+                                    src: step.imageSrc,
+                                    alt: step.imageAlt,
+                                    title: `Bước ${step.stepNumber}: ${step.title}`,
+                                  })
+                                }
+                                className="h-7 px-2.5 text-[11px] font-bold text-slate-700 border-slate-300"
+                              >
+                                <ZoomIn className="w-3 h-3 mr-1 text-emerald-600" />
+                                Phóng to
+                              </Button>
+                            </div>
+
+                            <div
+                              onClick={() =>
+                                setZoomedImage({
+                                  src: step.imageSrc,
+                                  alt: step.imageAlt,
+                                  title: `Bước ${step.stepNumber}: ${step.title}`,
+                                })
+                              }
+                              className="relative w-full aspect-[16/10] bg-white rounded-xl overflow-hidden border border-slate-100 cursor-pointer"
+                            >
+                              <Image
+                                src={step.imageSrc}
+                                alt={step.imageAlt}
+                                fill
+                                className="object-contain p-1"
+                                sizes="(max-width: 640px) 100vw, 50vw"
+                              />
+                            </div>
+                          </div>
+
                           {/* Điểm dừng an toàn Poka-Yoke (nếu có) */}
                           {step.checkpoint && (
-                            <div className="p-3.5 rounded-xl bg-rose-50 border-2 border-rose-300 text-rose-950 space-y-1 shadow-2xs">
-                              <div className="flex items-center gap-2 font-black text-xs text-rose-900 uppercase">
-                                <ShieldAlert className="w-4 h-4 text-rose-600" />
+                            <div className="p-3 sm:p-3.5 rounded-xl bg-rose-50 border-2 border-rose-300 text-rose-950 space-y-1 shadow-2xs">
+                              <div className="flex items-center gap-1.5 font-black text-xs text-rose-900 uppercase">
+                                <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
                                 <span>{step.checkpoint.code}: {step.checkpoint.name}</span>
                               </div>
-                              <p className="text-xs sm:text-sm leading-relaxed pl-6 font-semibold">
+                              <p className="text-xs sm:text-sm leading-relaxed pl-5 font-semibold">
                                 {step.checkpoint.requirement}
                               </p>
                             </div>
                           )}
 
                           {/* Danh sách hành động chi tiết */}
-                          <div className="space-y-2 pt-1">
+                          <div className="space-y-1.5 pt-1">
                             <div className="text-xs font-black uppercase text-slate-500 tracking-wider">
                               Thao tác tay bắt buộc làm tại bàn:
                             </div>
-                            <ul className="space-y-2 text-sm leading-relaxed">
+                            <ul className="space-y-2 text-xs sm:text-sm leading-relaxed">
                               {step.instructions.map((ins, i) => (
-                                <li key={i} className="flex items-start gap-2.5">
+                                <li key={i} className="flex items-start gap-2">
                                   <span className="w-1.5 h-1.5 rounded-full bg-slate-900 mt-2 shrink-0"></span>
                                   <span>{ins}</span>
                                 </li>
@@ -809,7 +860,7 @@ export default function CompleteHardwareTrainingPage() {
                           {/* Ví von đời thường */}
                           <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-200/80 text-amber-900 space-y-1">
                             <div className="flex items-center gap-1.5 text-xs font-black">
-                              <Lightbulb className="w-4 h-4 text-amber-600" />
+                              <Lightbulb className="w-4 h-4 text-amber-600 shrink-0" />
                               <span>Ví von đời thường dễ nhớ:</span>
                             </div>
                             <p className="text-xs sm:text-sm leading-relaxed pl-5">
@@ -820,7 +871,7 @@ export default function CompleteHardwareTrainingPage() {
                           {/* Cảnh báo Poka-Yoke */}
                           <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 space-y-1">
                             <div className="flex items-center gap-1.5 text-xs font-black text-slate-900">
-                              <AlertTriangle className="w-4 h-4 text-slate-700" />
+                              <AlertTriangle className="w-4 h-4 text-slate-700 shrink-0" />
                               <span>LƯU Ý POKA-YOKE (CHỐNG LÀM SAI):</span>
                             </div>
                             <p className="text-xs sm:text-sm leading-relaxed pl-5 font-medium">
@@ -828,20 +879,7 @@ export default function CompleteHardwareTrainingPage() {
                             </p>
                           </div>
 
-                          {/* Ghi chú thị trường (nếu có) */}
-                          {step.marketNote && (
-                            <div className="p-3 rounded-xl bg-slate-900 text-slate-200 text-xs space-y-1">
-                              <div className="flex items-center gap-1.5 font-bold text-emerald-400">
-                                <Sparkles className="w-3.5 h-3.5" />
-                                <span>Mở rộng thị trường:</span>
-                              </div>
-                              <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed pl-5">
-                                {step.marketNote}
-                              </p>
-                            </div>
-                          )}
-
-                          {/* NÚT CHECKBOX XÁC NHẬN AN TOÀN 1-CHẠM */}
+                          {/* NÚT CHECKBOX XÁC NHẬN AN TOÀN 1-CHẠM (CHIỀU CAO TỐI THIỂU 48PX CHO NGÓN CÁI) */}
                           <div className="pt-2">
                             <div
                               role="button"
@@ -853,15 +891,15 @@ export default function CompleteHardwareTrainingPage() {
                                   handleToggleStep(step.id);
                                 }
                               }}
-                              className={`w-full min-h-[48px] p-3.5 rounded-xl border-2 flex items-center justify-between gap-3 transition-all cursor-pointer select-none active:scale-[0.99] ${
+                              className={`w-full min-h-[48px] p-3 sm:p-3.5 rounded-xl border-2 flex items-center justify-between gap-2.5 transition-all cursor-pointer select-none active:scale-[0.99] ${
                                 isStepDone
                                   ? "bg-emerald-50 border-emerald-500 text-emerald-950 shadow-xs"
                                   : "bg-white border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
                               }`}
                             >
-                              <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-2.5">
                                 <div
-                                  className={`w-5 h-5 rounded-md flex items-center justify-center border transition-colors ${
+                                  className={`w-5 h-5 rounded-md flex items-center justify-center border transition-colors shrink-0 ${
                                     isStepDone
                                       ? "bg-emerald-600 border-emerald-600 text-white"
                                       : "border-slate-300 bg-white"
@@ -875,13 +913,13 @@ export default function CompleteHardwareTrainingPage() {
                               </div>
 
                               <span
-                                className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-md shrink-0 ${
+                                className={`text-[10px] sm:text-[11px] font-mono font-bold px-2 py-0.5 rounded-md shrink-0 ${
                                   isStepDone
                                     ? "bg-emerald-100 text-emerald-800"
                                     : "bg-slate-100 text-slate-500"
                                 }`}
                               >
-                                {isStepDone ? "✓ ĐÃ NGHIỆM THU" : "CHƯA TICK"}
+                                {isStepDone ? "✓ ĐÃ XONG" : "CHƯA TICK"}
                               </span>
                             </div>
                           </div>
@@ -893,7 +931,7 @@ export default function CompleteHardwareTrainingPage() {
                               size="sm"
                               disabled={step.stepNumber === 1}
                               onClick={handlePrevStep}
-                              className="text-slate-600 hover:text-slate-900 cursor-pointer"
+                              className="text-slate-600 hover:text-slate-900 cursor-pointer min-h-[40px]"
                             >
                               <ArrowLeft className="w-3.5 h-3.5 mr-1" />
                               <span>Bước {step.stepNumber - 1}</span>
@@ -904,7 +942,7 @@ export default function CompleteHardwareTrainingPage() {
                                 variant="secondary"
                                 size="sm"
                                 onClick={handleNextStep}
-                                className="bg-slate-900 hover:bg-slate-800 text-white font-bold cursor-pointer"
+                                className="bg-slate-900 hover:bg-slate-800 text-white font-bold cursor-pointer min-h-[40px]"
                               >
                                 <span>Sang Bước {step.stepNumber + 1}</span>
                                 <ArrowRight className="w-3.5 h-3.5 ml-1" />
@@ -913,9 +951,9 @@ export default function CompleteHardwareTrainingPage() {
                               <Button
                                 size="sm"
                                 onClick={() => setActiveMainTab("report")}
-                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold cursor-pointer"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold cursor-pointer min-h-[40px]"
                               >
-                                <span>Nộp Biên Bản Bàn Giao</span>
+                                <span>Nộp Báo Cáo</span>
                                 <ChevronRight className="w-3.5 h-3.5 ml-1" />
                               </Button>
                             )}
@@ -927,9 +965,9 @@ export default function CompleteHardwareTrainingPage() {
                 </Accordion>
               </div>
 
-              {/* CỘT PHẢI (5/12): MINH HỌA TRỰC QUAN & SƠ ĐỒ BO MẠCH H510 */}
-              <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-20">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-200">
+              {/* CỘT PHẢI (5/12 CỘT): CHỈ HIỂN THỊ TRÊN MÀN HÌNH DESKTOP (STICKY) */}
+              <div className="hidden lg:block lg:col-span-5 space-y-4 lg:sticky lg:top-20">
+                <div className="flex items-center justify-between gap-2 pb-2 border-b border-slate-200">
                   <div className="flex items-center gap-2">
                     <Monitor className="w-5 h-5 text-slate-900" />
                     <h3 className="text-base font-black text-slate-900">
@@ -950,11 +988,11 @@ export default function CompleteHardwareTrainingPage() {
                     className="flex items-center gap-1.5 text-xs font-bold border-slate-300 h-8 cursor-pointer"
                   >
                     <Maximize2 className="w-3.5 h-3.5" />
-                    <span>Phóng to máy chiếu</span>
+                    <span>Phóng to</span>
                   </Button>
                 </div>
 
-                {/* Chuyển tab xem */}
+                {/* Chuyển tab xem trên desktop */}
                 <div className="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200 text-xs font-bold w-full">
                   <button
                     type="button"
@@ -965,7 +1003,7 @@ export default function CompleteHardwareTrainingPage() {
                         : "text-slate-600 hover:text-slate-900"
                     }`}
                   >
-                    🗺️ Sơ Đồ Bo Mạch H510 (Hotspot)
+                    🗺️ Sơ Đồ Bo Mạch H510
                   </button>
                   <button
                     type="button"
@@ -982,7 +1020,7 @@ export default function CompleteHardwareTrainingPage() {
 
                 {/* Khung hiển thị Card */}
                 <Card className="border-slate-200 bg-white overflow-hidden shadow-xs">
-                  <CardContent className="p-3 sm:p-4 space-y-3">
+                  <CardContent className="p-4 space-y-3">
                     {rightViewMode === "interactive" ? (
                       <div className="space-y-3">
                         <div className="relative w-full aspect-[1010/889] bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-inner group">
@@ -991,7 +1029,7 @@ export default function CompleteHardwareTrainingPage() {
                             alt="Sơ đồ tương tác bo mạch chủ MSI H510M-A PRO Socket LGA1200"
                             fill
                             className="object-contain p-2"
-                            sizes="(max-width: 1024px) 100vw, 40vw"
+                            sizes="40vw"
                             priority
                           />
 
@@ -1070,7 +1108,7 @@ export default function CompleteHardwareTrainingPage() {
                             alt={activeStep.imageAlt}
                             fill
                             className="object-contain p-2 group-hover:scale-102 transition-transform duration-300"
-                            sizes="(max-width: 1024px) 100vw, 40vw"
+                            sizes="40vw"
                           />
                         </div>
 
@@ -1090,9 +1128,9 @@ export default function CompleteHardwareTrainingPage() {
         {/* PHÂN HỆ 2: BẢN ĐỒ BẮT BỆNH 60 GIÂY (CHẨN ĐOÁN TRỰC QUAN)             */}
         {/* ==================================================================== */}
         {activeMainTab === "diagnostics" && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <Card className="border-slate-200 bg-white shadow-xs">
-              <CardHeader className="pb-3 border-b border-slate-100">
+              <CardHeader className="p-4 sm:p-6 pb-3 border-b border-slate-100">
                 <CardTitle className="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2">
                   <Zap className="w-5 h-5 text-amber-500" />
                   <span>Bản Đồ Bắt Bệnh 60 Giây: Cứu Sống Máy Không Lên Hình</span>
@@ -1102,24 +1140,24 @@ export default function CompleteHardwareTrainingPage() {
                 </p>
               </CardHeader>
 
-              <CardContent className="pt-4 space-y-6">
-                {/* 5 Phím chọn ca bệnh */}
-                <div className="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
+              <CardContent className="p-4 sm:p-6 pt-4 space-y-4 sm:space-y-6">
+                {/* 5 Phím chọn ca bệnh (Vuốt ngang mượt mà trên di động) */}
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-2.5">
                   {DIAGNOSTIC_CASES.map((c) => (
                     <button
                       key={c.id}
                       type="button"
                       onClick={() => setSelectedCaseId(c.id)}
-                      className={`p-3 rounded-2xl border text-left cursor-pointer transition-all ${
+                      className={`p-2.5 sm:p-3 rounded-2xl border text-left cursor-pointer transition-all min-h-[56px] sm:min-h-[64px] ${
                         selectedCaseId === c.id
                           ? "bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-slate-900 ring-offset-2"
                           : "bg-slate-50 hover:bg-slate-100 text-slate-800 border-slate-200"
                       }`}
                     >
-                      <div className="font-mono text-xs font-black mb-1 opacity-70">
+                      <div className="font-mono text-[10px] sm:text-xs font-black mb-0.5 sm:mb-1 opacity-75">
                         {c.name.split(":")[0]}
                       </div>
-                      <div className="font-extrabold text-xs sm:text-sm line-clamp-2">
+                      <div className="font-extrabold text-[11px] sm:text-xs line-clamp-2 leading-snug">
                         {c.name.split(":")[1]}
                       </div>
                     </button>
@@ -1127,24 +1165,24 @@ export default function CompleteHardwareTrainingPage() {
                 </div>
 
                 {/* Hộp chi tiết xử lý ca bệnh đang chọn */}
-                <div className="p-5 rounded-3xl bg-slate-900 text-white border border-slate-700 shadow-xl space-y-4">
+                <div className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-slate-900 text-white border border-slate-700 shadow-xl space-y-3 sm:space-y-4">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3">
                     <div className="space-y-0.5">
-                      <span className="text-amber-400 font-mono text-xs font-black tracking-wide">
+                      <span className="text-amber-400 font-mono text-[10px] sm:text-xs font-black tracking-wide">
                         CHẨN ĐOÁN KỸ THUẬT VIÊN
                       </span>
-                      <h3 className="text-lg sm:text-xl font-black text-white">
+                      <h3 className="text-base sm:text-xl font-black text-white">
                         {activeCase.name}
                       </h3>
                     </div>
-                    <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-xs font-mono font-bold border border-slate-700">
+                    <span className="px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 text-[11px] sm:text-xs font-mono font-bold border border-slate-700 w-fit">
                       Dụng cụ: {activeCase.tool}
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
-                    <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1.5">
-                      <div className="font-bold text-amber-400 uppercase tracking-wide text-xs">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm">
+                    <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1">
+                      <div className="font-bold text-amber-400 uppercase tracking-wide text-[11px] sm:text-xs">
                         Triệu chứng mắt thấy:
                       </div>
                       <p className="text-slate-300 leading-relaxed font-medium">
@@ -1152,8 +1190,8 @@ export default function CompleteHardwareTrainingPage() {
                       </p>
                     </div>
 
-                    <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1.5">
-                      <div className="font-bold text-rose-400 uppercase tracking-wide text-xs">
+                    <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-slate-800/80 border border-slate-700 space-y-1">
+                      <div className="font-bold text-rose-400 uppercase tracking-wide text-[11px] sm:text-xs">
                         Nguyên nhân gốc (Thủ phạm):
                       </div>
                       <p className="text-slate-300 leading-relaxed font-medium">
@@ -1163,13 +1201,13 @@ export default function CompleteHardwareTrainingPage() {
                   </div>
 
                   {/* Các bước xử lý chi tiết */}
-                  <div className="space-y-2 pt-2">
-                    <div className="font-black text-xs uppercase tracking-wider text-emerald-400">
+                  <div className="space-y-2 pt-1 sm:pt-2">
+                    <div className="font-black text-[11px] sm:text-xs uppercase tracking-wider text-emerald-400">
                       Các bước tay em làm để cứu sống máy trong 3 phút:
                     </div>
-                    <ul className="space-y-2.5 text-xs sm:text-sm text-slate-200">
+                    <ul className="space-y-2 text-xs sm:text-sm text-slate-200">
                       {activeCase.quickFix.map((step, idx) => (
-                        <li key={idx} className="flex items-start gap-2.5 leading-relaxed bg-slate-800/40 p-2.5 rounded-xl border border-slate-800">
+                        <li key={idx} className="flex items-start gap-2 leading-relaxed bg-slate-800/40 p-2 sm:p-2.5 rounded-xl border border-slate-800">
                           <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                           <span>{step}</span>
                         </li>
@@ -1186,9 +1224,9 @@ export default function CompleteHardwareTrainingPage() {
         {/* PHÂN HỆ 3: 5 MÓN ĐỒ & 4 SỢI DÂY (GIẢI MÃ THÙNG MÁY TRONG 5 PHÚT)     */}
         {/* ==================================================================== */}
         {activeMainTab === "components" && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <Card className="border-slate-200 bg-white shadow-xs">
-              <CardHeader className="pb-3 border-b border-slate-100">
+              <CardHeader className="p-4 sm:p-6 pb-3 border-b border-slate-100">
                 <CardTitle className="text-lg sm:text-xl font-black text-slate-900 flex items-center gap-2">
                   <Cpu className="w-5 h-5 text-blue-600" />
                   <span>Giải Mã Thùng Máy Trong 5 Phút: 5 Món Đồ Lớn &amp; 4 Sợi Dây</span>
@@ -1198,13 +1236,13 @@ export default function CompleteHardwareTrainingPage() {
                 </p>
               </CardHeader>
 
-              <CardContent className="pt-4 space-y-6">
+              <CardContent className="p-4 sm:p-6 pt-4 space-y-5 sm:space-y-6">
                 {/* 5 MÓN ĐỒ LỚN */}
-                <div className="space-y-3">
-                  <h4 className="font-black text-sm uppercase tracking-wide text-slate-700">
+                <div className="space-y-2.5 sm:space-y-3">
+                  <h4 className="font-black text-xs sm:text-sm uppercase tracking-wide text-slate-700">
                     1. Năm (05) món đồ lớn nhìn bằng mắt thường:
                   </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
                     {[
                       {
                         title: "1. Cục Nguồn (PSU)",
@@ -1243,13 +1281,13 @@ export default function CompleteHardwareTrainingPage() {
                         bad: "Cắm nhầm dây lên cổng Mainboard làm màn đen.",
                       },
                     ].map((item, i) => (
-                      <div key={i} className="p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-1.5">
+                      <div key={i} className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-slate-50 space-y-1.5">
                         <div className="flex items-center justify-between">
-                          <div className="font-extrabold text-sm text-slate-900">{item.title}</div>
+                          <div className="font-extrabold text-xs sm:text-sm text-slate-900">{item.title}</div>
                           <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-200 text-slate-700">{item.sub}</span>
                         </div>
                         <p className="text-xs text-slate-600 leading-relaxed">{item.desc}</p>
-                        <div className="text-[11px] text-rose-700 font-semibold pt-1">
+                        <div className="text-[11px] text-rose-700 font-semibold pt-0.5">
                           ⚠️ Hay lỗi: {item.bad}
                         </div>
                       </div>
@@ -1258,11 +1296,11 @@ export default function CompleteHardwareTrainingPage() {
                 </div>
 
                 {/* 4 SỢI DÂY SỐNG CÒN */}
-                <div className="space-y-3 pt-2 border-t border-slate-100">
-                  <h4 className="font-black text-sm uppercase tracking-wide text-slate-700">
+                <div className="space-y-2.5 sm:space-y-3 pt-2 border-t border-slate-100">
+                  <h4 className="font-black text-xs sm:text-sm uppercase tracking-wide text-slate-700">
                     2. Bốn (04) sợi dây duy nhất em cần biết cắm:
                   </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
                     {[
                       {
                         name: "Dây 1: Cấp nguồn 24 chân (To nhất)",
@@ -1289,7 +1327,7 @@ export default function CompleteHardwareTrainingPage() {
                         warn: "Cắm sai là bấm nút mở máy ngoài vỏ không phản ứng.",
                       },
                     ].map((wire, idx) => (
-                      <div key={idx} className="p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-1">
+                      <div key={idx} className="p-3 sm:p-3.5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-1">
                         <div className="flex items-center justify-between">
                           <span className="font-extrabold text-xs sm:text-sm text-slate-900">{wire.name}</span>
                           <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-bold border border-blue-200">{wire.pin}</span>
@@ -1309,9 +1347,9 @@ export default function CompleteHardwareTrainingPage() {
         {/* PHÂN HỆ 4: PHIẾU NGHIỆM THU BÀN GIAO & NỘP BÁO CÁO (3 ĐIỂM DỪNG)      */}
         {/* ==================================================================== */}
         {activeMainTab === "report" && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <Card className="border-slate-200 bg-white shadow-xs">
-              <CardHeader className="pb-3 border-b border-slate-100">
+              <CardHeader className="p-4 sm:p-6 pb-3 border-b border-slate-100">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <FileCheck2 className="w-5 h-5 text-slate-900" />
@@ -1326,7 +1364,7 @@ export default function CompleteHardwareTrainingPage() {
                         : "bg-amber-100 text-amber-800 border border-amber-300"
                     }`}
                   >
-                    {isAllCompleted ? "✓ ĐỦ ĐIỀU KIỆN NỘP" : `CÒN THIẾU ${totalSteps - completedCount} BƯỚC`}
+                    {isAllCompleted ? "✓ ĐỦ ĐIỀU KIỆN" : `CÒN THIẾU ${totalSteps - completedCount} BƯỚC`}
                   </span>
                 </div>
                 <p className="text-xs text-slate-500">
@@ -1334,11 +1372,11 @@ export default function CompleteHardwareTrainingPage() {
                 </p>
               </CardHeader>
 
-              <CardContent className="pt-5">
+              <CardContent className="p-4 sm:p-6 pt-4 sm:pt-5">
                 {/* 3 ĐIỂM DỪNG POKA-YOKE TỔNG HỢP */}
-                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 mb-6 text-xs">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 mb-5 sm:mb-6 text-xs">
                   <div className="font-extrabold text-slate-900 flex items-center gap-2">
-                    <ShieldAlert className="w-4 h-4 text-emerald-600" />
+                    <ShieldAlert className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span>3 ĐIỂM DỪNG AN TOÀN BẮT BUỘC ĐÃ ĐƯỢC THẦY NGHIỆM THU:</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-slate-700">
@@ -1355,11 +1393,11 @@ export default function CompleteHardwareTrainingPage() {
                 </div>
 
                 {isSubmitted ? (
-                  <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
+                  <div className="p-5 sm:p-6 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-3">
                     <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto shadow-md">
                       <CheckCircle2 className="w-7 h-7" />
                     </div>
-                    <h4 className="text-lg font-black text-emerald-950">
+                    <h4 className="text-base sm:text-lg font-black text-emerald-950">
                       {submitMessage}
                     </h4>
                     <p className="text-xs text-emerald-800 max-w-md mx-auto">
@@ -1370,7 +1408,7 @@ export default function CompleteHardwareTrainingPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => setIsSubmitted(false)}
-                        className="border-emerald-300 text-emerald-900 hover:bg-emerald-100 cursor-pointer"
+                        className="border-emerald-300 text-emerald-900 hover:bg-emerald-100 cursor-pointer min-h-[44px]"
                       >
                         <RotateCcw className="w-4 h-4 mr-1.5" />
                         Chỉnh sửa hoặc Nộp lại
@@ -1379,19 +1417,20 @@ export default function CompleteHardwareTrainingPage() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmitReport} className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      {/* Số máy */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                      {/* Số máy: text-base chống iOS Safari auto-zoom */}
                       <div className="space-y-1.5">
                         <Label htmlFor="machine-num" className="text-xs font-bold text-slate-800">
                           Số Máy Thực Hành <span className="text-rose-600">*</span>
                         </Label>
                         <Input
                           id="machine-num"
+                          inputMode="text"
                           placeholder="Ví dụ: Máy 08 (từ 01 - 36)"
                           value={machineNumber}
                           onChange={(e) => setMachineNumber(e.target.value)}
                           required
-                          className="border-slate-300 text-sm h-11"
+                          className="border-slate-300 text-base sm:text-sm h-12 sm:h-11"
                         />
                       </div>
 
@@ -1404,7 +1443,7 @@ export default function CompleteHardwareTrainingPage() {
                           id="tbl-num"
                           value={tableNumber}
                           onChange={(e) => setTableNumber(e.target.value)}
-                          className="w-full h-11 px-3 rounded-xl border border-slate-300 bg-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer"
+                          className="w-full h-12 sm:h-11 px-3 rounded-xl border border-slate-300 bg-white text-base sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer"
                         >
                           {Array.from({ length: 10 }, (_, i) => {
                             const num = String(i + 1).padStart(2, "0");
@@ -1424,10 +1463,11 @@ export default function CompleteHardwareTrainingPage() {
                         </Label>
                         <Input
                           id="cpu-temp"
+                          inputMode="numeric"
                           placeholder="Ví dụ: 38 (dưới 75°C là đạt)"
                           value={cpuTemp}
                           onChange={(e) => setCpuTemp(e.target.value)}
-                          className="border-slate-300 text-sm h-11"
+                          className="border-slate-300 text-base sm:text-sm h-12 sm:h-11"
                         />
                       </div>
                     </div>
@@ -1442,7 +1482,7 @@ export default function CompleteHardwareTrainingPage() {
                         placeholder="Nguyễn Văn A (KTV 1), Trần Thị B (KTV 2), Lê Văn C (KTV 3)"
                         value={ktvNames}
                         onChange={(e) => setKtvNames(e.target.value)}
-                        className="border-slate-300 text-sm h-11"
+                        className="border-slate-300 text-base sm:text-sm h-12 sm:h-11"
                       />
                     </div>
 
@@ -1457,7 +1497,7 @@ export default function CompleteHardwareTrainingPage() {
                         placeholder="Ví dụ: Máy POST nhanh trong 4s, BIOS nhận đủ 8192MB DDR4 Bus 2666, Device Manager sạch chấm than, đã in Test Page máy in thành công."
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
-                        className="w-full p-3 rounded-xl border border-slate-300 bg-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
+                        className="w-full p-3 rounded-xl border border-slate-300 bg-white text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-slate-900"
                       />
                     </div>
 
@@ -1466,11 +1506,11 @@ export default function CompleteHardwareTrainingPage() {
                       <div className="text-xs text-slate-500">
                         {isAllCompleted ? (
                           <span className="text-emerald-700 font-bold flex items-center gap-1">
-                            ✓ Học sinh đã tick đủ 7/7 bước. Nút nộp báo cáo đã được mở khóa!
+                            ✓ Đã tick đủ 7/7 bước. Nút nộp báo cáo đã sẵn sàng!
                           </span>
                         ) : (
                           <span className="text-amber-700 font-medium">
-                            ⚠️ Cần tick xác nhận đủ 7 bước ở tab 'Quy Trình 7 Bước KTV' để mở khóa nút nộp bài.
+                            ⚠️ Cần tick xác nhận đủ 7 bước ở tab 'Quy Trình 7 Bước' để mở khóa nút nộp bài.
                           </span>
                         )}
                       </div>
@@ -1498,15 +1538,69 @@ export default function CompleteHardwareTrainingPage() {
       </main>
 
       {/* ==================================================================== */}
+      {/* 3. THANH ĐIỀU HƯỚNG DƯỚI ĐÁY RIÊNG CHO DI ĐỘNG (MOBILE ACTION BAR)   */}
+      {/* Giúp học sinh thao tác bằng 1 ngón tay cái mà không phải cuộn tìm nút */}
+      {/* ==================================================================== */}
+      {activeMainTab === "workflow7" && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 sm:hidden shadow-2xl flex items-center justify-between gap-2">
+          {/* Nút lùi */}
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={activeStepIndex === 0}
+            onClick={handlePrevStep}
+            className="h-11 px-3 text-xs font-bold border-slate-300"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+
+          {/* Nút ở giữa: Tick xong bước hiện tại 1-chạm */}
+          <button
+            type="button"
+            onClick={() => handleToggleStep(activeStep.id)}
+            className={`flex-1 h-11 px-3 rounded-xl border flex items-center justify-center gap-2 text-xs font-black transition-all cursor-pointer select-none active:scale-[0.98] ${
+              isActiveStepDone
+                ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                : "bg-slate-100 text-slate-800 border-slate-300 hover:bg-slate-200"
+            }`}
+          >
+            <CheckCircle2 className={`w-4 h-4 ${isActiveStepDone ? "text-white" : "text-slate-400"}`} />
+            <span>
+              {isActiveStepDone ? `Bước ${activeStep.stepNumber}: Đã Xong ✓` : `Tick Xong Bước ${activeStep.stepNumber}`}
+            </span>
+          </button>
+
+          {/* Nút tiến */}
+          {activeStepIndex < totalSteps - 1 ? (
+            <Button
+              size="sm"
+              onClick={handleNextStep}
+              className="h-11 px-3 text-xs font-bold bg-slate-900 text-white"
+            >
+              <ArrowRight className="w-4 h-4" />
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              onClick={() => setActiveMainTab("report")}
+              className="h-11 px-3 text-xs font-bold bg-emerald-600 text-white"
+            >
+              <span>Nộp</span>
+            </Button>
+          )}
+        </div>
+      )}
+
+      {/* ==================================================================== */}
       {/* 4. MODAL PHÓNG TO ẢNH MÁY CHIẾU (PROJECTOR LIGHTBOX)                 */}
       {/* ==================================================================== */}
       {zoomedImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl border border-slate-200 max-w-5xl w-full p-6 space-y-4 shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-3 sm:p-4 animate-in fade-in">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-slate-200 max-w-5xl w-full p-4 sm:p-6 space-y-3 sm:space-y-4 shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2 sm:pb-3">
               <div className="flex items-center gap-2">
-                <Maximize2 className="w-5 h-5 text-slate-900" />
-                <h3 className="text-lg font-black text-slate-900">
+                <Maximize2 className="w-4 h-4 sm:w-5 sm:h-5 text-slate-900" />
+                <h3 className="text-sm sm:text-lg font-black text-slate-900 truncate">
                   {zoomedImage.title}
                 </h3>
               </div>
@@ -1514,33 +1608,33 @@ export default function CompleteHardwareTrainingPage() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setZoomedImage(null)}
-                className="rounded-full hover:bg-slate-100 cursor-pointer"
+                className="rounded-full hover:bg-slate-100 cursor-pointer h-8 w-8 sm:h-10 sm:w-10"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4 sm:w-5 sm:h-5" />
               </Button>
             </div>
 
-            <div className="relative w-full h-[65vh] bg-white rounded-2xl overflow-hidden border border-slate-200">
+            <div className="relative w-full h-[55vh] sm:h-[65vh] bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200">
               <Image
                 src={zoomedImage.src}
                 alt={zoomedImage.alt}
                 fill
                 className="object-contain p-2"
-                sizes="90vw"
+                sizes="95vw"
                 priority
               />
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
-              <span className="text-slate-500 font-mono">
-                Chuẩn trình chiếu độ phân giải cao cho phòng thực hành máy tính
+            <div className="flex items-center justify-between pt-1 sm:pt-2 border-t border-slate-100 text-xs">
+              <span className="text-slate-500 font-mono text-[11px] sm:text-xs truncate mr-2">
+                Ảnh độ nét cao cấu hình H510 phòng lab
               </span>
               <Button
                 size="touch"
                 onClick={() => setZoomedImage(null)}
-                className="bg-slate-900 hover:bg-slate-800 text-white font-bold cursor-pointer"
+                className="bg-slate-900 hover:bg-slate-800 text-white font-bold cursor-pointer h-10 sm:h-12 min-h-[40px] sm:min-h-[48px] px-4"
               >
-                Đóng Chế Độ Chiếu
+                Đóng
               </Button>
             </div>
           </div>
