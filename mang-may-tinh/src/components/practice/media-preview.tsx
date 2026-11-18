@@ -16,6 +16,18 @@ interface MediaPreviewProps {
  */
 export function MediaPreview({ currentStep }: MediaPreviewProps) {
   const [isZoomed, setIsZoomed] = React.useState(false);
+  const [viewMode, setViewMode] = React.useState<"real" | "diagram">(
+    currentStep.realImageUrl ? "real" : "diagram"
+  );
+
+  // Tự động ưu tiên chế độ xem ảnh thực tế nếu bài lab có ảnh thật
+  React.useEffect(() => {
+    if (currentStep.realImageUrl) {
+      setViewMode("real");
+    } else {
+      setViewMode("diagram");
+    }
+  }, [currentStep.id, currentStep.realImageUrl]);
 
   // Render sơ đồ mô phỏng theo từng bước kỹ thuật
   const renderDiagramContent = () => {
@@ -560,43 +572,106 @@ export function MediaPreview({ currentStep }: MediaPreviewProps) {
   return (
     <>
       <Card className="border-slate-200 shadow-sm sticky top-20">
-        <CardHeader className="flex flex-row items-center justify-between pb-3">
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3">
           <div className="space-y-0.5">
             <CardTitle className="text-base font-bold flex items-center gap-2">
               <span>🔍</span>
-              <span>Sơ Đồ Kỹ Thuật Bước {currentStep.stepNumber}</span>
+              <span>Minh Họa Bước {currentStep.stepNumber}</span>
             </CardTitle>
             <span className="text-xs text-slate-500 font-medium">
               Đối chiếu mẫu trực quan trước khi thực hiện
             </span>
           </div>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setIsZoomed(true)}
-            className="flex items-center gap-1.5 text-xs font-bold border-slate-300"
-            title="Phóng to sơ đồ cho màn hình máy chiếu phòng lab"
-          >
-            <Maximize2 className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Phóng to</span>
-          </Button>
+          <div className="flex items-center gap-2">
+            {/* Thanh chuyển chế độ xem: Ảnh thực tế 📷 vs Sơ đồ 📐 */}
+            {currentStep.realImageUrl && (
+              <div className="flex rounded-lg border border-slate-200 p-0.5 bg-slate-100 text-[11px] font-bold">
+                <button
+                  type="button"
+                  onClick={() => setViewMode("real")}
+                  className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
+                    viewMode === "real"
+                      ? "bg-white text-slate-900 shadow-xs font-black"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  📷 Ảnh Chụp Thật
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewMode("diagram")}
+                  className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
+                    viewMode === "diagram"
+                      ? "bg-white text-slate-900 shadow-xs font-black"
+                      : "text-slate-600 hover:text-slate-900"
+                  }`}
+                >
+                  📐 Sơ Đồ Kỹ Thuật
+                </button>
+              </div>
+            )}
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsZoomed(true)}
+              className="flex items-center gap-1.5 text-xs font-bold border-slate-300"
+              title="Phóng to cho màn hình máy chiếu phòng lab"
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Phóng to</span>
+            </Button>
+          </div>
         </CardHeader>
 
         <CardContent className="pt-2">
-          {renderDiagramContent()}
+          {viewMode === "real" && currentStep.realImageUrl ? (
+            <div className="space-y-3">
+              <div
+                onClick={() => setIsZoomed(true)}
+                className="relative w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-700 shadow-md group cursor-pointer"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={currentStep.realImageUrl}
+                  alt={currentStep.title}
+                  className="w-full h-auto max-h-[380px] object-contain mx-auto group-hover:scale-102 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-transparent transition-colors flex items-center justify-center">
+                  <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-slate-900/90 text-white font-mono text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-lg">
+                    <ZoomIn className="w-3.5 h-3.5 text-emerald-400" />
+                    Click phóng to toàn màn hình máy chiếu
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between text-xs font-mono font-bold text-slate-700 bg-slate-100 border border-slate-200 p-2.5 rounded-xl">
+                <span>📷 Ảnh chụp thực tế Windows 10</span>
+                <button
+                  type="button"
+                  onClick={() => setIsZoomed(true)}
+                  className="text-emerald-700 hover:underline cursor-pointer"
+                >
+                  Phóng to ➔
+                </button>
+              </div>
+            </div>
+          ) : (
+            renderDiagramContent()
+          )}
         </CardContent>
       </Card>
 
       {/* MODAL PHÓNG TO SƠ ĐỒ TOÀN MÀN HÌNH (PROJECTOR LIGHTBOX) */}
       {isZoomed && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl border border-slate-200 max-w-3xl w-full p-6 space-y-5 shadow-2xl">
+          <div className="bg-white rounded-3xl border border-slate-200 max-w-4xl w-full p-6 space-y-5 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
                 <ZoomIn className="w-5 h-5 text-slate-900" />
                 <h3 className="text-lg font-black text-slate-900">
-                  Sơ Đồ Bước {currentStep.stepNumber}: {currentStep.title}
+                  {viewMode === "real" && currentStep.realImageUrl ? "Ảnh Thực Tế: " : "Sơ Đồ Kỹ Thuật: "}
+                  Bước {currentStep.stepNumber}: {currentStep.title}
                 </h3>
               </div>
               <Button
@@ -609,8 +684,19 @@ export function MediaPreview({ currentStep }: MediaPreviewProps) {
               </Button>
             </div>
 
-            <div className="py-4">
-              {renderDiagramContent()}
+            <div className="py-2">
+              {viewMode === "real" && currentStep.realImageUrl ? (
+                <div className="rounded-2xl overflow-hidden bg-slate-950 p-2 border border-slate-700">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={currentStep.realImageUrl}
+                    alt={currentStep.title}
+                    className="w-full h-auto max-h-[70vh] object-contain mx-auto"
+                  />
+                </div>
+              ) : (
+                renderDiagramContent()
+              )}
             </div>
 
             <div className="flex justify-end pt-2 border-t border-slate-100">

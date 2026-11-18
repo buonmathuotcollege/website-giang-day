@@ -35,6 +35,7 @@ const LAB_FILE_SHARING_LESSON: LabLesson = {
       pokaYoke: "Cả máy chủ (chứa file) và máy khách (nhận file) đều bắt buộc phải chọn Private Network.",
       analogy: "Mở cổng hàng xóm: Đổi từ chế độ 'ngoài đường công cộng' sang chế độ 'trong nội bộ gia đình'.",
       diagramType: "share_private_network",
+      realImageUrl: "/images/chia-se-file/step-1-private-network.webp",
     },
     {
       id: 2,
@@ -52,6 +53,7 @@ const LAB_FILE_SHARING_LESSON: LabLesson = {
       pokaYoke: "KTV 2 kiểm tra: Đảm bảo đã chọn 'Turn off password protected' để các máy học sinh không bị chặn mật khẩu.",
       analogy: "Bật đèn hành lang: Bật đèn để mọi người nhìn thấy nhau và mở cửa cổng không khóa then cài.",
       diagramType: "share_advanced_settings",
+      realImageUrl: "/images/chia-se-file/step-2-advanced-sharing.jpg",
     },
     {
       id: 3,
@@ -69,6 +71,7 @@ const LAB_FILE_SHARING_LESSON: LabLesson = {
       pokaYoke: "Đặt tên Share Name ngắn gọn không dấu tiếng Việt, không chứa ký tự đặc biệt để tránh lỗi đường dẫn.",
       analogy: "Mở quầy bốc thuốc: Đặt biển thông báo cho phép tất cả mọi người được vào lấy tài liệu.",
       diagramType: "share_permissions",
+      realImageUrl: "/images/chia-se-file/step-3-sharing-permissions.webp",
     },
     {
       id: 4,
@@ -86,6 +89,7 @@ const LAB_FILE_SHARING_LESSON: LabLesson = {
       pokaYoke: "ĐIỂM DỪNG BẮT BUỘC: Nếu thiếu bước cấp quyền ở thẻ Security, máy khách sẽ gặp lỗi 'Access Denied'!",
       analogy: "Mở khóa 2 lớp: Thẻ Sharing là mở cổng rào, thẻ Security là mở chìa khóa phòng chứa đồ.",
       diagramType: "share_security_tab",
+      realImageUrl: "/images/chia-se-file/step-4-security-tab-ntfs.webp",
     },
     {
       id: 5,
@@ -102,6 +106,7 @@ const LAB_FILE_SHARING_LESSON: LabLesson = {
       pokaYoke: "Phải gõ 2 dấu gạch chéo ngược \\\\, nếu gõ nhầm // sẽ bị trình duyệt web hiểu nhầm là URL.",
       analogy: "Đi theo số nhà: Nhập đúng địa chỉ số nhà là xe hàng tự động chạy đến tận cửa giao nhận đồ.",
       diagramType: "share_run_ip",
+      realImageUrl: "/images/chia-se-file/step-5-access-shared-folder.jpg",
     },
   ],
 };
