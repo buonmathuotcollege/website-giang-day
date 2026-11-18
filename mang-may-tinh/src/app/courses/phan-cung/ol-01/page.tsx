@@ -11,12 +11,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,7 +21,6 @@ import {
   Cpu,
   Layers,
   Monitor,
-  HardDrive,
   CheckCircle2,
   Maximize2,
   X,
@@ -36,6 +29,9 @@ import {
   Info,
   RotateCcw,
   Zap,
+  ArrowRight,
+  ArrowLeft,
+  ChevronRight,
 } from "lucide-react";
 
 /**
@@ -50,6 +46,7 @@ interface HardwareStep {
   componentName: string;
   imageSrc: string;
   imageAlt: string;
+  linkedHotspotId?: string;
   instructions: string[];
   pokaYoke: string;
   analogy: string;
@@ -60,13 +57,96 @@ interface HardwareStep {
 }
 
 /**
+ * Danh sách 5 điểm Hotspot trên Bo Mạch MSI H510
+ */
+interface HotspotInfo {
+  id: string;
+  stepId: string;
+  stepNumber: number;
+  title: string;
+  badge: string;
+  top: string;
+  left: string;
+  color: string;
+  description: string;
+  pokaYoke: string;
+}
+
+const H510_HOTSPOTS: HotspotInfo[] = [
+  {
+    id: "socket-cpu",
+    stepId: "step-1",
+    stepNumber: 1,
+    title: "1. Socket LGA1200 (Vị trí CPU)",
+    badge: "Intel Gen 10 / Gen 11",
+    top: "33%",
+    left: "40%",
+    color: "bg-blue-600",
+    description:
+      "Socket LGA1200 với 1200 chân tiếp xúc kim bằng đồng. Tương thích CPU Intel Core i3, i5, i7 thế hệ 10 (Comet Lake) và 11 (Rocket Lake).",
+    pokaYoke:
+      "Căn đúng 2 vết khuyết hình bán nguyệt trên mép CPU trùng với 2 gờ nổi của socket. Thao tác đặt thẳng đứng, tuyệt đối KHÔNG làm cong gãy chân kim!",
+  },
+  {
+    id: "ram-slots",
+    stepId: "step-2",
+    stepNumber: 2,
+    title: "2. Khe Cắm RAM DDR4 (2 Khe DIMM)",
+    badge: "DDR4 8GB · Dual-Channel",
+    top: "33%",
+    left: "70%",
+    color: "bg-emerald-600",
+    description:
+      "2 khe cắm RAM chuẩn DDR4 hỗ trợ dung lượng tối đa 64GB, tần số Bus 2666MHz / 2933MHz / 3200MHz. Hỗ trợ chạy Dual-Channel tăng gấp đôi băng thông dữ liệu.",
+    pokaYoke:
+      "Soi đúng vị trí khe khuyết lệch của chuẩn DDR4. Ấn đều hai đầu thanh RAM đến khi 2 ngàm khóa tự ôm chặt, nguyên tắc Zero-force không dùng sức bẻ ép.",
+  },
+  {
+    id: "pcie-x16",
+    stepId: "step-3",
+    stepNumber: 3,
+    title: "3. Khe PCIe 3.0/4.0 x16 (Card Rời GT 730)",
+    badge: "Băng Thông Đồ Họa Cao Cấp",
+    top: "60%",
+    left: "38%",
+    color: "bg-amber-500",
+    description:
+      "Khe cắm card màn hình đồ họa chuyên dụng với băng thông tối đa 16 làn. Đây là nơi lắp ráp card rời NVIDIA GeForce GT 730 2GB GDDR5 của phòng thực hành.",
+    pokaYoke:
+      "Mở lẫy khóa đuôi khe trước khi cắm. Cắm dây xuất hình màn hình vào card GT 730, KHÔNG cắm vào cổng mainboard vì CPU đuôi F sẽ không có hình!",
+  },
+  {
+    id: "sata-m2",
+    stepId: "step-4",
+    stepNumber: 4,
+    title: "4. Cụm Cổng SATA III 6Gb/s & Khe M.2",
+    badge: "Ổ Cứng SSD 128GB/256GB",
+    top: "78%",
+    left: "72%",
+    color: "bg-indigo-600",
+    description:
+      "Gồm 4 cổng SATA III tốc độ 6Gb/s hình chữ L cho SSD 2.5\" và 1 khe cắm M.2 PCIe Gen3 x4 cho ổ cứng SSD NVMe tốc độ cao.",
+    pokaYoke:
+      "Cổng SATA có gờ chữ L định hướng chống cắm ngược. Siết ốc giữ SSD M.2 vừa tay với ren đồng bo mạch.",
+  },
+  {
+    id: "power-atx",
+    stepId: "step-1",
+    stepNumber: 1,
+    title: "5. Đầu Cấp Nguồn 24-Pin ATX & 8-Pin CPU",
+    badge: "Điện Áp 12V / 5V / 3.3V",
+    top: "40%",
+    left: "87%",
+    color: "bg-rose-600",
+    description:
+      "Cổng nguồn chính 24 chân ATX nuôi toàn bộ bo mạch và đầu nguồn 8-pin 12V (phía góc trên bên trái) cấp dòng điện riêng cho CPU Intel.",
+    pokaYoke:
+      "Cả hai đầu nối đều có ngàm gài nhựa khóa an toàn. Phải ấn thật chặt đến khi ngàm khóa ngậm khít để tránh đánh tia lửa điện gây cháy chân jack.",
+  },
+];
+
+/**
  * Dữ liệu bài ôn luyện năng lực nghề: Phần cứng Máy tính (OL-01)
- * Chuẩn hóa 100% cấu hình phòng máy thực tế:
- * - Hệ điều hành: Windows 10 Pro
- * - Mainboard: MSI H510M-A PRO (Chipset Intel H510, Socket LGA1200)
- * - RAM: 8GB DDR4 (Bus 2666 / 3200MHz)
- * - VGA: NVIDIA GeForce GT 730 2GB GDDR5
- * - Lưu trữ: SSD 128GB / 256GB SATA III
  */
 const HARDWARE_STEPS: HardwareStep[] = [
   {
@@ -78,6 +158,7 @@ const HARDWARE_STEPS: HardwareStep[] = [
     componentName: "Bo mạch chủ MSI H510M-A PRO",
     imageSrc: "/images/ol-01/main-h510.jpg",
     imageAlt: "Toàn cảnh bo mạch chủ MSI H510M-A PRO Socket LGA1200",
+    linkedHotspotId: "socket-cpu",
     instructions: [
       "Trước khi chạm vào bất kỳ linh kiện nào, KTV chạm hai lòng bàn tay vào khung vỏ kim loại của case máy tính tối thiểu 5 giây để xả tĩnh điện tích tụ trên cơ thể (ESD).",
       "Kiểm tra dây nguồn 220V: Bắt buộc đã rút phích cắm khỏi ổ điện ít nhất 30 giây để toàn bộ tụ lọc nguồn trên bo mạch xả hết điện áp rò.",
@@ -103,6 +184,7 @@ const HARDWARE_STEPS: HardwareStep[] = [
     componentName: "Thanh RAM 8GB DDR4 Bus 2666/3200MHz",
     imageSrc: "/images/ol-01/ram-ddr4.jpg",
     imageAlt: "Cận cảnh thanh RAM DDR4 chân mạ vàng và khe khuyết lệch",
+    linkedHotspotId: "ram-slots",
     instructions: [
       "Mở hai ngàm khóa nhựa màu đen ở hai đầu khe cắm RAM DDR4 (khe DIMMA1 hoặc DIMMB1) trên bo mạch H510.",
       "Cầm thanh RAM 8GB DDR4 bằng hai mép cạnh bên, tuyệt đối không chạm ngón tay vào hàng chân tiếp xúc mạ vàng.",
@@ -128,6 +210,7 @@ const HARDWARE_STEPS: HardwareStep[] = [
     componentName: "VGA NVIDIA GeForce GT 730 2GB GDDR5",
     imageSrc: "/images/ol-01/vga-gt730.jpg",
     imageAlt: "Card đồ họa rời NVIDIA GeForce GT 730 2GB GDDR5 chân cắm PCIe",
+    linkedHotspotId: "pcie-x16",
     instructions: [
       "Xác định khe cắm dài PCIe 3.0/4.0 x16 bọc gia cố trên bo mạch H510. Dùng ngón tay mở nhẹ lẫy khóa an toàn ở phần đuôi khe cắm sang trạng thái mở.",
       "Tháo nẹp chắn kim loại tương ứng ở mặt sau thùng case máy tính (nếu lắp vào case).",
@@ -154,6 +237,7 @@ const HARDWARE_STEPS: HardwareStep[] = [
     componentName: "Ổ cứng SSD 128GB/256GB & Cáp SATA 6Gb/s",
     imageSrc: "/images/ol-01/main-h510.jpg",
     imageAlt: "Cụm cổng SATA III và khe M.2 NVMe trên bo mạch chủ H510",
+    linkedHotspotId: "sata-m2",
     instructions: [
       "Xác định cổng SATA 6Gb/s (SATA III) trên bo mạch H510. Quan sát hình dạng chân cắm hình chữ L đặc thù.",
       "Lấy sợi cáp dữ liệu SATA (có lẫy kim loại chống tuột), cắm một đầu vào cổng SATA_1 trên mainboard cho đến khi nghe tiếng 'TÁCH'.",
@@ -180,6 +264,7 @@ const HARDWARE_STEPS: HardwareStep[] = [
     componentName: "Màn hình kiểm tra POST & Click BIOS 5",
     imageSrc: "/images/ol-01/main-h510.jpg",
     imageAlt: "Giao diện kiểm tra thông số hệ thống trong BIOS và Windows 10",
+    linkedHotspotId: "socket-cpu",
     instructions: [
       "Kết nối bàn phím, chuột và dây cáp màn hình từ màn chiếu/màn hình bàn máy vào cổng của card rời GT 730.",
       "Cắm dây nguồn 220V vào bộ nguồn máy tính và bật công tắc I/O sang vị trí 'I'. Bấm nút Power trên case máy tính.",
@@ -199,95 +284,11 @@ const HARDWARE_STEPS: HardwareStep[] = [
   },
 ];
 
-/**
- * Danh sách 5 điểm Hotspot nhấp nháy trên ảnh Bo Mạch MSI H510
- * Tọa độ phần trăm chính xác trên ảnh main-h510.jpg
- */
-interface HotspotInfo {
-  id: string;
-  title: string;
-  badge: string;
-  top: string;
-  left: string;
-  color: string;
-  description: string;
-  pokaYoke: string;
-}
-
-const H510_HOTSPOTS: HotspotInfo[] = [
-  {
-    id: "socket-cpu",
-    title: "1. Socket LGA1200 (Vị trí CPU)",
-    badge: "Intel Gen 10 / Gen 11",
-    top: "33%",
-    left: "40%",
-    color: "bg-blue-600",
-    description:
-      "Socket LGA1200 với 1200 chân tiếp xúc kim bằng đồng. Tương thích CPU Intel Core i3, i5, i7 thế hệ 10 (Comet Lake) và 11 (Rocket Lake).",
-    pokaYoke:
-      "Căn đúng 2 vết khuyết hình bán nguyệt trên mép CPU trùng với 2 gờ nổi của socket. Thao tác đặt thẳng đứng, tuyệt đối KHÔNG làm cong gãy chân kim!",
-  },
-  {
-    id: "ram-slots",
-    title: "2. Khe Cắm RAM DDR4 (2 Khe DIMM)",
-    badge: "DDR4 8GB · Dual-Channel",
-    top: "33%",
-    left: "70%",
-    color: "bg-emerald-600",
-    description:
-      "2 khe cắm RAM chuẩn DDR4 hỗ trợ dung lượng tối đa 64GB, tần số Bus 2666MHz / 2933MHz / 3200MHz. Hỗ trợ chạy Dual-Channel tăng gấp đôi băng thông.",
-    pokaYoke:
-      "Soi đúng vị trí khe khuyết lệch của chuẩn DDR4. Ấn đều hai đầu thanh RAM đến khi 2 ngàm khóa tự ôm chặt, không dùng sức bẻ ép.",
-  },
-  {
-    id: "pcie-x16",
-    title: "3. Khe PCIe 3.0/4.0 x16 (Card Rời GT 730)",
-    badge: "Băng Thông Đồ Họa Cao Cấp",
-    top: "60%",
-    left: "38%",
-    color: "bg-amber-500",
-    description:
-      "Khe cắm card màn hình đồ họa chuyên dụng với băng thông tối đa 16 làn. Đây là nơi lắp ráp card rời NVIDIA GeForce GT 730 2GB GDDR5 của phòng thực hành.",
-    pokaYoke:
-      "Mở lẫy khóa đuôi khe trước khi cắm. Cắm dây xuất hình màn hình vào card GT 730, KHÔNG cắm vào cổng mainboard vì CPU đuôi F sẽ không có hình!",
-  },
-  {
-    id: "sata-m2",
-    title: "4. Cụm Cổng SATA III 6Gb/s & Khe M.2",
-    badge: "Ổ Cứng SSD 128GB/256GB",
-    top: "78%",
-    left: "72%",
-    color: "bg-indigo-600",
-    description:
-      "Gồm 4 cổng SATA III tốc độ 6Gb/s hình chữ L cho SSD 2.5\" và 1 khe cắm M.2 PCIe Gen3 x4 cho ổ cứng SSD NVMe tốc độ cao.",
-    pokaYoke:
-      "Cổng SATA có gờ chữ L định hướng chống cắm ngược. Siết ốc giữ SSD M.2 vừa tay với ren đồng bo mạch.",
-  },
-  {
-    id: "power-atx",
-    title: "5. Đầu Cấp Nguồn 24-Pin ATX & 8-Pin CPU",
-    badge: "Điện Áp 12V / 5V / 3.3V",
-    top: "40%",
-    left: "87%",
-    color: "bg-rose-600",
-    description:
-      "Cổng nguồn chính 24 chân ATX nuôi toàn bộ bo mạch và đầu nguồn 8-pin 12V (phía góc trên bên trái) cấp dòng điện riêng cho CPU Intel.",
-    pokaYoke:
-      "Cả hai đầu nối đều có ngàm gài nhựa khóa an toàn. Phải ấn thật chặt đến khi ngàm khóa ngậm khít để tránh đánh tia lửa điện gây cháy chân jack.",
-  },
-];
-
-/**
- * Trang Ôn luyện Năng lực Nghề: Phần cứng Máy tính (OL-01)
- * Cấu trúc thiết kế 2 cột iFixit chuẩn mực:
- * Bên trái: Hướng dẫn thực hành từng bước bằng Shadcn Accordion & Checkbox tiến độ
- * Bên phải: Sơ đồ Bo Mạch H510 tương tác bằng Shadcn HoverCard & Ảnh thực tế chuẩn phòng lab
- */
 export default function HardwarePracticePage() {
-  // Trạng thái Accordion bước đang mở
+  // Trạng thái bước đang chọn (step-1 đến step-5)
   const [activeStepId, setActiveStepId] = React.useState<string>("step-1");
 
-  // Trạng thái Checkbox hoàn thành của 5 bước (Khởi tạo từ localStorage nếu có)
+  // Trạng thái Checkbox hoàn thành của 5 bước
   const [checkedSteps, setCheckedSteps] = React.useState<Record<string, boolean>>({
     "step-1": false,
     "step-2": false,
@@ -298,6 +299,9 @@ export default function HardwarePracticePage() {
 
   // Chế độ xem bên phải: 'interactive' (sơ đồ điểm hotspot) hoặc 'stepImage' (ảnh theo bước)
   const [rightViewMode, setRightViewMode] = React.useState<"interactive" | "stepImage">("interactive");
+
+  // Điểm Hotspot đang được chọn để ghim thông tin bên dưới sơ đồ
+  const [selectedHotspot, setSelectedHotspot] = React.useState<HotspotInfo>(H510_HOTSPOTS[1]); // Mặc định RAM
 
   // Trạng thái phóng to ảnh toàn màn hình (Projector Lightbox)
   const [zoomedImage, setZoomedImage] = React.useState<{ src: string; alt: string; title: string } | null>(null);
@@ -322,16 +326,18 @@ export default function HardwarePracticePage() {
     } catch {}
   }, []);
 
-  // Xử lý thay đổi Checkbox tiến độ
+  // Xử lý đảo trạng thái Checkbox tiến độ (Tuyệt đối không dùng label htmlFor để chống xung đột event)
   const handleToggleStep = (stepId: string) => {
-    const updated = {
-      ...checkedSteps,
-      [stepId]: !checkedSteps[stepId],
-    };
-    setCheckedSteps(updated);
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(updated));
-    } catch {}
+    setCheckedSteps((prev) => {
+      const updated = {
+        ...prev,
+        [stepId]: !prev[stepId],
+      };
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
   };
 
   // Tính toán % tiến độ hoàn thành
@@ -341,12 +347,30 @@ export default function HardwarePracticePage() {
   const isAllCompleted = completedCount === totalSteps;
 
   // Lấy dữ liệu của bước đang chọn
-  const activeStep = HARDWARE_STEPS.find((s) => s.id === activeStepId) || HARDWARE_STEPS[0];
+  const activeStepIndex = HARDWARE_STEPS.findIndex((s) => s.id === activeStepId);
+  const activeStep = HARDWARE_STEPS[activeStepIndex >= 0 ? activeStepIndex : 0];
 
-  // Khi học sinh chuyển bước ở Accordion, tự động chuyển ảnh minh họa sang bước đó
-  const handleAccordionChange = (value: string) => {
-    if (value) {
-      setActiveStepId(value);
+  // Khi click chọn Hotspot trên sơ đồ bo mạch
+  const handleSelectHotspot = (spot: HotspotInfo) => {
+    setSelectedHotspot(spot);
+    // Tự động mở bước tương ứng
+    setActiveStepId(spot.stepId);
+  };
+
+  // Chuyển sang bước kế tiếp
+  const handleNextStep = () => {
+    if (activeStepIndex < totalSteps - 1) {
+      const nextStep = HARDWARE_STEPS[activeStepIndex + 1];
+      setActiveStepId(nextStep.id);
+      setRightViewMode("stepImage");
+    }
+  };
+
+  // Quay lại bước trước
+  const handlePrevStep = () => {
+    if (activeStepIndex > 0) {
+      const prevStep = HARDWARE_STEPS[activeStepIndex - 1];
+      setActiveStepId(prevStep.id);
       setRightViewMode("stepImage");
     }
   };
@@ -415,7 +439,7 @@ export default function HardwarePracticePage() {
                   </span>
                 </div>
                 <CardTitle className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                  Ôn Luyện Năng Lực Nghề: Lắp Ráp & Nghiệm Thu Phần Cứng PC
+                  Ôn Luyện Năng Lực Nghề: Lắp Ráp &amp; Nghiệm Thu Phần Cứng PC
                 </CardTitle>
                 <p className="text-xs sm:text-sm text-slate-500 font-medium">
                   Giảng viên hướng dẫn: <strong className="text-slate-800">CN. Phạm Tiến Đông</strong> · Cầm tay chỉ việc 100% tại Bàn Kỹ Thuật
@@ -463,9 +487,54 @@ export default function HardwarePracticePage() {
         </Card>
 
         {/* ==================================================================== */}
+        {/* THANH CHUYỂN BƯỚC NHANH 1-CHẠM (QUICK STEP NAVIGATOR PILLS)          */}
+        {/* ==================================================================== */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          <span className="text-xs font-bold text-slate-500 shrink-0 mr-1 hidden sm:inline">
+            Chuyển bước nhanh:
+          </span>
+          {HARDWARE_STEPS.map((s, idx) => {
+            const isCurrent = s.id === activeStepId;
+            const isDone = Boolean(checkedSteps[s.id]);
+            return (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => {
+                  setActiveStepId(s.id);
+                  setRightViewMode("stepImage");
+                }}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer ${
+                  isCurrent
+                    ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
+                    : isDone
+                    ? "bg-emerald-50 text-emerald-900 border border-emerald-300 hover:bg-emerald-100"
+                    : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                <span
+                  className={`w-5 h-5 rounded-full flex items-center justify-center font-mono text-[11px] font-black ${
+                    isCurrent
+                      ? "bg-white text-slate-900"
+                      : isDone
+                      ? "bg-emerald-600 text-white"
+                      : "bg-slate-200 text-slate-700"
+                  }`}
+                >
+                  {isDone ? "✓" : idx + 1}
+                </span>
+                <span className="truncate max-w-[140px] sm:max-w-none">
+                  Bước {idx + 1}: {s.componentName.split(" ")[0]} {s.componentName.split(" ")[1]}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* ==================================================================== */}
         {/* 2. BỐ CỤC CHIA ĐÔI MÀN HÌNH (IFIXIT SPLIT VIEW)                      */}
-        {/* CỘT TRÁI: HƯỚNG DẪN TỪNG BƯỚC (ACCORDION + CHECKBOX)                 */}
-        {/* CỘT PHẢI: SƠ ĐỒ MAINBOARD H510 TƯƠNG TÁC HOVERCARD & ẢNH THẬT        */}
+        {/* CỘT TRÁI: HƯỚNG DẪN TỪNG BƯỚC (ACCORDION + CHECKBOX TÁC VỤ)          */}
+        {/* CỘT PHẢI: SƠ ĐỒ MAINBOARD H510 TƯƠNG TÁC HOVER & CLICK + ẢNH THẬT    */}
         {/* ==================================================================== */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* CỘT BÊN TRÁI: 7 CỘT TRÊN MÀN HÌNH LỚN */}
@@ -487,7 +556,12 @@ export default function HardwarePracticePage() {
               type="single"
               collapsible
               value={activeStepId}
-              onValueChange={handleAccordionChange}
+              onValueChange={(val) => {
+                if (val) {
+                  setActiveStepId(val);
+                  setRightViewMode("stepImage");
+                }
+              }}
               className="w-full space-y-3"
             >
               {HARDWARE_STEPS.map((step) => {
@@ -503,7 +577,7 @@ export default function HardwarePracticePage() {
                         : "border-slate-200 hover:border-slate-300"
                     }`}
                   >
-                    <AccordionTrigger className="px-4 sm:px-5 py-4 hover:no-underline text-left">
+                    <AccordionTrigger className="px-4 sm:px-5 py-4 hover:no-underline text-left cursor-pointer">
                       <div className="flex items-start gap-3 w-full pr-2">
                         {/* Huy hiệu số bước */}
                         <div
@@ -589,29 +663,79 @@ export default function HardwarePracticePage() {
                         </div>
                       </div>
 
-                      {/* CHECKBOX BÁO CÁO TIẾN ĐỘ BƯỚC */}
-                      <div className="pt-2 border-t border-slate-100">
-                        <label
-                          htmlFor={`check-${step.id}`}
-                          className={`flex items-center gap-3 p-3 rounded-xl border transition-colors cursor-pointer select-none ${
+                      {/* NÚT CHECKBOX XÁC NHẬN AN TOÀN 1-CHẠM (TUYỆT ĐỐI CHỐNG XUNG ĐỘT SỰ KIỆN) */}
+                      <div className="pt-2">
+                        <div
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => handleToggleStep(step.id)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              handleToggleStep(step.id);
+                            }
+                          }}
+                          className={`w-full min-h-[48px] p-3.5 rounded-xl border-2 flex items-center justify-between gap-3 transition-all cursor-pointer select-none active:scale-[0.99] ${
                             isStepDone
-                              ? "bg-emerald-50/80 border-emerald-300 text-emerald-950"
-                              : "bg-slate-50 border-slate-200 text-slate-800 hover:bg-slate-100"
+                              ? "bg-emerald-50 border-emerald-500 text-emerald-950 shadow-xs"
+                              : "bg-white border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50"
                           }`}
                         >
-                          <Checkbox
-                            id={`check-${step.id}`}
-                            checked={isStepDone}
-                            onCheckedChange={() => handleToggleStep(step.id)}
-                            className="h-5 w-5"
-                          />
-                          <span className="text-xs sm:text-sm font-bold flex-1">
-                            Em đã hoàn thành và kiểm tra an toàn linh kiện này
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-5 h-5 rounded-md flex items-center justify-center border transition-colors ${
+                                isStepDone
+                                  ? "bg-emerald-600 border-emerald-600 text-white"
+                                  : "border-slate-300 bg-white"
+                              }`}
+                            >
+                              {isStepDone && <CheckCircle2 className="w-4 h-4 stroke-[3]" />}
+                            </div>
+                            <span className="text-xs sm:text-sm font-bold text-left">
+                              Em đã hoàn thành và kiểm tra an toàn linh kiện này
+                            </span>
+                          </div>
+
+                          <span
+                            className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-md shrink-0 ${
+                              isStepDone
+                                ? "bg-emerald-100 text-emerald-800"
+                                : "bg-slate-100 text-slate-500"
+                            }`}
+                          >
+                            {isStepDone ? "✓ ĐÃ NGHIỆM THU" : "CHƯA TICK"}
                           </span>
-                          <span className="text-[11px] font-mono text-slate-500">
-                            {isStepDone ? "✓ ĐÃ XÁC NHẬN" : "CHƯA TICK"}
+                        </div>
+                      </div>
+
+                      {/* NÚT TIẾN BƯỚC / LÙI BƯỚC NHANH TRONG ACCORDION */}
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={step.stepNumber === 1}
+                          onClick={handlePrevStep}
+                          className="text-slate-600 hover:text-slate-900"
+                        >
+                          <ArrowLeft className="w-3.5 h-3.5 mr-1" />
+                          <span>Bước {step.stepNumber - 1}</span>
+                        </Button>
+
+                        {step.stepNumber < totalSteps ? (
+                          <Button
+                            variant="secondary"
+                            size="sm"
+                            onClick={handleNextStep}
+                            className="bg-slate-900 hover:bg-slate-800 text-white font-bold"
+                          >
+                            <span>Sang Bước {step.stepNumber + 1}</span>
+                            <ArrowRight className="w-3.5 h-3.5 ml-1" />
+                          </Button>
+                        ) : (
+                          <span className="text-emerald-700 font-bold">
+                            ✓ Bước kiểm tra cuối cùng
                           </span>
-                        </label>
+                        )}
                       </div>
                     </AccordionContent>
                   </AccordionItem>
@@ -661,7 +785,7 @@ export default function HardwarePracticePage() {
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
-                🗺️ Sơ Đồ Bo Mạch H510 (Hover)
+                🗺️ Sơ Đồ Bo Mạch H510 (Hotspot)
               </button>
               <button
                 type="button"
@@ -682,13 +806,13 @@ export default function HardwarePracticePage() {
                 {rightViewMode === "interactive" ? (
                   /* ======================================================== */
                   /* MODULE NHẬN DIỆN LINH KIỆN: SƠ ĐỒ H510 INTERACTIVE       */
-                  /* TÍCH HỢP 5 HOTSPOT NHẤP NHÁY (ANIMATE-PING) & HOVERCARD  */
+                  /* TÍCH HỢP 5 HOTSPOT CLICK HOẶC HOVER ĐỀU TƯƠNG TÁC        */
                   /* ======================================================== */
                   <div className="space-y-3">
                     <div className="text-xs font-bold text-slate-700 flex items-center justify-between">
                       <span className="flex items-center gap-1.5">
                         <Zap className="w-3.5 h-3.5 text-amber-500" />
-                        <span>Rà chuột vào các điểm nhấp nháy để xem chỉ dẫn:</span>
+                        <span>Chạm hoặc rà chuột vào điểm nhấp nháy:</span>
                       </span>
                       <span className="text-[11px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                         5 Điểm Hotspot
@@ -706,78 +830,94 @@ export default function HardwarePracticePage() {
                         priority
                       />
 
-                      {/* 5 ĐIỂM HOTSPOT NHẤP NHÁY TƯƠNG TÁC BẰNG SHADCN HOVERCARD */}
-                      {H510_HOTSPOTS.map((spot) => (
-                        <div
-                          key={spot.id}
-                          className="absolute -translate-x-1/2 -translate-y-1/2 z-20"
-                          style={{ top: spot.top, left: spot.left }}
-                        >
-                          <HoverCard openDelay={100} closeDelay={150}>
-                            <HoverCardTrigger asChild>
-                              <button
-                                type="button"
-                                className="relative flex items-center justify-center w-8 h-8 rounded-full focus:outline-none cursor-pointer group"
-                                aria-label={spot.title}
-                              >
-                                {/* Vòng lan tỏa nhấp nháy (Tailwind animate-ping) */}
-                                <span
-                                  className={`animate-ping absolute inline-flex h-7 w-7 rounded-full opacity-75 ${spot.color}`}
-                                ></span>
+                      {/* 5 ĐIỂM HOTSPOT NHẤP NHÁY HỖ TRỢ CLICK LẪN HOVER */}
+                      {H510_HOTSPOTS.map((spot) => {
+                        const isSelected = selectedHotspot.id === spot.id;
 
-                                {/* Chấm tròn chính hiển thị biểu tượng */}
-                                <span
-                                  className={`relative inline-flex items-center justify-center rounded-full h-6 w-6 text-white text-[10px] font-black shadow-md border-2 border-white transition-transform group-hover:scale-125 ${spot.color}`}
-                                >
-                                  {spot.title.charAt(0)}
-                                </span>
-                              </button>
-                            </HoverCardTrigger>
-
-                            {/* NỘI DUNG HOVERCARD CHI TIẾT */}
-                            <HoverCardContent
-                              side="top"
-                              align="center"
-                              className="w-80 p-4 space-y-2 text-left bg-white/95 backdrop-blur-sm border-slate-200 shadow-2xl"
+                        return (
+                          <div
+                            key={spot.id}
+                            className="absolute -translate-x-1/2 -translate-y-1/2 z-20"
+                            style={{ top: spot.top, left: spot.left }}
+                          >
+                            <button
+                              type="button"
+                              onClick={() => handleSelectHotspot(spot)}
+                              onMouseEnter={() => setSelectedHotspot(spot)}
+                              className={`relative flex items-center justify-center w-8 h-8 rounded-full focus:outline-none cursor-pointer transition-transform ${
+                                isSelected ? "scale-125 ring-4 ring-slate-900/30" : "hover:scale-110"
+                              }`}
+                              title={`Chạm để xem ${spot.title}`}
                             >
-                              <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-                                <h4 className="font-extrabold text-sm text-slate-900 leading-tight">
-                                  {spot.title}
-                                </h4>
-                              </div>
-                              <div className="inline-block px-2 py-0.5 rounded bg-slate-100 text-slate-700 font-mono text-[10px] font-bold">
-                                {spot.badge}
-                              </div>
-                              <p className="text-xs text-slate-600 leading-relaxed">
-                                {spot.description}
-                              </p>
-                              <div className="p-2 rounded-lg bg-rose-50 border border-rose-200 text-rose-950 text-[11px] leading-relaxed">
-                                <strong className="font-bold">⚠️ Poka-Yoke:</strong> {spot.pokaYoke}
-                              </div>
-                            </HoverCardContent>
-                          </HoverCard>
-                        </div>
-                      ))}
+                              {/* Vòng lan tỏa nhấp nháy (Tailwind animate-ping) */}
+                              <span
+                                className={`animate-ping absolute inline-flex h-7 w-7 rounded-full opacity-75 ${spot.color}`}
+                              ></span>
+
+                              {/* Chấm tròn chính hiển thị biểu tượng */}
+                              <span
+                                className={`relative inline-flex items-center justify-center rounded-full h-6 w-6 text-white text-[11px] font-black shadow-md border-2 border-white ${spot.color}`}
+                              >
+                                {spot.title.charAt(0)}
+                              </span>
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
 
-                    {/* Danh mục chú giải nhanh 5 điểm hotspot */}
+                    {/* HỘP THÔNG TIN CHI TIẾT CỦA HOTSPOT ĐANG CHỌN (LUÔN HIỂN THỊ, CHẠM LÀ ĐỔI) */}
+                    <div className="p-3.5 rounded-xl bg-slate-900 text-white space-y-2 border border-slate-700 shadow-md">
+                      <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <div className="font-extrabold text-sm text-emerald-400">
+                          {selectedHotspot.title}
+                        </div>
+                        <span className="px-2 py-0.5 rounded bg-slate-800 text-[10px] font-mono text-slate-300 font-bold">
+                          {selectedHotspot.badge}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        {selectedHotspot.description}
+                      </p>
+                      <div className="p-2 rounded-lg bg-rose-950/60 border border-rose-800/80 text-rose-200 text-[11px] leading-relaxed">
+                        <strong>⚠️ Poka-Yoke:</strong> {selectedHotspot.pokaYoke}
+                      </div>
+
+                      <div className="pt-1 flex items-center justify-between">
+                        <span className="text-[11px] text-slate-400">
+                          Tương ứng: Bước {selectedHotspot.stepNumber}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setActiveStepId(selectedHotspot.stepId);
+                            setRightViewMode("stepImage");
+                          }}
+                          className="inline-flex items-center gap-1 text-xs font-bold text-emerald-400 hover:text-emerald-300 hover:underline cursor-pointer"
+                        >
+                          <span>Mở bài học Bước {selectedHotspot.stepNumber}</span>
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Danh mục 5 phím bấm chọn nhanh hotspot */}
                     <div className="grid grid-cols-2 gap-1.5 text-[11px] font-medium text-slate-600 pt-1">
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-2.5 h-2.5 rounded-full bg-blue-600 shrink-0"></span>
-                        <span>1. Socket LGA1200 CPU</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-600 shrink-0"></span>
-                        <span>2. Khe cắm RAM DDR4</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></span>
-                        <span>3. Khe PCIe x16 (GT 730)</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 shrink-0"></span>
-                        <span>4. Cụm SATA &amp; M.2 SSD</span>
-                      </div>
+                      {H510_HOTSPOTS.slice(0, 4).map((h) => (
+                        <button
+                          key={h.id}
+                          type="button"
+                          onClick={() => handleSelectHotspot(h)}
+                          className={`flex items-center gap-1.5 p-1.5 rounded-lg border text-left cursor-pointer transition-colors ${
+                            selectedHotspot.id === h.id
+                              ? "bg-slate-100 border-slate-400 text-slate-900 font-bold"
+                              : "border-slate-200 hover:bg-slate-50 text-slate-600"
+                          }`}
+                        >
+                          <span className={`w-2.5 h-2.5 rounded-full ${h.color} shrink-0`}></span>
+                          <span className="truncate">{h.title}</span>
+                        </button>
+                      ))}
                     </div>
                   </div>
                 ) : (
@@ -853,7 +993,7 @@ export default function HardwarePracticePage() {
               <div className="flex items-center gap-2">
                 <Send className="w-5 h-5 text-slate-900" />
                 <CardTitle className="text-lg sm:text-xl font-black text-slate-900">
-                  Nghiệm Thu & Nộp Báo Cáo Thực Hành (Bàn Kỹ Thuật)
+                  Nghiệm Thu &amp; Nộp Báo Cáo Thực Hành (Bàn Kỹ Thuật)
                 </CardTitle>
               </div>
               <span
@@ -888,7 +1028,7 @@ export default function HardwarePracticePage() {
                     variant="outline"
                     size="sm"
                     onClick={() => setIsSubmitted(false)}
-                    className="border-emerald-300 text-emerald-900 hover:bg-emerald-100"
+                    className="border-emerald-300 text-emerald-900 hover:bg-emerald-100 cursor-pointer"
                   >
                     <RotateCcw className="w-4 h-4 mr-1.5" />
                     Chỉnh sửa hoặc Nộp lại
@@ -922,7 +1062,7 @@ export default function HardwarePracticePage() {
                       id="table-number"
                       value={tableNumber}
                       onChange={(e) => setTableNumber(e.target.value)}
-                      className="w-full h-11 px-3 rounded-xl border border-slate-300 bg-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-slate-900"
+                      className="w-full h-11 px-3 rounded-xl border border-slate-300 bg-white text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-slate-900 cursor-pointer"
                     >
                       {Array.from({ length: 10 }, (_, i) => {
                         const num = String(i + 1).padStart(2, "0");
@@ -983,9 +1123,9 @@ export default function HardwarePracticePage() {
                     type="submit"
                     disabled={!isAllCompleted}
                     size="touch"
-                    className={`min-h-[48px] px-8 text-base font-black shadow-md cursor-pointer transition-all ${
+                    className={`min-h-[48px] px-8 text-base font-black shadow-md transition-all ${
                       isAllCompleted
-                        ? "bg-slate-900 hover:bg-slate-800 text-white"
+                        ? "bg-slate-900 hover:bg-slate-800 text-white cursor-pointer"
                         : "bg-slate-200 text-slate-400 cursor-not-allowed"
                     }`}
                   >
@@ -1016,7 +1156,7 @@ export default function HardwarePracticePage() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setZoomedImage(null)}
-                className="rounded-full hover:bg-slate-100"
+                className="rounded-full hover:bg-slate-100 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </Button>
@@ -1040,7 +1180,7 @@ export default function HardwarePracticePage() {
               <Button
                 size="touch"
                 onClick={() => setZoomedImage(null)}
-                className="bg-slate-900 hover:bg-slate-800 text-white font-bold"
+                className="bg-slate-900 hover:bg-slate-800 text-white font-bold cursor-pointer"
               >
                 Đóng Chế Độ Chiếu
               </Button>
