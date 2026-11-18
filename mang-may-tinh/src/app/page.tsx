@@ -6,6 +6,7 @@ import { Rj45Simulator } from "@/components/network/rj45-simulator";
 import { SubnetCalculator } from "@/components/network/subnet-calculator";
 import { BenchesTable } from "@/components/network/benches-table";
 import { CheckinForm } from "@/components/network/checkin-form";
+import { TechNewsWidget } from "@/components/network/tech-news-widget";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -263,7 +264,14 @@ export default function HomePage() {
         </section>
 
         {/* ================================================================== */}
-        {/* 6. PHIẾU ĐIỂM DANH & NỘP BÀI THỰC HÀNH (KẾT NỐI SUPABASE)          */}
+        {/* 6. TIN TỨC AN NINH MẠNG MỚI NHẤT (NETWORK SECURITY UPDATES)        */}
+        {/* ================================================================== */}
+        <section id="tin-an-ninh-mang" className="scroll-mt-20">
+          <TechNewsWidget />
+        </section>
+
+        {/* ================================================================== */}
+        {/* 7. PHIẾU ĐIỂM DANH & NỘP BÀI THỰC HÀNH (KẾT NỐI SUPABASE)          */}
         {/* ================================================================== */}
         <section id="diem-danh" className="scroll-mt-20">
           <CheckinForm />
