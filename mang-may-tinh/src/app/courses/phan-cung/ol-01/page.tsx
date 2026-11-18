@@ -406,9 +406,411 @@ const H510_HOTSPOTS: HotspotInfo[] = [
   },
 ];
 
+/**
+ * Kiểu dữ liệu cho bước Tháo & Lắp máy cơ khí KTV
+ */
+interface MechanicalStep {
+  id: string;
+  stepNumber: number;
+  title: string;
+  shortName: string;
+  tool: string;
+  action: string;
+  commonMistakes: string[];
+  pokaYoke: string;
+  imageSrc: string;
+  imageAlt: string;
+}
+
+/**
+ * 6 BƯỚC THÁO MÁY CHUẨN AN TOÀN ĐIỆN & CƠ KHÍ
+ */
+const DISASSEMBLY_STEPS: MechanicalStep[] = [
+  {
+    id: "dis-1",
+    stepNumber: 1,
+    title: "Ngắt Nguồn Điện 220V & Xả Tụ An Toàn",
+    shortName: "Rút Điện & Xả Tụ",
+    tool: "Tay trần, dây tiếp địa hoặc chạm tay vào vỏ kim loại case máy",
+    action: "Rút hoàn toàn phích cắm điện nguồn 220V khỏi ổ điện. Nhấn và giữ nút Power trên case trong 10 giây (hoặc bấm liên tục 3-5 lần) để các tụ điện trên bo mạch xả hết dòng điện dư thừa. Chạm tay vào vỏ kim loại case để triệt tiêu tĩnh điện cơ thể (chống sốc tĩnh điện ESD).",
+    commonMistakes: [
+      "Quên rút phích cắm mà chỉ tắt công tắc ổ cắm, nguồn vẫn còn dòng chờ 5VSB.",
+      "Rút điện xong vội vàng tháo linh kiện ngay khi tụ nguồn còn tích điện, gây sốc điện nổ chip BIOS hoặc IC điều khiển.",
+      "Cơ thể tích tĩnh điện trong mùa hanh khô chạm thẳng vào vi mạch mạ vàng của RAM hoặc Mainboard.",
+    ],
+    pokaYoke: "Khẩu quyết sống còn: 'Rút phích điện -> Bấm nút nguồn 3 lần -> Chạm tay vỏ kim loại case'.",
+    imageSrc: "/images/ol-01/workflow-thao-may.jpg",
+    imageAlt: "Sơ đồ 6 bước tháo máy an toàn - Bước 1: Rút nguồn và xả tụ điện",
+  },
+  {
+    id: "dis-2",
+    stepNumber: 2,
+    title: "Mở Nắp Case & Tháo Card Đồ Họa Rời (VGA GT 730)",
+    shortName: "Tháo Card Rời GT 730",
+    tool: "Tua vít bake từ tính PH2, khay đựng ốc phân loại",
+    action: "Mở nắp hông case máy tính. Dùng tua vít bake tháo ốc nẹp kim loại cố định đuôi card đồ họa vào khung sau thùng máy. Dùng ngón tay trỏ ấn nhẹ lẫy nhựa khóa khe PCIe x16 trên mainboard để ngàm nhả ra, rồi nhấc thẳng đứng card rời theo góc 90 độ ra ngoài, đặt lên khay xốp đệm.",
+    commonMistakes: [
+      "Quên không gạt lẫy khóa đuôi khe PCIe x16 mà dùng sức giật mạnh lên, làm gãy lẫy hoặc bong rách chân đồng khe cắm.",
+      "Rơi ốc nẹp kim loại lọt vào khe hẹp của bộ nguồn PSU hoặc kẹt dưới đáy mainboard gây chập điện.",
+      "Cầm ngón tay nắm chặt vào hàng chân đồng PCIe mạ vàng khiến mồ hôi tay làm oxy hóa tiếp xúc.",
+    ],
+    pokaYoke: "Luôn kiểm tra lẫy khóa PCIe đã mở hết cỡ trước khi nhấc card; cầm card ở phần khung nẹp sắt và tản nhiệt.",
+    imageSrc: "/images/ol-01/guide-clean-vga-pcie.jpg",
+    imageAlt: "Kỹ thuật tháo card đồ họa rời GT 730 mở lẫy PCIe x16 và tháo ốc nẹp",
+  },
+  {
+    id: "dis-3",
+    stepNumber: 3,
+    title: "Mở Ngàm Khóa & Tháo Thanh RAM DDR4",
+    shortName: "Tháo Thanh RAM DDR4",
+    tool: "Tay trần sạch và khô ráo, khay đựng linh kiện",
+    action: "Dùng ngón tay ấn đều hai ngàm khóa nhựa ở hai đầu khe RAM (hoặc ngàm đơn phía trên với main H510) xuống dưới. Thanh RAM sẽ tự động bật nảy nhẹ lên khỏi khe. Dùng hai ngón tay cầm vào hai cạnh mép trên của thanh RAM và nhấc thẳng đứng ra ngoài.",
+    commonMistakes: [
+      "Chưa mở ngàm nhựa đã dùng ngón tay kéo lệch một đầu thanh RAM, làm mẻ chân RAM và gãy rãnh ngàm định vị.",
+      "Ngón tay chạm tì vào các chip nhớ dán hoặc chân đồng mạ vàng làm bám dính mồ hôi và dầu mỡ.",
+      "Rút RAM ra khi máy vừa tắt được vài giây, linh kiện còn đang rất nóng có thể gây phỏng tay.",
+    ],
+    pokaYoke: "Chỉ cầm vào hai góc trên của bảng mạch PCB thanh RAM, đặt ngay ngắn vào khay linh kiện chống tĩnh điện.",
+    imageSrc: "/images/ol-01/guide-clean-ram-slot.jpg",
+    imageAlt: "Kỹ thuật mở ngàm và tháo thanh RAM DDR4 khỏi bo mạch H510",
+  },
+  {
+    id: "dis-4",
+    stepNumber: 4,
+    title: "Tháo Ổ Cứng SSD SATA/NVMe & Cáp Tín Hiệu",
+    shortName: "Tháo Ổ Cứng SSD",
+    tool: "Tua vít bake từ tính PH1 / PH2, khay ốc nhỏ",
+    action: "Với SSD 2.5\" SATA: Dùng ngón tay bóp nhẹ vào lẫy kim loại trên đầu cáp SATA Data rồi rút thẳng ra; sau đó rút cáp nguồn SATA mỏng hình chữ L; vặn ốc cố định khung ổ đĩa. Với SSD M.2 NVMe: Vặn ốc khóa đuôi M.2, nhấc ổ chếch lên 30 độ rồi rút nhẹ theo chiều xiên.",
+    commonMistakes: [
+      "Giật mạnh cáp SATA khi chưa bóp lẫy khóa kim loại, làm toác gãy vỏ nhựa chân cắm SATA trên bo mạch hoặc ổ cứng.",
+      "Làm rơi hoặc làm toét đầu ốc vít siêu nhỏ của khe M.2 NVMe.",
+      "Kéo vặn xoắn dây cáp tín hiệu gây đứt ngầm lõi đồng truyền dữ liệu bên trong.",
+    ],
+    pokaYoke: "Luôn bóp chốt lẫy kim loại trước khi rút cáp SATA; ốc M.2 rất nhỏ phải bỏ riêng vào ngăn nam châm khay ốc.",
+    imageSrc: "/images/ol-01/workflow-thao-may.jpg",
+    imageAlt: "Tháo cáp tín hiệu SATA dữ liệu có lẫy kim loại và cáp nguồn ổ cứng",
+  },
+  {
+    id: "dis-5",
+    stepNumber: 5,
+    title: "Tháo Cụm Cáp F_PANEL, Dây Fan & Nguồn 24-Pin ATX / 8-Pin CPU",
+    shortName: "Tháo Dây Cáp Nối",
+    tool: "Điện thoại chụp ảnh lưu sơ đồ màu dây, tay trần",
+    action: "Dùng điện thoại chụp rõ ảnh vị trí cắm của cụm dây F_PANEL (POWER SW, RESET, LED) để đối chiếu khi lắp lại. Nhẹ nhàng rút từng giắc cắm F_PANEL, USB và Audio. Rút giắc cấp nguồn 8-pin CPU ở góc trên. Bóp lẫy khóa nhựa to của đầu cấp nguồn 24-pin ATX, lắc nhẹ hai bên thân giắc và rút dứt khoát lên trên.",
+    commonMistakes: [
+      "Cầm vào sợi dây điện giật mạnh thay vì cầm vào chuôi nhựa giắc cắm, dẫn đến đứt ngầm hoặc tuột chân đồng ra khỏi vỏ nhựa.",
+      "Tháo cụm F_PANEL mà không chụp ảnh lưu lại, lúc lắp lại cắm mò dẫn đến bấm nút nguồn máy không phản hồi.",
+      "Không bóp lẫy khóa nhựa 24-pin mà cố giật làm nứt bo mạch chủ tại vị trí cổng nguồn.",
+    ],
+    pokaYoke: "Quy tắc cầm chuôi nhựa có lẫy, không bao giờ giật dây điện; chụp ảnh lại cụm 9-pin trước khi tháo rời.",
+    imageSrc: "/images/ol-01/guide-fpanel-diagram.jpg",
+    imageAlt: "Sơ đồ và kỹ thuật tháo cắm cụm dây F_PANEL và đầu cấp nguồn 24-pin bo mạch",
+  },
+  {
+    id: "dis-6",
+    stepNumber: 6,
+    title: "Tháo Cụm Tản Nhiệt CPU & Nhấc Bo Mạch Chủ (Mainboard H510)",
+    shortName: "Tháo Tản CPU & Mainboard",
+    tool: "Tua vít bake từ tính PH2, khăn giấy mềm, cồn vệ sinh 90 độ",
+    action: "Rút giắc dây quạt CPU FAN. Xoay 4 chốt khóa tản nhiệt Intel theo chiều mũi tên để nhả ngàm (hoặc tháo 4 ốc tản nhôm theo đường chéo), lay nhẹ cụm tản nhiệt theo vòng tròn để lớp keo khô tách ra rồi nhấc thẳng đứng lên. Vặn đủ 6 ốc cố định bo mạch chủ vào khung case, nhấc nghiêng bo mạch ra khỏi miếng che cổng I/O Shield.",
+    commonMistakes: [
+      "Xoay chốt tản nhiệt Intel ngược hướng làm gãy chân lẫy nhựa trắng của quạt tản nhiệt zin.",
+      "Keo tản nhiệt bị khô cứng như xi măng, giật cục tản thẳng lên làm bật bung cả CPU dính theo tản (đặc biệt nguy hiểm).",
+      "Quên chưa tháo đủ 6 ốc đệm standoff trên bo mạch mà cố cạy mainboard lên gây gãy nứt mạch in PCB.",
+    ],
+    pokaYoke: "Nếu keo tản nhiệt dính chặt, lay nhẹ qua lại theo hình tròn để tách keo trước khi nhấc; đếm đủ 6 ốc tháo ra trước khi nhấc main.",
+    imageSrc: "/images/ol-01/workflow-thao-may.jpg",
+    imageAlt: "Quy trình nhấc cụm tản nhiệt CPU và tháo 6 ốc cố định bo mạch chủ H510",
+  },
+];
+
+/**
+ * 7 BƯỚC LẮP MÁY CHUẨN POKA-YOKE (THỨ TỰ CHUẨN TỪ LINH KIỆN VÀO CASE)
+ */
+const ASSEMBLY_STEPS: MechanicalStep[] = [
+  {
+    id: "asm-1",
+    stepNumber: 1,
+    title: "Lắp CPU LGA1200, Tra Keo Tản Nhiệt & Bắt Quạt CPU",
+    shortName: "Lắp CPU & Tản Nhiệt",
+    tool: "Keo tản nhiệt xilanh xịn (gốc gốm/kim loại), tua vít bake, găng tay",
+    action: "Mở cần khóa socket LGA1200 trên Mainboard H510. Cầm CPU ở hai cạnh mép, so đúng 2 rãnh khuyết định vị và hình tam giác vàng ở góc dưới bên trái, đặt nhẹ nhàng rơi tự nhiên vào socket (tuyệt đối không ấn mạnh). Gài nẹp và hạ cần khóa. Bơm 1 lượng keo tản nhiệt bằng hạt đậu xanh (đường kính ~4mm) ngay chính giữa lưng CPU. Đặt tản nhiệt cân đối và ấn chéo 4 góc nghe tiếng cạch khóa ngàm. Cắm dây quạt vào chân cắm CPU_FAN.",
+    commonMistakes: [
+      "Đặt ngược chiều CPU hoặc làm trượt tay làm cong gập chân kim socket LGA1200 (lỗi hỏng bo mạch không thể sửa chữa).",
+      "Quên bóc lớp nilon bảo vệ trong suốt ở đáy tản nhiệt mới trước khi ốp vào CPU, máy bật lên 100°C quá nhiệt sập nguồn.",
+      "Bôi quá nhiều keo tản nhiệt làm tràn be bét xuống chân socket và vi mạch xung quanh bo mạch gây chập cháy.",
+      "Quên cắm dây quạt CPU_FAN khiến quạt không quay, máy báo cảnh báo 'CPU Fan Error' khi khởi động.",
+    ],
+    pokaYoke: "Khẩu quyết: 'Tam giác vàng so tam giác socket -> 1 hạt đậu xanh keo tản nhiệt -> Bóc nilon đáy quạt -> Cắm CPU_FAN'.",
+    imageSrc: "/images/ol-01/workflow-lap-may.jpg",
+    imageAlt: "Lắp CPU LGA1200 đúng ngàm khuyết và bơm keo tản nhiệt hạt đậu xanh",
+  },
+  {
+    id: "asm-2",
+    stepNumber: 2,
+    title: "Lắp Thanh RAM 8GB DDR4 Đúng Rãnh Khuyết Lệch",
+    shortName: "Lắp RAM DDR4",
+    tool: "Gôm trắng vệ sinh chân vàng, chổi quét mạt",
+    action: "Mở lẫy khóa khe cắm RAM trên mainboard H510. Quan sát rãnh khuyết chống cắm ngược trên thanh RAM DDR4 (rãnh lệch về một phía so với tâm) trùng khớp với gờ nổi trong lòng khe cắm. Đặt thanh RAM vuông góc 90 độ vào khe, dùng 2 ngón tay cái ấn đều với lực vừa phải xuống hai đầu thanh RAM cho đến khi nghe tiếng 'TÁCH' đanh gọn và lẫy khóa tự động ngậm khít.",
+    commonMistakes: [
+      "Cắm ngược đầu rãnh khuyết nhưng cố tình dùng sức tì đè mạnh làm toác khe RAM và mẻ thanh nhớ.",
+      "Ấn không đều lực khiến một đầu đã vào nhưng đầu kia bị kênh ra ngoài, bật máy quạt quay tít nhưng màn hình đen ngòm và phát tiếng bíp dài liên tục.",
+      "Dùng tay bẩn chạm vào chân mạ vàng trước khi cắm làm bụi bẩn và dầu nhờn cản trở tiếp xúc.",
+    ],
+    pokaYoke: "Khẩu quyết: 'So rãnh khuyết trước -> Ấn đều 2 đầu -> Nghe tiếng TÁCH đanh gọn -> Khóa lẫy tự ngậm khít'.",
+    imageSrc: "/images/ol-01/guide-clean-ram-slot.jpg",
+    imageAlt: "Lắp thanh RAM DDR4 đúng khớp rãnh khuyết lệch và khóa lẫy ngậm khít",
+  },
+  {
+    id: "asm-3",
+    stepNumber: 3,
+    title: "Gá Chặn I/O Shield, Đặt Mainboard Vào Case & Siết Ốc Standoff",
+    shortName: "Lắp Mainboard Vào Case",
+    tool: "Tua vít bake từ tính, 6 ốc ren mịn bo mạch, chân đệm trụ đồng standoff",
+    action: "Ấn miếng che cổng kết nối (I/O Shield) từ bên trong khung case ra phía sau cho đến khi khớp chặt 4 góc. Kiểm tra đếm đủ các chân trụ đồng đệm (Standoff) trên thành case trùng khớp với các lỗ bắt ốc của bo mạch chủ H510. Đặt bo mạch nghiêng nhẹ đưa các cổng kết nối khớp vào I/O Shield rồi hạ phẳng xuống các chân đệm. Vặn đủ 6 ốc ren mịn theo đường chéo chữ X, vặn vừa tay không siết quá chặt.",
+    commonMistakes: [
+      "Quên lắp ốc chân đệm Standoff, gắn trực tiếp lưng bo mạch lên thành kim loại của case dẫn đến chập mạch nổ nguồn ngay lần bật đầu tiên.",
+      "Quên lắp miếng I/O Shield trước khi siết ốc mainboard, phải tháo toàn bộ ốc ra làm lại từ đầu.",
+      "Lưỡi kim loại tiếp địa của I/O Shield bị chọc thụt vào trong lòng cổng mạng LAN hoặc cổng HDMI làm nghẽn không cắm được dây.",
+      "Dùng nhầm ốc ren thô của nguồn/vỏ case để siết vào chân đệm ren mịn làm toét rách ren ốc.",
+    ],
+    pokaYoke: "Quy tắc 2 bước kiểm tra: 1. Đếm đủ số trụ đồng Standoff. 2. Soi đèn kiểm tra lưỡi thép I/O Shield không chọc vào trong lòng các cổng kết nối.",
+    imageSrc: "/images/ol-01/workflow-lap-may.jpg",
+    imageAlt: "Gá miếng chặn I/O Shield và siết ốc đệm standoff cố định bo mạch chủ H510",
+  },
+  {
+    id: "asm-4",
+    stepNumber: 4,
+    title: "Lắp Bộ Nguồn PSU & Đi Dây Cấp Điện (24-Pin ATX & 8-Pin CPU)",
+    shortName: "Lắp Nguồn & Đi Dây Điện",
+    tool: "Tua vít bake PH2, 4 ốc ren thô bộ nguồn, dây rút nhựa",
+    action: "Đặt bộ nguồn vào khoang dưới case, quạt hút gió của nguồn hướng xuống đáy case (nếu case có lưới lọc bụi đáy) hoặc hướng vào trong khoang. Vặn chặt 4 ốc ren thô phía sau. Luồn dây 8-pin CPU (hoặc 4+4 pin) qua khe hẹp phía trên góc trái và cắm chắc chắn vào cổng nguồn CPU trên bo mạch. Luồn dây 24-pin ATX qua khe hông, cắm kịch vào cổng nguồn chính của mainboard cho đến khi lẫy khóa nhựa ngậm chặt.",
+    commonMistakes: [
+      "Lắp ngược chiều quạt nguồn khiến nguồn bị kín gió, chạy một lúc quá nhiệt tự ngắt nguồn bảo vệ.",
+      "Cắm nhầm đầu cấp nguồn card rời PCIe 8-pin (chia 6+2) vào khe cấp nguồn CPU 8-pin (chia 4+4) làm nổ IC nguồn và dàn VRM do sai sơ đồ cực điện 12V!",
+      "Cắm đầu 24-pin chưa hết nấc, lẫy khóa chưa ngậm dẫn đến chập chờn tiếp xúc hoặc đánh tia lửa điện làm sun đầu nhựa.",
+    ],
+    pokaYoke: "Tuyệt đối phân biệt: Đầu cắm CPU luôn ghi chữ 'CPU' (chia 4+4). Đầu cấp card đồ họa luôn ghi chữ 'PCI-E' (chia 6+2). Lẫy khóa phải ngậm kẹp chặt.",
+    imageSrc: "/images/ol-01/workflow-lap-may.jpg",
+    imageAlt: "Lắp bộ nguồn PSU đúng chiều thông gió và cắm lẫy khóa cáp 24-pin ATX",
+  },
+  {
+    id: "asm-5",
+    stepNumber: 5,
+    title: "Cắm Cụm Chân Điều Khiển F_PANEL, Dây USB & Cáp Âm Thanh Audio",
+    shortName: "Cắm Cụm Dây F_PANEL",
+    tool: "Đèn pin soi sáng, sơ đồ chân kim chuẩn 9-pin",
+    action: "Xác định cụm chân cắm F_PANEL ở góc dưới bên phải bo mạch chủ H510. Quan sát vị trí khuyết chân kim (chân số 9 trống). Cắm 2 chân POWER SW vào hàng trên sát vị trí chân khuyết. Cắm 2 chân POWER LED vào bên cạnh. Cắm 2 chân RESET SW vào hàng dưới đối diện POWER SW. Cắm 2 chân HDD LED vào bên cạnh Reset. Sau đó cắm dây USB 2.0 (khuyết chân góc), USB 3.0 (gờ định vị to) và HD Audio (khuyết chân giữa) vào đúng vị trí in chữ trên mainboard.",
+    commonMistakes: [
+      "Cắm nhầm vị trí POWER SW sang RESET SW khiến nút bấm nguồn trên thùng máy không có tác dụng.",
+      "Cắm ngược cực âm dương (+ / -) của đèn LED làm đèn HDD LED hoặc đèn Power LED không sáng khi máy hoạt động.",
+      "Cắm lệch hoặc dùng lực ấn mạnh chân USB 3.0 màu xanh làm cong gập gãy các chân kim siêu nhỏ bên trong.",
+    ],
+    pokaYoke: "Khẩu quyết F_PANEL bất hủ: 'Chân POWER SW nằm ở hàng trên ngay sát cạnh chân trống bị khuyết; nút nguồn & reset không phân cực âm dương'.",
+    imageSrc: "/images/ol-01/guide-fpanel-diagram.jpg",
+    imageAlt: "Bản đồ cắm chân kim F_PANEL hàng trên POWER SW và hàng dưới RESET SW",
+  },
+  {
+    id: "asm-6",
+    stepNumber: 6,
+    title: "Lắp Card Đồ Họa Rời (VGA GT 730) & Siết Ốc Nẹp Chống Xệ",
+    shortName: "Lắp Card Đồ Họa Rời GT 730",
+    tool: "Tua vít bake từ tính, ốc nẹp kim loại nắp sau case",
+    action: "Gạt mở lẫy khóa đuôi khe cắm PCIe x16 trên bo mạch H510. Căn chỉnh phần nẹp kim loại của card đồ họa khớp với khe mở ở mặt sau case máy tính. Đặt chân cắm mạ vàng của card thẳng hàng với khe PCIe x16 rồi dùng lực đều ấn xuống cho đến khi lẫy đuôi khe cắm tự động nhảy tiếng 'TÁCH' giữ chặt đuôi card. Dùng tua vít siết chặt ốc nẹp giữ card vào thành thùng máy.",
+    commonMistakes: [
+      "Quên không siết ốc nẹp kim loại sau case khiến card bị xệ và rung lắc lỏng chân cắm khi học sinh cắm cáp màn hình phía sau.",
+      "Chưa mở lẫy khóa PCIe mà đã ấn card vào làm gãy cong lẫy nhựa bảo vệ bo mạch.",
+      "Sau khi lắp card rời xong, lúc thử máy lại cắm nhầm dây màn hình vào cổng VGA trên bo mạch chủ (khiến màn hình tối om do CPU i5-10400F không có GPU tích hợp).",
+    ],
+    pokaYoke: "Quy tắc 2 điểm khóa: 1. Khóa lẫy nhựa đuôi PCIe tự ngậm. 2. Bắt buộc siết ốc nẹp kim loại cố định vào khung case.",
+    imageSrc: "/images/ol-01/guide-clean-vga-pcie.jpg",
+    imageAlt: "Lắp card đồ họa rời GT 730 khóa lẫy ngậm và siết ốc nẹp khung sau",
+  },
+  {
+    id: "asm-7",
+    stepNumber: 7,
+    title: "Lắp Ổ Cứng SSD, Nối Cáp SATA Dữ Liệu/Nguồn & Nghiệm Thu Khởi Động",
+    shortName: "Lắp Ổ Cứng & Test Khởi Động",
+    tool: "Tua vít bake, cáp SATA Data có lẫy kim loại, dây nguồn máy tính",
+    action: "Bắt ốc cố định ổ cứng SSD 2.5\" vào khay case (hoặc lắp SSD M.2 NVMe vào khe M.2 siết ốc đuôi). Cắm cáp SATA Data một đầu vào cổng SATA_1 trên mainboard H510, đầu kia cắm vào ổ cứng SSD (nghe tiếng tách nhẹ của lẫy kim loại). Cắm đầu cáp nguồn SATA mỏng hình chữ L từ bộ nguồn vào ổ cứng. Kiểm tra lại toàn bộ khoang máy không để rơi rớt ốc vít kim loại. Cắm dây nguồn 220V, cắm dây màn hình vào Card rời GT 730 và bấm nút Power kiểm tra máy lên hình xuất BIOS bình thường.",
+    commonMistakes: [
+      "Quên cắm cáp nguồn SATA cho ổ cứng (chỉ cắm cáp SATA Data), máy bật lên báo lỗi 'Reboot and Select proper Boot device'.",
+      "Cắm cáp màn hình lộn lên cổng VGA của bo mạch chủ thay vì cắm vào cổng của Card màn hình rời GT 730.",
+      "Để sót ốc vít hoặc đầu dây kim loại rơi tự do chạm vào lưng bo mạch chủ gây chập nổ bo mạch khi cắm điện kiểm tra.",
+    ],
+    pokaYoke: "Khẩu quyết nghiệm thu: 'Dây màn hình cắm Card rời GT 730 phía dưới -> Cáp SATA đủ Data và Nguồn -> Khoang case sạch ốc rơi'.",
+    imageSrc: "/images/ol-01/workflow-lap-may.jpg",
+    imageAlt: "Cắm cáp SATA dữ liệu và nguồn cho ổ cứng SSD và nghiệm thu khởi động máy",
+  },
+];
+
+/**
+ * 4 KỸ NĂNG CƠ KHÍ CỐT LÕI & BẪY LỖI SỐNG CÒN CỦA KỸ THUẬT VIÊN
+ */
+interface CoreSkill {
+  id: "ram" | "vga" | "fpanel" | "cmos";
+  name: string;
+  subtitle: string;
+  badge: string;
+  imageSrc: string;
+  imageAlt: string;
+  tools: string[];
+  steps: string[];
+  mistakes: string[];
+  pokaYoke: string;
+}
+
+const CORE_SKILLS: CoreSkill[] = [
+  {
+    id: "ram",
+    name: "Vệ Sinh Chân & Khe Cắm RAM DDR4",
+    subtitle: "Khắc phục 90% lỗi quạt quay tít không lên hình, máy kêu bíp dài liên tục",
+    badge: "Kỹ Năng Cốt Lõi #1",
+    imageSrc: "/images/ol-01/guide-clean-ram-slot.jpg",
+    imageAlt: "Sơ đồ kỹ thuật vệ sinh chân mạ vàng RAM DDR4 bằng gôm tẩy trắng và cọ mềm khe cắm",
+    tools: [
+      "Cục gôm (tẩy) bút chì mềm màu trắng sạch (không dùng gôm đen hoặc gôm cát)",
+      "Chổi cọ sơn mềm hoặc cọ quét bụi tĩnh điện",
+      "Khăn vải sợi microfiber sạch và khô",
+      "Bình xịt khí nén hoặc bóng thổi bụi cao su",
+    ],
+    steps: [
+      "Đặt thanh RAM nằm nghiêng 45 độ trên mặt phẳng sạch có lót khăn mềm.",
+      "Dùng mặt gôm trắng chà nhẹ nhàng theo một chiều dọc theo hàng chân tiếp xúc mạ vàng ở cả 2 mặt thanh RAM cho đến khi chân đồng sáng bóng, lớp oxy hóa ố mờ biến mất hoàn toàn.",
+      "Dùng chổi cọ mềm quét sạch toàn bộ mạt vụn gôm bám trên chân RAM và thân linh kiện dán SMD (tuyệt đối không dùng miệng thổi vì hơi thở ẩm làm oxy hóa chân vàng).",
+      "Dùng cọ mềm và bóng thổi bụi luồn sâu vào lòng khe cắm RAM trên mainboard H510 để thổi bay bụi bặm, sợi vải bám lâu ngày.",
+      "Căn đúng rãnh khuyết lệch chống cắm ngược, ấn đều hai đầu thanh RAM nghe tiếng 'TÁCH' đanh gọn là hoàn thành.",
+    ],
+    mistakes: [
+      "Dùng cồn ướt hoặc giẻ lau ẩm lau chân RAM rồi cắm ngay vào máy khi chưa khô hẳn gây chập chân tiếp xúc.",
+      "Dùng gôm tẩy có hạt mài cứng hoặc chà xát quá mạnh làm tróc cả lớp mạ vàng bảo vệ chân mạch đồng.",
+      "Để lại mạt vụn cao su của gôm bám vào khe chân cắm, khi cắm RAM vào mạt gôm chèn vào giữa làm mất tiếp xúc, máy hoàn toàn không nhận RAM.",
+    ],
+    pokaYoke: "Chỉ dùng gôm tẩy trắng chuyên dụng; quét sạch 100% mạt vụn gôm trước khi cắm; cắm nghe tiếng 'TÁCH' và lẫy tự đóng ngậm khít.",
+  },
+  {
+    id: "vga",
+    name: "Tháo Lắp & Vệ Sinh Card Đồ Họa Rời (GT 730)",
+    subtitle: "Quy trình nhả lẫy an toàn, vệ sinh chân PCIe và bắt ốc nẹp chống xệ",
+    badge: "Kỹ Năng Cốt Lõi #2",
+    imageSrc: "/images/ol-01/guide-clean-vga-pcie.jpg",
+    imageAlt: "Hướng dẫn tháo lắp vệ sinh card rời GT 730 mở lẫy PCIe x16 và bắt ốc nẹp case",
+    tools: [
+      "Tua vít bake từ tính cán dài PH2",
+      "Gôm tẩy trắng làm sạch chân mạ vàng PCIe x16",
+      "Chổi cọ mềm làm sạch cánh quạt và khe nhôm tản nhiệt",
+      "Khay đựng ốc nẹp kim loại sau thùng máy",
+    ],
+    steps: [
+      "Tháo ốc nẹp cố định khung kim loại của Card rời vào thành sau case máy tính, để ốc vào khay đựng riêng.",
+      "Dùng ngón tay trỏ hoặc cán que nhựa gạt nhẹ lẫy khóa đuôi của khe cắm PCIe x16 trên bo mạch H510 cho lẫy nhả ra hoàn toàn.",
+      "Hai tay cầm vào khung nẹp sắt và phần tản nhiệt, nhấc thẳng đứng card đồ họa ra ngoài theo góc 90 độ.",
+      "Dùng chổi cọ quét sạch bụi bặm bám trên các nan nhôm tản nhiệt và cánh quạt làm mát của card GT 730.",
+      "Dùng gôm trắng làm sạch nhẹ nhàng hàng chân tiếp xúc mạ vàng PCIe x16 cả 2 mặt, quét sạch mạt gôm.",
+      "Lắp lại: Mở lẫy đuôi khe PCIe -> Căn thẳng chân cắm -> Ấn đều tay nghe tiếng 'TÁCH' khóa lẫy -> Bắt buộc vặn chặt ốc nẹp giữ card vào thùng case.",
+    ],
+    mistakes: [
+      "Chưa mở lẫy khóa đuôi khe PCIe x16 đã dùng sức kéo mạnh card lên, làm bẻ gãy lẫy nhựa hoặc giật bung cả chân tiếp xúc khe cắm trên bo mạch chủ.",
+      "Quên bắt ốc nẹp kim loại sau case khiến card bị rung xệ, cắm dây cáp màn hình vào làm lỏng chân dẫn đến mất tín hiệu hiển thị.",
+      "CẮM NHẦM DÂY MÀN HÌNH: Cắm dây VGA/HDMI lên cổng trên bo mạch chủ thay vì cắm vào cổng của Card rời GT 730 (học sinh phòng máy thực hành mắc lỗi này nhiều nhất!).",
+    ],
+    pokaYoke: "Khẩu quyết sống còn: 'Card rời có nẹp ốc giữ phía dưới -> Dây màn hình BẮT BUỘC cắm vào nẹp Card rời phía dưới, KHÔNG cắm lên cụm cổng Mainboard!'.",
+  },
+  {
+    id: "fpanel",
+    name: "Kỹ Thuật Cắm Cụm Chân Kim F_PANEL (Front Panel)",
+    subtitle: "Bản đồ chân kim 9-pin chuẩn quốc tế: Bấm nguồn lên đèn ngay từ lần đầu",
+    badge: "Kỹ Năng Cốt Lõi #3",
+    imageSrc: "/images/ol-01/guide-fpanel-diagram.jpg",
+    imageAlt: "Bản đồ 9 chân kim Front Panel Mainboard H510 hàng trên POWER SW và hàng dưới RESET SW",
+    tools: [
+      "Đèn pin hoặc đèn flash điện thoại để soi rõ ký hiệu in trên bo mạch H510",
+      "Nhíp kẹp nhựa nếu không gian case hẹp",
+      "Bản đồ ghi nhớ vị trí 9 chân kim chuẩn",
+    ],
+    steps: [
+      "Tìm cụm 9 chân kim F_PANEL (thường in chữ JFP1, PANEL hoặc F_PANEL) ở góc dưới cùng bên phải bo mạch chủ H510.",
+      "Xác định điểm mốc chuẩn: Cụm này gồm 2 hàng chân kim, trong đó hàng dưới cùng bên phải có một vị trí CHÂN KHUYẾT (chân số 9 trống không có kim).",
+      "HÀNG TRÊN (gồm 4 chân kim): 2 chân bên phải (ngay sát cạnh vị trí chân khuyết bên dưới) chính là chân cắm giắc POWER SW (công tắc bật nguồn). 2 chân bên trái là cắm POWER LED (+ và -).",
+      "HÀNG DƯỚI (gồm 5 chân kim, chân ngoài cùng bên phải bỏ trống): 2 chân cắm RESET SW (nút khởi động lại) nằm ngay bên cạnh chân khuyết (đối diện với POWER SW). 2 chân bên trái là cắm HDD LED (+ và -).",
+      "Lưu ý nguyên tắc phân cực: POWER SW và RESET SW là công tắc đóng ngắt tiếp điểm, cắm chiều nào cũng hoạt động bình thường. Riêng đèn LED (HDD LED, POWER LED) có cực âm (-) và dương (+), dây có màu nổi hoặc in dấu (+) là cực dương.",
+    ],
+    mistakes: [
+      "Cắm lộn dây POWER SW sang vị trí chân RESET SW khiến học sinh bấm nút nguồn máy không có phản hồi gì.",
+      "Cắm nhầm dây nguồn sang chân đèn LED làm chập tiếp điểm tín hiệu điều khiển.",
+      "Cắm ngược cực âm dương của HDD LED khiến máy vẫn chạy tốt nhưng đèn báo ổ cứng đỏ/xanh mặt trước không bao giờ chớp sáng.",
+    ],
+    pokaYoke: "Khẩu quyết vàng F_PANEL: 'Hàng trên sát cạnh chân khuyết là POWER SW. Hàng dưới đối diện là RESET SW. Hai nút bấm này không phân biệt chiều âm dương!'.",
+  },
+  {
+    id: "cmos",
+    name: "Kỹ Thuật Tháo Pin CMOS & Clear CMOS (Xả BIOS Về Mặc Định)",
+    subtitle: "Cứu hộ máy tính lỗi thiết lập BIOS, treo logo hoặc quên mật khẩu BIOS",
+    badge: "Kỹ Năng Cốt Lõi #4",
+    imageSrc: "/images/ol-01/guide-clear-cmos-pin.jpg",
+    imageAlt: "Hướng dẫn tháo pin cúc áo CR2032 3V Clear CMOS xả BIOS gốc trên main H510",
+    tools: [
+      "Tua vít dẹp nhỏ (2mm) hoặc que nạy nhựa chuyên dụng",
+      "Đồng hồ vạn năng VOM đo điện áp pin (nếu kiểm tra tình trạng pin hết điện)",
+      "Pin cúc áo Lithium CR2032 điện áp chuẩn 3.0V - 3.3V",
+    ],
+    steps: [
+      "Rút hoàn toàn phích cắm điện 220V khỏi bộ nguồn, bấm nút Power trên thùng máy 3 lần để xả sạch điện tích tụ trong hệ thống.",
+      "Quan sát ổ đựng pin CMOS tròn trên bo mạch H510. Ở một góc vành giữ kim loại có một lẫy đàn hồi nhỏ tì vào cạnh viên pin.",
+      "Dùng đầu que nhựa hoặc tua vít dẹp ấn nhẹ lẫy kim loại gạt sang phía ngoài. Lò xo bên dưới đáy ổ sẽ tự động đẩy bật viên pin nảy chéo góc 45 độ lên.",
+      "Dùng ngón tay nhấc viên pin CR2032 ra ngoài. Để máy nghỉ từ 3 đến 5 phút để chip CMOS xả hết dữ liệu lưu trong bộ nhớ tạm thời.",
+      "MẸO NHANH CHO KTV: Dùng đầu tua vít kim loại chập nối 2 chân kim JBAT1 / CLR_CMOS trên bo mạch chủ trong 5-10 giây để xả sạch BIOS ngay lập tức mà không cần chờ đợi lâu.",
+      "Lắp lại pin: Đặt viên pin chếch vào ngàm cố định, mặt chữ có dấu (+) và in chữ 'CR2032 3V' NGỬA LÊN TRÊN, ấn nhẹ cạnh đối diện xuống cho đến khi nghe tiếng tách ngậm chốt.",
+    ],
+    mistakes: [
+      "Không rút dây nguồn 220V trước khi tháo pin, nguồn phụ 5VSB vẫn duy trì nuôi chip nên BIOS không bao giờ được xả về mặc định.",
+      "Dùng vật nhọn bằng sắt chọc cày xước mặt bo mạch xung quanh socket pin làm đứt các đường vi mạch in tí hon.",
+      "Lắp ngược mặt pin (úp mặt dương dấu + xuống dưới) làm hỏng lẫy tiếp điểm và không cấp được điện cho chip lưu thời gian thực RTC.",
+      "Pin CMOS bị tụt áp dưới 2.5V nhưng không phát hiện, dẫn đến mỗi lần rút điện bật máy lại bị sai ngày giờ và bắt nhấn F1 để tiếp tục.",
+    ],
+    pokaYoke: "Mặt có dấu (+) và chữ 'CR2032' luôn ngửa lên trên nhìn thấy; nếu máy khởi động cứ nhảy về năm 2002 hoặc sai giờ thì thay ngay pin mới!",
+  },
+];
+
+
 export default function CompleteHardwareTrainingPage() {
   // Tab điều hướng chính
-  const [activeMainTab, setActiveMainTab] = React.useState<"workflow7" | "diagnostics" | "components" | "report">("workflow7");
+  const [activeMainTab, setActiveMainTab] = React.useState<
+    "workflow7" | "assembly" | "diagnostics" | "components" | "report"
+  >("workflow7");
+
+  // Tab con trong phân hệ Tháo & Lắp máy KTV
+  const [assemblySubTab, setAssemblySubTab] = React.useState<"disassembly" | "assembly" | "skills">("disassembly");
+
+  // Bước đang chọn trong Tháo máy (6 bước)
+  const [activeDisassemblyStepId, setActiveDisassemblyStepId] = React.useState<string>("dis-1");
+
+  // Bước đang chọn trong Lắp máy (7 bước)
+  const [activeAssemblyStepId, setActiveAssemblyStepId] = React.useState<string>("asm-1");
+
+  // Kỹ năng cốt lõi đang chọn (RAM, VGA, F_PANEL, CMOS)
+  const [selectedSkillId, setSelectedSkillId] = React.useState<"ram" | "vga" | "fpanel" | "cmos">("ram");
+
+  // Checkbox tiến độ Tháo máy
+  const [checkedDisassembly, setCheckedDisassembly] = React.useState<Record<string, boolean>>({
+    "dis-1": false,
+    "dis-2": false,
+    "dis-3": false,
+    "dis-4": false,
+    "dis-5": false,
+    "dis-6": false,
+  });
+
+  // Checkbox tiến độ Lắp máy
+  const [checkedAssembly, setCheckedAssembly] = React.useState<Record<string, boolean>>({
+    "asm-1": false,
+    "asm-2": false,
+    "asm-3": false,
+    "asm-4": false,
+    "asm-5": false,
+    "asm-6": false,
+    "asm-7": false,
+  });
 
   // Bước đang chọn trong quy trình 7 bước
   const [activeStepId, setActiveStepId] = React.useState<string>("step-1");
@@ -482,6 +884,21 @@ export default function CompleteHardwareTrainingPage() {
   const isActiveStepDone = Boolean(checkedSteps[activeStep.id]);
 
   const activeCase = DIAGNOSTIC_CASES.find((c) => c.id === selectedCaseId) || DIAGNOSTIC_CASES[1];
+
+  const handleToggleDisassembly = (id: string) => {
+    setCheckedDisassembly((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const handleToggleAssembly = (id: string) => {
+    setCheckedAssembly((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const activeDisassemblyStep =
+    DISASSEMBLY_STEPS.find((s) => s.id === activeDisassemblyStepId) || DISASSEMBLY_STEPS[0];
+  const activeAssemblyStep =
+    ASSEMBLY_STEPS.find((s) => s.id === activeAssemblyStepId) || ASSEMBLY_STEPS[0];
+  const selectedSkill =
+    CORE_SKILLS.find((s) => s.id === selectedSkillId) || CORE_SKILLS[0];
 
   // Chuyển bước kế tiếp
   const handleNextStep = () => {
@@ -642,6 +1059,19 @@ export default function CompleteHardwareTrainingPage() {
           >
             <Layers className="w-4 h-4" />
             <span>📖 Quy Trình 7 Bước</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveMainTab("assembly")}
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer shrink-0 min-h-[44px] ${
+              activeMainTab === "assembly"
+                ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
+                : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
+            }`}
+          >
+            <Wrench className="w-4 h-4 text-emerald-500" />
+            <span>🔧 Tháo &amp; Lắp Máy KTV</span>
           </button>
 
           <button
@@ -1133,6 +1563,549 @@ export default function CompleteHardwareTrainingPage() {
                 </Card>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ==================================================================== */}
+        {/* PHÂN HỆ MỚI: QUY TRÌNH THÁO & LẮP MÁY KTV + 4 KỸ NĂNG CỐT LÕI         */}
+        {/* ==================================================================== */}
+        {activeMainTab === "assembly" && (
+          <div className="space-y-4 sm:space-y-6">
+            {/* Thanh chọn 3 phân nhánh Tháo - Lắp - 4 Kỹ năng */}
+            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-3 px-3 sm:mx-0 sm:px-0">
+              <button
+                type="button"
+                onClick={() => setAssemblySubTab("disassembly")}
+                className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 min-h-[44px] ${
+                  assemblySubTab === "disassembly"
+                    ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
+                    : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                <span>🔩 1. Tháo Máy An Toàn (6 Bước)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAssemblySubTab("assembly")}
+                className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 min-h-[44px] ${
+                  assemblySubTab === "assembly"
+                    ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
+                    : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                <span>🛠️ 2. Lắp Máy Poka-Yoke (7 Bước)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setAssemblySubTab("skills")}
+                className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 min-h-[44px] ${
+                  assemblySubTab === "skills"
+                    ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
+                    : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <span>🎯 3. 4 Kỹ Năng Cơ Khí &amp; Bẫy Lỗi</span>
+              </button>
+            </div>
+
+            {/* ------------------------------------------------------------------ */}
+            {/* SUBTAB 1: QUY TRÌNH THÁO MÁY (6 BƯỚC AN TOÀN ĐIỆN & CƠ KHÍ)         */}
+            {/* ------------------------------------------------------------------ */}
+            {assemblySubTab === "disassembly" && (
+              <div className="space-y-4">
+                {/* Dàn nút chuyển nhanh 6 bước tháo */}
+                <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1 -mx-3 px-3 sm:mx-0 sm:px-0">
+                  <span className="text-xs font-bold text-slate-500 shrink-0 hidden md:inline">
+                    Các bước tháo:
+                  </span>
+                  {DISASSEMBLY_STEPS.map((step) => {
+                    const isCurrent = step.id === activeDisassemblyStepId;
+                    const isDone = Boolean(checkedDisassembly[step.id]);
+                    return (
+                      <button
+                        key={step.id}
+                        type="button"
+                        onClick={() => setActiveDisassemblyStepId(step.id)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer min-h-[40px] sm:min-h-[44px] ${
+                          isCurrent
+                            ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
+                            : isDone
+                            ? "bg-emerald-50 text-emerald-900 border border-emerald-300 hover:bg-emerald-100"
+                            : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
+                        }`}
+                      >
+                        <span
+                          className={`w-5 h-5 rounded-full flex items-center justify-center font-mono text-[11px] font-black ${
+                            isCurrent
+                              ? "bg-white text-slate-900"
+                              : isDone
+                              ? "bg-emerald-600 text-white"
+                              : "bg-slate-100 text-slate-700"
+                          }`}
+                        >
+                          {isDone ? "✓" : step.stepNumber}
+                        </span>
+                        <span>{step.shortName}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Bố cục 2 cột: Cột trái (Chi tiết bước & Bẫy lỗi) - Cột phải (Hình minh họa phóng to) */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+                  {/* CỘT TRÁI: 7 CỘT */}
+                  <div className="lg:col-span-7 space-y-4">
+                    <Card className="border-slate-200 bg-white shadow-xs">
+                      <CardHeader className="p-4 sm:p-5 border-b border-slate-100">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-mono text-xs font-bold">
+                            BƯỚC THÁO {activeDisassemblyStep.stepNumber} / {DISASSEMBLY_STEPS.length}
+                          </span>
+                          <span className="text-xs font-medium text-slate-500">
+                            Dụng cụ: <strong className="text-slate-800">{activeDisassemblyStep.tool}</strong>
+                          </span>
+                        </div>
+                        <CardTitle className="text-lg sm:text-xl font-black text-slate-900 mt-2">
+                          {activeDisassemblyStep.title}
+                        </CardTitle>
+                      </CardHeader>
+
+                      <CardContent className="p-4 sm:p-5 space-y-4 text-xs sm:text-sm">
+                        {/* Thao tác kỹ thuật */}
+                        <div>
+                          <strong className="text-slate-900 block font-bold mb-1.5 flex items-center gap-1.5">
+                            <Wrench className="w-4 h-4 text-slate-700" />
+                            <span>Thao Tác Thực Hiện:</span>
+                          </strong>
+                          <p className="text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            {activeDisassemblyStep.action}
+                          </p>
+                        </div>
+
+                        {/* Sai sót thường gặp */}
+                        <div className="p-3.5 rounded-xl bg-amber-50/90 border border-amber-300 text-amber-950 space-y-2">
+                          <strong className="font-extrabold flex items-center gap-1.5 text-amber-900">
+                            <AlertTriangle className="w-4 h-4 text-amber-600" />
+                            <span>Ghi Chú Sai Sót Dễ Mắc Phải:</span>
+                          </strong>
+                          <ul className="space-y-1 pl-4 list-disc text-xs text-amber-900/90 leading-relaxed">
+                            {activeDisassemblyStep.commonMistakes.map((m, idx) => (
+                              <li key={idx}>{m}</li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Chuẩn Poka-Yoke */}
+                        <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950 flex items-start gap-2.5">
+                          <ShieldAlert className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+                          <div className="text-xs leading-relaxed">
+                            <strong className="font-extrabold text-emerald-900">An toàn Poka-Yoke: </strong>
+                            <span>{activeDisassemblyStep.pokaYoke}</span>
+                          </div>
+                        </div>
+
+                        {/* Checkbox hoàn thành */}
+                        <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                          <label className="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm font-bold text-slate-800 select-none">
+                            <input
+                              type="checkbox"
+                              checked={Boolean(checkedDisassembly[activeDisassemblyStep.id])}
+                              onChange={() => handleToggleDisassembly(activeDisassemblyStep.id)}
+                              className="w-5 h-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                            />
+                            <span>Em đã kiểm tra an toàn và hoàn thành bước này</span>
+                          </label>
+
+                          <span className="text-xs font-mono text-slate-400">
+                            {Boolean(checkedDisassembly[activeDisassemblyStep.id]) ? "ĐÃ XÁC NHẬN ✓" : "CHƯA XÁC NHẬN"}
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* 3 Nguyên tắc tháo máy */}
+                    <div className="p-3.5 rounded-xl bg-slate-900 text-white space-y-1.5 text-xs">
+                      <strong className="text-amber-400 font-extrabold flex items-center gap-1.5">
+                        <Lightbulb className="w-4 h-4 text-amber-400" />
+                        <span>3 Khẩu Quyết Tháo Máy Sống Còn:</span>
+                      </strong>
+                      <p className="text-slate-300 leading-relaxed">
+                        1. <strong>Rút nguồn bấm 3 lần</strong> xả sạch tụ trước khi chạm vào linh kiện.
+                        <br />
+                        2. <strong>Ốc nào khay nấy</strong> - tuyệt đối không để rơi ốc vào trong case máy.
+                        <br />
+                        3. <strong>Mở lẫy trước khi rút</strong> - cộm tay là dừng ngay, không dùng sức giật!
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* CỘT PHẢI: 5 CỘT (HÌNH MINH HỌA) */}
+                  <div className="lg:col-span-5 space-y-3">
+                    <Card className="border-slate-200 bg-white shadow-xs overflow-hidden sticky top-20">
+                      <CardHeader className="p-3.5 border-b border-slate-100 flex flex-row items-center justify-between pb-3">
+                        <CardTitle className="text-xs sm:text-sm font-bold text-slate-800">
+                          Minh Họa Bước {activeDisassemblyStep.stepNumber}
+                        </CardTitle>
+                        <span className="text-[11px] font-mono text-slate-500">Chạm để phóng to 🔍</span>
+                      </CardHeader>
+                      <CardContent className="p-3.5 space-y-2">
+                        <div
+                          onClick={() =>
+                            setZoomedImage({
+                              src: activeDisassemblyStep.imageSrc,
+                              alt: activeDisassemblyStep.imageAlt,
+                              title: `Bước ${activeDisassemblyStep.stepNumber}: ${activeDisassemblyStep.title}`,
+                            })
+                          }
+                          className="relative w-full aspect-[4/3] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 cursor-pointer group shadow-inner"
+                        >
+                          <Image
+                            src={activeDisassemblyStep.imageSrc}
+                            alt={activeDisassemblyStep.imageAlt}
+                            fill
+                            className="object-contain p-2 group-hover:scale-102 transition-transform duration-300"
+                            sizes="(max-width: 1024px) 100vw, 40vw"
+                          />
+                          <div className="absolute bottom-2 right-2 bg-slate-900/80 text-white p-1.5 rounded-lg opacity-80 group-hover:opacity-100 transition-opacity">
+                            <ZoomIn className="w-4 h-4" />
+                          </div>
+                        </div>
+                        <p className="text-[11px] text-slate-500 italic text-center leading-tight">
+                          {activeDisassemblyStep.imageAlt}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------------ */}
+            {/* SUBTAB 2: QUY TRÌNH LẮP MÁY (7 BƯỚC POKA-YOKE TỪ LINH KIỆN VÀO CASE)*/}
+            {/* ------------------------------------------------------------------ */}
+            {assemblySubTab === "assembly" && (
+              <div className="space-y-4">
+                {/* Dàn nút chuyển nhanh 7 bước lắp */}
+                <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1 -mx-3 px-3 sm:mx-0 sm:px-0">
+                  <span className="text-xs font-bold text-slate-500 shrink-0 hidden md:inline">
+                    Các bước lắp:
+                  </span>
+                  {ASSEMBLY_STEPS.map((step) => {
+                    const isCurrent = step.id === activeAssemblyStepId;
+                    const isDone = Boolean(checkedAssembly[step.id]);
+                    return (
+                      <button
+                        key={step.id}
+                        type="button"
+                        onClick={() => setActiveAssemblyStepId(step.id)}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer min-h-[40px] sm:min-h-[44px] ${
+                          isCurrent
+                            ? "bg-slate-900 text-white shadow-sm ring-2 ring-slate-900 ring-offset-2"
+                            : isDone
+                            ? "bg-emerald-50 text-emerald-900 border border-emerald-300 hover:bg-emerald-100"
+                            : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
+                        }`}
+                      >
+                        <span
+                          className={`w-5 h-5 rounded-full flex items-center justify-center font-mono text-[11px] font-black ${
+                            isCurrent
+                              ? "bg-white text-slate-900"
+                              : isDone
+                              ? "bg-emerald-600 text-white"
+                              : "bg-slate-100 text-slate-700"
+                          }`}
+                        >
+                          {isDone ? "✓" : step.stepNumber}
+                        </span>
+                        <span>{step.shortName}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Bố cục 2 cột */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+                  {/* CỘT TRÁI: 7 CỘT */}
+                  <div className="lg:col-span-7 space-y-4">
+                    <Card className="border-slate-200 bg-white shadow-xs">
+                      <CardHeader className="p-4 sm:p-5 border-b border-slate-100">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-mono text-xs font-bold">
+                            BƯỚC LẮP {activeAssemblyStep.stepNumber} / {ASSEMBLY_STEPS.length}
+                          </span>
+                          <span className="text-xs font-medium text-slate-500">
+                            Dụng cụ: <strong className="text-slate-800">{activeAssemblyStep.tool}</strong>
+                          </span>
+                        </div>
+                        <CardTitle className="text-lg sm:text-xl font-black text-slate-900 mt-2">
+                          {activeAssemblyStep.title}
+                        </CardTitle>
+                      </CardHeader>
+
+                      <CardContent className="p-4 sm:p-5 space-y-4 text-xs sm:text-sm">
+                        {/* Thao tác kỹ thuật */}
+                        <div>
+                          <strong className="text-slate-900 block font-bold mb-1.5 flex items-center gap-1.5">
+                            <Wrench className="w-4 h-4 text-slate-700" />
+                            <span>Thao Tác Kỹ Thuật Chuẩn:</span>
+                          </strong>
+                          <p className="text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            {activeAssemblyStep.action}
+                          </p>
+                        </div>
+
+                        {/* Sai sót thường gặp */}
+                        <div className="p-3.5 rounded-xl bg-amber-50/90 border border-amber-300 text-amber-950 space-y-2">
+                          <strong className="font-extrabold flex items-center gap-1.5 text-amber-900">
+                            <AlertTriangle className="w-4 h-4 text-amber-600" />
+                            <span>Ghi Chú Sai Sót Dễ Mắc Phải:</span>
+                          </strong>
+                          <ul className="space-y-1 pl-4 list-disc text-xs text-amber-900/90 leading-relaxed">
+                            {activeAssemblyStep.commonMistakes.map((m, idx) => (
+                              <li key={idx}>{m}</li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Chuẩn Poka-Yoke */}
+                        <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950 flex items-start gap-2.5">
+                          <ShieldAlert className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+                          <div className="text-xs leading-relaxed">
+                            <strong className="font-extrabold text-emerald-900">An toàn Poka-Yoke: </strong>
+                            <span>{activeAssemblyStep.pokaYoke}</span>
+                          </div>
+                        </div>
+
+                        {/* Checkbox hoàn thành */}
+                        <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                          <label className="flex items-center gap-2.5 cursor-pointer text-xs sm:text-sm font-bold text-slate-800 select-none">
+                            <input
+                              type="checkbox"
+                              checked={Boolean(checkedAssembly[activeAssemblyStep.id])}
+                              onChange={() => handleToggleAssembly(activeAssemblyStep.id)}
+                              className="w-5 h-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
+                            />
+                            <span>Em đã kiểm tra an toàn và hoàn thành bước này</span>
+                          </label>
+
+                          <span className="text-xs font-mono text-slate-400">
+                            {Boolean(checkedAssembly[activeAssemblyStep.id]) ? "ĐÃ XÁC NHẬN ✓" : "CHƯA XÁC NHẬN"}
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* 3 Khẩu quyết lắp máy */}
+                    <div className="p-3.5 rounded-xl bg-slate-900 text-white space-y-1.5 text-xs">
+                      <strong className="text-amber-400 font-extrabold flex items-center gap-1.5">
+                        <Lightbulb className="w-4 h-4 text-amber-400" />
+                        <span>3 Khẩu Quyết Lắp Máy Sống Còn:</span>
+                      </strong>
+                      <p className="text-slate-300 leading-relaxed">
+                        1. <strong>Đếm đủ trụ đệm Standoff</strong> - quên trụ đệm là chập nổ bo mạch.
+                        <br />
+                        2. <strong>So đúng rãnh khuyết lệch</strong> - tuyệt đối không dùng sức ấn cố đè linh kiện.
+                        <br />
+                        3. <strong>Dây màn hình cắm vào Card rời</strong> - không cắm lên cổng bo mạch chủ!
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* CỘT PHẢI: 5 CỘT (HÌNH MINH HỌA) */}
+                  <div className="lg:col-span-5 space-y-3">
+                    <Card className="border-slate-200 bg-white shadow-xs overflow-hidden sticky top-20">
+                      <CardHeader className="p-3.5 border-b border-slate-100 flex flex-row items-center justify-between pb-3">
+                        <CardTitle className="text-xs sm:text-sm font-bold text-slate-800">
+                          Minh Họa Bước {activeAssemblyStep.stepNumber}
+                        </CardTitle>
+                        <span className="text-[11px] font-mono text-slate-500">Chạm để phóng to 🔍</span>
+                      </CardHeader>
+                      <CardContent className="p-3.5 space-y-2">
+                        <div
+                          onClick={() =>
+                            setZoomedImage({
+                              src: activeAssemblyStep.imageSrc,
+                              alt: activeAssemblyStep.imageAlt,
+                              title: `Bước ${activeAssemblyStep.stepNumber}: ${activeAssemblyStep.title}`,
+                            })
+                          }
+                          className="relative w-full aspect-[4/3] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 cursor-pointer group shadow-inner"
+                        >
+                          <Image
+                            src={activeAssemblyStep.imageSrc}
+                            alt={activeAssemblyStep.imageAlt}
+                            fill
+                            className="object-contain p-2 group-hover:scale-102 transition-transform duration-300"
+                            sizes="(max-width: 1024px) 100vw, 40vw"
+                          />
+                          <div className="absolute bottom-2 right-2 bg-slate-900/80 text-white p-1.5 rounded-lg opacity-80 group-hover:opacity-100 transition-opacity">
+                            <ZoomIn className="w-4 h-4" />
+                          </div>
+                        </div>
+                        <p className="text-[11px] text-slate-500 italic text-center leading-tight">
+                          {activeAssemblyStep.imageAlt}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------------ */}
+            {/* SUBTAB 3: 4 KỸ NĂNG CƠ KHÍ CỐT LÕI (RAM, VGA, F_PANEL, CMOS)        */}
+            {/* ------------------------------------------------------------------ */}
+            {assemblySubTab === "skills" && (
+              <div className="space-y-4">
+                {/* 4 Nút chọn kỹ năng */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
+                  {CORE_SKILLS.map((skill) => {
+                    const isSelected = skill.id === selectedSkillId;
+                    return (
+                      <button
+                        key={skill.id}
+                        type="button"
+                        onClick={() => setSelectedSkillId(skill.id)}
+                        className={`p-3 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between min-h-[64px] ${
+                          isSelected
+                            ? "bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-slate-900 ring-offset-2"
+                            : "bg-white text-slate-800 border-slate-200 hover:bg-slate-50"
+                        }`}
+                      >
+                        <span
+                          className={`text-[10px] font-black uppercase font-mono tracking-wider ${
+                            isSelected ? "text-amber-400" : "text-slate-400"
+                          }`}
+                        >
+                          {skill.badge}
+                        </span>
+                        <strong className="text-xs sm:text-sm font-extrabold line-clamp-1 mt-1">
+                          {skill.name}
+                        </strong>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Khung nội dung chi tiết của Kỹ năng được chọn */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+                  {/* CỘT TRÁI: 7 CỘT */}
+                  <div className="lg:col-span-7 space-y-4">
+                    <Card className="border-slate-200 bg-white shadow-xs">
+                      <CardHeader className="p-4 sm:p-5 border-b border-slate-100">
+                        <div className="flex items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 font-mono text-xs font-black">
+                            {selectedSkill.badge}
+                          </span>
+                        </div>
+                        <CardTitle className="text-lg sm:text-xl font-black text-slate-900 mt-2">
+                          {selectedSkill.name}
+                        </CardTitle>
+                        <p className="text-xs text-slate-500 font-medium mt-1">
+                          {selectedSkill.subtitle}
+                        </p>
+                      </CardHeader>
+
+                      <CardContent className="p-4 sm:p-5 space-y-4 text-xs sm:text-sm">
+                        {/* Dụng cụ cần thiết */}
+                        <div>
+                          <strong className="text-slate-900 block font-bold mb-1.5 flex items-center gap-1.5">
+                            <Wrench className="w-4 h-4 text-slate-700" />
+                            <span>Dụng Cụ Cần Chuẩn Bị:</span>
+                          </strong>
+                          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-slate-700">
+                            {selectedSkill.tools.map((t, idx) => (
+                              <li key={idx} className="flex items-center gap-1.5 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                                <span className="w-1.5 h-1.5 rounded-full bg-slate-600 shrink-0" />
+                                <span>{t}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Quy trình thao tác từng bước */}
+                        <div>
+                          <strong className="text-slate-900 block font-bold mb-1.5 flex items-center gap-1.5">
+                            <Layers className="w-4 h-4 text-blue-600" />
+                            <span>Quy Trình Thao Tác Kỹ Thuật (Step-by-Step):</span>
+                          </strong>
+                          <ol className="space-y-2 text-xs sm:text-sm text-slate-700 list-decimal pl-4 bg-slate-50/60 p-3 rounded-xl border border-slate-200 leading-relaxed">
+                            {selectedSkill.steps.map((st, idx) => (
+                              <li key={idx} className="pl-1">
+                                {st}
+                              </li>
+                            ))}
+                          </ol>
+                        </div>
+
+                        {/* Bẫy lỗi và sai sót nguy hiểm */}
+                        <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-rose-950 space-y-2">
+                          <strong className="font-extrabold flex items-center gap-1.5 text-rose-900">
+                            <AlertTriangle className="w-4 h-4 text-rose-600" />
+                            <span>Bẫy Lỗi &amp; Sai Sót Nguy Hiểm Dễ Mắc Phải:</span>
+                          </strong>
+                          <ul className="space-y-1.5 pl-4 list-disc text-xs text-rose-900/90 leading-relaxed">
+                            {selectedSkill.mistakes.map((mis, idx) => (
+                              <li key={idx}>{mis}</li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        {/* Mẹo KTV & Poka-Yoke */}
+                        <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-950 flex items-start gap-2.5">
+                          <ShieldAlert className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+                          <div className="text-xs leading-relaxed">
+                            <strong className="font-extrabold text-emerald-900">Mẹo KTV Thực Chiến &amp; Poka-Yoke: </strong>
+                            <span>{selectedSkill.pokaYoke}</span>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  {/* CỘT PHẢI: 5 CỘT (HÌNH MINH HỌA PHÓNG TO) */}
+                  <div className="lg:col-span-5 space-y-3">
+                    <Card className="border-slate-200 bg-white shadow-xs overflow-hidden sticky top-20">
+                      <CardHeader className="p-3.5 border-b border-slate-100 flex flex-row items-center justify-between pb-3">
+                        <CardTitle className="text-xs sm:text-sm font-bold text-slate-800">
+                          Sơ Đồ Thực Hành Trực Quan
+                        </CardTitle>
+                        <span className="text-[11px] font-mono text-slate-500">Chạm để phóng to 🔍</span>
+                      </CardHeader>
+                      <CardContent className="p-3.5 space-y-2">
+                        <div
+                          onClick={() =>
+                            setZoomedImage({
+                              src: selectedSkill.imageSrc,
+                              alt: selectedSkill.imageAlt,
+                              title: selectedSkill.name,
+                            })
+                          }
+                          className="relative w-full aspect-[4/3] bg-slate-100 rounded-xl overflow-hidden border border-slate-200 cursor-pointer group shadow-inner"
+                        >
+                          <Image
+                            src={selectedSkill.imageSrc}
+                            alt={selectedSkill.imageAlt}
+                            fill
+                            className="object-contain p-2 group-hover:scale-102 transition-transform duration-300"
+                            sizes="(max-width: 1024px) 100vw, 40vw"
+                          />
+                          <div className="absolute bottom-2 right-2 bg-slate-900/80 text-white p-1.5 rounded-lg opacity-80 group-hover:opacity-100 transition-opacity">
+                            <ZoomIn className="w-4 h-4" />
+                          </div>
+                        </div>
+                        <p className="text-[11px] text-slate-500 italic text-center leading-tight">
+                          {selectedSkill.imageAlt}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 
