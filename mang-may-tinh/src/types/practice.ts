@@ -17,6 +17,7 @@ export interface LabStep {
   instructions: string[]; // Các gạch đầu dòng ngắn gọn (dưới 15 từ mỗi ý)
   pokaYoke: string; // Quy tắc chống sai lỗi (Poka-Yoke) bắt buộc kiểm tra
   analogy?: string; // Ví von đời thường dễ hiểu
+  imageUrl?: string; // Đường dẫn ảnh minh họa cục bộ (/images/chia-se-file/...)
   diagramType: 
     | "strip_cable"           // Tuốt vỏ bảo vệ cáp
     | "arrange_wires"         // Sắp xếp thứ tự 8 sợi màu

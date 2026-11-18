@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="100%" height="100%">
+  <!-- Nền tối sang trọng chuẩn máy chiếu phòng Lab -->
+  <rect width="600" height="360" rx="20" fill="#0f172a"/>
+  
+  <!-- Header thanh công cụ -->
+  <rect width="600" height="48" rx="20" fill="#1e293b"/>
+  <rect y="32" width="600" height="16" fill="#1e293b"/>
+  
+  <!-- 3 Chấm điều khiển macOS/Linux -->
+  <circle cx="28" cy="24" r="6" fill="#ef4444"/>
+  <circle cx="48" cy="24" r="6" fill="#f59e0b"/>
+  <circle cx="68" cy="24" r="6" fill="#10b981"/>
+  
+  <!-- Tiêu đề sơ đồ -->
+  <text x="100" y="29" fill="#f8fafc" font-family="sans-serif" font-size="14" font-weight="bold">Bước 1: Chuyển Mạng Sang Private Network</text>
+  <rect x="460" y="12" width="120" height="24" rx="6" fill="#3b82f6" fill-opacity="0.2"/>
+  <text x="475" y="28" fill="#3b82f6" font-family="monospace" font-size="11" font-weight="bold">KTV LAB GUIDE</text>
+  
+  <!-- Nội dung chi tiết từng bước -->
+  
+      <rect x="50" y="70" width="500" height="240" rx="16" fill="#1e293b" stroke="#475569" stroke-width="2"/>
+      <text x="75" y="105" fill="#94a3b8" font-family="monospace" font-size="14" font-weight="bold">NETWORK PROFILE TYPE</text>
+      
+      <!-- Public Option -->
+      <rect x="75" y="125" width="450" height="70" rx="10" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+      <circle cx="105" cy="160" r="8" fill="none" stroke="#64748b" stroke-width="2"/>
+      <text x="130" y="155" fill="#cbd5e1" font-family="sans-serif" font-size="14" font-weight="bold">Public (Chặn chia sẻ file & máy in)</text>
+      <text x="130" y="175" fill="#64748b" font-family="sans-serif" font-size="11">Dành cho quán cafe, sân bay để bảo mật máy tính</text>
+      
+      <!-- Private Option (Selected) -->
+      <rect x="75" y="210" width="450" height="75" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="2.5"/>
+      <circle cx="105" cy="245" r="9" fill="#10b981"/>
+      <circle cx="105" cy="245" r="4" fill="#ffffff"/>
+      <text x="130" y="240" fill="#10b981" font-family="sans-serif" font-size="15" font-weight="bold">Private (Cho phép chia sẻ mạng LAN)</text>
+      <text x="130" y="262" fill="#94a3b8" font-family="sans-serif" font-size="12">✓ Máy tính có thể nhìn thấy và truyền dữ liệu cho nhau</text>
+    
+  
+  <!-- Chú thích footer -->
+  <text x="50" y="340" fill="#64748b" font-family="sans-serif" font-size="11">Windows Settings > Network & Internet > Chọn Private</text>
+</svg>

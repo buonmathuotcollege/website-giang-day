@@ -74,14 +74,14 @@ export default function HomePage() {
                 <span>CHUẨN THỰC HÀNH 100% PHÒNG MÁY · KHÔNG BÀI TẬP VỀ NHÀ</span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-                6 Bài Thực Hành Chuyên Ngành Mạng Chuẩn iFixit
+                Chuyên Đề Thực Hành Mạng Máy Tính Chuẩn iFixit
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 font-medium mt-1">
                 Giao diện chia đôi màn hình: Trái là quy trình chuẩn, Phải là sơ đồ trực quan có chế độ chiếu sáng phòng Lab.
               </p>
             </div>
             <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-lg shrink-0">
-              6 / 6 BÀI ĐÃ SẴN SÀNG
+              7 / 7 BÀI ĐÃ SẴN SÀNG
             </span>
           </div>
 
@@ -96,6 +96,16 @@ export default function HomePage() {
                 desc: "Đo cắt, tuốt vỏ cáp, xếp 8 màu chuẩn T568B, miết thẳng, cắt bằng và bấm kìm dứt khoát. Test đủ 8 đèn xanh.",
                 href: "/thuc-hanh/bam-cap-rj45/",
                 tag: "Thi công bấm cáp",
+              },
+              {
+                code: "LAB-SHARE-01",
+                title: "Cấu Hình Chia Sẻ File & Cấp Quyền Thư Mục LAN (Win 10)",
+                category: "Quản trị chia sẻ tài nguyên",
+                steps: "5 bước",
+                duration: "45 phút",
+                desc: "Đổi Private Network, bật Advanced Sharing, phân quyền 2 lớp (Sharing & Security tab) chống lỗi Access Denied.",
+                href: "/courses/chia-se-file/",
+                tag: "Quản trị Windows",
               },
               {
                 code: "LAB-02",

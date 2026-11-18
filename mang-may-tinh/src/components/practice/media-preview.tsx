@@ -19,6 +19,26 @@ export function MediaPreview({ currentStep }: MediaPreviewProps) {
 
   // Render sơ đồ mô phỏng theo từng bước kỹ thuật
   const renderDiagramContent = () => {
+    // Nếu bước có ảnh minh họa cục bộ cụ thể
+    if (currentStep.imageUrl) {
+      return (
+        <div className="space-y-4 text-center">
+          <div className="relative w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-700 shadow-md">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={currentStep.imageUrl}
+              alt={currentStep.title}
+              className="w-full h-auto max-h-[360px] object-contain mx-auto"
+            />
+          </div>
+          <div className="flex items-center justify-center gap-2 text-xs font-mono font-bold text-slate-800 bg-slate-100 border border-slate-200 p-2.5 rounded-xl">
+            <span>🖼️ Minh họa kỹ thuật:</span>
+            <span>Đối chiếu hình ảnh chuẩn hệ thống trước khi cấu hình</span>
+          </div>
+        </div>
+      );
+    }
+
     switch (currentStep.diagramType) {
       case "strip_cable":
         return (
