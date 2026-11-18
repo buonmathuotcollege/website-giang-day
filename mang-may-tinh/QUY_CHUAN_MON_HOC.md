@@ -73,3 +73,20 @@ Giao diện mỗi bài học thực hành được tổ chức nghiêm ngặt th
 * **Ngôn ngữ:** $100\%$ Tiếng Việt cho giao diện, thông báo lỗi và chú thích code.
 * **Clean Code:** Chia nhỏ thành các component độc lập (`StepByStepGuide`, `MediaPreview`, `LabSplitView`, `PracticeForm`, `TechNewsWidget`).
 * **Tiêu chuẩn hoàn tất:** `npm run build` đạt **0 errors, 0 warnings**.
+
+---
+
+## 6. CẤU HÌNH PHÒNG MÁY THỰC TẾ & BẢN ĐỒ PHÂN KHÚC LINH KIỆN
+* **Cấu hình phần cứng phòng máy chuẩn mực:**
+  - **Hệ điều hành:** Windows 10 Pro / Enterprise 64-bit.
+  - **Bo mạch chủ (Mainboard):** Chipset Intel H510 (ASUS, MSI, Winnfox).
+  - **Bộ nhớ trong (RAM):** 8GB DDR4 (Bus 2666MHz / 3200MHz).
+  - **Ổ cứng:** SSD 128GB hoặc 256GB.
+  - **Card đồ họa rời (VGA):** NVIDIA GeForce GT 730 2GB GDDR5.
+* **Quy tắc sư phạm & Thao tác an toàn:**
+  - 🎯 **Bám sát thực tế:** Ảnh chụp và bài giảng bám sát cấu hình trên, không dùng đồ quá cũ (G31, 945, DDR2) hoặc quá xa vời (Z790, RTX 4090).
+  - 🛡️ **An toàn Poka-Yoke & Chống tĩnh điện (ESD):** Chạm tay vào vỏ kim loại trước khi tháo lắp, cắm linh kiện đúng ngàm, **TUYỆT ĐỐI KHÔNG DÙNG SỨC ÉP/ẤN MẠNH** khi thấy kẹt.
+* **Bản đồ kiến thức thị trường mở rộng:**
+  - **Dòng Mainboard:** Dòng H (văn phòng/phòng lab), Dòng B (gaming/tầm trung), Dòng Z (cao cấp/ép xung), Dòng A/X của AMD.
+  - **Hậu tố CPU:** K (ép xung), F (không iGPU, cần VGA rời), H/HX (laptop hiệu năng cao), U (laptop mỏng nhẹ tiết kiệm pin).
+  - **Đời RAM & Bus:** DDR3 (1333/1600), DDR4 (2400/2666/3200), DDR5 (4800/5600/6000+), kỹ thuật Dual-Channel 2 làn xe.

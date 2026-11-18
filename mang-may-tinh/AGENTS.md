@@ -82,3 +82,34 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
     - **File Explorer Windows 10:** Thanh công cụ Ribbon cổ điển (File, Home, Share, View).
     - **Command Prompt (CMD):** Giao diện console đen truyền thống của Windows 10 (`cmd.exe`).
   - ❌ **TUYỆT ĐỐI KHÔNG DÙNG GIAO DIỆN WINDOWS 11:** Không dùng ảnh chụp hoặc mô tả giao diện Windows 11 (Taskbar căn giữa, menu Settings bo tròn kiểu Win 11, menu chuột phải rút gọn) để tránh gây nhầm lẫn, bỡ ngỡ cho học sinh khi thao tác trên máy phòng lab.
+
+---
+
+## 7. CẤU HÌNH PHÒNG MÁY THỰC TẾ & BẢN ĐỒ LINH KIỆN THỊ TRƯỜNG (HARDWARE MANDATE)
+* **Cấu hình phần cứng phòng máy thực tế (Bối cảnh tìm kiếm ảnh & sinh code):**
+  - **Hệ điều hành:** Windows 10 Pro / Enterprise 64-bit.
+  - **Bo mạch chủ (Mainboard):** Chipset Intel H510 (ASUS Prime H510, MSI H510M, Winnfox H510).
+  - **Bộ nhớ trong (RAM):** 8GB DDR4 (Bus 2666MHz / 3200MHz, dạng thanh đơn hoặc 2x4GB).
+  - **Ổ cứng lưu trữ:** SSD 128GB hoặc 256GB (chuẩn 2.5" SATA III hoặc M.2 NVMe PCIe).
+  - **Card đồ họa rời (VGA):** NVIDIA GeForce GT 730 2GB GDDR5.
+* **Quy chuẩn tìm kiếm hình ảnh & văn phong hướng dẫn:**
+  - 🎯 **Bám sát cấu hình thực tế:** Ưu tiên 100% hình ảnh thực tế của linh kiện đúng phân khúc trên (Socket LGA1200, Main H510, RAM DDR4 tản thường/chân khuyết lệch, VGA GT 730 quạt đơn/tản nhôm). Tuyệt đối không dùng linh kiện cổ lỗ sĩ (G31, 945, DDR2, LGA775) hoặc linh kiện quá cao cấp (RTX 4090, Main Z790) làm học sinh hoang mang, xa rời thực tế.
+  - 🛡️ **An toàn Poka-Yoke & Chống tĩnh điện (ESD):** Luôn nhắc nhở chạm tay vào vỏ kim loại case trước khi thao tác, rút dây nguồn trước 30 giây để tụ xả hết điện, cắm linh kiện "đúng chiều - đúng ngàm", **TUYỆT ĐỐI KHÔNG DÙNG SỨC ÉP/ẤN MẠNH** khi thấy kẹt.
+* **Bản đồ mở rộng kiến thức thị trường cho học sinh 9+3:**
+  - **Dòng Mainboard theo phân khúc:**
+    - Dòng H (H510, H610): Phổ thông, văn phòng, phòng lab thực hành, giá rẻ, tính năng cơ bản.
+    - Dòng B (B560, B660, B760): Tầm trung, gaming, đồ họa, tản nhiệt VRM tốt, hỗ trợ mở rộng nhiều khe M.2 và RAM.
+    - Dòng Z (Z590, Z690, Z790): Cao cấp, cho phép ép xung (Overclock), nhiều cổng kết nối, linh kiện chuẩn quân đội.
+    - Dòng A/X của AMD: A520 (phổ thông), B550 (tầm trung), X570 (cao cấp).
+  - **Quy tắc đọc tên CPU & Hậu tố:**
+    - Thế hệ CPU: Số hàng nghìn đầu tiên (Core i5-**10**400 là Gen 10, i5-**11**400 là Gen 11, i5-**12**400 là Gen 12).
+    - Hậu tố K: Cho phép ép xung mở khóa nhân (Unlocked).
+    - Hậu tố F: Không tích hợp đồ họa (bắt buộc phải cắm VGA rời mới lên hình).
+    - Hậu tố KF: Vừa ép xung được vừa không có GPU tích hợp.
+    - Hậu tố H / HX / U (Laptop): H/HX là chip hiệu năng cao cho laptop gaming/đồ họa; U là chip tiết kiệm điện cho văn phòng mỏng nhẹ.
+    - Không có hậu tố: Chip tiêu chuẩn cho máy bàn có sẵn GPU Intel UHD Graphics.
+  - **Các đời RAM & Tần số Bus:**
+    - DDR3: Khe cắm cũ, khuyết chính giữa, Bus 1333/1600 MHz.
+    - DDR4: Khe cắm hiện đại, khuyết hơi lệch, Bus 2400/2666/3200 MHz (cấu hình phòng máy thực tế).
+    - DDR5: Thế hệ mới nhất, khuyết gần chính giữa, tích hợp chip quản lý nguồn PMIC, Bus 4800/5600/6000+ MHz.
+    - Kỹ thuật Dual-Channel: Cắm 2 thanh cùng dung lượng/bus để tăng gấp đôi băng thông truyền dữ liệu (mặt bàn 2 làn xe).
