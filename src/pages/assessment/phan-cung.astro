@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
+import HardwareWorkflowSection from '../../components/assessment/HardwareWorkflowSection.astro';
 import {
   HARDWARE_METADATA,
   OFFICIAL_RUBRIC_CRITERIA,
@@ -143,6 +144,18 @@ const exam = {
           <div class="mt-4 flex flex-wrap gap-2 pt-2">
             <button
               type="button"
+              @click="switchMode('workflow')"
+              class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center gap-2 border shadow-sm"
+              :class="activeMode === 'workflow'
+                ? 'bg-slate-900 text-white border-slate-900'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
+            >
+              <span>📖</span>
+              <span>1. Quy Trình 7 Bước & Tháo Lắp KTV</span>
+            </button>
+
+            <button
+              type="button"
               @click="switchMode('diagnostic')"
               class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold transition-all flex items-center gap-2 border shadow-sm"
               :class="activeMode === 'diagnostic'
@@ -150,7 +163,7 @@ const exam = {
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
             >
               <span>⚡</span>
-              <span>1. Bắt Bệnh 60s (Cây Chẩn Đoán)</span>
+              <span>2. Bắt Bệnh 60s (Cây Chẩn Đoán)</span>
             </button>
 
             <button
@@ -162,7 +175,7 @@ const exam = {
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
             >
               <span>🗂️</span>
-              <span>2. Thẻ Lật Ôn Thi (Flashcards)</span>
+              <span>3. Thẻ Lật Ôn Thi (Flashcards)</span>
             </button>
 
             <button
@@ -174,7 +187,7 @@ const exam = {
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
             >
               <span>🎮</span>
-              <span>3. Mô Phỏng Ca Thi & In Phiếu A4</span>
+              <span>4. Mô Phỏng Ca Thi & In Phiếu A4</span>
             </button>
 
             <button
@@ -186,7 +199,7 @@ const exam = {
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
             >
               <span>🎲</span>
-              <span>4. Trắc Nghiệm Sát Hạch (100 Câu AI)</span>
+              <span>5. Trắc Nghiệm Sát Hạch (100 Câu AI)</span>
             </button>
 
             <button
@@ -198,7 +211,7 @@ const exam = {
                 : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
             >
               <span>📚</span>
-              <span>5. Ngân Hàng Vấn Đáp</span>
+              <span>6. Ngân Hàng Vấn Đáp</span>
             </button>
 
             <a
@@ -209,6 +222,13 @@ const exam = {
               <span>Bàn Máy 10 Nhóm KTV →</span>
             </a>
           </div>
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- MODE: QUY TRÌNH 7 BƯỚC THỰC CHIẾN & THÁO LẮP KTV (3 GIÂY LÀ NHỚ) -->
+        <!-- ============================================================== -->
+        <div x-show="activeMode === 'workflow'" class="space-y-6">
+          <HardwareWorkflowSection />
         </div>
 
         <!-- ============================================================== -->
@@ -2148,7 +2168,17 @@ const exam = {
   }}>
     document.addEventListener('alpine:init', () => {
       Alpine.data('hardwareMasterEngine', () => ({
-        activeMode: 'diagnostic', // 'diagnostic' | 'flashcards' | 'simulator' | 'mcq' | 'library'
+        activeMode: 'workflow', // 'workflow' | 'diagnostic' | 'flashcards' | 'simulator' | 'mcq' | 'library'
+        workflowSubTab: 'workflow7', // 'workflow7' | 'assembly' | 'skills' | 'components'
+        selectedBoardId: 'msi', // 'msi' | 'asus' | 'winnfox' | 'compare'
+        assemblySubTab: 'disassembly', // 'disassembly' | 'assembly'
+        selectedSkillId: 'ram', // 'ram' | 'vga' | 'fpanel' | 'cmos'
+        activeStep7Index: 0,
+        activeDisassemblyStep: 0,
+        activeAssemblyStep: 0,
+        workflowProgress: {},
+        zoomedImage: null,
+        zoomedImageTitle: '',
         librarySubTab: 'oral', // 'oral' | 'assembly' | 'windows'
         librarySearch: '',
 
@@ -2607,7 +2637,19 @@ const exam = {
             this.timerSeconds = 3600;
           } else if (mode === 'flashcards') {
             this.timerSeconds = 3600;
+          } else if (mode === 'workflow') {
+            this.timerSeconds = 10800;
           }
+          this.persistSession();
+        },
+
+        openZoom(src, title) {
+          this.zoomedImage = src;
+          this.zoomedImageTitle = title || 'Chi tiết hình ảnh linh kiện thực tế';
+        },
+
+        toggleStepProgress(id) {
+          this.workflowProgress[id] = !this.workflowProgress[id];
           this.persistSession();
         },
 
@@ -2634,6 +2676,7 @@ const exam = {
               timestamp: new Date().toLocaleTimeString('vi-VN'),
               student: this.student,
               activeMode: this.activeMode,
+              workflowProgress: this.workflowProgress,
               simPhase: this.simPhase,
               selectedTicketIndex: this.selectedTicketIndex,
               currentStep: this.currentStep,
@@ -2679,6 +2722,7 @@ const exam = {
               const data = JSON.parse(raw);
               if (data.student) this.student = data.student;
               if (data.activeMode) this.activeMode = data.activeMode;
+              if (data.workflowProgress) this.workflowProgress = data.workflowProgress;
               if (data.simPhase) this.simPhase = data.simPhase;
               if (data.selectedTicketIndex !== undefined) this.selectedTicketIndex = data.selectedTicketIndex;
               if (data.currentStep) this.currentStep = data.currentStep;
