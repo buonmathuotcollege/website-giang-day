@@ -21,8 +21,12 @@ import { HELPDESK_5_STEPS } from '../../data/hardwareCurriculum';
   zoomedImageTitle: '',
   workflowProgress: {},
   openZoom(src, title) {
-    this.zoomedImage = src;
-    this.zoomedImageTitle = title;
+    if (window.openImageLightbox) {
+      window.openImageLightbox(src, title);
+    } else {
+      this.zoomedImage = src;
+      this.zoomedImageTitle = title;
+    }
   },
   closeZoom() {
     this.zoomedImage = null;
@@ -270,48 +274,49 @@ import { HELPDESK_5_STEPS } from '../../data/hardwareCurriculum';
 
           <!-- Cột Phải: Hình Ảnh Thực Tế Linh Kiện -->
           <div class="lg:col-span-5 space-y-3">
-            <div class="relative bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
-              <img
-                src={step.imageSrc}
-                alt={step.imageAlt}
-                class="w-full h-56 sm:h-64 object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
-                @click={`openZoom('${step.imageSrc}', '${step.imageAlt.replace(/'/g, "\\'")}')`}
-                loading="lazy"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
-
-              <button
-                type="button"
-                @click={`openZoom('${step.imageSrc}', '${step.imageAlt.replace(/'/g, "\\'")}')`}
-                class="absolute bottom-3 right-3 px-3 py-1.5 bg-slate-900/90 hover:bg-slate-900 text-white text-xs font-bold rounded-lg border border-slate-600 flex items-center gap-1.5 shadow-md backdrop-blur-sm transition-all"
-              >
-                <span>🔍</span>
-                <span>Phóng to</span>
-              </button>
-
-              <div class="absolute bottom-3 left-3 right-24 pointer-events-none">
-                <span class="text-[11px] text-slate-200 font-medium line-clamp-1">
-                  {step.imageAlt}
-                </span>
+            <div class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
+              <div class="relative">
+                <img
+                  src={step.imageSrc}
+                  alt={step.imageAlt}
+                  class="w-full h-56 sm:h-64 object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+                  @click={`openZoom('${step.imageSrc}', '${step.imageAlt.replace(/'/g, "\\'")}')`}
+                  loading="lazy"
+                />
+              </div>
+              <div class="px-3 py-2 bg-slate-900 text-white flex items-center justify-between text-xs border-t border-slate-800">
+                <span class="truncate pr-2 font-medium text-slate-200 text-[11px]">📷 {step.imageAlt}</span>
+                <button
+                  type="button"
+                  @click={`openZoom('${step.imageSrc}', '${step.imageAlt.replace(/'/g, "\\'")}')`}
+                  class="text-blue-400 hover:text-blue-300 font-bold shrink-0 text-xs flex items-center gap-1 cursor-pointer py-1 px-2 rounded hover:bg-slate-800 transition-colors"
+                >
+                  <span>🔍 Phóng to</span>
+                </button>
               </div>
             </div>
 
             {step.secondaryImageSrc && (
-              <div class="relative bg-slate-900 rounded-xl overflow-hidden border border-slate-200 shadow-sm group">
-                <img
-                  src={step.secondaryImageSrc}
-                  alt={`${step.title} - Ảnh chi tiết bổ sung`}
-                  class="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
-                  @click={`openZoom('${step.secondaryImageSrc}', '${step.title.replace(/'/g, "\\'")}')`}
-                  loading="lazy"
-                />
-                <button
-                  type="button"
-                  @click={`openZoom('${step.secondaryImageSrc}', '${step.title.replace(/'/g, "\\'")}')`}
-                  class="absolute bottom-2 right-2 px-2.5 py-1 bg-slate-900/90 text-white text-[11px] font-bold rounded border border-slate-600 flex items-center gap-1"
-                >
-                  <span>🔍 Chi tiết</span>
-                </button>
+              <div class="bg-slate-900 rounded-xl overflow-hidden border border-slate-200 shadow-sm group">
+                <div class="relative">
+                  <img
+                    src={step.secondaryImageSrc}
+                    alt={`${step.title} - Ảnh chi tiết bổ sung`}
+                    class="w-full h-40 object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+                    @click={`openZoom('${step.secondaryImageSrc}', '${step.title.replace(/'/g, "\\'")}')`}
+                    loading="lazy"
+                  />
+                </div>
+                <div class="px-3 py-1.5 bg-slate-900 text-white flex items-center justify-between text-xs border-t border-slate-800">
+                  <span class="truncate pr-2 text-slate-300 text-[11px]">📷 Ảnh chi tiết</span>
+                  <button
+                    type="button"
+                    @click={`openZoom('${step.secondaryImageSrc}', '${step.title.replace(/'/g, "\\'")}')`}
+                    class="text-blue-400 hover:text-blue-300 font-bold shrink-0 text-[11px] flex items-center gap-1 cursor-pointer py-0.5 px-1.5 rounded hover:bg-slate-800 transition-colors"
+                  >
+                    <span>🔍 Chi tiết</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -624,25 +629,28 @@ import { HELPDESK_5_STEPS } from '../../data/hardwareCurriculum';
             </div>
           </div>
 
-          <div class="relative bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
-            <img
-              src={mb.imageSrc}
-              alt={mb.imageAlt}
-              class="w-full h-72 sm:h-96 object-contain bg-slate-950 transition-transform duration-300 group-hover:scale-105 cursor-pointer"
-              @click={`openZoom('${mb.imageSrc}', '${mb.imageAlt.replace(/'/g, "\\'")}')`}
-              loading="lazy"
-            />
-            <button
-              type="button"
-              @click={`openZoom('${mb.imageSrc}', '${mb.imageAlt.replace(/'/g, "\\'")}')`}
-              class="absolute bottom-3 right-3 px-3 py-1.5 bg-slate-900/90 hover:bg-slate-900 text-white text-xs font-bold rounded-lg border border-slate-600 flex items-center gap-1.5 shadow-md backdrop-blur-sm transition-all"
-            >
-              <span>🔍</span>
-              <span>Phóng to xem chân cắm</span>
-            </button>
-            <div class="absolute bottom-3 left-3 right-28 pointer-events-none">
-              <span class="text-xs text-white font-bold block">{mb.name}</span>
-              <span class="text-[11px] text-slate-300 line-clamp-1">{mb.imageAlt}</span>
+          <div class="bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
+            <div class="relative">
+              <img
+                src={mb.imageSrc}
+                alt={mb.imageAlt}
+                class="w-full h-72 sm:h-96 object-contain bg-slate-950 transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+                @click={`openZoom('${mb.imageSrc}', '${mb.imageAlt.replace(/'/g, "\\'")}')`}
+                loading="lazy"
+              />
+            </div>
+            <div class="px-4 py-2.5 bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-slate-800">
+              <div class="min-w-0">
+                <span class="text-xs text-white font-bold block">{mb.name}</span>
+                <span class="text-[11px] text-slate-300 line-clamp-1">{mb.imageAlt}</span>
+              </div>
+              <button
+                type="button"
+                @click={`openZoom('${mb.imageSrc}', '${mb.imageAlt.replace(/'/g, "\\'")}')`}
+                class="text-blue-400 hover:text-blue-300 font-bold shrink-0 text-xs flex items-center gap-1 cursor-pointer py-1 px-2.5 rounded bg-slate-800 hover:bg-slate-750 transition-colors w-fit"
+              >
+                <span>🔍 Phóng to xem chân cắm</span>
+              </button>
             </div>
           </div>
         </div>
@@ -666,7 +674,8 @@ import { HELPDESK_5_STEPS } from '../../data/hardwareCurriculum';
         <button
           type="button"
           @click="closeZoom()"
-          class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold border border-slate-600"
+          class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-rose-600 text-white text-xs font-bold border border-slate-600 min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer transition-colors"
+          aria-label="Đóng ảnh"
         >
           ✕ Đóng (ESC)
         </button>

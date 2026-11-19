@@ -332,15 +332,15 @@
           const cleanAlt = img.alt.replace(/[<>"']/g, '');
           const imgHtml = `
             <div class="my-2 rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
-              <a href="${cleanSrc}" target="_blank" rel="noopener noreferrer" class="block relative group" title="Bấm vào để xem ảnh phóng to">
+              <div onclick="window.openImageLightbox && window.openImageLightbox('${cleanSrc}', '${cleanAlt}')" class="block relative group cursor-pointer" title="Bấm vào để xem ảnh phóng to trong trang">
                 <img src="${cleanSrc}" alt="${cleanAlt}" loading="lazy" class="w-full h-auto max-h-48 object-cover group-hover:opacity-90 transition-opacity duration-200" />
                 <div class="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/0 transition-colors flex items-center justify-center">
-                  <span class="opacity-0 group-hover:opacity-100 bg-slate-900/90 text-white text-[10px] font-medium px-2.5 py-1 rounded-full shadow-md transition-opacity">🔍 Bấm để xem ảnh to</span>
+                  <span class="opacity-0 group-hover:opacity-100 bg-slate-900/90 text-white text-[10px] font-medium px-2.5 py-1 rounded-full shadow-md transition-opacity">🔍 Bấm để phóng to trong trang</span>
                 </div>
-              </a>
+              </div>
               <div class="px-2.5 py-1.5 bg-slate-900 text-white flex items-center justify-between text-[11px]">
                 <span class="font-medium truncate pr-2">📷 ${cleanAlt}</span>
-                <a href="${cleanSrc}" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 text-[10px] shrink-0 underline">Mở ảnh ↗</a>
+                <button type="button" onclick="window.openImageLightbox && window.openImageLightbox('${cleanSrc}', '${cleanAlt}')" class="text-blue-400 hover:text-blue-300 text-[10px] shrink-0 font-bold hover:underline cursor-pointer">Phóng to 🔍</button>
               </div>
             </div>
           `;

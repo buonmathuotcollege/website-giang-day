@@ -713,17 +713,21 @@ const hsgPayload = {
           <template x-if="currentStation.stationNumber === 1">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
-                <img src="/images/hsg-02/cable-tia-568ab-standard.svg" alt="Sơ đồ màu chuẩn TIA/EIA-568A và 568B" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                <div class="cursor-pointer" @click="window.openImageLightbox('/images/hsg-02/cable-tia-568ab-standard.svg', 'Sơ đồ chuẩn màu 8 sợi TIA/EIA-568B Gigabit', 'Thứ tự màu chuẩn B: Trắng cam, Cam, Trắng xanh lá, Xanh dương, Trắng xanh dương, Xanh lá, Trắng nâu, Nâu')">
+                  <img src="/images/hsg-02/cable-tia-568ab-standard.svg" alt="Sơ đồ màu chuẩn TIA/EIA-568A và 568B" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                </div>
                 <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                  <span>📷 Sơ đồ chuẩn màu 8 sợi TIA/EIA-568B Gigabit</span>
-                  <a href="/images/hsg-02/cable-tia-568ab-standard.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                  <span class="truncate pr-2">📷 Sơ đồ chuẩn màu 8 sợi TIA/EIA-568B Gigabit</span>
+                  <button type="button" @click="window.openImageLightbox('/images/hsg-02/cable-tia-568ab-standard.svg', 'Sơ đồ chuẩn màu 8 sợi TIA/EIA-568B Gigabit', 'Thứ tự màu chuẩn B: Trắng cam, Cam, Trắng xanh lá, Xanh dương, Trắng xanh dương, Xanh lá, Trắng nâu, Nâu')" class="text-blue-400 hover:text-blue-300 font-bold cursor-pointer shrink-0 min-h-[44px] flex items-center">Phóng to 🔍</button>
                 </div>
               </div>
               <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
-                <img src="/images/hsg-02/cable-tester-gigabit.svg" alt="Máy test mạng thông mạch 8/8 sợi tuyệt đối" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                <div class="cursor-pointer" @click="window.openImageLightbox('/images/hsg-02/cable-tester-gigabit.svg', 'Máy test cáp mạng thông 8/8 sợi & Link Speed 1.0 Gbps', 'Kiểm tra thông mạch tuyệt đối 8 đèn sáng tuần tự 1-8 và đèn G')">
+                  <img src="/images/hsg-02/cable-tester-gigabit.svg" alt="Máy test mạng thông mạch 8/8 sợi tuyệt đối" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                </div>
                 <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                  <span>📷 Máy test cáp mạng thông 8/8 sợi & Link Speed 1.0 Gbps</span>
-                  <a href="/images/hsg-02/cable-tester-gigabit.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                  <span class="truncate pr-2">📷 Máy test cáp mạng thông 8/8 sợi & Link Speed 1.0 Gbps</span>
+                  <button type="button" @click="window.openImageLightbox('/images/hsg-02/cable-tester-gigabit.svg', 'Máy test cáp mạng thông 8/8 sợi & Link Speed 1.0 Gbps', 'Kiểm tra thông mạch tuyệt đối 8 đèn sáng tuần tự 1-8 và đèn G')" class="text-blue-400 hover:text-blue-300 font-bold cursor-pointer shrink-0 min-h-[44px] flex items-center">Phóng to 🔍</button>
                 </div>
               </div>
             </div>
@@ -732,38 +736,46 @@ const hsgPayload = {
           <template x-if="currentStation.stationNumber === 2">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
-                <img src="/images/hsg-02/win10-static-ip-config.svg" alt="Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                <div class="cursor-pointer" @click="window.openImageLightbox('/images/hsg-02/win10-static-ip-config.svg', 'Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10 (ncpa.cpl)', 'Cấu hình IP address, Subnet mask, Default gateway và DNS Server')">
+                  <img src="/images/hsg-02/win10-static-ip-config.svg" alt="Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                </div>
                 <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                  <span>📷 Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10 (ncpa.cpl)</span>
-                  <a href="/images/hsg-02/win10-static-ip-config.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                  <span class="truncate pr-2">📷 Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10 (ncpa.cpl)</span>
+                  <button type="button" @click="window.openImageLightbox('/images/hsg-02/win10-static-ip-config.svg', 'Cửa sổ thiết lập IP tĩnh IPv4 trên Windows 10 (ncpa.cpl)', 'Cấu hình IP address, Subnet mask, Default gateway và DNS Server')" class="text-blue-400 hover:text-blue-300 font-bold cursor-pointer shrink-0 min-h-[44px] flex items-center">Phóng to 🔍</button>
                 </div>
               </div>
               <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
-                <img src="/images/hsg-02/ntfs-security-matrix.svg" alt="Ma trận phân quyền NTFS Security & Share Permissions" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                <div class="cursor-pointer" @click="window.openImageLightbox('/images/hsg-02/ntfs-security-matrix.svg', 'Ma trận phân quyền nâng cao NTFS Security & Share Permissions', 'Phân quyền Everyone, Administrators và phòng ban')">
+                  <img src="/images/hsg-02/ntfs-security-matrix.svg" alt="Ma trận phân quyền NTFS Security & Share Permissions" class="w-full h-auto max-h-56 object-contain p-2" loading="lazy" />
+                </div>
                 <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                  <span>📷 Ma trận phân quyền nâng cao NTFS Security & Share Permissions</span>
-                  <a href="/images/hsg-02/ntfs-security-matrix.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                  <span class="truncate pr-2">📷 Ma trận phân quyền nâng cao NTFS Security & Share Permissions</span>
+                  <button type="button" @click="window.openImageLightbox('/images/hsg-02/ntfs-security-matrix.svg', 'Ma trận phân quyền nâng cao NTFS Security & Share Permissions', 'Phân quyền Everyone, Administrators và phòng ban')" class="text-blue-400 hover:text-blue-300 font-bold cursor-pointer shrink-0 min-h-[44px] flex items-center">Phóng to 🔍</button>
                 </div>
               </div>
             </div>
           </template>
 
           <template x-if="currentStation.stationNumber === 3">
-            <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
-              <img src="/images/hsg-02/topology-packet-tracer-vlsm.svg" alt="Sơ đồ Cisco Packet Tracer" class="w-full h-auto max-h-64 object-contain p-2" loading="lazy" />
+            <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
+              <div class="cursor-pointer" @click="window.openImageLightbox('/images/hsg-02/topology-packet-tracer-vlsm.svg', 'Sơ đồ mạng Cisco Packet Tracer: Router Core, Switch 24-Port & VLAN phòng ban', 'Mô phỏng hạ tầng mạng LAN/WAN chuẩn Cisco')">
+                <img src="/images/hsg-02/topology-packet-tracer-vlsm.svg" alt="Sơ đồ Cisco Packet Tracer" class="w-full h-auto max-h-64 object-contain p-2" loading="lazy" />
+              </div>
               <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                <span>📷 Sơ đồ mạng Cisco Packet Tracer: Router Core, Switch 24-Port & VLAN phòng ban</span>
-                <a href="/images/hsg-02/topology-packet-tracer-vlsm.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                <span class="truncate pr-2">📷 Sơ đồ mạng Cisco Packet Tracer: Router Core, Switch 24-Port & VLAN phòng ban</span>
+                <button type="button" @click="window.openImageLightbox('/images/hsg-02/topology-packet-tracer-vlsm.svg', 'Sơ đồ mạng Cisco Packet Tracer: Router Core, Switch 24-Port & VLAN phòng ban', 'Mô phỏng hạ tầng mạng LAN/WAN chuẩn Cisco')" class="text-blue-400 hover:text-blue-300 font-bold cursor-pointer shrink-0 min-h-[44px] flex items-center">Phóng to 🔍</button>
               </div>
             </div>
           </template>
 
           <template x-if="currentStation.stationNumber === 4">
-            <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
-              <img src="/images/hsg-02/system-full-acceptance-ping.svg" alt="Nghiệm thu toàn hệ thống bằng lệnh Ping" class="w-full h-auto max-h-64 object-contain p-2" loading="lazy" />
+            <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col justify-between">
+              <div class="cursor-pointer" @click="window.openImageLightbox('/images/hsg-02/system-full-acceptance-ping.svg', 'Nghiệm thu đo kiểm Ping 0% Packet Loss & Biên bản bảo vệ đồ án', 'Xác thực độ trễ mạng < 1ms và không mất gói tin')">
+                <img src="/images/hsg-02/system-full-acceptance-ping.svg" alt="Nghiệm thu toàn hệ thống bằng lệnh Ping" class="w-full h-auto max-h-64 object-contain p-2" loading="lazy" />
+              </div>
               <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
-                <span>📷 Nghiệm thu đo kiểm Ping 0% Packet Loss & Biên bản bảo vệ đồ án</span>
-                <a href="/images/hsg-02/system-full-acceptance-ping.svg" target="_blank" class="text-blue-400 hover:text-blue-300 font-bold">Xem to ↗</a>
+                <span class="truncate pr-2">📷 Nghiệm thu đo kiểm Ping 0% Packet Loss & Biên bản bảo vệ đồ án</span>
+                <button type="button" @click="window.openImageLightbox('/images/hsg-02/system-full-acceptance-ping.svg', 'Nghiệm thu đo kiểm Ping 0% Packet Loss & Biên bản bảo vệ đồ án', 'Xác thực độ trễ mạng < 1ms và không mất gói tin')" class="text-blue-400 hover:text-blue-300 font-bold cursor-pointer shrink-0 min-h-[44px] flex items-center">Phóng to 🔍</button>
               </div>
             </div>
           </template>
@@ -1275,13 +1287,31 @@ const hsgPayload = {
 
             <!-- Hardware Real Illustration Image -->
             <div x-show="currentMainboard.imageSrc" class="rounded-xl border border-slate-200 overflow-hidden bg-slate-100 p-2 text-center">
-              <img
-                :src="currentMainboard.imageSrc"
-                :alt="'Bo mạch chủ ' + currentMainboard.brand + ' phòng thực hành'"
-                class="w-full h-48 sm:h-56 object-cover rounded-lg mx-auto"
-                loading="lazy"
-              />
-              <div class="text-[11px] font-semibold text-slate-500 mt-2" x-text="'Hình ảnh thực tế bo mạch chủ ' + currentMainboard.brand + ' cấu hình phòng máy thực hành'"></div>
+              <div
+                class="relative group cursor-pointer"
+                @click="window.openImageLightbox(currentMainboard.imageSrc, 'Bo mạch chủ ' + currentMainboard.brand + ' phòng thực hành', currentMainboard.series)"
+                title="Bấm để phóng to ảnh toàn màn hình"
+              >
+                <img
+                  :src="currentMainboard.imageSrc"
+                  :alt="'Bo mạch chủ ' + currentMainboard.brand + ' phòng thực hành'"
+                  class="w-full h-48 sm:h-56 object-cover rounded-lg mx-auto group-hover:opacity-95 transition-opacity"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                  <span class="px-3 py-1.5 rounded-full bg-slate-900/90 text-white text-xs font-bold shadow-md">🔍 Bấm để phóng to ảnh</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-[11px] font-semibold text-slate-500 mt-2 px-1">
+                <span x-text="'Ảnh bo mạch ' + currentMainboard.brand + ' phòng lab'"></span>
+                <button
+                  type="button"
+                  @click="window.openImageLightbox(currentMainboard.imageSrc, 'Bo mạch chủ ' + currentMainboard.brand + ' phòng thực hành', currentMainboard.series)"
+                  class="text-blue-600 hover:text-blue-700 font-bold text-xs cursor-pointer min-h-[44px] flex items-center"
+                >
+                  🔍 Phóng to
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1430,13 +1460,31 @@ const hsgPayload = {
           <!-- Step Illustration Image (If available) -->
           <div x-show="currentWin10Step.imageSrc" class="mt-4 pt-4 border-t border-slate-200">
             <div class="rounded-xl border border-slate-200 overflow-hidden bg-white p-2 text-center max-w-xl mx-auto">
-              <img
-                :src="currentWin10Step.imageSrc"
-                :alt="'Minh họa bước ' + currentWin10Step.stepNum + ': ' + currentWin10Step.title"
-                class="w-full h-auto rounded-lg object-contain"
-                loading="lazy"
-              />
-              <div class="text-[11px] font-semibold text-slate-500 mt-2" x-text="'Ảnh chụp màn hình thực tế: ' + currentWin10Step.title"></div>
+              <div
+                class="relative group cursor-pointer"
+                @click="window.openImageLightbox(currentWin10Step.imageSrc, 'Bước ' + currentWin10Step.stepNum + ': ' + currentWin10Step.title, currentWin10Step.action)"
+                title="Bấm để phóng to ảnh toàn màn hình"
+              >
+                <img
+                  :src="currentWin10Step.imageSrc"
+                  :alt="'Minh họa bước ' + currentWin10Step.stepNum + ': ' + currentWin10Step.title"
+                  class="w-full h-auto rounded-lg object-contain group-hover:opacity-95 transition-opacity"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                  <span class="px-3 py-1.5 rounded-full bg-slate-900/90 text-white text-xs font-bold shadow-md">🔍 Bấm để phóng to ảnh</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between text-[11px] font-semibold text-slate-500 mt-2 px-1">
+                <span x-text="'Ảnh thực tế: ' + currentWin10Step.title"></span>
+                <button
+                  type="button"
+                  @click="window.openImageLightbox(currentWin10Step.imageSrc, 'Bước ' + currentWin10Step.stepNum + ': ' + currentWin10Step.title, currentWin10Step.action)"
+                  class="text-blue-600 hover:text-blue-700 font-bold text-xs cursor-pointer min-h-[44px] flex items-center"
+                >
+                  🔍 Phóng to
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -1608,15 +1656,15 @@ const hsgPayload = {
         </div>
 
         <!-- Sơ đồ Topo logic mạng phòng ban (Minh họa trực quan) -->
-        <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
-          <div class="relative group">
-            <img src="/images/hsg-02/topology-packet-tracer-vlsm.svg" alt="Sơ đồ Topo nguyên lý mạng logic trên Cisco Packet Tracer" class="w-full h-auto max-h-56 object-cover" loading="lazy" />
-            <div class="absolute bottom-0 inset-x-0 bg-slate-950/85 px-3 py-2 flex items-center justify-between text-[11px] text-white">
-              <span>📷 Sơ đồ Topo nguyên lý logic Cisco Packet Tracer & Quy hoạch dải IP VLSM</span>
-              <a href="/images/hsg-02/topology-packet-tracer-vlsm.svg" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 font-bold inline-flex items-center gap-1">
-                <span>Xem ảnh to ↗</span>
-              </a>
-            </div>
+        <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col">
+          <div class="relative group cursor-pointer" @click="window.openImageLightbox('/images/hsg-02/topology-packet-tracer-vlsm.svg', 'Sơ đồ Topo nguyên lý logic Cisco Packet Tracer & Quy hoạch dải IP VLSM', 'Thiết kế nguyên lý mạng Router Core, Switch 24-Port và phân chia mạng con VLSM')">
+            <img src="/images/hsg-02/topology-packet-tracer-vlsm.svg" alt="Sơ đồ Topo nguyên lý mạng logic trên Cisco Packet Tracer" class="w-full h-auto max-h-64 object-contain p-2" loading="lazy" />
+          </div>
+          <div class="p-2.5 bg-slate-950 text-white text-[11px] flex justify-between items-center border-t border-slate-800">
+            <span class="truncate pr-2">📷 Sơ đồ Topo nguyên lý logic Cisco Packet Tracer & Quy hoạch dải IP VLSM</span>
+            <button type="button" @click="window.openImageLightbox('/images/hsg-02/topology-packet-tracer-vlsm.svg', 'Sơ đồ Topo nguyên lý logic Cisco Packet Tracer & Quy hoạch dải IP VLSM', 'Thiết kế nguyên lý mạng Router Core, Switch 24-Port và phân chia mạng con VLSM')" class="text-blue-400 hover:text-blue-300 font-bold inline-flex items-center gap-1 cursor-pointer shrink-0 min-h-[44px]">
+              <span>🔍 Phóng to ảnh</span>
+            </button>
           </div>
         </div>
 

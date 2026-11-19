@@ -1,0 +1,227 @@
+---
+// Global Image Lightbox Modal Component
+// Allows students to zoom in on any technical photo, diagram, or schematic
+// directly inside the webpage without opening a new tab or leaving context.
+---
+
+<div
+  id="global-image-lightbox"
+  class="fixed inset-0 z-[99999] hidden items-center justify-center bg-slate-950/90 backdrop-blur-md p-2 sm:p-4 transition-all duration-200 select-none"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Xem ảnh phóng to toàn màn hình"
+>
+  <!-- Backdrop click zone -->
+  <div id="lightbox-backdrop" class="absolute inset-0 cursor-zoom-out" title="Bấm để đóng ảnh"></div>
+
+  <!-- Lightbox Frame -->
+  <div class="relative z-10 max-w-5xl w-full max-h-[96vh] flex flex-col bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden">
+    
+    <!-- Top Header Bar -->
+    <div class="flex items-center justify-between px-3 sm:px-5 py-2.5 bg-slate-950/80 border-b border-slate-800 text-white shrink-0">
+      <div class="flex items-center gap-2 overflow-hidden pr-2">
+        <span class="text-amber-400 text-sm shrink-0">🔍</span>
+        <h4 id="lightbox-title" class="text-xs sm:text-sm font-bold text-slate-100 truncate">
+          Chi tiết hình ảnh kỹ thuật
+        </h4>
+      </div>
+
+      <!-- Control Buttons (Touch-friendly >= 44px) -->
+      <div class="flex items-center gap-1.5 shrink-0">
+        <!-- Zoom Out Button -->
+        <button
+          type="button"
+          id="lightbox-zoom-out"
+          class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 flex items-center justify-center text-lg font-bold transition-all cursor-pointer"
+          title="Thu nhỏ ảnh (-)"
+          aria-label="Thu nhỏ ảnh"
+        >
+          −
+        </button>
+
+        <!-- Zoom In Button -->
+        <button
+          type="button"
+          id="lightbox-zoom-in"
+          class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 flex items-center justify-center text-lg font-bold transition-all cursor-pointer"
+          title="Phóng to ảnh (+)"
+          aria-label="Phóng to ảnh"
+        >
+          +
+        </button>
+
+        <!-- Reset Zoom Button -->
+        <button
+          type="button"
+          id="lightbox-zoom-reset"
+          class="px-2.5 h-10 sm:h-11 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 font-mono text-xs font-semibold flex items-center justify-center transition-all cursor-pointer hidden sm:flex"
+          title="Khôi phục kích thước 100%"
+          aria-label="Khôi phục kích thước 100%"
+        >
+          100%
+        </button>
+
+        <!-- Close Button -->
+        <button
+          type="button"
+          id="lightbox-close-btn"
+          class="w-11 h-11 sm:w-12 sm:h-11 rounded-xl bg-rose-600/90 hover:bg-rose-600 active:scale-95 text-white flex items-center justify-center text-lg font-black transition-all cursor-pointer ml-1"
+          title="Đóng ảnh (Phím Esc hoặc bấm ra ngoài)"
+          aria-label="Đóng ảnh"
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+
+    <!-- Center Viewport Area -->
+    <div id="lightbox-viewport" class="flex-1 overflow-auto p-2 sm:p-4 flex items-center justify-center bg-slate-950/60 min-h-[240px] max-h-[75vh] touch-pan-x touch-pan-y">
+      <img
+        id="lightbox-img"
+        src=""
+        alt="Chi tiết hình ảnh kỹ thuật"
+        class="max-h-[72vh] max-w-full w-auto object-contain rounded-lg shadow-lg transition-transform duration-150 origin-center select-none"
+        loading="eager"
+      />
+    </div>
+
+    <!-- Bottom Caption Bar -->
+    <div class="px-3 sm:px-5 py-2 bg-slate-950/90 border-t border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] text-slate-400 shrink-0">
+      <div id="lightbox-caption" class="text-slate-300 font-medium truncate sm:max-w-xl">
+        Hình ảnh minh họa thực tế phòng máy
+      </div>
+      <div class="text-[10px] text-slate-500 font-mono flex items-center gap-2 shrink-0">
+        <span>Phím <kbd class="px-1 py-0.5 bg-slate-800 rounded border border-slate-700 text-slate-300">ESC</kbd> hoặc chạm ngoài để đóng</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    var modal = document.getElementById('global-image-lightbox');
+    var backdrop = document.getElementById('lightbox-backdrop');
+    var closeBtn = document.getElementById('lightbox-close-btn');
+    var img = document.getElementById('lightbox-img');
+    var titleEl = document.getElementById('lightbox-title');
+    var captionEl = document.getElementById('lightbox-caption');
+    var zoomInBtn = document.getElementById('lightbox-zoom-in');
+    var zoomOutBtn = document.getElementById('lightbox-zoom-out');
+    var zoomResetBtn = document.getElementById('lightbox-zoom-reset');
+
+    var currentScale = 1;
+    var minScale = 0.5;
+    var maxScale = 3.0;
+
+    function applyScale(newScale) {
+      currentScale = Math.min(Math.max(newScale, minScale), maxScale);
+      if (img) {
+        img.style.transform = 'scale(' + currentScale + ')';
+        if (currentScale > 1) {
+          img.classList.add('cursor-grab');
+          img.classList.remove('cursor-zoom-out');
+        } else {
+          img.classList.remove('cursor-grab');
+          img.classList.add('cursor-zoom-out');
+        }
+      }
+    }
+
+    function openLightbox(src, title, caption) {
+      if (!modal || !img) return;
+      img.src = src;
+      img.alt = title || 'Chi tiết hình ảnh';
+      if (titleEl) titleEl.textContent = title || 'Chi tiết hình ảnh linh kiện thực tế';
+      if (captionEl) captionEl.textContent = caption || title || 'Hình ảnh thực tế chuẩn cấu hình phòng máy thực hành';
+
+      currentScale = 1;
+      applyScale(1);
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden'; // Ngăn cuộn trang phía sau
+    }
+
+    function closeLightbox() {
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      if (img) {
+        img.src = '';
+        applyScale(1);
+      }
+      document.body.style.overflow = '';
+    }
+
+    // Expose Global Helper for direct calling anywhere in JS/Alpine
+    window.openImageLightbox = openLightbox;
+    window.closeImageLightbox = closeLightbox;
+
+    // Listen to custom event
+    window.addEventListener('open-image-lightbox', function(e) {
+      if (e.detail) {
+        openLightbox(e.detail.src, e.detail.title, e.detail.caption);
+      }
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closeLightbox);
+    if (backdrop) backdrop.addEventListener('click', closeLightbox);
+
+    if (zoomInBtn) {
+      zoomInBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        applyScale(currentScale + 0.3);
+      });
+    }
+
+    if (zoomOutBtn) {
+      zoomOutBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        applyScale(currentScale - 0.3);
+      });
+    }
+
+    if (zoomResetBtn) {
+      zoomResetBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        applyScale(1);
+      });
+    }
+
+    // Double tap on image to toggle zoom
+    if (img) {
+      img.addEventListener('dblclick', function(e) {
+        e.stopPropagation();
+        if (currentScale > 1) {
+          applyScale(1);
+        } else {
+          applyScale(2);
+        }
+      });
+    }
+
+    // Close on Escape key
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+        closeLightbox();
+      }
+    });
+
+    // Auto-bind click handlers for elements with data-zoom-src or class zoomable-img
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      var trigger = target.closest('[data-zoom-src], .zoomable-img, [data-action="open-lightbox"]');
+      if (trigger) {
+        e.preventDefault();
+        e.stopPropagation();
+        var src = trigger.getAttribute('data-zoom-src') || (trigger.tagName === 'IMG' ? trigger.src : trigger.getAttribute('href'));
+        var title = trigger.getAttribute('data-zoom-title') || trigger.getAttribute('alt') || trigger.getAttribute('title') || '';
+        var caption = trigger.getAttribute('data-zoom-caption') || '';
+        if (src) {
+          openLightbox(src, title, caption);
+        }
+      }
+    });
+  })();
+</script>

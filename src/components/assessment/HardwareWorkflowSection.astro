@@ -244,32 +244,36 @@ import {
             </div>
           </div>
 
-          <!-- Cột Phải: Hình Ảnh Thực Tế Linh Kiện Phòng Lab -->
+          <!-- Cột Phải: Hình Ảnh Thực Tế Linh Kiện Phòng Lab (Unobstructed View) -->
           <div class="lg:col-span-5 flex flex-col">
-            <div class="relative bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 shadow-sm group">
-              <img
-                src={step.imageSrc}
-                alt={step.imageAlt}
-                class="w-full h-64 sm:h-72 object-cover transition-transform duration-300 group-hover:scale-105 cursor-pointer"
+            <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm flex flex-col">
+              <div
+                class="relative group cursor-pointer"
                 @click={`openZoom('${step.imageSrc}', '${step.imageAlt.replace(/'/g, "\\'")}')`}
-                loading="lazy"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
-
-              <!-- Zoom Button Overlay -->
-              <button
-                type="button"
-                @click={`openZoom('${step.imageSrc}', '${step.imageAlt.replace(/'/g, "\\'")}')`}
-                class="absolute bottom-3 right-3 px-3 py-1.5 bg-slate-900/90 hover:bg-slate-900 text-white text-xs font-bold rounded-lg border border-slate-600 flex items-center gap-1.5 shadow-md backdrop-blur-sm transition-all"
+                title="Bấm để phóng to ảnh trong trang"
               >
-                <span>🔍</span>
-                <span>Phóng to xem chi tiết</span>
-              </button>
+                <img
+                  src={step.imageSrc}
+                  alt={step.imageAlt}
+                  class="w-full h-56 sm:h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <!-- Zoom Button Overlay Top-Right -->
+                <div class="absolute top-2.5 right-2.5 px-2.5 py-1 bg-slate-900/85 hover:bg-slate-900 text-white text-[11px] font-bold rounded-lg border border-slate-600 flex items-center gap-1 shadow-md backdrop-blur-sm">
+                  <span>🔍 Phóng to</span>
+                </div>
+              </div>
 
-              <div class="absolute bottom-3 left-3 right-20 pointer-events-none">
-                <span class="text-[11px] text-slate-200 font-medium line-clamp-1">
-                  {step.imageAlt}
-                </span>
+              <!-- Caption Bar Positioned Outside Below Image (Never covers photo on mobile) -->
+              <div class="p-2.5 bg-slate-950 text-white text-xs flex items-center justify-between border-t border-slate-800">
+                <span class="text-[11px] text-slate-300 font-medium truncate pr-2">📷 {step.imageAlt}</span>
+                <button
+                  type="button"
+                  @click={`openZoom('${step.imageSrc}', '${step.imageAlt.replace(/'/g, "\\'")}')`}
+                  class="text-blue-400 hover:text-blue-300 text-[11px] font-bold shrink-0 min-h-[44px] flex items-center cursor-pointer"
+                >
+                  Xem ảnh gốc 🔍
+                </button>
               </div>
             </div>
 
@@ -1085,7 +1089,9 @@ import {
         <button
           type="button"
           @click="zoomedImage = null"
-          class="w-8 h-8 rounded-full bg-slate-700 hover:bg-rose-600 text-white flex items-center justify-center font-bold text-sm transition-colors shrink-0 ml-2"
+          class="min-w-[44px] min-h-[44px] rounded-xl bg-slate-700 hover:bg-rose-600 text-white flex items-center justify-center font-black text-base transition-colors shrink-0 ml-2 cursor-pointer"
+          title="Đóng ảnh"
+          aria-label="Đóng ảnh"
         >
           ✕
         </button>

@@ -671,13 +671,31 @@ const description = "Hệ thống bồi dưỡng kiến thức chuyên sâu: Ph�
 
                 {mb.imageSrc && (
                   <div class="rounded-2xl border border-slate-200 overflow-hidden bg-slate-100 p-2 text-center">
-                    <img
-                      src={mb.imageSrc}
-                      alt={`Bo mạch chủ ${mb.brand} phòng máy`}
-                      class="w-full h-48 sm:h-56 object-cover rounded-xl mx-auto"
-                      loading="lazy"
-                    />
-                    <div class="text-[11px] font-semibold text-slate-500 mt-2">Hình ảnh thực tế bo mạch chủ {mb.brand} phòng máy thực hành</div>
+                    <div
+                      class="relative group cursor-pointer"
+                      onclick={`window.openImageLightbox && window.openImageLightbox('${mb.imageSrc}', 'Bo mạch chủ ${mb.brand} phòng thực hành', '${mb.series}')`}
+                      title="Bấm để phóng to ảnh toàn màn hình"
+                    >
+                      <img
+                        src={mb.imageSrc}
+                        alt={`Bo mạch chủ ${mb.brand} phòng máy`}
+                        class="w-full h-48 sm:h-56 object-cover rounded-xl mx-auto group-hover:opacity-95 transition-opacity"
+                        loading="lazy"
+                      />
+                      <div class="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-xl">
+                        <span class="px-3 py-1.5 rounded-full bg-slate-900/90 text-white text-xs font-bold shadow-md">🔍 Bấm để phóng to ảnh</span>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px] font-semibold text-slate-500 mt-2 px-1">
+                      <span>Ảnh thực tế bo mạch {mb.brand} phòng máy</span>
+                      <button
+                        type="button"
+                        onclick={`window.openImageLightbox && window.openImageLightbox('${mb.imageSrc}', 'Bo mạch chủ ${mb.brand} phòng thực hành', '${mb.series}')`}
+                        class="text-blue-600 hover:text-blue-700 font-bold text-xs cursor-pointer min-h-[44px] flex items-center"
+                      >
+                        🔍 Phóng to
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -748,13 +766,31 @@ const description = "Hệ thống bồi dưỡng kiến thức chuyên sâu: Ph�
               {step.imageSrc && (
                 <div class="mt-3 pt-3 border-t border-slate-200">
                   <div class="rounded-xl border border-slate-200 overflow-hidden bg-white p-2 text-center max-w-xl mx-auto">
-                    <img
-                      src={step.imageSrc}
-                      alt={`Minh họa bước ${step.stepNum}: ${step.title}`}
-                      class="w-full h-auto rounded-lg object-contain"
-                      loading="lazy"
-                    />
-                    <div class="text-[11px] font-semibold text-slate-500 mt-2">Ảnh chụp màn hình thực tế: {step.title}</div>
+                    <div
+                      class="relative group cursor-pointer"
+                      onclick={`window.openImageLightbox && window.openImageLightbox('${step.imageSrc}', 'Bước ${step.stepNum}: ${step.title}', '${step.action}')`}
+                      title="Bấm để phóng to ảnh toàn màn hình"
+                    >
+                      <img
+                        src={step.imageSrc}
+                        alt={`Minh họa bước ${step.stepNum}: ${step.title}`}
+                        class="w-full h-auto rounded-lg object-contain group-hover:opacity-95 transition-opacity"
+                        loading="lazy"
+                      />
+                      <div class="absolute inset-0 bg-slate-950/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                        <span class="px-3 py-1.5 rounded-full bg-slate-900/90 text-white text-xs font-bold shadow-md">🔍 Bấm để phóng to ảnh</span>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px] font-semibold text-slate-500 mt-2 px-1">
+                      <span>Ảnh chụp màn hình: {step.title}</span>
+                      <button
+                        type="button"
+                        onclick={`window.openImageLightbox && window.openImageLightbox('${step.imageSrc}', 'Bước ${step.stepNum}: ${step.title}', '${step.action}')`}
+                        class="text-blue-600 hover:text-blue-700 font-bold text-xs cursor-pointer min-h-[44px] flex items-center"
+                      >
+                        🔍 Phóng to
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

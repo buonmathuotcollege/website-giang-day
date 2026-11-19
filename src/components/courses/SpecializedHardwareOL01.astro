@@ -536,11 +536,15 @@ const appDataPayload = {
                 </div>
 
                 <!-- Ảnh minh họa thực tế Bước 1 -->
-                <div class="my-3 rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
-                  <img src="/images/ol-01/step-1-kham-may.jpg" alt="Quy trình khám máy và an toàn xả điện phòng lab" class="w-full h-auto max-h-56 object-cover" loading="lazy" />
+                <div
+                  class="my-3 rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm cursor-pointer group"
+                  @click="window.openImageLightbox('/images/ol-01/step-1-kham-may.jpg', 'Bước 1: Khám Ngoại Quan & Xả Điện An Toàn', 'Khám ngoại quan, rút phích 220V và xả điện tụ nguồn trước khi tháo lắp')"
+                  title="Bấm để xem ảnh phóng to trong trang"
+                >
+                  <img src="/images/ol-01/step-1-kham-may.jpg" alt="Quy trình khám máy và an toàn xả điện phòng lab" class="w-full h-auto max-h-56 object-cover group-hover:opacity-90 transition-opacity" loading="lazy" />
                   <div class="px-3 py-1.5 bg-slate-900 text-white text-[11px] flex justify-between items-center">
                     <span>📷 Thao tác: Khám ngoại quan, rút phích 220V và xả điện tụ nguồn</span>
-                    <span class="text-blue-400 font-mono">Hình thực tế</span>
+                    <span class="text-blue-400 font-bold flex items-center gap-1">🔍 Phóng to</span>
                   </div>
                 </div>
 
@@ -594,11 +598,15 @@ const appDataPayload = {
                 </div>
 
                 <!-- Ảnh minh họa thực tế Bước 2 -->
-                <div class="my-3 rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
-                  <img src="/images/ol-01/step-2-cuu-du-lieu-win10.jpg" alt="Môi trường WinPE sao lưu dữ liệu Desktop Documents Zalo" class="w-full h-auto max-h-56 object-cover" loading="lazy" />
+                <div
+                  class="my-3 rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm cursor-pointer group"
+                  @click="window.openImageLightbox('/images/ol-01/step-2-cuu-du-lieu-win10.jpg', 'Bước 2: Cứu Hộ Dữ Liệu Khách Hàng (WinPE)', 'Môi trường WinPE: Sao lưu Desktop, Documents, Zalo PC sang ổ D an toàn')"
+                  title="Bấm để xem ảnh phóng to trong trang"
+                >
+                  <img src="/images/ol-01/step-2-cuu-du-lieu-win10.jpg" alt="Môi trường WinPE sao lưu dữ liệu Desktop Documents Zalo" class="w-full h-auto max-h-56 object-cover group-hover:opacity-90 transition-opacity" loading="lazy" />
                   <div class="px-3 py-1.5 bg-slate-900 text-white text-[11px] flex justify-between items-center">
                     <span>📷 Môi trường WinPE: Sao lưu Desktop, Documents, Zalo PC sang ổ D an toàn</span>
-                    <span class="text-blue-400 font-mono">WinPE 10</span>
+                    <span class="text-blue-400 font-bold flex items-center gap-1">🔍 Phóng to</span>
                   </div>
                 </div>
 
@@ -654,27 +662,31 @@ const appDataPayload = {
 
                 <!-- Ảnh minh họa thực tế Bước 3: Vệ sinh RAM & Linh kiện phòng lab -->
                 <div class="space-y-2 my-3">
-                  <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
-                    <img src="/images/ol-01/step-3-cha-ram-cuc-tay.jpg" alt="Thao tác chà chân RAM DDR4 bằng gôm tẩy và cắm chuẩn ngàm" class="w-full h-auto max-h-56 object-cover" loading="lazy" />
+                  <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm cursor-pointer group"
+                    onclick="window.openImageLightbox && window.openImageLightbox('/images/ol-01/step-3-cha-ram-cuc-tay.jpg', 'Vệ sinh chân RAM DDR4 bằng gôm tẩy & kiểm tra ngàm khóa', 'Dùng gôm tẩy chà sạch 2 mặt chân đồng RAM DDR4, cắm đúng chiều rãnh khuyết lệch.')">
+                    <img src="/images/ol-01/step-3-cha-ram-cuc-tay.jpg" alt="Thao tác chà chân RAM DDR4 bằng gôm tẩy và cắm chuẩn ngàm" class="w-full h-auto max-h-56 object-cover group-hover:opacity-90 transition-opacity" loading="lazy" />
                     <div class="px-3 py-1.5 bg-slate-900 text-white text-[11px] flex justify-between items-center">
                       <span>📷 Vệ sinh chân RAM DDR4 bằng gôm tẩy & kiểm tra ngàm khóa</span>
-                      <span class="text-blue-400 font-mono">Poka-Yoke</span>
+                      <span class="text-blue-400 font-mono">Poka-Yoke 🔍</span>
                     </div>
                   </div>
 
                   <!-- 3 Linh kiện thực tế: RAM DDR4, VGA GT 730, SSD SATA -->
                   <div class="grid grid-cols-3 gap-2">
-                    <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 text-white text-center">
-                      <img src="/images/ol-01/ram-ddr4.jpg" alt="Thanh RAM DDR4 8GB" class="w-full h-20 object-cover" loading="lazy" />
-                      <div class="p-1 text-[10px] font-bold truncate">RAM DDR4 8GB</div>
+                    <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 text-white text-center cursor-pointer group"
+                      onclick="window.openImageLightbox && window.openImageLightbox('/images/ol-01/ram-ddr4.jpg', 'Thanh RAM DDR4 8GB phòng máy', 'RAM DDR4 chân khuyết lệch chống cắm ngược, bus 2666/3200MHz.')">
+                      <img src="/images/ol-01/ram-ddr4.jpg" alt="Thanh RAM DDR4 8GB" class="w-full h-20 object-cover group-hover:opacity-90 transition-opacity" loading="lazy" />
+                      <div class="p-1 text-[10px] font-bold truncate">RAM DDR4 8GB 🔍</div>
                     </div>
-                    <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 text-white text-center">
-                      <img src="/images/ol-01/vga-gt730.jpg" alt="Card đồ họa GT 730" class="w-full h-20 object-cover" loading="lazy" />
-                      <div class="p-1 text-[10px] font-bold truncate">VGA GT 730 2GB</div>
+                    <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 text-white text-center cursor-pointer group"
+                      onclick="window.openImageLightbox && window.openImageLightbox('/images/ol-01/vga-gt730.jpg', 'Card đồ họa NVIDIA GeForce GT 730 2GB', 'VGA rời phòng máy, gắn khe PCIe x16, xuất cổng HDMI/DVI/VGA.')">
+                      <img src="/images/ol-01/vga-gt730.jpg" alt="Card đồ họa GT 730" class="w-full h-20 object-cover group-hover:opacity-90 transition-opacity" loading="lazy" />
+                      <div class="p-1 text-[10px] font-bold truncate">VGA GT 730 2GB 🔍</div>
                     </div>
-                    <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 text-white text-center">
-                      <img src="/images/ol-01/ssd-sata.jpg" alt="Ổ cứng SSD SATA" class="w-full h-20 object-cover" loading="lazy" />
-                      <div class="p-1 text-[10px] font-bold truncate">SSD SATA 256GB</div>
+                    <div class="rounded-lg overflow-hidden border border-slate-200 bg-slate-900 text-white text-center cursor-pointer group"
+                      onclick="window.openImageLightbox && window.openImageLightbox('/images/ol-01/ssd-sata.jpg', 'Ổ cứng SSD SATA 2.5 inch 256GB', 'SSD SATA III 6Gb/s tốc độ ~500MB/s, cắm đúng chiều chân chữ L.')">
+                      <img src="/images/ol-01/ssd-sata.jpg" alt="Ổ cứng SSD SATA" class="w-full h-20 object-cover group-hover:opacity-90 transition-opacity" loading="lazy" />
+                      <div class="p-1 text-[10px] font-bold truncate">SSD SATA 256GB 🔍</div>
                     </div>
                   </div>
                 </div>
@@ -723,18 +735,20 @@ const appDataPayload = {
 
                 <!-- Ảnh minh họa thực tế Bước 4 -->
                 <div class="space-y-2 my-3">
-                  <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
-                    <img src="/images/ol-01/step-5-cai-win10-partition.jpg" alt="Màn hình phân vùng cài đặt Windows 10 chuẩn UEFI GPT" class="w-full h-auto max-h-56 object-cover" loading="lazy" />
+                  <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm cursor-pointer group"
+                    onclick="window.openImageLightbox && window.openImageLightbox('/images/ol-01/step-5-cai-win10-partition.jpg', 'Cài đặt Windows 10: Phân vùng ổ đĩa GPT UEFI', 'Xóa đúng phân vùng ổ C hệ điều hành cũ, tuyệt đối không đụng vào ổ D chứa dữ liệu khách hàng.')">
+                    <img src="/images/ol-01/step-5-cai-win10-partition.jpg" alt="Màn hình phân vùng cài đặt Windows 10 chuẩn UEFI GPT" class="w-full h-auto max-h-56 object-cover group-hover:opacity-90 transition-opacity" loading="lazy" />
                     <div class="px-3 py-1.5 bg-slate-900 text-white text-[11px] flex justify-between items-center">
                       <span>📷 Cài đặt Windows 10: Xóa đúng phân vùng ổ C, giữ an toàn ổ D chứa Backup</span>
-                      <span class="text-blue-400 font-mono">Win 10 UEFI</span>
+                      <span class="text-blue-400 font-mono">Win 10 UEFI 🔍</span>
                     </div>
                   </div>
-                  <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
-                    <img src="/images/ol-01/guide-fpanel-diagram.jpg" alt="Sơ đồ 9 chân Front Panel vỏ case" class="w-full h-auto max-h-48 object-cover" loading="lazy" />
+                  <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm cursor-pointer group"
+                    onclick="window.openImageLightbox && window.openImageLightbox('/images/ol-01/guide-fpanel-diagram.jpg', 'Sơ đồ 9 chân Front Panel vỏ case', 'Chân 6-8 là POWER SW sát cạnh chân khuyết, chân 1-3 là HDD LED, chân 2-4 là POWER LED.')">
+                    <img src="/images/ol-01/guide-fpanel-diagram.jpg" alt="Sơ đồ 9 chân Front Panel vỏ case" class="w-full h-auto max-h-48 object-cover group-hover:opacity-90 transition-opacity" loading="lazy" />
                     <div class="px-3 py-1.5 bg-slate-900 text-white text-[11px] flex justify-between items-center">
                       <span>📷 Sơ đồ 9 chân Front Panel: Cắm POWER SW sát chân khuyết</span>
-                      <span class="text-purple-400 font-mono">F_PANEL</span>
+                      <span class="text-purple-400 font-mono">F_PANEL 🔍</span>
                     </div>
                   </div>
                 </div>
@@ -784,18 +798,20 @@ const appDataPayload = {
 
                 <!-- Ảnh minh họa thực tế Bước 5 -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 my-3">
-                  <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
-                    <img src="/images/ol-01/step-6-may-in-test-page.jpg" alt="In trang Test Page máy in qua mạng LAN" class="w-full h-auto max-h-48 object-cover" loading="lazy" />
+                  <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm cursor-pointer group"
+                    onclick="window.openImageLightbox && window.openImageLightbox('/images/ol-01/step-6-may-in-test-page.jpg', 'In thử trang Test Page máy in qua mạng LAN', 'Mở Devices and Printers, chọn Print Test Page xác nhận kết nối và driver máy in hoạt động tốt.')">
+                    <img src="/images/ol-01/step-6-may-in-test-page.jpg" alt="In trang Test Page máy in qua mạng LAN" class="w-full h-auto max-h-48 object-cover group-hover:opacity-90 transition-opacity" loading="lazy" />
                     <div class="px-2.5 py-1.5 bg-slate-900 text-white text-[10px] flex justify-between items-center">
                       <span>📷 In thử Print Test Page mạng LAN</span>
-                      <span class="text-emerald-400 font-mono">Test Page</span>
+                      <span class="text-emerald-400 font-mono">Test Page 🔍</span>
                     </div>
                   </div>
-                  <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm">
-                    <img src="/images/ol-01/step-7-hwmonitor-nhiet-do.jpg" alt="Đo nhiệt độ CPU trong HWMonitor" class="w-full h-auto max-h-48 object-cover" loading="lazy" />
+                  <div class="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm cursor-pointer group"
+                    onclick="window.openImageLightbox && window.openImageLightbox('/images/ol-01/step-7-hwmonitor-nhiet-do.jpg', 'Kiểm tra nhiệt độ CPU bằng HWMonitor', 'Chạy stress test 5 phút: nhiệt độ CPU phải duy trì an toàn dưới 75°C.')">
+                    <img src="/images/ol-01/step-7-hwmonitor-nhiet-do.jpg" alt="Đo nhiệt độ CPU trong HWMonitor" class="w-full h-auto max-h-48 object-cover group-hover:opacity-90 transition-opacity" loading="lazy" />
                     <div class="px-2.5 py-1.5 bg-slate-900 text-white text-[10px] flex justify-between items-center">
                       <span>📷 Kiểm tra nhiệt độ tải &lt; 75°C</span>
-                      <span class="text-amber-400 font-mono">HWMonitor</span>
+                      <span class="text-amber-400 font-mono">HWMonitor 🔍</span>
                     </div>
                   </div>
                 </div>
@@ -854,24 +870,32 @@ const appDataPayload = {
             </div>
           </div>
 
-          <!-- Interactive Motherboard Viewport -->
+          <!-- Interactive Motherboard Viewport (Unobstructed View) -->
           <div class="relative mt-4 rounded-2xl overflow-hidden border border-slate-200 bg-slate-950 aspect-[4/3] select-none group">
             <img
               src="/images/ol-01/main-h510.jpg"
               alt="Bo mạch chủ Intel H510 phòng lab thực tế"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.02] cursor-pointer"
+              @click="window.openImageLightbox('/images/ol-01/main-h510.jpg', 'Bo mạch chủ Intel H510 phòng lab thực tế', 'Hình ảnh thực tế sắc nét bo mạch chủ H510 phòng máy thực hành')"
             />
 
-            <!-- Dark overlay gradient for contrast -->
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-slate-950/20 pointer-events-none"></div>
+            <!-- Top Right: Zoom Image In-Page Button -->
+            <button
+              type="button"
+              @click="window.openImageLightbox('/images/ol-01/main-h510.jpg', 'Bo mạch chủ Intel H510 phòng lab thực tế', 'Hình ảnh thực tế sắc nét bo mạch chủ H510 phòng máy thực hành')"
+              class="absolute top-2.5 right-2.5 px-3 py-1.5 rounded-xl bg-slate-900/85 hover:bg-slate-900 active:scale-95 text-white text-xs font-bold border border-slate-700 shadow-md backdrop-blur flex items-center gap-1.5 cursor-pointer z-20 min-h-[44px]"
+              title="Phóng to ảnh toàn màn hình"
+            >
+              <span>🔍</span>
+              <span>Phóng to ảnh</span>
+            </button>
 
-            <!-- Hotspot markers -->
+            <!-- Hotspot markers on the image -->
             {ENRICHED_HOTSPOTS.map((spot, sIdx) => (
               <div
                 class="absolute cursor-pointer z-10 -translate-x-1/2 -translate-y-1/2 group/spot"
                 style={`top: ${spot.top}; left: ${spot.left};`}
                 x-on:click={`selectHotspot('${spot.id}')`}
-                x-on:mouseenter={`selectHotspot('${spot.id}')`}
               >
                 <!-- Outer Pulse Ping -->
                 <span class="absolute inline-flex h-8 w-8 rounded-full bg-blue-500 opacity-75 animate-ping"></span>
@@ -879,8 +903,8 @@ const appDataPayload = {
                 <button
                   type="button"
                   x-on:click={`selectHotspot('${spot.id}')`}
-                  x-on:mouseenter={`selectHotspot('${spot.id}')`}
-                  class="relative inline-flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white text-xs font-mono font-bold shadow-lg border-2 border-white transition-transform hover:scale-125 focus:outline-none"
+                  class="relative inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-600 active:scale-95 text-white text-xs font-mono font-bold shadow-lg border-2 border-white transition-transform hover:scale-110 focus:outline-none cursor-pointer"
+                  :class={`activeHotspot === '${spot.id}' ? 'ring-4 ring-amber-400 bg-amber-500 text-slate-950 font-black' : ''`}
                   aria-label={spot.title}
                 >
                   {sIdx + 1}
@@ -888,40 +912,69 @@ const appDataPayload = {
               </div>
             ))}
 
-            <!-- Floating HoverCard / Popover Card (Shadcn Style) -->
-            <div
-              x-show="activeHotspot"
-              x-cloak
-              x-transition
-              class="absolute bottom-3 left-3 right-3 sm:left-4 sm:right-4 bg-white/95 backdrop-blur-md border border-slate-200 rounded-2xl p-4 shadow-xl text-xs z-20 text-slate-800"
-            >
-              <div class="flex items-start justify-between gap-3">
-                <div class="space-y-1">
-                  <div class="flex items-center gap-2">
-                    <span class="font-bold text-slate-900 text-sm" x-text="activeHotspotData?.title"></span>
-                    <span class="px-2 py-0.5 rounded-full font-mono text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200" x-text="activeHotspotData?.badge"></span>
-                  </div>
-                  <p class="text-slate-600 leading-relaxed" x-text="activeHotspotData?.description"></p>
-                </div>
+            <!-- Bottom Left Info Hint -->
+            <div class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur text-white text-[10px] sm:text-[11px] px-2.5 py-1 rounded-lg border border-slate-700 pointer-events-none">
+              💡 Chạm vào các điểm số để xem ghi chú bên dưới
+            </div>
+          </div>
+
+          <!-- Hotspots Mobile Navigation Strip (Touch-friendly pills) -->
+          <div class="mt-3 space-y-1.5">
+            <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center justify-between">
+              <span>Danh mục 6 điểm cốt lõi bo mạch H510:</span>
+              <span class="text-[10px] text-blue-600 font-normal">Chạm để xem ghi chú</span>
+            </div>
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+              {ENRICHED_HOTSPOTS.map((spot, sIdx) => (
                 <button
                   type="button"
-                  @click="activeHotspot = null"
-                  class="text-slate-400 hover:text-slate-600 text-sm font-bold p-1"
+                  x-on:click={`selectHotspot('${spot.id}')`}
+                  class="px-2.5 py-2 rounded-xl text-xs whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer min-h-[44px] shrink-0 border"
+                  :class={`activeHotspot === '${spot.id}' 
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-sm font-bold' 
+                    : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-200 font-medium'`}
                 >
-                  ✕
+                  <span
+                    class="w-5 h-5 rounded-full font-mono text-[10px] font-bold flex items-center justify-center shrink-0"
+                    :class={`activeHotspot === '${spot.id}' ? 'bg-amber-400 text-amber-950' : 'bg-slate-100 text-slate-700'`}
+                  >
+                    {sIdx + 1}
+                  </span>
+                  <span>{spot.title}</span>
                 </button>
-              </div>
+              ))}
+            </div>
+          </div>
 
-              <!-- Poka-Yoke Highlight Box -->
-              <div class="mt-2.5 bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-amber-900 flex items-start gap-2">
-                <span class="text-amber-600 font-bold shrink-0">🛡️ Poka-Yoke:</span>
-                <span class="leading-relaxed" x-text="activeHotspotData?.pokaYoke"></span>
+          <!-- Hotspot Note Card Positioned CLEANLY OUTSIDE THE IMAGE (Never Obscures Photo on Mobile) -->
+          <div
+            x-show="activeHotspot"
+            x-cloak
+            x-transition
+            class="mt-3 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm text-xs space-y-3"
+          >
+            <div class="flex items-start justify-between gap-3 pb-2.5 border-b border-slate-100">
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-extrabold text-slate-900 text-sm sm:text-base" x-text="activeHotspotData?.title"></span>
+                  <span class="px-2 py-0.5 rounded-full font-mono text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200" x-text="activeHotspotData?.badge"></span>
+                </div>
+                <p class="text-slate-600 leading-relaxed text-xs sm:text-sm" x-text="activeHotspotData?.description"></p>
               </div>
+              <button
+                type="button"
+                @click="window.openImageLightbox('/images/ol-01/main-h510.jpg', activeHotspotData?.title, activeHotspotData?.description)"
+                class="px-2.5 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs shrink-0 flex items-center gap-1 cursor-pointer min-h-[44px]"
+                title="Phóng to ảnh để soi kỹ chi tiết"
+              >
+                <span>🔍 Soi ảnh</span>
+              </button>
             </div>
 
-            <!-- Hint overlay if no hotspot is selected -->
-            <div x-show="!activeHotspot" class="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur text-white text-[11px] px-3 py-1.5 rounded-xl border border-slate-700 pointer-events-none">
-              💡 Chạm vào 6 điểm số nhấp nháy để xem chi tiết linh kiện
+            <!-- Poka-Yoke Highlight Box -->
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-950 flex items-start gap-2">
+              <span class="text-amber-600 font-bold shrink-0">🛡️ Poka-Yoke:</span>
+              <span class="leading-relaxed font-semibold" x-text="activeHotspotData?.pokaYoke"></span>
             </div>
           </div>
 
@@ -976,7 +1029,7 @@ const appDataPayload = {
         
         <!-- Ảnh 1: So Sánh 3 Mainboard H510 -->
         <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 text-white shadow-sm flex flex-col group">
-          <div class="relative overflow-hidden aspect-[4/3]">
+          <div class="relative overflow-hidden aspect-[4/3] cursor-pointer" @click="window.openImageLightbox('/images/ol-01/main-h510-compare.jpg', 'So Sánh 3 Dòng Main H510', 'MSI (EZ Debug LED) vs ASUS (Q-LED) vs WINNFOX (Buzzer Speaker)')">
             <img src="/images/ol-01/main-h510-compare.jpg" alt="So sánh 3 dòng bo mạch chủ H510 ASUS MSI WINNFOX" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
             <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[10px] font-bold text-amber-300">Bo mạch chủ</div>
           </div>
@@ -985,15 +1038,15 @@ const appDataPayload = {
               <div class="text-xs font-bold text-slate-100">So Sánh 3 Dòng Main H510</div>
               <p class="text-[11px] text-slate-400 leading-relaxed mt-0.5">MSI (EZ Debug LED) vs ASUS (Q-LED) vs WINNFOX (Buzzer Speaker).</p>
             </div>
-            <a href="/images/ol-01/main-h510-compare.jpg" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold pt-2 inline-flex items-center gap-1">
-              <span>Xem ảnh to ↗</span>
-            </a>
+            <button type="button" @click="window.openImageLightbox('/images/ol-01/main-h510-compare.jpg', 'So Sánh 3 Dòng Main H510', 'MSI (EZ Debug LED) vs ASUS (Q-LED) vs WINNFOX (Buzzer Speaker)')" class="text-blue-400 hover:text-blue-300 text-[11px] font-bold pt-2 inline-flex items-center gap-1 cursor-pointer min-h-[44px]">
+              <span>🔍 Phóng to ảnh</span>
+            </button>
           </div>
         </div>
 
         <!-- Ảnh 2: RAM DDR4 8GB -->
         <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 text-white shadow-sm flex flex-col group">
-          <div class="relative overflow-hidden aspect-[4/3]">
+          <div class="relative overflow-hidden aspect-[4/3] cursor-pointer" @click="window.openImageLightbox('/images/ol-01/ram-ddr4.jpg', 'Thanh RAM DDR4 8GB', 'Chân khuyết lệch đặc trưng. Vệ sinh bằng gôm tẩy và ấn đều 2 đầu kêu TÁCH')">
             <img src="/images/ol-01/ram-ddr4.jpg" alt="Thanh RAM DDR4 8GB chân khuyết lệch" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
             <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[10px] font-bold text-blue-300">Bộ nhớ trong</div>
           </div>
@@ -1002,15 +1055,15 @@ const appDataPayload = {
               <div class="text-xs font-bold text-slate-100">Thanh RAM DDR4 8GB</div>
               <p class="text-[11px] text-slate-400 leading-relaxed mt-0.5">Chân khuyết lệch đặc trưng. Vệ sinh bằng gôm tẩy và ấn đều 2 đầu kêu "TÁCH".</p>
             </div>
-            <a href="/images/ol-01/ram-ddr4.jpg" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold pt-2 inline-flex items-center gap-1">
-              <span>Xem ảnh to ↗</span>
-            </a>
+            <button type="button" @click="window.openImageLightbox('/images/ol-01/ram-ddr4.jpg', 'Thanh RAM DDR4 8GB', 'Chân khuyết lệch đặc trưng. Vệ sinh bằng gôm tẩy và ấn đều 2 đầu kêu TÁCH')" class="text-blue-400 hover:text-blue-300 text-[11px] font-bold pt-2 inline-flex items-center gap-1 cursor-pointer min-h-[44px]">
+              <span>🔍 Phóng to ảnh</span>
+            </button>
           </div>
         </div>
 
         <!-- Ảnh 3: Card đồ họa rời GT 730 -->
         <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 text-white shadow-sm flex flex-col group">
-          <div class="relative overflow-hidden aspect-[4/3]">
+          <div class="relative overflow-hidden aspect-[4/3] cursor-pointer" @click="window.openImageLightbox('/images/ol-01/vga-gt730.jpg', 'VGA NVIDIA GeForce GT 730 2GB', 'Cắm khe PCIe x16. Mở lẫy khóa đuôi khe trước khi rút, cắm dây màn hình vào cổng card rời')">
             <img src="/images/ol-01/vga-gt730.jpg" alt="Card đồ họa rời NVIDIA GeForce GT 730" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
             <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[10px] font-bold text-emerald-300">Xử lý đồ họa</div>
           </div>
@@ -1019,15 +1072,15 @@ const appDataPayload = {
               <div class="text-xs font-bold text-slate-100">VGA NVIDIA GeForce GT 730 2GB</div>
               <p class="text-[11px] text-slate-400 leading-relaxed mt-0.5">Cắm khe PCIe x16. Mở lẫy khóa đuôi khe trước khi rút, cắm dây màn hình vào cổng card rời.</p>
             </div>
-            <a href="/images/ol-01/vga-gt730.jpg" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold pt-2 inline-flex items-center gap-1">
-              <span>Xem ảnh to ↗</span>
-            </a>
+            <button type="button" @click="window.openImageLightbox('/images/ol-01/vga-gt730.jpg', 'VGA NVIDIA GeForce GT 730 2GB', 'Cắm khe PCIe x16. Mở lẫy khóa đuôi khe trước khi rút, cắm dây màn hình vào cổng card rời')" class="text-blue-400 hover:text-blue-300 text-[11px] font-bold pt-2 inline-flex items-center gap-1 cursor-pointer min-h-[44px]">
+              <span>🔍 Phóng to ảnh</span>
+            </button>
           </div>
         </div>
 
         <!-- Ảnh 4: Ổ cứng SSD SATA 256GB -->
         <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 text-white shadow-sm flex flex-col group">
-          <div class="relative overflow-hidden aspect-[4/3]">
+          <div class="relative overflow-hidden aspect-[4/3] cursor-pointer" @click="window.openImageLightbox('/images/ol-01/ssd-sata.jpg', 'Ổ Cứng SSD 2.5 SATA III', 'Tốc độ đọc 550MB/s. Cắm ngàm chữ L cho cáp nguồn 15-pin và cáp dữ liệu 7-pin')">
             <img src="/images/ol-01/ssd-sata.jpg" alt="Ổ cứng SSD chuẩn 2.5 inch SATA III" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
             <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[10px] font-bold text-purple-300">Lưu trữ dữ liệu</div>
           </div>
@@ -1036,15 +1089,15 @@ const appDataPayload = {
               <div class="text-xs font-bold text-slate-100">Ổ Cứng SSD 2.5" SATA III</div>
               <p class="text-[11px] text-slate-400 leading-relaxed mt-0.5">Tốc độ đọc 550MB/s. Cắm ngàm chữ L cho cáp nguồn 15-pin và cáp dữ liệu 7-pin.</p>
             </div>
-            <a href="/images/ol-01/ssd-sata.jpg" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold pt-2 inline-flex items-center gap-1">
-              <span>Xem ảnh to ↗</span>
-            </a>
+            <button type="button" @click="window.openImageLightbox('/images/ol-01/ssd-sata.jpg', 'Ổ Cứng SSD 2.5 SATA III', 'Tốc độ đọc 550MB/s. Cắm ngàm chữ L cho cáp nguồn 15-pin và cáp dữ liệu 7-pin')" class="text-blue-400 hover:text-blue-300 text-[11px] font-bold pt-2 inline-flex items-center gap-1 cursor-pointer min-h-[44px]">
+              <span>🔍 Phóng to ảnh</span>
+            </button>
           </div>
         </div>
 
         <!-- Ảnh 5: Sơ đồ tháo máy chuẩn KTV -->
         <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 text-white shadow-sm flex flex-col group">
-          <div class="relative overflow-hidden aspect-[4/3]">
+          <div class="relative overflow-hidden aspect-[4/3] cursor-pointer" @click="window.openImageLightbox('/images/ol-01/workflow-thao-may.jpg', 'Sơ Đồ Quy Trình Tháo Máy', 'Rút điện ➔ Mở nắp case ➔ Tháo VGA ➔ Tháo RAM ➔ Tháo cáp nguồn ➔ Nhấc bo mạch')">
             <img src="/images/ol-01/workflow-thao-may.jpg" alt="Sơ đồ 6 bước quy trình tháo máy KTV" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
             <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[10px] font-bold text-amber-400">Quy trình kỹ thuật</div>
           </div>
@@ -1053,15 +1106,15 @@ const appDataPayload = {
               <div class="text-xs font-bold text-slate-100">Sơ Đồ Quy Trình Tháo Máy</div>
               <p class="text-[11px] text-slate-400 leading-relaxed mt-0.5">Rút điện ➔ Mở nắp case ➔ Tháo VGA ➔ Tháo RAM ➔ Tháo cáp nguồn ➔ Nhấc bo mạch.</p>
             </div>
-            <a href="/images/ol-01/workflow-thao-may.jpg" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold pt-2 inline-flex items-center gap-1">
-              <span>Xem ảnh to ↗</span>
-            </a>
+            <button type="button" @click="window.openImageLightbox('/images/ol-01/workflow-thao-may.jpg', 'Sơ Đồ Quy Trình Tháo Máy', 'Rút điện ➔ Mở nắp case ➔ Tháo VGA ➔ Tháo RAM ➔ Tháo cáp nguồn ➔ Nhấc bo mạch')" class="text-blue-400 hover:text-blue-300 text-[11px] font-bold pt-2 inline-flex items-center gap-1 cursor-pointer min-h-[44px]">
+              <span>🔍 Phóng to ảnh</span>
+            </button>
           </div>
         </div>
 
         <!-- Ảnh 6: Sơ đồ lắp máy chuẩn KTV -->
         <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 text-white shadow-sm flex flex-col group">
-          <div class="relative overflow-hidden aspect-[4/3]">
+          <div class="relative overflow-hidden aspect-[4/3] cursor-pointer" @click="window.openImageLightbox('/images/ol-01/workflow-lap-may.jpg', 'Sơ Đồ Quy Trình Lắp Máy', 'Bắt ốc chân đệm ➔ Lắp Main ➔ Cắm cáp nguồn ➔ Cắm RAM ➔ Cắm VGA ➔ Đấu nối F_PANEL')">
             <img src="/images/ol-01/workflow-lap-may.jpg" alt="Sơ đồ 7 bước quy trình lắp máy KTV" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
             <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[10px] font-bold text-emerald-400">Quy trình kỹ thuật</div>
           </div>
@@ -1070,15 +1123,15 @@ const appDataPayload = {
               <div class="text-xs font-bold text-slate-100">Sơ Đồ Quy Trình Lắp Máy</div>
               <p class="text-[11px] text-slate-400 leading-relaxed mt-0.5">Bắt ốc chân đệm ➔ Lắp Main ➔ Cắm cáp nguồn ➔ Cắm RAM ➔ Cắm VGA ➔ Đấu nối F_PANEL.</p>
             </div>
-            <a href="/images/ol-01/workflow-lap-may.jpg" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold pt-2 inline-flex items-center gap-1">
-              <span>Xem ảnh to ↗</span>
-            </a>
+            <button type="button" @click="window.openImageLightbox('/images/ol-01/workflow-lap-may.jpg', 'Sơ Đồ Quy Trình Lắp Máy', 'Bắt ốc chân đệm ➔ Lắp Main ➔ Cắm cáp nguồn ➔ Cắm RAM ➔ Cắm VGA ➔ Đấu nối F_PANEL')" class="text-blue-400 hover:text-blue-300 text-[11px] font-bold pt-2 inline-flex items-center gap-1 cursor-pointer min-h-[44px]">
+              <span>🔍 Phóng to ảnh</span>
+            </button>
           </div>
         </div>
 
         <!-- Ảnh 7: Sơ đồ 9 chân F_PANEL -->
         <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 text-white shadow-sm flex flex-col group">
-          <div class="relative overflow-hidden aspect-[4/3]">
+          <div class="relative overflow-hidden aspect-[4/3] cursor-pointer" @click="window.openImageLightbox('/images/ol-01/guide-fpanel-diagram.jpg', 'Sơ Đồ 9 Chân Cụm F_PANEL', 'Chân POWER SW ở hàng trên ngay sát cạnh chân trống bị khuyết. Nút nguồn không phân cực')">
             <img src="/images/ol-01/guide-fpanel-diagram.jpg" alt="Sơ đồ 9 chân cắm cụm Front Panel vỏ case" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
             <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[10px] font-bold text-purple-400">Sơ đồ chân cắm</div>
           </div>
@@ -1087,15 +1140,15 @@ const appDataPayload = {
               <div class="text-xs font-bold text-slate-100">Sơ Đồ 9 Chân Cụm F_PANEL</div>
               <p class="text-[11px] text-slate-400 leading-relaxed mt-0.5">Chân POWER SW ở hàng trên ngay sát cạnh chân trống bị khuyết. Nút nguồn không phân cực.</p>
             </div>
-            <a href="/images/ol-01/guide-fpanel-diagram.jpg" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold pt-2 inline-flex items-center gap-1">
-              <span>Xem ảnh to ↗</span>
-            </a>
+            <button type="button" @click="window.openImageLightbox('/images/ol-01/guide-fpanel-diagram.jpg', 'Sơ Đồ 9 Chân Cụm F_PANEL', 'Chân POWER SW ở hàng trên ngay sát cạnh chân trống bị khuyết. Nút nguồn không phân cực')" class="text-blue-400 hover:text-blue-300 text-[11px] font-bold pt-2 inline-flex items-center gap-1 cursor-pointer min-h-[44px]">
+              <span>🔍 Phóng to ảnh</span>
+            </button>
           </div>
         </div>
 
         <!-- Ảnh 8: Tháo pin CMOS và Clear CMOS -->
         <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 text-white shadow-sm flex flex-col group">
-          <div class="relative overflow-hidden aspect-[4/3]">
+          <div class="relative overflow-hidden aspect-[4/3] cursor-pointer" @click="window.openImageLightbox('/images/ol-01/guide-clear-cmos-pin.jpg', 'Pin CMOS & Xóa Cài Đặt BIOS', 'Gạt lẫy thép nhấc pin CR2032 hoặc nối tắt 2 chân cọc JBAT1 trong 10 giây để khôi phục mặc định')">
             <img src="/images/ol-01/guide-clear-cmos-pin.jpg" alt="Hướng dẫn tháo pin CMOS và Clear CMOS chân JBAT1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
             <div class="absolute top-2 left-2 px-2 py-0.5 rounded bg-slate-900/80 text-[10px] font-bold text-rose-400">Chẩn đoán BIOS</div>
           </div>
@@ -1104,9 +1157,9 @@ const appDataPayload = {
               <div class="text-xs font-bold text-slate-100">Pin CMOS &amp; Xóa Cài Đặt BIOS</div>
               <p class="text-[11px] text-slate-400 leading-relaxed mt-0.5">Gạt lẫy thép nhấc pin CR2032 hoặc nối tắt 2 chân cọc JBAT1 trong 10 giây để khôi phục mặc định.</p>
             </div>
-            <a href="/images/ol-01/guide-clear-cmos-pin.jpg" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 text-[11px] font-semibold pt-2 inline-flex items-center gap-1">
-              <span>Xem ảnh to ↗</span>
-            </a>
+            <button type="button" @click="window.openImageLightbox('/images/ol-01/guide-clear-cmos-pin.jpg', 'Pin CMOS & Xóa Cài Đặt BIOS', 'Gạt lẫy thép nhấc pin CR2032 hoặc nối tắt 2 chân cọc JBAT1 trong 10 giây để khôi phục mặc định')" class="text-blue-400 hover:text-blue-300 text-[11px] font-bold pt-2 inline-flex items-center gap-1 cursor-pointer min-h-[44px]">
+              <span>🔍 Phóng to ảnh</span>
+            </button>
           </div>
         </div>
 

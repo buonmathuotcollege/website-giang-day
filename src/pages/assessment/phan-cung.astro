@@ -1755,8 +1755,12 @@ const exam = {
         },
 
         openZoom(src, title) {
-          this.zoomedImage = src;
-          this.zoomedImageTitle = title || 'Chi tiết hình ảnh linh kiện thực tế';
+          if (window.openImageLightbox) {
+            window.openImageLightbox(src, title || 'Chi tiết hình ảnh linh kiện thực tế');
+          } else {
+            this.zoomedImage = src;
+            this.zoomedImageTitle = title || 'Chi tiết hình ảnh linh kiện thực tế';
+          }
         },
 
         toggleStepProgress(id) {
