@@ -538,7 +538,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
               <span class="text-[11px] text-gray-500 font-mono">Chuẩn CSDL Cloudflare D1</span>
             </div>
 
-            <div class="max-h-52 overflow-y-auto border border-gray-200 rounded-xl bg-white shadow-inner">
+            <div class="max-h-52 overflow-y-auto overflow-x-auto border border-gray-200 rounded-xl bg-white shadow-inner">
               <table class="w-full text-xs text-left">
                 <thead class="bg-gray-100 text-gray-600 font-mono sticky top-0 border-b border-gray-200">
                   <tr>
@@ -730,7 +730,7 @@ import AdminAuthGuard from '../../components/AdminAuthGuard.astro';
 
           <!-- Main Table -->
           <div x-show="!loadingStudents && selectedClassStudents.length > 0" class="border border-gray-200 rounded-2xl overflow-hidden shadow-2xs">
-            <div class="max-h-[50vh] overflow-y-auto">
+            <div class="max-h-[50vh] overflow-y-auto overflow-x-auto">
               <table class="w-full text-xs text-left">
                 <thead class="bg-gray-100 text-gray-700 uppercase font-mono sticky top-0 border-b border-gray-200">
                   <tr>
