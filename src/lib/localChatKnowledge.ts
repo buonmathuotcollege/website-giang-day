@@ -643,41 +643,20 @@ export function matchKnowledge(rawQuery: string, history: any[] = []): string | 
   }
 
   // =========================================================================
-  // 6. GUARDRAILS TỪ CHỐI LỊCH SỰ CÁC CHỦ ĐỀ NGOÀI PHẠM VI (PHI CÔNG NGHỆ)
+  // 6. KHÔNG GIỚI HẠN PHẠM VI HỎI ĐÁP:
+  // Nếu câu hỏi không nằm trong kiến thức nghề phòng lab cài sẵn,
+  // trả về null để chuyển cho Gemini AI đa năng giải đáp thông minh mọi chủ đề!
   // =========================================================================
-  const hasTechKeyword = /ram|cpu|main|mainboard|o cung|ssd|hdd|vga|card|boot|bios|usb|win|windows|linux|mang|ip|lan|wan|router|switch|fpanel|cmos|ve sinh|nguon|psu|fan|tiet bi|phan mem|cai dat|thao lap|chia se|share|file|thu muc|may in|tuong lua|firewall|driver|o dia|phan vung|phim tat|workgroup|remote|rdp|mang noi bo|dns|dhcp|subnet|cmd|powershell|cai win|word|excel|office|powerpoint|unikey|tieng viet|font|man hinh|am thanh|loa|tai nghe|chuot|ban phim|laptop|pc|bluetooth|wifi|hotspot|nen file|giai nen|zip|rar|virus|diet virus|lap trinh|code|python|html|css|javascript|web|cntt|tin hoc|cong nghe/i.test(qNoAccent);
-
-  if (!hasTechKeyword) {
-    const outOfScopePatterns = [
-      /\b(toan|giai toan|hinh hoc|dai so)\b/,
-      /\b(mon ly|vat ly|bai ly)\b/,
-      /\b(mon hoa|hoa hoc|phuong trinh hoa)\b/,
-      /\b(mon sinh|sinh hoc)\b/,
-      /\b(mon van|ngu van|viet van|tap lam van)\b/,
-      /\b(lam tho|bai tho|cau tho)\b/,
-      /\b(yeu|to tinh|nguoi yeu|ban trai|ban gai|hen ho)\b/,
-      /\b(lien quan mobile|free fire|pubg|choi game)\b/,
-      /\b(showbiz|ca si|dien vien|nghe si)\b/,
-      /\b(tu vi|boi toan|cung hoang dao|boi tinh duyen)\b/
-    ];
-
-    for (const pattern of outOfScopePatterns) {
-      if (pattern.test(qNoAccent)) {
-        return 'Mình là Trợ lý AI hỗ trợ chuyên ngành CNTT nên chỉ giải đáp các kiến thức về máy tính, tin học, phần mềm, phần cứng, mạng và thiết bị số thôi nè! Bạn có câu hỏi nào về máy tính hoặc công nghệ cứ hỏi mình giải thích ngay nhé!';
-      }
-    }
-  }
-
   return null;
 }
 
 /**
  * BỘ PHÂN TÍCH NGỮ NGHĨA DỰ PHÒNG THÔNG MINH (SMART FALLBACK)
- * Tự động kích hoạt khi Google Gemini gặp sự cố mạng hoặc bị chặn Geolocation.
+ * Tự động kích hoạt khi Google Gemini gặp sự cố mạng, cạn quota tạm thời hoặc bị chặn Geolocation.
  */
 export function getSmartFallback(rawQuery: string): string {
   if (!rawQuery) {
-    return 'Chào bạn! Mình là Trợ lý AI Chuyên ngành CNTT & Tin học. Bạn đang gặp khó ở thao tác công nghệ hay bài học nào? Cứ hỏi mình nhé, mình giải thích ngắn gọn, dễ hiểu ngay!';
+    return 'Chào bạn! Mình là Trợ lý AI. Bạn đang có câu hỏi hay cần giải đáp vấn đề gì? Cứ nhắn cho mình nhé, mình giải thích thông minh, ngắn gọn ngay!';
   }
 
   const qNoAccent = removeAccents(rawQuery);
@@ -793,13 +772,31 @@ export function getSmartFallback(rawQuery: string): string {
     ].join('\n');
   }
 
-  // Phản hồi định hướng học tập thân thiện nếu câu hỏi chưa khớp các mục trên
+  // 12. Phương pháp học tập & ôn thi hiệu quả
+  if (qNoAccent.includes('cach hoc') || qNoAccent.includes('on thi') || qNoAccent.includes('hoc gioi') || qNoAccent.includes('phuong phap hoc') || qNoAccent.includes('lam sao de nho')) {
+    return [
+      'Gợi ý phương pháp học tập hiệu quả & ghi nhớ lâu:',
+      '• **Học đi đôi với hành (Hands-on):** Trực tiếp thao tác trên máy hoặc giấy nháp, giải quyết từng bài tập thực tế.',
+      '• **Kỹ thuật Pomodoro:** Tập trung học 25 phút, nghỉ 5 phút để não bộ phục hồi và tiếp thu tốt nhất.',
+      '• **Sơ đồ tư duy (Mindmap):** Hệ thống hóa kiến thức bằng từ khóa, mũi tên và màu sắc trực quan.',
+      '• **Giảng lại cho người khác:** Khi bạn giải thích lại được bài cho bạn bè hiểu là bạn đã nắm chắc 90% kiến thức.'
+    ].join('\n');
+  }
+
+  // 13. Động lực học tập & Lời khuyên tâm lý
+  if (qNoAccent.includes('nan long') || qNoAccent.includes('met moi') || qNoAccent.includes('ap luc') || qNoAccent.includes('lo lang') || qNoAccent.includes('buon')) {
+    return [
+      'Chào bạn! Mình hiểu rằng việc học tập hay cuộc sống đôi khi sẽ có những lúc áp lực và mệt mỏi.',
+      '• Hãy cho bản thân nghỉ ngơi một chút, uống một ly nước hoặc nghe một bản nhạc nhẹ nhàng nhé.',
+      '• Đừng ngần ngại trao đổi, tâm sự với thầy cô, bạn bè hoặc gia đình khi gặp bế tắc.',
+      '• Mỗi ngày tiến bộ một chút nhỏ cũng là một thành công lớn. Cố lên nhé, mình luôn ở đây hỗ trợ bạn!'
+    ].join('\n');
+  }
+
+  // Phản hồi thân thiện, thông minh mở rộng cho mọi chủ đề
   return [
-    `Chào bạn! Mình là Trợ lý AI chuyên ngành CNTT & Tin học. Về câu hỏi của bạn: "${rawQuery.slice(0, 75)}"`,
-    'Mình luôn sẵn sàng giải đáp tất cả câu hỏi về máy tính, phần mềm, phần cứng, mạng và tin học:',
-    '• **Tin học & Phần mềm:** Word, Excel, Unikey, phím tắt Windows 10, gỡ lỗi phần mềm, nén file.',
-    '• **Mạng & Hệ thống:** Bật chia sẻ file/máy in LAN, đặt IP tĩnh, tắt tường lửa, cấu hình Wifi/Router.',
-    '• **Phần cứng & Thiết bị số:** Tháo lắp linh kiện, kiểm tra CPU/RAM/VGA/Ổ cứng, tư vấn cấu hình laptop.',
-    '👉 Bạn có thể chia sẻ cụ thể hơn bạn đang dùng máy gì hoặc gặp lỗi gì để mình hướng dẫn từng bước ngay nhé!'
+    `Chào bạn! Về câu hỏi: "${rawQuery.slice(0, 80)}"`,
+    'Mình đã ghi nhận câu hỏi của bạn. Để mình giải đáp chính xác và chi tiết nhất, bạn có thể miêu tả cụ thể hơn ngữ cảnh bài toán, sự cố máy tính hay điều bạn đang băn khoăn không?',
+    '💡 *Gợi ý:* Bạn có thể hỏi mình về bài tập các môn học (Toán, Lý, Hóa, Tin...), thủ thuật công nghệ, cách sửa lỗi máy tính hoặc bất kỳ câu hỏi nào trong đời sống nhé!'
   ].join('\n');
 }
