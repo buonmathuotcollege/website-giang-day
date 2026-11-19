@@ -127,6 +127,41 @@ export function matchKnowledge(rawQuery: string, history: any[] = []): string | 
     ].join('\n');
   }
 
+  // ASROCK
+  if ((qNoAccent.includes('boot') || qNoAccent.includes('usb') || qNoAccent.includes('bios') || qNoAccent.includes('main')) && qNoAccent.includes('asrock')) {
+    return [
+      'Phím tắt Boot USB và BIOS của bo mạch chủ **ASROCK** (chuẩn H510M-HDV / B660M):',
+      '• **Phím Boot Menu (chọn USB Boot):** Bấm phím **F11** liên tục ngay khi bật máy.',
+      '• **Phím vào BIOS:** Bấm phím **Delete (Del)** hoặc **F2**.',
+      '⚠️ *Lưu ý KTV:* Trong tab Boot tắt Fast Boot và CSM (Disabled) để chạy thuần chuẩn UEFI GPT.'
+    ].join('\n');
+  }
+
+  // HƯỚNG DẪN CÀI WIN CÁC DÒNG MAIN & BẢNG PHÍM BOOT TỔNG HỢP
+  if ((qNoAccent.includes('cai win') || qNoAccent.includes('cai dat win') || qNoAccent.includes('cai windows')) && (qNoAccent.includes('main') || qNoAccent.includes('dong main') || qNoAccent.includes('cac dong') || qNoAccent.includes('boot') || qNoAccent.includes('huong dan') || qNoAccent.includes('phim'))) {
+    return [
+      'Khẩu quyết phím Boot cài Win 10 cho các dòng Mainboard phổ biến:',
+      '• **ASUS:** Cắm USB vào cổng sau ➔ Bật nguồn nhấp nhả phím **F8** (vào BIOS bấm Del/F2).',
+      '• **MSI:** Bật nguồn nhấp nhả phím **F11** (vào BIOS bấm Del). Có 4 đèn EZ Debug LED báo lỗi.',
+      '• **WINNFOX / HUANANZHI:** Bật nguồn nhấp nhả phím **F11** (hoặc F7). Bắt buộc cắm loa bíp J_SPEAKER.',
+      '• **GIGABYTE:** Bật nguồn nhấp nhả phím **F12** (vào BIOS bấm Del).',
+      '• **ASROCK:** Bật nguồn nhấp nhả phím **F11** (vào BIOS bấm Del/F2).',
+      '• **DELL / LENOVO:** Bấm **F12**  •  **HP:** Bấm **F9** (vào BIOS bấm F10).',
+      '👉 *Nguyên tắc KTV:* Luôn chọn dòng có chữ **[UEFI: USB_Name]** và phân vùng chuẩn GPT để cài đặt siêu tốc.'
+    ].join('\n');
+  }
+
+  // LỖI KHÔNG THẤY Ổ CỨNG KHI CÀI WIN / INTEL VMD CONTROLLER
+  if (qNoAccent.includes('vmd') || (qNoAccent.includes('khong thay o cung') && (qNoAccent.includes('cai win') || qNoAccent.includes('ssd') || qNoAccent.includes('nvme'))) || qNoAccent.includes('we couldnt find any drives')) {
+    return [
+      'Khắc phục lỗi "We couldn\'t find any drives" (Không thấy ổ cứng khi cài Win 10):',
+      '• **Nguyên nhân chính (Main ASUS/Giga Intel Gen 11 trở lên):** Tính năng **Intel VMD Controller** đang Bật làm ẩn ổ cứng NVMe.',
+      '• **Cách sửa trên ASUS:** Vào BIOS (Del/F2) ➔ Bấm **F7** sang Advanced Mode ➔ Vào **Advanced** ➔ **VMD Setup Menu** ➔ Đổi **Enable VMD Controller** thành **Disabled** ➔ Bấm **F10** lưu lại.',
+      '• **Cách sửa trên máy DELL:** Vào BIOS (F2) ➔ **Storage** ➔ Đổi từ **RAID On** sang **AHCI/NVMe** ➔ Bấm Apply.',
+      '👉 Sau khi chỉnh xong, khởi động lại vào bộ cài Windows 10 sẽ nhìn thấy ngay ổ SSD!'
+    ].join('\n');
+  }
+
   // TỔNG HỢP CÂU HỎI VỀ PHÍM BOOT CHUNG
   if ((qNoAccent.includes('phim boot') || qNoAccent.includes('boot usb') || qNoAccent.includes('chon boot') || qNoAccent.includes('menu boot')) && !qNoAccent.includes('cai win')) {
     return [

@@ -1667,3 +1667,281 @@ export const HSG_PRACTICAL_EXAMS: HsgPracticalExam[] = [
   }
 ];
 
+// ============================================================================
+// HƯỚNG DẪN CÀI ĐẶT WINDOWS 10 CÁC DÒNG MAINBOARD PHỔ BIẾN CHO THI HSG
+// ============================================================================
+
+export interface HsgMainboardBootGuide {
+  id: string;
+  brand: string;
+  series: string;
+  marketSegment: string;
+  bootKey: string;
+  biosKey: string;
+  saveExitKey: string;
+  biosMode: string;
+  badgeColor: string;
+  uefiSettings: {
+    setting: string;
+    value: string;
+    why: string;
+  }[];
+  bootSteps: {
+    step: number;
+    title: string;
+    detail: string;
+  }[];
+  commonTraps: {
+    trap: string;
+    cause: string;
+    fix: string;
+  }[];
+  vmdWarning?: string;
+  imageSrc?: string;
+}
+
+export interface HsgWin10InstallStep {
+  stepNum: number;
+  title: string;
+  badge: string;
+  action: string;
+  pokaYokeAlert: string;
+  checklist: string[];
+  imageSrc?: string;
+}
+
+export const HSG_MAINBOARD_BOOT_GUIDES: HsgMainboardBootGuide[] = [
+  {
+    id: 'main_asus',
+    brand: 'ASUS',
+    series: 'Dòng H510 / H610 / B560 / B760 (Prime & TUF Gaming)',
+    marketSegment: 'Phổ thông phòng máy thực hành & Gaming tầm trung',
+    bootKey: 'F8',
+    biosKey: 'Delete (Del) hoặc F2',
+    saveExitKey: 'F10',
+    biosMode: 'EZ Mode (F7) & Advanced Mode',
+    badgeColor: 'bg-blue-600',
+    uefiSettings: [
+      { setting: 'Chế độ hiển thị', value: 'Bấm phím F7 sang Advanced Mode', why: 'Mở khóa toàn bộ menu cài đặt chuyên sâu của ASUS UEFI BIOS.' },
+      { setting: 'Fast Boot', value: 'Disabled', why: 'Ngăn bo mạch bỏ qua giai đoạn quét cổng USB, giúp nhận diện phím F8 kịp thời.' },
+      { setting: 'CSM Support', value: 'Disabled', why: 'Chạy chế độ thuần UEFI GPT, tăng tốc độ khởi động và hỗ trợ chuẩn bảo mật.' },
+      { setting: 'VMD Controller', value: 'Disabled (trên Intel Gen 11/12/13)', why: 'Bắt buộc tắt Intel VMD để bộ cài Windows 10 nhận diện ổ SSD NVMe không bị lỗi We couldnt find any drives.' },
+      { setting: 'SATA Mode', value: 'AHCI', why: 'Chuẩn giao tiếp tối ưu tốc độ đọc ghi cho ổ SSD SATA III.' }
+    ],
+    bootSteps: [
+      { step: 1, title: 'Cắm USB Boot', detail: 'Cắm USB Boot chuẩn UEFI GPT vào cổng USB 3.0 (màu xanh dương) ở mặt sau bo mạch chủ.' },
+      { step: 2, title: 'Bật nguồn & Gọi Boot Menu', detail: 'Nhấp nhả phím F8 liên tục ngay khi đèn bàn phím vừa chớp sáng.' },
+      { step: 3, title: 'Chọn dòng UEFI', detail: 'Chọn dòng có tiền tố [UEFI: Tên_USB (Partition 1)], tuyệt đối không chọn dòng Legacy không có chữ UEFI.' },
+      { step: 4, title: 'Vào trình cài đặt', detail: 'Màn hình hiện logo Windows 10 với vòng tròn xoay, bắt đầu quá trình phân vùng và cài đặt.' }
+    ],
+    commonTraps: [
+      { trap: 'Bấm nhầm phím F11', cause: 'Thói quen từ mainboard MSI hoặc Winnfox.', fix: 'Main ASUS bắt buộc phím F8. Nếu lỡ vào Windows cũ, khởi động lại và nhấp nhả phím F8.' },
+      { trap: 'Không nhìn thấy ổ cứng SSD NVMe khi cài Win', cause: 'Tính năng Intel VMD Controller đang Bật (Enabled) ở bản BIOS xuất xưởng.', fix: 'Vào BIOS (Del/F2) ➔ Advanced ➔ VMD Setup Menu ➔ Đổi Enable VMD Controller thành Disabled ➔ Nhấn F10 lưu lại.' }
+    ],
+    vmdWarning: 'Trên các dòng bo mạch ASUS chạy chip Intel Gen 11 (H510, B560), nếu không tắt VMD Controller, bộ cài Windows 10 sẽ bắt nạp driver Intel RST Storage.',
+    imageSrc: '/images/ol-01/main-asus-h510.jpg'
+  },
+  {
+    id: 'main_msi',
+    brand: 'MSI',
+    series: 'Dòng H510 / H610 / B660 / B760 (PRO & MAG Mortar/Tomahawk)',
+    marketSegment: 'Phòng máy chuẩn CBT & Máy thi tay nghề',
+    bootKey: 'F11',
+    biosKey: 'Delete (Del)',
+    saveExitKey: 'F10',
+    biosMode: 'Click BIOS 5 (EZ Mode / Advanced Mode phím F7)',
+    badgeColor: 'bg-red-600',
+    uefiSettings: [
+      { setting: 'Giao diện BIOS', value: 'Bấm F7 để chuyển sang Advanced Mode', why: 'Truy cập vào cây thư mục Settings và Boot chuyên sâu.' },
+      { setting: 'BIOS UEFI/CSM Mode', value: 'UEFI', why: 'Khởi động Windows 10 chuẩn GPT, bật Secure Boot và nạp bootmgr siêu tốc.' },
+      { setting: 'SATA Mode', value: 'AHCI Mode', why: 'Chuẩn giao tiếp bắt buộc cho các ổ SSD SATA/M.2.' },
+      { setting: 'Boot Option Priorities', value: 'Boot Option #1: UEFI USB Hard Disk', why: 'Ưu tiên nạp bootloader từ USB Boot của KTV trước ổ cứng.' }
+    ],
+    bootSteps: [
+      { step: 1, title: 'Kiểm tra cụm EZ Debug LED', detail: 'Bật máy quan sát 4 đèn EZ Debug ở góc trên: CPU ➔ DRAM ➔ VGA ➔ BOOT. Nếu đèn BOOT sáng đứng là máy chưa nhận ổ khởi động.' },
+      { step: 2, title: 'Gọi Boot Menu', detail: 'Nhấp nhả phím F11 liên tục ngay khi quạt CPU bắt đầu quay.' },
+      { step: 3, title: 'Chọn thiết bị khởi động', detail: 'Dùng phím mũi tên chọn [UEFI: Tên_USB_Boot] và nhấn Enter.' },
+      { step: 4, title: 'Nạp bộ cài Win 10', detail: 'Đèn LED trên USB nhấp nháy, màn hình Windows Setup 64-bit xuất hiện.' }
+    ],
+    commonTraps: [
+      { trap: 'Máy không xuất hình khi bật nguồn', cause: 'Cắm nhầm dây HDMI/VGA lên cổng Mainboard thay vì cổng Card đồ họa rời GT 730 (do CPU đuôi F không có iGPU).', fix: 'Chuyển dây màn hình xuống đúng cổng của Card đồ họa NVIDIA GT 730 ở hàng dưới.' },
+      { trap: 'Bấm F11 không ăn', cause: 'Bàn phím không dây hoặc cắm cổng USB mặt trước chập chờn.', fix: 'Cắm bàn phím USB có dây vào cổng USB 2.0 (màu đen) ở mặt sau bo mạch chủ.' }
+    ],
+    imageSrc: '/images/ol-01/main-h510.jpg'
+  },
+  {
+    id: 'main_gigabyte',
+    brand: 'GIGABYTE',
+    series: 'Dòng H510 / H610 / B660 / B760 (Ultra Durable & AORUS)',
+    marketSegment: 'Văn phòng doanh nghiệp & Bàn kỹ thuật thi đấu',
+    bootKey: 'F12',
+    biosKey: 'Delete (Del)',
+    saveExitKey: 'F10',
+    biosMode: 'Classic / Easy Mode (F2 chuyển Advanced Mode)',
+    badgeColor: 'bg-amber-600',
+    uefiSettings: [
+      { setting: 'Chế độ cấu hình', value: 'Bấm phím F2 sang Advanced Mode', why: 'Hiển thị đầy đủ các thẻ Tweaker, Settings, System Info, Boot.' },
+      { setting: 'Fast Boot', value: 'Disable', why: 'Giúp bo mạch khởi tạo đầy đủ các cổng giao tiếp ngoại vi lúc bật máy.' },
+      { setting: 'CSM Support', value: 'Disable', why: 'Tắt tính năng tương thích cũ, bắt buộc toàn bộ thiết bị chạy chuẩn UEFI GPT.' },
+      { setting: 'Storage Boot Option Control', value: 'UEFI Only', why: 'Ngăn chặn nạp nhầm phân vùng MBR Legacy.' },
+      { setting: 'VMD Setup Menu', value: 'Enable VMD Controller: Disabled', why: 'Nhận diện trực tiếp SSD NVMe PCIe không cần nạp driver ngoài.' }
+    ],
+    bootSteps: [
+      { step: 1, title: 'Cắm USB Boot', detail: 'Cắm USB vào cổng USB màu xanh phía sau case máy.' },
+      { step: 2, title: 'Bật máy & Gọi Boot Menu', detail: 'Nhấp nhả phím F12 liên tục ngay khi bấm nút Power.' },
+      { step: 3, title: 'Chọn phân vùng UEFI', detail: 'Bảng Boot Menu nền xám đen của GIGABYTE hiện ra ➔ Chọn dòng có chữ [UEFI: ...] và Enter.' },
+      { step: 4, title: 'Tiến hành cài đặt', detail: 'Vào trình cài đặt Windows 10 Setup.' }
+    ],
+    commonTraps: [
+      { trap: 'Bật CSM Support khiến không vào được USB Boot GPT', cause: 'CSM kích hoạt chế độ Legacy ưu tiên quét MBR.', fix: 'Vào BIOS tab Boot ➔ Chuyển CSM Support sang Disable ➔ Bấm F10 lưu lại.' }
+    ]
+  },
+  {
+    id: 'main_winnfox',
+    brand: 'WINNFOX / HUANANZHI',
+    series: 'Dòng H510G / H610G / H81 / B75 phòng máy giá rẻ',
+    marketSegment: 'Phòng máy thực hành phổ thông & Văn phòng tối giản',
+    bootKey: 'F11 (hoặc F7 ở bản AMI cũ)',
+    biosKey: 'Delete (Del)',
+    saveExitKey: 'F10',
+    biosMode: 'AMI BIOS cổ điển (điều hướng phím mũi tên)',
+    badgeColor: 'bg-purple-600',
+    uefiSettings: [
+      { setting: 'Giao diện BIOS', value: 'Giao diện bảng chữ màu xanh/xám AMI', why: 'Không hỗ trợ chuột, thao tác 100% bằng phím mũi tên và Enter.' },
+      { setting: 'Boot Mode Select', value: 'UEFI', why: 'Đảm bảo nạp đúng phân vùng boot EFI FAT32.' },
+      { setting: 'SATA Mode Selection', value: 'AHCI', why: 'Tối ưu tốc độ ổ SSD SATA.' },
+      { setting: 'Quiet Boot', value: 'Disabled', why: 'Hiện thông số POST RAM/CPU trên màn hình để kiểm tra trực quan.' }
+    ],
+    bootSteps: [
+      { step: 1, title: 'Cắm Loa Buzzer', detail: 'Bắt buộc cắm loa bíp vào chân J_SPEAKER trước khi bật nguồn để nghe mã âm thanh POST.' },
+      { step: 2, title: 'Gọi Boot Menu', detail: 'Bật nút nguồn và nhấp nhả phím F11 (nếu không được thử phím F7).' },
+      { step: 3, title: 'Chọn UEFI USB', detail: 'Chọn dòng ổ USB có chữ UEFI và nhấn Enter.' },
+      { step: 4, title: 'Cài đặt Windows 10', detail: 'Tiến hành phân vùng ổ C và cài đặt.' }
+    ],
+    commonTraps: [
+      { trap: 'Không có đèn Debug báo lỗi khi máy không lên hình', cause: 'Bo mạch thiết kế tối giản cắt giảm cụm đèn LED debug.', fix: 'Bắt buộc phải cắm Loa Buzzer bíp: 1 tiếng bíp ngắn là nhận diện phần cứng tốt; 3 bíp dài liên tục là lỗi RAM; 1 bíp dài 2 bíp ngắn là lỗi VGA.' }
+    ],
+    imageSrc: '/images/ol-01/main-winnfox-h510.jpg'
+  },
+  {
+    id: 'main_asrock',
+    brand: 'ASROCK',
+    series: 'Dòng H510M-HDV / H610M / B660M Pro4 / Phantom Gaming',
+    marketSegment: 'Máy tính kỹ thuật & Lắp ráp chuyên biệt',
+    bootKey: 'F11',
+    biosKey: 'Delete (Del) hoặc F2',
+    saveExitKey: 'F10',
+    biosMode: 'ASRock UEFI Easy Mode / Advanced Mode',
+    badgeColor: 'bg-emerald-600',
+    uefiSettings: [
+      { setting: 'CSM Support', value: 'Disabled', why: 'Chạy thuần UEFI, mở khóa tính năng Secure Boot và Fast Boot.' },
+      { setting: 'SATA Mode', value: 'AHCI', why: 'Tối ưu cho SSD.' },
+      { setting: 'Primary Graphics Adapter', value: 'PCI Express', why: 'Ưu tiên xuất hình qua Card đồ họa rời GT 730.' }
+    ],
+    bootSteps: [
+      { step: 1, title: 'Cắm USB Boot', detail: 'Cắm USB Boot vào cổng sau của bo mạch ASRock.' },
+      { step: 2, title: 'Bật máy & Nhấn F11', detail: 'Nhấp nhả phím F11 liên tục.' },
+      { step: 3, title: 'Chọn UEFI Boot Device', detail: 'Chọn dòng có tiền tố UEFI: [Tên USB].' },
+      { step: 4, title: 'Cài đặt hệ điều hành', detail: 'Vào trình cài Windows 10.' }
+    ],
+    commonTraps: [
+      { trap: 'Bật tính năng Ultra Fast Boot', cause: 'Làm bàn phím không kịp nhận lệnh F11/F2 lúc khởi động.', fix: 'Khởi động vào Windows cũ rồi giữ Shift + Restart để vào UEFI, hoặc tháo pin CMOS 3 phút để khôi phục mặc định.' }
+    ]
+  },
+  {
+    id: 'main_oem_dell_hp',
+    brand: 'MÁY BỘ & LAPTOP (DELL · HP · LENOVO)',
+    series: 'Dell OptiPlex/Vostro · HP ProDesk/EliteDesk · Lenovo ThinkCentre',
+    marketSegment: 'Máy trạm văn phòng đồng bộ & Laptop học tập',
+    bootKey: 'Dell: F12 · HP: F9 · Lenovo: F12 (hoặc nút Novo)',
+    biosKey: 'Dell: F2 · HP: F10 · Lenovo: F2',
+    saveExitKey: 'F10 (Dell/HP) / Fn+F10',
+    biosMode: 'OEM UEFI Setup Utility',
+    badgeColor: 'bg-slate-700',
+    uefiSettings: [
+      { setting: 'DELL: SATA Operation', value: 'Bắt buộc chuyển từ RAID On sang AHCI/NVMe', why: 'BẪY TỬ HUYỆT: Nếu để RAID On, bộ cài Windows 10 sẽ không thể tìm thấy ổ đĩa SSD NVMe (báo lỗi We couldnt find any drives).' },
+      { setting: 'HP: Secure Boot Configuration', value: 'Legacy Support Disable & Secure Boot Disable', why: 'Cho phép boot nhanh vào USB cài Windows của KTV.' },
+      { setting: 'LENOVO: Boot Priority', value: 'UEFI Only', why: 'Ngăn chặn nạp MBR Legacy.' }
+    ],
+    bootSteps: [
+      { step: 1, title: 'Nhận diện phím Boot theo hãng', detail: 'Dell bấm F12, HP bấm F9, Lenovo bấm F12 ngay khi vừa bật nguồn.' },
+      { step: 2, title: 'Chọn One-Time Boot Menu', detail: 'Chọn dòng [UEFI Boot: Tên USB] trong menu xuất hiện.' },
+      { step: 3, title: 'Xử lý bẫy ổ cứng trên máy Dell', detail: 'Nếu không thấy ổ đĩa: Vào BIOS F2 ➔ Storage ➔ SATA Operation ➔ Đổi sang AHCI/NVMe.' },
+      { step: 4, title: 'Cài đặt hoàn tất', detail: 'Tiến hành phân vùng ổ C và cài đặt.' }
+    ],
+    commonTraps: [
+      { trap: 'Lỗi kinh điển trên máy Dell: Không thấy ổ cứng SSD khi chọn phân vùng', cause: 'Chế độ SATA Operation đang để mặc định RAID On của hãng Dell.', fix: 'Vào BIOS (F2) ➔ Storage ➔ SATA Operation ➔ Tích chọn AHCI/NVMe ➔ Bấm Apply và Restart lại.' }
+    ]
+  }
+];
+
+export const HSG_WIN10_PRACTICAL_WORKFLOW: HsgWin10InstallStep[] = [
+  {
+    stepNum: 1,
+    title: 'Tạo USB Boot Chuẩn UEFI GPT Bằng Rufus',
+    badge: 'CHUẨN BỊ BỘ CÀI',
+    action: 'Dùng công cụ Rufus (bản mới nhất) nạp file ISO Windows 10 Pro 64-bit sạch vào USB tối thiểu 8GB.',
+    pokaYokeAlert: 'BẮT BUỘC chọn Partition scheme: GPT và Target system: UEFI (non CSM). Tuyệt đối không chọn MBR / BIOS Legacy!',
+    checklist: [
+      'File ISO nguồn: Windows 10 Pro 64-bit nguyên gốc Microsoft (phiên bản 21H2 hoặc 22H2).',
+      'Partition scheme: Chọn chuẩn GPT (hỗ trợ phân vùng khởi động EFI).',
+      'Target system: UEFI (non CSM), File system: NTFS.',
+      'Đặt tên nhãn Volume label dễ nhớ: WIN10_UEFI_KTV.'
+    ],
+    imageSrc: '/images/ol-01/step-5-cai-win10-partition.jpg'
+  },
+  {
+    stepNum: 2,
+    title: 'Chọn Phím Boot USB Đúng Bo Mạch Chủ',
+    badge: 'KHỞI ĐỘNG POST',
+    action: 'Cắm USB vào cổng USB 3.0 (màu xanh dương phía sau), bật nút nguồn và nhấp nhả phím Boot Menu tương ứng của bo mạch.',
+    pokaYokeAlert: 'Nhớ khẩu quyết phím Boot: ASUS bấm F8, MSI & Winnfox bấm F11, GIGABYTE & Dell bấm F12, HP bấm F9!',
+    checklist: [
+      'Cắm USB vào cổng sau bo mạch chủ (trực tiếp từ Chipset, ổn định hơn cổng trước vỏ case).',
+      'Nhấp nhả phím Boot liên tục ngay khi đèn bàn phím vừa chớp sáng.',
+      'Tại menu chọn thiết bị: Luôn chọn dòng có tiền tố [UEFI: Tên_USB (Partition 1)].'
+    ]
+  },
+  {
+    stepNum: 3,
+    title: 'Phân Vùng Ổ Cứng An Toàn (Zero Data Loss)',
+    badge: 'BẢO MẬT DỮ LIỆU',
+    action: 'Chọn Custom: Install Windows only (advanced). Nhìn dung lượng và tên phân vùng để xóa đúng ổ C cũ, bảo vệ nguyên vẹn ổ D/E dữ liệu.',
+    pokaYokeAlert: 'QUY TẮC POKA-YOKE TỬ HUYỆT: Tuyệt đối không bấm Delete hoặc Format vào ổ D/E chứa tài liệu của khách hàng!',
+    checklist: [
+      'Nhận diện phân vùng: Ổ C là phân vùng Primary có dung lượng khoảng 60GB - 120GB.',
+      'Xóa (Delete) phân vùng C: cũ và các phân vùng hệ thống nhỏ (Recovery, System EFI, MSR) thành vùng đen Unallocated Space.',
+      'Bấm New ➔ Apply: Windows 10 tự động sinh 3 phân vùng chuẩn UEFI: Recovery (500MB), System EFI (100MB FAT32 chứa bootmgr), MSR (16MB).',
+      'Chọn phân vùng Primary lớn nhất vừa tạo và bấm Next để nạp dữ liệu.'
+    ],
+    imageSrc: '/images/ol-01/step-5-cai-win10-partition.jpg'
+  },
+  {
+    stepNum: 4,
+    title: 'Thiết Lập OOBE & Tài Khoản Local Administrator',
+    badge: 'CẤU HÌNH HỆ THỐNG',
+    action: 'Hoàn tất các bước thiết lập trải nghiệm ban đầu (Out-of-Box Experience) sau khi máy tự khởi động lại.',
+    pokaYokeAlert: 'Không kết nối Wifi hoặc rút dây mạng ở bước này để tránh bị bắt buộc đăng nhập tài khoản Microsoft cá nhân!',
+    checklist: [
+      'Chọn Region: Vietnam (hoặc United States), Bàn phím: US.',
+      'Màn hình kết nối mạng: Chọn "I dont have internet" ➔ Chọn tiếp "Continue with limited setup".',
+      'Đặt tên tài khoản Local Admin viết liền không dấu: ví dụ KTV-01 hoặc User.',
+      'Đặt mật khẩu (hoặc để trống theo yêu cầu của đề thi). Tắt toàn bộ tùy chọn vị trí và chẩn đoán quảng cáo.'
+    ]
+  },
+  {
+    stepNum: 5,
+    title: 'Cài Đặt Driver & Kiểm Tra Nghiệm Thu',
+    badge: 'NGHIỆM THU HOÀN THIỆN',
+    action: 'Cài đặt đầy đủ driver phần cứng, kiểm tra Device Manager sạch dấu chấm than vàng và kích hoạt bản quyền phòng lab.',
+    pokaYokeAlert: 'Cài driver đúng thứ tự KTV chuẩn: 1. Chipset ➔ 2. Card đồ họa GT 730 ➔ 3. Âm thanh Audio ➔ 4. Mạng LAN/Wifi.',
+    checklist: [
+      'Bấm Windows + X ➔ Chọn Device Manager (devmgmt.msc), xác nhận 100% không còn dấu chấm than vàng ⚠️.',
+      'Mở lệnh winver kiểm tra phiên bản Windows 10 Pro 64-bit.',
+      'Mở Task Manager (Ctrl + Shift + Esc) kiểm tra nhận đủ dung lượng RAM (8GB DDR4) và CPU.',
+      'Dùng CrystalDiskInfo hoặc lệnh CIM kiểm tra nhiệt độ và sức khỏe ổ cứng SSD Good 100%.'
+    ],
+    imageSrc: '/images/ol-01/step-7-hwmonitor-nhiet-do.jpg'
+  }
+];
+

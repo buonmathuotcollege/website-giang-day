@@ -1,7 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import { SUBNET_CHEAT_SHEET, HSG_QUESTION_BANK } from '../../data/hsgCurriculum';
+import {
+  SUBNET_CHEAT_SHEET,
+  HSG_QUESTION_BANK,
+  HSG_MAINBOARD_BOOT_GUIDES,
+  HSG_WIN10_PRACTICAL_WORKFLOW,
+} from '../../data/hsgCurriculum';
 
 export const prerender = true;
 
@@ -116,10 +121,22 @@ const description = "Hệ thống bồi dưỡng kiến thức chuyên sâu: Ph�
         :class="activeTab === 'cases' 
           ? 'bg-slate-900 text-white shadow-sm' 
           : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200'"
-        class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer"
+        class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer min-h-[44px]"
       >
         <span>🛠️</span>
         <span>Ca Thực Hành & Bẫy Đề</span>
+      </button>
+
+      <button
+        type="button"
+        @click="activeTab = 'boot-install'"
+        :class="activeTab === 'boot-install' 
+          ? 'bg-slate-900 text-white shadow-sm' 
+          : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200'"
+        class="px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer min-h-[44px]"
+      >
+        <span>💾</span>
+        <span>Cài Win & Boot Menu Các Main</span>
       </button>
     </div>
 
@@ -439,6 +456,311 @@ const description = "Hệ thống bồi dưỡng kiến thức chuyên sâu: Ph�
           </div>
         </div>
 
+      </div>
+
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- TAB 5: CÀI WIN 10 & KHẨU QUYẾT BOOT MENU CÁC DÒNG MAINBOARD -->
+    <!-- ==================================================================== -->
+    <div x-show="activeTab === 'boot-install'" x-cloak class="space-y-6">
+      
+      <!-- Top Overview Banner -->
+      <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-black uppercase bg-slate-900 text-white">
+            💾 HƯỚNG DẪN CÀI WIN THỰC HÀNH HSG
+          </span>
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-blue-800">
+            CHUẨN UEFI GPT & WINDOWS 10 PRO 64-BIT
+          </span>
+        </div>
+        <h2 class="text-xl sm:text-2xl font-black text-slate-900">
+          Khẩu Quyết Boot Menu & Quy Trình Cài Đặt Windows 10 Các Dòng Bo Mạch Chủ
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          Kỹ năng sống còn trong các kỳ thi tay nghề và bồi dưỡng Học sinh giỏi CNTT: Nắm chắc phím gọi Boot Menu chọn USB của từng hãng bo mạch, thiết lập BIOS chuẩn UEFI không CSM, vô hiệu hóa bẫy Intel VMD / RAID On gây lỗi ẩn ổ cứng NVMe, và quy trình phân vùng an toàn Zero Data Loss bảo vệ 100% tài liệu khách hàng.
+        </p>
+      </div>
+
+      <!-- Quick Comparative Matrix (Cheat Sheet) -->
+      <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-0.5 rounded text-[11px] font-black uppercase bg-slate-900 text-white">MA TRẬN TRA CỨU NHANH</span>
+          <h3 class="text-base sm:text-lg font-black text-slate-900">Bảng So Sánh Phím Tắt Boot & BIOS 6 Dòng Bo Mạch Chủ Phổ Biến</h3>
+        </div>
+        <div class="overflow-x-auto rounded-2xl border border-slate-200">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-900 text-white font-bold">
+              <tr>
+                <th class="p-3">Hãng Mainboard / Máy Bộ</th>
+                <th class="p-3 text-center bg-amber-400 text-amber-950 font-black">Phím Boot Menu</th>
+                <th class="p-3 text-center">Phím Vào BIOS</th>
+                <th class="p-3 text-center">Lưu & Thoát</th>
+                <th class="p-3">Thiết Lập Sống Còn & Bẫy Cần Tránh</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-black text-blue-900">ASUS (H510 / H610 / B560 / B760 Prime)</td>
+                <td class="p-3 font-black text-center font-mono text-base text-amber-950 bg-amber-50">F8</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-900">Delete (Del) / F2</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-700">F10</td>
+                <td class="p-3 text-slate-600">Bấm F7 sang Advanced Mode; <strong>Tắt Intel VMD Controller</strong> (Disabled) để bộ cài Win nhận diện ổ SSD NVMe.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-black text-red-900">MSI (H510M-A PRO / B660M / B760 PRO)</td>
+                <td class="p-3 font-black text-center font-mono text-base text-amber-950 bg-amber-50">F11</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-900">Delete (Del)</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-700">F10</td>
+                <td class="p-3 text-slate-600">Click BIOS 5; Bật UEFI Mode, SATA AHCI; Khi máy không lên hình quan sát ngay <strong>4 đèn EZ Debug LED</strong>.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-black text-orange-900">GIGABYTE (H510M / B760M DS3H)</td>
+                <td class="p-3 font-black text-center font-mono text-base text-amber-950 bg-amber-50">F12</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-900">Delete (Del)</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-700">F10</td>
+                <td class="p-3 text-slate-600">CSM Disabled, Storage Boot Option Control: <strong>UEFI Only</strong>; Tắt VMD Controller trong menu Settings.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-black text-purple-900">WINNFOX / HUANANZHI (H510G)</td>
+                <td class="p-3 font-black text-center font-mono text-base text-amber-950 bg-amber-50">F11 / F7</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-900">Delete (Del)</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-700">F10</td>
+                <td class="p-3 text-slate-600">AMI BIOS cổ điển; Không có đèn LED debug, <strong>bắt buộc cắm loa Buzzer bíp</strong> vào chân J_SPEAKER để chẩn đoán lỗi.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-black text-emerald-900">ASROCK (H510M-HDV / B660M Pro4)</td>
+                <td class="p-3 font-black text-center font-mono text-base text-amber-950 bg-amber-50">F11</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-900">Delete (Del) / F2</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-700">F10</td>
+                <td class="p-3 text-slate-600">CSM Support: Disabled; Không bật Ultra Fast Boot vì sẽ bỏ qua bàn phím USB lúc khởi động.</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="p-3 font-black text-slate-900">DELL / HP / LENOVO (OEM)</td>
+                <td class="p-3 font-black text-center font-mono text-base text-amber-950 bg-amber-50">Dell F12 / HP F9</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-900">Dell F2 / HP F10</td>
+                <td class="p-3 font-mono font-bold text-center text-slate-700">F10 / Enter</td>
+                <td class="p-3 text-slate-600">Trên máy Dell bắt buộc đổi <strong>SATA Operation từ RAID On sang AHCI/NVMe</strong> để bộ cài Win nhìn thấy ổ SSD.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Detailed Breakdown Cards for Each Brand -->
+      <div class="space-y-6">
+        {HSG_MAINBOARD_BOOT_GUIDES.map((mb) => (
+          <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6">
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class={`px-2.5 py-0.5 rounded text-xs font-black uppercase text-white ${mb.badgeColor || 'bg-slate-900'}`}>{mb.brand}</span>
+                  <span class="text-xs text-slate-500 font-semibold">{mb.marketSegment}</span>
+                </div>
+                <h3 class="text-lg sm:text-xl font-black text-slate-900">{mb.series}</h3>
+              </div>
+
+              <!-- Metrics -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div class="p-3 rounded-xl bg-amber-50 border border-amber-200 text-center">
+                  <div class="text-[10px] uppercase font-bold text-amber-800">Phím Boot USB</div>
+                  <div class="text-xl font-black text-amber-950 font-mono mt-0.5">{mb.bootKey}</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                  <div class="text-[10px] uppercase font-bold text-slate-500">Vào BIOS</div>
+                  <div class="text-sm sm:text-base font-black text-slate-900 font-mono mt-0.5">{mb.biosKey}</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                  <div class="text-[10px] uppercase font-bold text-slate-500">Lưu & Thoát</div>
+                  <div class="text-sm sm:text-base font-black text-slate-900 font-mono mt-0.5">{mb.saveExitKey}</div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 text-center">
+                  <div class="text-[10px] uppercase font-bold text-slate-500">Chế độ BIOS</div>
+                  <div class="text-xs font-bold text-slate-800 mt-1 line-clamp-1">{mb.biosMode}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content Grid: UEFI Settings + Traps -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <!-- Left: UEFI Settings Table & 4 Steps -->
+              <div class="space-y-5">
+                <div class="space-y-2">
+                  <div class="text-xs font-black text-slate-900 uppercase flex items-center gap-1.5">
+                    <span>⚙️</span>
+                    <span>Bảng Thiết Lập BIOS / UEFI Bắt Buộc:</span>
+                  </div>
+                  <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full text-xs text-left">
+                      <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
+                        <tr>
+                          <th class="p-2.5">Mục Cài Đặt</th>
+                          <th class="p-2.5">Giá Trị</th>
+                          <th class="p-2.5">Ý Nghĩa Kỹ Thuật</th>
+                        </tr>
+                      </thead>
+                      <tbody class="divide-y divide-slate-100">
+                        {mb.uefiSettings.map((st) => (
+                          <tr class="hover:bg-slate-50/50">
+                            <td class="p-2.5 font-bold text-slate-900">{st.setting}</td>
+                            <td class="p-2.5 font-mono font-bold text-blue-700 bg-blue-50/40">{st.value}</td>
+                            <td class="p-2.5 text-slate-600">{st.why}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- 4 Steps -->
+                <div class="space-y-2">
+                  <div class="text-xs font-black text-slate-900 uppercase flex items-center gap-1.5">
+                    <span>🚀</span>
+                    <span>Quy Trình 4 Bước Gọi Boot USB:</span>
+                  </div>
+                  <div class="space-y-2">
+                    {mb.bootSteps.map((bs) => (
+                      <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
+                        <div class="w-6 h-6 rounded-full bg-slate-900 text-white font-mono text-xs font-black flex items-center justify-center shrink-0 mt-0.5">{bs.step}</div>
+                        <div class="space-y-0.5">
+                          <div class="text-xs font-extrabold text-slate-900">{bs.title}</div>
+                          <div class="text-xs text-slate-600 leading-relaxed">{bs.detail}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right: Traps & Hardware Photo -->
+              <div class="space-y-5">
+                <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200 space-y-3">
+                  <div class="text-xs font-black text-rose-950 uppercase flex items-center gap-1.5">
+                    <span>🛑</span>
+                    <span>Bẫy Đề Thi HSG & Lỗi Cần Tránh:</span>
+                  </div>
+                  <div class="space-y-2.5">
+                    {mb.commonTraps.map((trap) => (
+                      <div class="p-3 rounded-xl bg-white border border-rose-200/80 text-xs space-y-1">
+                        <div class="font-extrabold text-rose-900 flex items-start gap-1.5">
+                          <span>⚠️</span>
+                          <span>{trap.trap}</span>
+                        </div>
+                        <div class="text-slate-600 pl-4">
+                          <strong>Nguyên nhân:</strong> {trap.cause}
+                        </div>
+                        <div class="text-emerald-700 font-bold pl-4">
+                          <strong>Cách xử lý:</strong> {trap.fix}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {mb.vmdWarning && (
+                  <div class="p-4 rounded-2xl bg-amber-50 border border-amber-300 space-y-1.5">
+                    <div class="text-xs font-black text-amber-950 uppercase flex items-center gap-1.5">
+                      <span>⚡</span>
+                      <span>LƯU Ý TỬ HUYỆT INTEL VMD CONTROLLER</span>
+                    </div>
+                    <p class="text-xs text-amber-900 leading-relaxed font-semibold">{mb.vmdWarning}</p>
+                  </div>
+                )}
+
+                {mb.imageSrc && (
+                  <div class="rounded-2xl border border-slate-200 overflow-hidden bg-slate-100 p-2 text-center">
+                    <img
+                      src={mb.imageSrc}
+                      alt={`Bo mạch chủ ${mb.brand} phòng máy`}
+                      class="w-full h-48 sm:h-56 object-cover rounded-xl mx-auto"
+                      loading="lazy"
+                    />
+                    <div class="text-[11px] font-semibold text-slate-500 mt-2">Hình ảnh thực tế bo mạch chủ {mb.brand} phòng máy thực hành</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- 5-Step Windows 10 Practical Workflow (Zero Data Loss) -->
+      <div class="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-6">
+        <div class="space-y-1 pb-4 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded text-[11px] font-black uppercase bg-emerald-600 text-white">QUY CHUẨN THỰC CHIẾN 5 BƯỚC</span>
+            <span class="text-xs text-slate-500 font-semibold">Quy chuẩn KTV 1 - KTV 2 - KTV 3</span>
+          </div>
+          <h3 class="text-lg sm:text-xl font-black text-slate-900">
+            Quy Chuẩn Cài Đặt Windows 10 Chuẩn UEFI GPT An Toàn Tuyệt Đối (Zero Data Loss)
+          </h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Tuân thủ nghiêm ngặt 3 điểm dừng an toàn: Bảo vệ toàn vẹn dữ liệu khách hàng ổ D/E, tạo phân vùng EFI 100MB chuẩn nạp bootmgr, và thiết lập tài khoản Local Administrator không dính tài khoản Microsoft.
+          </p>
+        </div>
+
+        <div class="space-y-5">
+          {HSG_WIN10_PRACTICAL_WORKFLOW.map((step) => (
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200">
+                <div>
+                  <div class="text-[11px] font-mono font-black uppercase text-blue-700">
+                    BƯỚC {step.stepNum} / 5 · {step.badge}
+                  </div>
+                  <h4 class="text-base sm:text-lg font-black text-slate-900 mt-0.5">{step.title}</h4>
+                </div>
+                <span class="px-3 py-1 rounded-full text-xs font-bold bg-white text-slate-800 border border-slate-200 shrink-0">
+                  KTV 1 Thao tác · KTV 2 Giám sát
+                </span>
+              </div>
+
+              <div class="text-xs sm:text-sm text-slate-700 leading-relaxed font-semibold">
+                👉 <strong>Nhiệm vụ thao tác:</strong> {step.action}
+              </div>
+
+              <!-- Poka-Yoke Alert -->
+              <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-300 text-xs text-rose-950 flex items-start gap-2">
+                <span class="text-base shrink-0">🛡️</span>
+                <div>
+                  <strong class="font-black">ĐIỂM DỪNG AN TOÀN POKA-YOKE:</strong>
+                  <div class="mt-0.5 leading-relaxed font-bold">{step.pokaYokeAlert}</div>
+                </div>
+              </div>
+
+              <!-- Checklist -->
+              <div class="space-y-2">
+                <div class="text-xs font-black uppercase text-slate-900 flex items-center gap-1.5">
+                  <span>📋</span>
+                  <span>Danh Mục Kiểm Soát Nghiệm Thu:</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {step.checklist.map((item) => (
+                    <div class="p-2.5 rounded-lg bg-white border border-slate-200 text-xs text-slate-800 flex items-start gap-2">
+                      <span class="text-emerald-600 font-bold shrink-0">✓</span>
+                      <span class="leading-relaxed">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {step.imageSrc && (
+                <div class="mt-3 pt-3 border-t border-slate-200">
+                  <div class="rounded-xl border border-slate-200 overflow-hidden bg-white p-2 text-center max-w-xl mx-auto">
+                    <img
+                      src={step.imageSrc}
+                      alt={`Minh họa bước ${step.stepNum}: ${step.title}`}
+                      class="w-full h-auto rounded-lg object-contain"
+                      loading="lazy"
+                    />
+                    <div class="text-[11px] font-semibold text-slate-500 mt-2">Ảnh chụp màn hình thực tế: {step.title}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
     </div>
