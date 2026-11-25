@@ -27,7 +27,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   try {
-    const body = await request.json().catch(() => ({}));
+    const body = (await request.json().catch(() => ({}))) as Record<string, any>;
     const inputSecret = String(body.secret || "").trim();
 
     if (!inputSecret) {

@@ -264,7 +264,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   try {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
     const slug = body.slug || "phan-cung";
     const studentName = String(body.studentName || "Học sinh").trim();
     const studentCode = String(body.studentCode || body.student_code || "").trim();

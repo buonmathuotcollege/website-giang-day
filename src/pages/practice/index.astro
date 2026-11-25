@@ -58,7 +58,7 @@ export const prerender = false;
         <button
           type="button"
           @click="activeTab = 'workbench'"
-          class="px-3.5 py-1.5 rounded-lg transition-all"
+          class="px-3.5 py-2 min-h-[44px] touch-manipulation rounded-lg transition-all"
           :class="activeTab === 'workbench' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'"
         >
           👥 10 Bàn Máy (Học Sinh)
@@ -66,7 +66,7 @@ export const prerender = false;
         <button
           type="button"
           @click="activeTab = 'attendance'"
-          class="px-3.5 py-1.5 rounded-lg transition-all"
+          class="px-3.5 py-2 min-h-[44px] touch-manipulation rounded-lg transition-all"
           :class="activeTab === 'attendance' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'"
         >
           📝 Điểm Danh Buổi
@@ -441,7 +441,7 @@ export const prerender = false;
           <button
             type="button"
             @click="showTeacherModal = false"
-            class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center text-sm cursor-pointer"
+            class="w-11 h-11 min-h-[44px] min-w-[44px] touch-manipulation rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold flex items-center justify-center text-sm cursor-pointer"
           >
             ✕
           </button>

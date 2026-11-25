@@ -1739,7 +1739,7 @@ export const HSG_MAINBOARD_BOOT_GUIDES: HsgMainboardBootGuide[] = [
       { trap: 'Không nhìn thấy ổ cứng SSD NVMe khi cài Win', cause: 'Tính năng Intel VMD Controller đang Bật (Enabled) ở bản BIOS xuất xưởng.', fix: 'Vào BIOS (Del/F2) ➔ Advanced ➔ VMD Setup Menu ➔ Đổi Enable VMD Controller thành Disabled ➔ Nhấn F10 lưu lại.' }
     ],
     vmdWarning: 'Trên các dòng bo mạch ASUS chạy chip Intel Gen 11 (H510, B560), nếu không tắt VMD Controller, bộ cài Windows 10 sẽ bắt nạp driver Intel RST Storage.',
-    imageSrc: '/images/ol-01/main-asus-h510.jpg'
+    imageSrc: '/images/ol-01/main-asus-h510.webp'
   },
   {
     id: 'main_msi',
@@ -1767,7 +1767,7 @@ export const HSG_MAINBOARD_BOOT_GUIDES: HsgMainboardBootGuide[] = [
       { trap: 'Máy không xuất hình khi bật nguồn', cause: 'Cắm nhầm dây HDMI/VGA lên cổng Mainboard thay vì cổng Card đồ họa rời GT 730 (do CPU đuôi F không có iGPU).', fix: 'Chuyển dây màn hình xuống đúng cổng của Card đồ họa NVIDIA GT 730 ở hàng dưới.' },
       { trap: 'Bấm F11 không ăn', cause: 'Bàn phím không dây hoặc cắm cổng USB mặt trước chập chờn.', fix: 'Cắm bàn phím USB có dây vào cổng USB 2.0 (màu đen) ở mặt sau bo mạch chủ.' }
     ],
-    imageSrc: '/images/ol-01/main-h510.jpg'
+    imageSrc: '/images/ol-01/main-h510.webp'
   },
   {
     id: 'main_gigabyte',
@@ -1821,7 +1821,7 @@ export const HSG_MAINBOARD_BOOT_GUIDES: HsgMainboardBootGuide[] = [
     commonTraps: [
       { trap: 'Không có đèn Debug báo lỗi khi máy không lên hình', cause: 'Bo mạch thiết kế tối giản cắt giảm cụm đèn LED debug.', fix: 'Bắt buộc phải cắm Loa Buzzer bíp: 1 tiếng bíp ngắn là nhận diện phần cứng tốt; 3 bíp dài liên tục là lỗi RAM; 1 bíp dài 2 bíp ngắn là lỗi VGA.' }
     ],
-    imageSrc: '/images/ol-01/main-winnfox-h510.jpg'
+    imageSrc: '/images/ol-01/main-winnfox-h510.webp'
   },
   {
     id: 'main_asrock',
@@ -1888,7 +1888,7 @@ export const HSG_WIN10_PRACTICAL_WORKFLOW: HsgWin10InstallStep[] = [
       'Target system: UEFI (non CSM), File system: NTFS.',
       'Đặt tên nhãn Volume label dễ nhớ: WIN10_UEFI_KTV.'
     ],
-    imageSrc: '/images/ol-01/step-5-cai-win10-partition.jpg'
+    imageSrc: '/images/ol-01/step-5-cai-win10-partition.webp'
   },
   {
     stepNum: 2,
@@ -1914,7 +1914,7 @@ export const HSG_WIN10_PRACTICAL_WORKFLOW: HsgWin10InstallStep[] = [
       'Bấm New ➔ Apply: Windows 10 tự động sinh 3 phân vùng chuẩn UEFI: Recovery (500MB), System EFI (100MB FAT32 chứa bootmgr), MSR (16MB).',
       'Chọn phân vùng Primary lớn nhất vừa tạo và bấm Next để nạp dữ liệu.'
     ],
-    imageSrc: '/images/ol-01/step-5-cai-win10-partition.jpg'
+    imageSrc: '/images/ol-01/step-5-cai-win10-partition.webp'
   },
   {
     stepNum: 4,
@@ -1941,7 +1941,7 @@ export const HSG_WIN10_PRACTICAL_WORKFLOW: HsgWin10InstallStep[] = [
       'Mở Task Manager (Ctrl + Shift + Esc) kiểm tra nhận đủ dung lượng RAM (8GB DDR4) và CPU.',
       'Dùng CrystalDiskInfo hoặc lệnh CIM kiểm tra nhiệt độ và sức khỏe ổ cứng SSD Good 100%.'
     ],
-    imageSrc: '/images/ol-01/step-7-hwmonitor-nhiet-do.jpg'
+    imageSrc: '/images/ol-01/step-7-hwmonitor-nhiet-do.webp'
   }
 ];
 

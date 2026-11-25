@@ -121,9 +121,14 @@ const payloadJson = JSON.stringify({
         }
 
         if (self.quizMode === 'random10') {
-          // Trộn ngẫu nhiên và bốc 10 câu
+          // Trộn ngẫu nhiên chuẩn Fisher-Yates và bốc 10 câu
           var copy = list.slice();
-          copy.sort(function() { return 0.5 - Math.random(); });
+          for (var i = copy.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = copy[i];
+            copy[i] = copy[j];
+            copy[j] = tmp;
+          }
           self.activeQuestionList = copy.slice(0, 10);
         } else {
           self.activeQuestionList = list.slice();
@@ -136,11 +141,19 @@ const payloadJson = JSON.stringify({
       },
 
       selectQuizCategory: function(catId) {
+        if (this.quizSelectedCategory === catId) return;
+        if (!this.quizCompleted && Object.keys(this.userAnswers).length > 0) {
+          if (!confirm('Bạn đang làm dở bài trắc nghiệm. Đổi chuyên đề sẽ làm mới câu trả lời hiện tại, tiếp tục?')) return;
+        }
         this.quizSelectedCategory = catId;
         this.filterQuestions();
       },
 
       setQuizMode: function(mode) {
+        if (this.quizMode === mode && mode !== 'random10') return;
+        if (!this.quizCompleted && Object.keys(this.userAnswers).length > 0) {
+          if (!confirm('Bạn đang làm dở bài trắc nghiệm. Đổi chế độ sẽ làm mới câu trả lời hiện tại, tiếp tục?')) return;
+        }
         this.quizMode = mode;
         this.filterQuestions();
       },
@@ -319,7 +332,7 @@ const payloadJson = JSON.stringify({
           <button
             type="button"
             @click="selectHwCategory(cat.id)"
-            class="px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer min-h-[40px] flex items-center gap-1.5 border"
+            class="px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer min-h-[44px] touch-manipulation flex items-center gap-1.5 border"
             :class="hwSelectedCategory === cat.id ? 'bg-slate-900 text-white border-slate-900 shadow-xs font-black' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'"
           >
             <span x-text="cat.icon"></span>
@@ -355,7 +368,7 @@ const payloadJson = JSON.stringify({
             <div class="space-y-1.5 flex-1">
               <div class="flex flex-wrap items-center gap-2">
                 <span
-                  class="px-2 py-0.5 rounded text-[10px] font-black font-mono tracking-wider"
+                  class="px-2 py-0.5 rounded text-[11px] font-black font-mono tracking-wider"
                   :class="item.severity === 'critical' ? 'bg-rose-100 text-rose-800' : (item.severity === 'high' ? 'bg-amber-100 text-amber-900' : 'bg-blue-100 text-blue-900')"
                   x-text="item.code"
                 ></span>
@@ -496,7 +509,7 @@ const payloadJson = JSON.stringify({
           <button
             type="button"
             @click="selectQuizCategory(cat.id)"
-            class="px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer min-h-[40px] flex items-center gap-1.5 border"
+            class="px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer min-h-[44px] touch-manipulation flex items-center gap-1.5 border"
             :class="quizSelectedCategory === cat.id ? 'bg-slate-900 text-white border-slate-900 font-black' : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200'"
           >
             <span x-text="cat.icon"></span>

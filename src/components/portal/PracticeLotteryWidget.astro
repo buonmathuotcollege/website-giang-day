@@ -31,6 +31,7 @@ const payloadJson = JSON.stringify({
       currentTicketIdx: 0,
       isSpinning: false,
       showHint: false,
+      spinInterval: null,
 
       toggleHint: function() {
         this.showHint = !this.showHint;
@@ -54,16 +55,21 @@ const payloadJson = JSON.stringify({
       spinTicket: function() {
         var self = this;
         if (self.isSpinning || self.tickets.length === 0) return;
+        if (self.spinInterval) {
+          clearInterval(self.spinInterval);
+          self.spinInterval = null;
+        }
         self.isSpinning = true;
         self.showHint = false;
 
         var count = 0;
         var maxSteps = 10;
-        var interval = setInterval(function() {
+        self.spinInterval = setInterval(function() {
           self.currentTicketIdx = Math.floor(Math.random() * self.tickets.length);
           count++;
           if (count >= maxSteps) {
-            clearInterval(interval);
+            clearInterval(self.spinInterval);
+            self.spinInterval = null;
             self.isSpinning = false;
             self.showHint = false;
           }

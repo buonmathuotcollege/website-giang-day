@@ -40,7 +40,7 @@ export const KTV_7_STEPS: KtvStep[] = [
     quickAction: "Khám vỏ ngoài xem có móp vỡ không, cắm nguồn bấm nút Power thử xem máy còn sống không, mở CPU-Z ghi lại cấu hình CPU/RAM/SSD.",
     quickSign: "Quạt quay, đèn case sáng, CrystalDiskInfo báo Good (Xanh).",
     quickDont: "Cấm vội vàng tháo ốc tháo máy khi chưa cắm điện thử máy ban đầu!",
-    imageSrc: "/images/ol-01/step-1-kham-may.jpg",
+    imageSrc: "/images/ol-01/step-1-kham-may.webp",
     imageAlt: "Khám ngoại quan case PC phòng lab, cắm nguồn AC và phân biệt cổng xuất hình GT 730",
     hotspotTarget: "socket-cpu",
     instructions: [
@@ -68,7 +68,7 @@ export const KTV_7_STEPS: KtvStep[] = [
       name: "Xác Nhận Dữ Liệu Khách & An Toàn Điện",
       requirement: "Thầy kiểm tra: Dữ liệu đã copy đủ 100% sang ổ D; dây nguồn AC đã rút và đã bấm xả điện 3 lần.",
     },
-    imageSrc: "/images/ol-01/step-2-cuu-du-lieu-win10.jpg",
+    imageSrc: "/images/ol-01/step-2-cuu-du-lieu-win10.webp",
     imageAlt: "Windows 10 File Explorer copy Desktop sang ổ D: SAO_LUU_KHACH, đếm số file Properties",
     hotspotTarget: "sata-m2",
     instructions: [
@@ -91,7 +91,7 @@ export const KTV_7_STEPS: KtvStep[] = [
     quickAction: "Rút điện bấm xả tụ 3 lần, tháo thanh RAM lấy cục gôm trắng học sinh chà sáng bóng chân vàng rồi cắm lại.",
     quickSign: "Cắm RAM nghe tiếng 'TÁCH' đanh gọn 2 đầu ngậm khít. Bật máy lên hình ngay.",
     quickDont: "Không dùng cồn ướt lau chân RAM; cấm để lại mạt vụn gôm rơi trong khe cắm.",
-    imageSrc: "/images/ol-01/step-3-cha-ram-cuc-tay.jpg",
+    imageSrc: "/images/ol-01/step-3-cha-ram-cuc-tay.webp",
     imageAlt: "Cận cảnh dùng cục tẩy trắng gôm học sinh chà sạch chân mạ vàng thanh RAM DDR4",
     hotspotTarget: "ram-slots",
     instructions: [
@@ -120,7 +120,7 @@ export const KTV_7_STEPS: KtvStep[] = [
       name: "Kiểm Soát Cơ Khí Trước Khi Cắm Điện",
       requirement: "Thầy kiểm tra 10 giây: (1) Hai ngàm RAM đã khóa sát khấc; (2) Dây quạt đã cắm CPU_FAN; (3) Không rơi ốc vít trên bo mạch.",
     },
-    imageSrc: "/images/ol-01/step-4-tra-keo-hat-dau-xanh.jpg",
+    imageSrc: "/images/ol-01/step-4-tra-keo-hat-dau-xanh.webp",
     imageAlt: "Tra đúng 01 giọt keo tản nhiệt hạt đậu xanh vào giữa CPU và vặn 4 chốt đối xứng đường chéo",
     hotspotTarget: "pcie-x16",
     instructions: [
@@ -144,7 +144,7 @@ export const KTV_7_STEPS: KtvStep[] = [
     quickAction: "Cắm USB cài Win (MSI/Winnfox bấm F11, ASUS bấm F8), ở bảng chọn ổ đĩa: chỉ Format dòng ổ C dung lượng nhỏ để cài.",
     quickSign: "Cài xong vào thẳng Windows 10 desktop, Device Manager sạch bóng dấu chấm than vàng.",
     quickDont: "Tuyệt đối cấm bấm Format dòng Ổ D (chứa tài liệu khách đã cứu ở Bước 2).",
-    imageSrc: "/images/ol-01/step-5-cai-win10-partition.jpg",
+    imageSrc: "/images/ol-01/step-5-cai-win10-partition.webp",
     imageAlt: "Giao diện phân vùng Windows 10 Setup quy tắc nhìn số GB chọn ổ C và Device Manager sạch chấm than",
     instructions: [
       "Boot từ USB cài Windows: Cắm USB -> Bật máy bấm liên tục phím Boot Menu (MSI & Winnfox: F11 | ASUS: F8) -> Chọn dòng 'UEFI: Tên USB' -> Bấm Enter.",
@@ -168,7 +168,7 @@ export const KTV_7_STEPS: KtvStep[] = [
     quickAction: "Cài đủ driver cho bo mạch và card GT 730, cắm dây máy in USB đặt làm mặc định (tích xanh) và in thử 1 trang.",
     quickSign: "Device Manager không còn cờ vàng chấm than (!); máy in chạy ra trang giấy in nét.",
     quickDont: "Không giao máy khi Device Manager còn dấu chấm than vàng (máy sẽ bị giật lag, mất tiếng hoặc mất mạng).",
-    imageSrc: "/images/ol-01/step-6-may-in-test-page.jpg",
+    imageSrc: "/images/ol-01/step-6-may-in-test-page.webp",
     imageAlt: "Windows 10 Devices and Printers máy in mặc định dấu tích xanh và in trang Print Test Page",
     instructions: [
       "Kiểm tra ngoại vi: Mở Notepad gõ thử 1 câu tiếng Việt có dấu; bấm thử chuột trái, phải, con lăn; cắm dây mạng kiểm tra biểu tượng mạng có Internet.",
@@ -195,7 +195,7 @@ export const KTV_7_STEPS: KtvStep[] = [
       name: "Nghiệm Thu Bàn Giao Ca Máy",
       requirement: "Thầy kiểm tra 3 màn hình: (1) Device Manager sạch chấm than; (2) HWMonitor nhiệt độ CPU <75°C; (3) Dữ liệu khách nguyên vẹn.",
     },
-    imageSrc: "/images/ol-01/step-7-hwmonitor-nhiet-do.jpg",
+    imageSrc: "/images/ol-01/step-7-hwmonitor-nhiet-do.webp",
     imageAlt: "Đo nhiệt độ CPU bằng HWMonitor mát 38°C và hoàn tất biên bản nghiệm thu bàn giao 5 tiêu chí",
     instructions: [
       "Tự dò đúng 5 tiêu chí trước khi đóng nắp thùng máy:",
@@ -245,7 +245,7 @@ export const DISASSEMBLY_STEPS: MechanicalStep[] = [
       "Cơ thể tích tĩnh điện trong mùa hanh khô chạm thẳng vào vi mạch mạ vàng của RAM hoặc Mainboard.",
     ],
     pokaYoke: "Khẩu quyết sống còn: 'Rút phích điện -> Bấm nút nguồn 3 lần -> Chạm tay vỏ kim loại case'.",
-    imageSrc: "/images/ol-01/workflow-thao-may.jpg",
+    imageSrc: "/images/ol-01/workflow-thao-may.webp",
     imageAlt: "Sơ đồ 6 bước tháo máy an toàn - Bước 1: Rút nguồn và xả tụ điện",
   },
   {
@@ -265,7 +265,7 @@ export const DISASSEMBLY_STEPS: MechanicalStep[] = [
       "Cầm ngón tay nắm chặt vào hàng chân đồng PCIe mạ vàng khiến mồ hôi tay làm oxy hóa tiếp xúc.",
     ],
     pokaYoke: "Luôn kiểm tra lẫy khóa PCIe đã mở hết cỡ trước khi nhấc card; cầm card ở phần khung nẹp sắt và tản nhiệt.",
-    imageSrc: "/images/ol-01/guide-clean-vga-pcie.jpg",
+    imageSrc: "/images/ol-01/guide-clean-vga-pcie.webp",
     imageAlt: "Kỹ thuật tháo card đồ họa rời GT 730 mở lẫy PCIe x16 và tháo ốc nẹp",
   },
   {
@@ -285,7 +285,7 @@ export const DISASSEMBLY_STEPS: MechanicalStep[] = [
       "Rút RAM ra khi máy vừa tắt được vài giây, linh kiện còn đang rất nóng có thể gây phỏng tay.",
     ],
     pokaYoke: "Chỉ cầm vào hai góc trên của bảng mạch PCB thanh RAM, đặt ngay ngắn vào khay linh kiện chống tĩnh điện.",
-    imageSrc: "/images/ol-01/guide-clean-ram-slot.jpg",
+    imageSrc: "/images/ol-01/guide-clean-ram-slot.webp",
     imageAlt: "Kỹ thuật mở ngàm và tháo thanh RAM DDR4 khỏi bo mạch H510",
   },
   {
@@ -305,7 +305,7 @@ export const DISASSEMBLY_STEPS: MechanicalStep[] = [
       "Kéo vặn xoắn dây cáp tín hiệu gây đứt ngầm lõi đồng truyền dữ liệu bên trong.",
     ],
     pokaYoke: "Luôn bóp chốt lẫy kim loại trước khi rút cáp SATA; ốc M.2 rất nhỏ phải bỏ riêng vào ngăn nam châm khay ốc.",
-    imageSrc: "/images/ol-01/workflow-thao-may.jpg",
+    imageSrc: "/images/ol-01/workflow-thao-may.webp",
     imageAlt: "Tháo cáp tín hiệu SATA dữ liệu có lẫy kim loại và cáp nguồn ổ cứng",
   },
   {
@@ -325,7 +325,7 @@ export const DISASSEMBLY_STEPS: MechanicalStep[] = [
       "Không bóp lẫy khóa nhựa 24-pin mà cố giật làm nứt bo mạch chủ tại vị trí cổng nguồn.",
     ],
     pokaYoke: "Quy tắc cầm chuôi nhựa có lẫy, không bao giờ giật dây điện; chụp ảnh lại cụm 9-pin trước khi tháo rời.",
-    imageSrc: "/images/ol-01/guide-fpanel-diagram.jpg",
+    imageSrc: "/images/ol-01/guide-fpanel-diagram.webp",
     imageAlt: "Sơ đồ và kỹ thuật tháo cắm cụm dây F_PANEL và đầu cấp nguồn 24-pin bo mạch",
   },
   {
@@ -345,7 +345,7 @@ export const DISASSEMBLY_STEPS: MechanicalStep[] = [
       "Quên chưa tháo đủ 6 ốc đệm standoff trên bo mạch mà cố cạy mainboard lên gây gãy nứt mạch in PCB.",
     ],
     pokaYoke: "Nếu keo tản nhiệt dính chặt, lay nhẹ qua lại theo hình tròn để tách keo trước khi nhấc; đếm đủ 6 ốc tháo ra trước khi nhấc main.",
-    imageSrc: "/images/ol-01/workflow-thao-may.jpg",
+    imageSrc: "/images/ol-01/workflow-thao-may.webp",
     imageAlt: "Quy trình nhấc cụm tản nhiệt CPU và tháo 6 ốc cố định bo mạch chủ H510",
   },
 ];
@@ -369,7 +369,7 @@ export const ASSEMBLY_STEPS: MechanicalStep[] = [
       "Quên cắm dây quạt CPU_FAN khiến quạt không quay, máy báo cảnh báo 'CPU Fan Error' khi khởi động.",
     ],
     pokaYoke: "Khẩu quyết: 'Tam giác vàng so tam giác socket -> 1 hạt đậu xanh keo tản nhiệt -> Bóc nilon đáy quạt -> Cắm CPU_FAN'.",
-    imageSrc: "/images/ol-01/workflow-lap-may.jpg",
+    imageSrc: "/images/ol-01/workflow-lap-may.webp",
     imageAlt: "Lắp CPU LGA1200 đúng ngàm khuyết và bơm keo tản nhiệt hạt đậu xanh",
   },
   {
@@ -389,7 +389,7 @@ export const ASSEMBLY_STEPS: MechanicalStep[] = [
       "Dùng tay bẩn chạm vào chân mạ vàng trước khi cắm làm bụi bẩn và dầu nhờn cản trở tiếp xúc.",
     ],
     pokaYoke: "Khẩu quyết: 'So rãnh khuyết trước -> Ấn đều 2 đầu -> Nghe tiếng TÁCH đanh gọn -> Khóa lẫy tự ngậm khít'.",
-    imageSrc: "/images/ol-01/guide-clean-ram-slot.jpg",
+    imageSrc: "/images/ol-01/guide-clean-ram-slot.webp",
     imageAlt: "Lắp thanh RAM DDR4 đúng khớp rãnh khuyết lệch và khóa lẫy ngậm khít",
   },
   {
@@ -410,7 +410,7 @@ export const ASSEMBLY_STEPS: MechanicalStep[] = [
       "Dùng nhầm ốc ren thô của nguồn/vỏ case để siết vào chân đệm ren mịn làm toét rách ren ốc.",
     ],
     pokaYoke: "Quy tắc 2 bước kiểm tra: 1. Đếm đủ số trụ đồng Standoff. 2. Soi đèn kiểm tra lưỡi thép I/O Shield không chọc vào trong lòng các cổng kết nối.",
-    imageSrc: "/images/ol-01/workflow-lap-may.jpg",
+    imageSrc: "/images/ol-01/workflow-lap-may.webp",
     imageAlt: "Gá miếng chặn I/O Shield và siết ốc đệm standoff cố định bo mạch chủ H510",
   },
   {
@@ -430,7 +430,7 @@ export const ASSEMBLY_STEPS: MechanicalStep[] = [
       "Cắm đầu 24-pin chưa hết nấc, lẫy khóa chưa ngậm dẫn đến chập chờn tiếp xúc hoặc đánh tia lửa điện làm sun đầu nhựa.",
     ],
     pokaYoke: "Tuyệt đối phân biệt: Đầu cắm CPU luôn ghi chữ 'CPU' (chia 4+4). Đầu cấp card đồ họa luôn ghi chữ 'PCI-E' (chia 6+2). Lẫy khóa phải ngậm kẹp chặt.",
-    imageSrc: "/images/ol-01/workflow-lap-may.jpg",
+    imageSrc: "/images/ol-01/workflow-lap-may.webp",
     imageAlt: "Lắp bộ nguồn PSU đúng chiều thông gió và cắm lẫy khóa cáp 24-pin ATX",
   },
   {
@@ -450,7 +450,7 @@ export const ASSEMBLY_STEPS: MechanicalStep[] = [
       "Cắm lệch hoặc dùng lực ấn mạnh chân USB 3.0 màu xanh làm cong gập gãy các chân kim siêu nhỏ bên trong.",
     ],
     pokaYoke: "Khẩu quyết F_PANEL bất hủ: 'Chân POWER SW nằm ở hàng trên ngay sát cạnh chân trống bị khuyết; nút nguồn & reset không phân cực âm dương'.",
-    imageSrc: "/images/ol-01/guide-fpanel-diagram.jpg",
+    imageSrc: "/images/ol-01/guide-fpanel-diagram.webp",
     imageAlt: "Bản đồ cắm chân kim F_PANEL hàng trên POWER SW và hàng dưới RESET SW",
   },
   {
@@ -470,7 +470,7 @@ export const ASSEMBLY_STEPS: MechanicalStep[] = [
       "Sau khi lắp card rời xong, lúc thử máy lại cắm nhầm dây màn hình vào cổng VGA trên bo mạch chủ (khiến màn hình tối om do CPU i5-10400F không có GPU tích hợp).",
     ],
     pokaYoke: "Quy tắc 2 điểm khóa: 1. Khóa lẫy nhựa đuôi PCIe tự ngậm. 2. Bắt buộc siết ốc nẹp kim loại cố định vào khung case.",
-    imageSrc: "/images/ol-01/guide-clean-vga-pcie.jpg",
+    imageSrc: "/images/ol-01/guide-clean-vga-pcie.webp",
     imageAlt: "Lắp card đồ họa rời GT 730 khóa lẫy ngậm và siết ốc nẹp khung sau",
   },
   {
@@ -490,7 +490,7 @@ export const ASSEMBLY_STEPS: MechanicalStep[] = [
       "Để sót ốc vít hoặc đầu dây kim loại rơi tự do chạm vào lưng bo mạch chủ gây chập nổ bo mạch khi cắm điện kiểm tra.",
     ],
     pokaYoke: "Khẩu quyết nghiệm thu: 'Dây màn hình cắm Card rời GT 730 phía dưới -> Cáp SATA đủ Data và Nguồn -> Khoang case sạch ốc rơi'.",
-    imageSrc: "/images/ol-01/workflow-lap-may.jpg",
+    imageSrc: "/images/ol-01/workflow-lap-may.webp",
     imageAlt: "Cắm cáp SATA dữ liệu và nguồn cho ổ cứng SSD và nghiệm thu khởi động máy",
   },
 ];
@@ -522,7 +522,7 @@ export const CORE_SKILLS: CoreSkill[] = [
     quickAction: "Dùng gôm học sinh màu trắng chà sáng bóng hàng chân vàng 2 mặt, lấy chổi quét sạch vụn gôm trước khi cắm lại.",
     quickSign: "Chân mạ vàng sáng bóng như mới, cắm vào nghe tiếng 'TÁCH' 2 đầu.",
     quickDont: "Không dùng gôm đen hay giấy ráp; không dùng miệng thổi bụi (hơi thở ẩm làm rỉ chân đồng).",
-    imageSrc: "/images/ol-01/guide-clean-ram-slot.jpg",
+    imageSrc: "/images/ol-01/guide-clean-ram-slot.webp",
     imageAlt: "Sơ đồ kỹ thuật vệ sinh chân mạ vàng RAM DDR4 bằng gôm tẩy trắng và cọ mềm khe cắm",
     tools: [
       "Cục gôm (tẩy) bút chì mềm màu trắng sạch (không dùng gôm đen hoặc gôm cát)",
@@ -553,7 +553,7 @@ export const CORE_SKILLS: CoreSkill[] = [
     quickAction: "Gạt mở lẫy đuôi trước khi nhấc card, luôn vặn ốc nẹp case, cắm dây màn hình vào card rời phía dưới.",
     quickSign: "Card chắc chắn không xệ, màn hình hiển thị logo ngay khi bật.",
     quickDont: "Cấm cắm dây màn hình lên cụm cổng bo mạch chủ phía trên.",
-    imageSrc: "/images/ol-01/guide-clean-vga-pcie.jpg",
+    imageSrc: "/images/ol-01/guide-clean-vga-pcie.webp",
     imageAlt: "Hướng dẫn tháo lắp vệ sinh card rời GT 730 mở lẫy PCIe x16 và bắt ốc nẹp case",
     tools: [
       "Tua vít bake từ tính cán dài PH2",
@@ -585,7 +585,7 @@ export const CORE_SKILLS: CoreSkill[] = [
     quickAction: "Tìm vị trí chân kim số 9 bị khuyết: 2 chân kim ở hàng trên ngay cạnh nó chính là công tắc bật nguồn POWER SW.",
     quickSign: "Bấm nút nguồn máy tính khởi động ngay từ lần đầu.",
     quickDont: "Nút Power & Reset không phân biệt âm dương (+/-); riêng đèn LED (HDD/Power LED) phải cắm đúng cực (+/-).",
-    imageSrc: "/images/ol-01/guide-fpanel-diagram.jpg",
+    imageSrc: "/images/ol-01/guide-fpanel-diagram.webp",
     imageAlt: "Bản đồ 9 chân kim Front Panel Mainboard H510 hàng trên POWER SW và hàng dưới RESET SW",
     tools: [
       "Đèn pin hoặc đèn flash điện thoại để soi rõ ký hiệu in trên bo mạch H510",
@@ -615,7 +615,7 @@ export const CORE_SKILLS: CoreSkill[] = [
     quickAction: "Rút điện 220V, bấm nút nguồn 3 lần, gạt nhẹ lẫy kim loại cho viên pin CR2032 nảy chéo 45 độ lên, chờ 3 phút lắp lại.",
     quickSign: "Máy được xóa sạch thiết lập BIOS cũ, khắc phục lỗi treo logo hoặc quên mật khẩu BIOS.",
     quickDont: "Cấm lắp úp mặt dấu (+) xuống dưới; cấm tháo pin khi chưa rút phích cắm điện 220V.",
-    imageSrc: "/images/ol-01/guide-clear-cmos-pin.jpg",
+    imageSrc: "/images/ol-01/guide-clear-cmos-pin.webp",
     imageAlt: "Hướng dẫn tháo pin cúc áo CR2032 3V Clear CMOS xả BIOS gốc trên main H510",
     tools: [
       "Tua vít dẹp nhỏ (2mm) hoặc que nạy nhựa chuyên dụng",
@@ -663,7 +663,7 @@ export const LAB_MOTHERBOARDS: MotherboardModel[] = [
     brand: "MSI (Micro-Star International)",
     badge: "Phòng Lab · Chuẩn Phổ Biến #1",
     color: "rose",
-    imageSrc: "/images/ol-01/main-h510.jpg",
+    imageSrc: "/images/ol-01/main-h510.webp",
     imageAlt: "Bo mạch chủ MSI H510M-A PRO Socket LGA1200",
     bootKey: "F11",
     biosKey: "Delete (Del)",
@@ -678,7 +678,7 @@ export const LAB_MOTHERBOARDS: MotherboardModel[] = [
     brand: "ASUS (ASUSTeK Computer)",
     badge: "Phòng Lab · Siêu Bền 5X Protection",
     color: "blue",
-    imageSrc: "/images/ol-01/main-asus-h510.jpg",
+    imageSrc: "/images/ol-01/main-asus-h510.webp",
     imageAlt: "Bo mạch chủ ASUS PRIME H510M-K Socket LGA1200",
     bootKey: "F8 (Đặc trưng ASUS - Tuyệt đối không bấm F11)",
     biosKey: "Delete (Del) hoặc F2",
@@ -693,7 +693,7 @@ export const LAB_MOTHERBOARDS: MotherboardModel[] = [
     brand: "Winnfox (Efang Intelligent Technology)",
     badge: "Phòng Lab · Tối Ưu Chi Phí Nghề",
     color: "emerald",
-    imageSrc: "/images/ol-01/main-winnfox-h510.jpg",
+    imageSrc: "/images/ol-01/main-winnfox-h510.webp",
     imageAlt: "Bo mạch chủ Winnfox H510G Socket LGA1200 giá rẻ phổ thông",
     bootKey: "F11 (hoặc F7 ở một số bản AMI BIOS)",
     biosKey: "Delete (Del)",
@@ -708,7 +708,7 @@ export const LAB_MOTHERBOARDS: MotherboardModel[] = [
     brand: "Bảng Đối Chiếu 3 Dòng Bo Mạch H510 Thực Tế Phòng Máy",
     badge: "Infographic Độc Quyền KTV",
     color: "amber",
-    imageSrc: "/images/ol-01/main-h510-compare.jpg",
+    imageSrc: "/images/ol-01/main-h510-compare.webp",
     imageAlt: "Bảng so sánh 3 dòng Mainboard H510 MSI vs ASUS vs Winnfox phòng lab",
     bootKey: "MSI: F11 | ASUS: F8 | Winnfox: F11/F7",
     biosKey: "Tất cả đều vào BIOS bằng phím Delete (Del)",

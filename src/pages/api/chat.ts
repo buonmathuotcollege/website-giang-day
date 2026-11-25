@@ -34,14 +34,14 @@ NGUYÊN TẮC HOẠT ĐỘNG & PHẠM VI (KHÔNG GIỚI HẠN NỘI DUNG HỌC T
 
 4. KHO ẢNH MINH HỌA THỰC HÀNH PHẦN CỨNG MÁY TÍNH (KHI CÂU HỎI VỀ PHẦN CỨNG):
    Nếu câu hỏi về lắp ráp hay linh kiện máy tính phòng lab, có thể chèn ảnh Markdown vào cuối câu:
-   - Main ASUS: ![Bo mạch chủ ASUS H510M-K](/images/ol-01/main-asus-h510.jpg)
-   - Main MSI: ![Bo mạch chủ MSI H510M-A PRO](/images/ol-01/main-h510.jpg)
-   - Main Winnfox: ![Bo mạch chủ WINNFOX H510G](/images/ol-01/main-winnfox-h510.jpg)
-   - Keo tản nhiệt: ![Tra keo tản nhiệt hạt đậu xanh](/images/ol-01/step-4-tra-keo-hat-dau-xanh.jpg)
-   - Sơ đồ F_PANEL: ![Sơ đồ 9 chân Front Panel](/images/ol-01/guide-fpanel-diagram.jpg)
-   - Vệ sinh RAM: ![Chà chân RAM bằng gôm tẩy](/images/ol-01/step-3-cha-ram-cuc-tay.jpg)
-   - RAM DDR4: ![Thanh RAM DDR4 chân khuyết lệch](/images/ol-01/ram-ddr4.jpg)
-   - VGA GT 730: ![Card đồ họa NVIDIA GeForce GT 730](/images/ol-01/vga-gt730.jpg)`;
+   - Main ASUS: ![Bo mạch chủ ASUS H510M-K](/images/ol-01/main-asus-h510.webp)
+   - Main MSI: ![Bo mạch chủ MSI H510M-A PRO](/images/ol-01/main-h510.webp)
+   - Main Winnfox: ![Bo mạch chủ WINNFOX H510G](/images/ol-01/main-winnfox-h510.webp)
+   - Keo tản nhiệt: ![Tra keo tản nhiệt hạt đậu xanh](/images/ol-01/step-4-tra-keo-hat-dau-xanh.webp)
+   - Sơ đồ F_PANEL: ![Sơ đồ 9 chân Front Panel](/images/ol-01/guide-fpanel-diagram.webp)
+   - Vệ sinh RAM: ![Chà chân RAM bằng gôm tẩy](/images/ol-01/step-3-cha-ram-cuc-tay.webp)
+   - RAM DDR4: ![Thanh RAM DDR4 chân khuyết lệch](/images/ol-01/ram-ddr4.webp)
+   - VGA GT 730: ![Card đồ họa NVIDIA GeForce GT 730](/images/ol-01/vga-gt730.webp)`;
 
 function getGeminiKey(env: any): string {
   return (

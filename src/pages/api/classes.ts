@@ -228,7 +228,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   try {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
     const action = body.action || "create_class";
 
     // -------------------------------------------------------------

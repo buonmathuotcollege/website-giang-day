@@ -29,7 +29,10 @@ const exam = {
 };
 ---
 
-<BaseLayout title={`${exam.name} - Đánh giá năng lực thực tế`}>
+<BaseLayout
+  title={`${exam.name} - Đánh giá năng lực thực tế`}
+  description="Sát hạch năng lực thực hành phần cứng máy tính chuẩn TT55: mô phỏng 7 bước Poka-Yoke, 100 câu trắc nghiệm tình huống, 20 câu vấn đáp và phiếu nghiệm thu A4."
+>
   <section class="max-w-6xl mx-auto px-4 py-8">
     <Breadcrumb items={[
       { label: 'Trang chủ', href: '/' },
@@ -221,11 +224,11 @@ const exam = {
               <span>Công Cụ Ôn Luyện Bổ Trợ:</span>
             </span>
 
-            <div class="flex flex-wrap gap-1.5">
+            <div class="flex flex-wrap gap-2">
               <button
                 type="button"
                 @click="switchMode('mcq')"
-                class="px-3 py-1.5 rounded-lg border font-bold transition-all flex items-center gap-1"
+                class="px-3.5 py-2 min-h-[44px] touch-manipulation rounded-lg border font-bold transition-all flex items-center gap-1.5"
                 :class="activeMode === 'mcq' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
               >
                 <span>🎲</span>
@@ -235,7 +238,7 @@ const exam = {
               <button
                 type="button"
                 @click="switchMode('library')"
-                class="px-3 py-1.5 rounded-lg border font-bold transition-all flex items-center gap-1"
+                class="px-3.5 py-2 min-h-[44px] touch-manipulation rounded-lg border font-bold transition-all flex items-center gap-1.5"
                 :class="activeMode === 'library' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
               >
                 <span>📚</span>
@@ -245,7 +248,7 @@ const exam = {
               <button
                 type="button"
                 @click="switchMode('diagnostic')"
-                class="px-3 py-1.5 rounded-lg border font-bold transition-all flex items-center gap-1"
+                class="px-3.5 py-2 min-h-[44px] touch-manipulation rounded-lg border font-bold transition-all flex items-center gap-1.5"
                 :class="activeMode === 'diagnostic' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
               >
                 <span>🩺</span>
@@ -255,7 +258,7 @@ const exam = {
               <button
                 type="button"
                 @click="switchMode('flashcards')"
-                class="px-3 py-1.5 rounded-lg border font-bold transition-all flex items-center gap-1"
+                class="px-3.5 py-2 min-h-[44px] touch-manipulation rounded-lg border font-bold transition-all flex items-center gap-1.5"
                 :class="activeMode === 'flashcards' ? 'bg-slate-900 text-white border-slate-900 shadow-sm' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'"
               >
                 <span>🗂️</span>
@@ -264,7 +267,7 @@ const exam = {
 
               <a
                 href="/practice"
-                class="px-3 py-1.5 rounded-lg border font-bold bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100 flex items-center gap-1 no-underline"
+                class="px-3.5 py-2 min-h-[44px] touch-manipulation rounded-lg border font-bold bg-blue-50 text-blue-900 border-blue-200 hover:bg-blue-100 flex items-center gap-1.5 no-underline"
               >
                 <span>🛠️</span>
                 <span>Bàn Máy 10 Nhóm →</span>
@@ -793,12 +796,12 @@ const exam = {
             <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
               <div class="flex flex-wrap items-center gap-2">
                 <span class="font-bold text-gray-700 font-mono text-[11px] uppercase tracking-wide">Tiến độ câu hỏi:</span>
-                <div class="flex flex-wrap items-center gap-1.5">
+                <div class="flex flex-wrap items-center gap-2">
                   <template x-for="(q, idx) in randomMCQs" :key="q.id">
                     <button
                       type="button"
                       @click="mcqCurrentIndex = idx"
-                      class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl font-mono text-xs font-bold transition-all relative flex items-center justify-center border shadow-sm"
+                      class="min-w-[44px] min-h-[44px] sm:min-w-[40px] sm:min-h-[40px] px-2 rounded-xl font-mono text-xs font-bold transition-all relative flex items-center justify-center border shadow-sm touch-manipulation"
                       :class="{
                         'ring-2 ring-primary-600 ring-offset-2 border-primary-600 bg-primary-50 text-primary-900 scale-105 z-10': mcqCurrentIndex === idx,
                         'bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold': mcqAnswers[idx] !== undefined && mcqCurrentIndex !== idx,
@@ -808,7 +811,7 @@ const exam = {
                     >
                       <span x-text="idx + 1"></span>
                       <!-- Red Flag for Review indicator -->
-                      <span x-show="mcqFlagged[idx]" class="absolute -top-1 -right-1 text-[10px]">🚩</span>
+                      <span x-show="mcqFlagged[idx]" class="absolute -top-1 -right-1 text-[11px]">🚩</span>
                     </button>
                   </template>
                 </div>
@@ -819,7 +822,7 @@ const exam = {
                 <button
                   type="button"
                   @click="toggleFlagCurrentMCQ()"
-                  class="px-3 py-1.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
+                  class="px-3.5 py-2 min-h-[44px] touch-manipulation rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
                   :class="mcqFlagged[mcqCurrentIndex] ? 'bg-amber-100 border-amber-300 text-amber-900' : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'"
                   title="Cắm cờ để ghi nhớ xem lại trước khi nộp bài (Phím tắt: F)"
                 >

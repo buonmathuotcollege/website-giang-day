@@ -133,7 +133,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   try {
-    const body = await request.json().catch(() => ({}));
+    const body = (await request.json().catch(() => ({}))) as Record<string, any>;
     // Giới hạn prompt tối đa 120 ký tự và loại bỏ ký tự điều khiển
     const userPrompt = String(body.prompt || '').trim().slice(0, 120).replace(/[\r\n\t]+/g, ' ');
     const category = String(body.category || '').trim().slice(0, 50);

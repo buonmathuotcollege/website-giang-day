@@ -79,7 +79,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   try {
-    const data = await request.json();
+    const data = (await request.json()) as Record<string, any>;
     const id = "sub_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
     // Tính đúng ngày theo múi giờ Việt Nam (GMT+7)
     const dateOnly = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());

@@ -62,7 +62,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const clientIp = request.headers.get('cf-connecting-ip') || '127.0.0.1';
 
   try {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, any>;
     const { question = '', options = [], selectedOption = '', correctOption = '', fallbackExplanation = '' } = body;
 
     // Cache key

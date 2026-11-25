@@ -498,7 +498,7 @@ import { HELPDESK_5_STEPS } from '../../data/hardwareCurriculum';
             class="p-3 rounded-xl border text-left transition-all"
             :class={`selectedSkillId === '${sk.id}' ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-emerald-500/40' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'`}
           >
-            <span class="text-base">{sk.icon}</span>
+            <span class="text-base">{sk.id === 'ram' ? '🧹' : (sk.id === 'vga' ? '🎮' : (sk.id === 'fpanel' ? '🔌' : '🔋'))}</span>
             <p class="text-xs sm:text-sm font-bold mt-1 leading-snug">{sk.name}</p>
           </button>
         ))}
@@ -508,10 +508,10 @@ import { HELPDESK_5_STEPS } from '../../data/hardwareCurriculum';
         <div x-show={`selectedSkillId === '${sk.id}'`} class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-5">
           <div class="flex items-center justify-between border-b border-slate-200 pb-3">
             <div>
-              <span class="text-xs font-mono font-bold text-slate-500 uppercase">{sk.target}</span>
+              <span class="text-xs font-mono font-bold text-slate-500 uppercase">{sk.badge}</span>
               <h4 class="text-base sm:text-lg font-black text-slate-900">{sk.name}</h4>
             </div>
-            <span class="text-xs font-mono bg-white px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700">Dụng cụ: {sk.tool}</span>
+            <span class="text-xs font-mono bg-white px-2.5 py-1 rounded-lg border border-slate-200 text-slate-700">Dụng cụ: {sk.tools.join(', ')}</span>
           </div>
 
           <div class="p-3 bg-slate-900 text-amber-400 font-mono font-bold text-xs sm:text-sm rounded-lg text-center">
@@ -540,7 +540,7 @@ import { HELPDESK_5_STEPS } from '../../data/hardwareCurriculum';
 
               <div class="bg-emerald-50 p-3.5 rounded-lg border border-emerald-200 text-emerald-950">
                 <strong class="block mb-0.5">Dấu hiệu nhận biết đã đạt chuẩn:</strong>
-                <p class="leading-relaxed">{sk.successSign}</p>
+                <p class="leading-relaxed">{sk.quickSign}</p>
               </div>
             </div>
 
@@ -625,7 +625,7 @@ import { HELPDESK_5_STEPS } from '../../data/hardwareCurriculum';
             <span class="text-xl shrink-0 mt-0.5">💡</span>
             <div class="text-xs sm:text-sm text-amber-950">
               <strong class="font-bold block mb-0.5">Lời khuyên khi thực hành trên bo mạch này:</strong>
-              <p class="leading-relaxed">{mb.practicalTip}</p>
+              <p class="leading-relaxed">{mb.ktvTip}</p>
             </div>
           </div>
 
