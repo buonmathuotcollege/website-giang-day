@@ -24,21 +24,21 @@ export function matchKnowledge(rawQuery: string, history: any[] = []): string | 
   let qNoAccent = removeAccents(q);
 
   // KẾ THỪA NGỮ CẢNH TỪ LỊCH SỬ HỘI THOẠI TRONG PHIÊN (SESSION MEMORY)
+  // Chỉ ghép ngữ cảnh khi câu hỏi thực sự là câu hỏi nối tiếp mơ hồ (không có chủ ngữ/chủ đề riêng)
   if (Array.isArray(history) && history.length > 0) {
     const recentText = history.slice(-2).map((h: any) => String(h.text || h.content || '')).join(' ').toLowerCase();
     const recentNoAccent = removeAccents(recentText);
-    
-    // Nếu câu hỏi hiện tại ngắn hoặc có tính chất tiếp nối đại từ
-    const isFollowUp = qNoAccent.includes('con') || qNoAccent.includes('o dau') || qNoAccent.includes('the nao') || qNoAccent.includes('phim gi') || qNoAccent.length < 25;
-    if (isFollowUp) {
+
+    const isVagueFollowUp = /\b(con|vay con|the con|o dau|phim gi|phim nao|nut nao|nut gi)\b/.test(qNoAccent) && qNoAccent.length < 30;
+    const hasOwnTopic = /chuan a|chuan b|568|ram|ssd|hdd|ip|mang|win|excel|word|cpu|vga|pin|keo|fpanel|bios|boot|router|switch/i.test(qNoAccent);
+
+    if (isVagueFollowUp && !hasOwnTopic) {
       if (recentNoAccent.includes('asus') && !qNoAccent.includes('msi') && !qNoAccent.includes('winnfox')) {
         qNoAccent += ' asus';
       } else if (recentNoAccent.includes('msi') && !qNoAccent.includes('asus') && !qNoAccent.includes('winnfox')) {
         qNoAccent += ' msi';
       } else if ((recentNoAccent.includes('winnfox') || recentNoAccent.includes('winfox')) && !qNoAccent.includes('asus')) {
         qNoAccent += ' winnfox';
-      } else if (recentNoAccent.includes('ram') && !qNoAccent.includes('o cung')) {
-        qNoAccent += ' ram';
       }
     }
   }
@@ -246,7 +246,7 @@ export function matchKnowledge(rawQuery: string, history: any[] = []): string | 
   }
 
   // MÁY TÍNH BỊ ĐƠ, GIẬT LAG
-  if (qNoAccent.includes('bi do') || qNoAccent.includes('giat lag') || qNoAccent.includes('cham') || qNoAccent.includes('treo may')) {
+  if (qNoAccent.includes('bi do') || qNoAccent.includes('giat lag') || qNoAccent.includes('may cham') || qNoAccent.includes('chay cham') || qNoAccent.includes('treo may')) {
     return [
       '3 nguyên nhân chính khiến máy tính chạy chậm, đơ lag:',
       '• **Nhiệt độ CPU quá cao (>85°C):** Keo tản nhiệt bị khô hoặc quạt đóng bụi, CPU tự hạ xung để chống cháy ➔ Vệ sinh và tra keo mới.',
@@ -282,7 +282,9 @@ export function matchKnowledge(rawQuery: string, history: any[] = []): string | 
   // =========================================================================
 
   // CÔNG THỨC TÍNH NHẨM SUBNETTING 30S CHO ĐỘI TUYỂN HSG
-  if (qNoAccent.includes('subnet') || qNoAccent.includes('magic number') || qNoAccent.includes('chia mang con')) {
+  // Nếu học sinh hỏi một IP hoặc CIDR cụ thể (vd: /27, 192.168.1.50/28) -> trả null để Gemini AI tính chính xác bài đó!
+  const hasSpecificSubnetExample = /\/\d{1,2}|\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/.test(qNoAccent);
+  if (!hasSpecificSubnetExample && (qNoAccent.includes('cong thuc subnet') || qNoAccent.includes('magic number') || qNoAccent.includes('chia mang con nhanh') || qNoAccent.includes('subnet 30s'))) {
     return [
       'Bí quyết tính nhẩm Subnetting IPv4 trong 30 giây (Quy tắc Magic Number):',
       '• **Bước 1:** Xác định Octet thay đổi từ Prefix /n (ví dụ: /26 có Subnet Mask 255.255.255.192).',
@@ -313,8 +315,31 @@ export function matchKnowledge(rawQuery: string, history: any[] = []): string | 
     ].join('\n');
   }
 
-  // BẤM DÂY MẠNG CHUẨN B
-  if (qNoAccent.includes('chuan b') || qNoAccent.includes('bam day mang') || qNoAccent.includes('568b') || qNoAccent.includes('mau mang')) {
+  // SO SÁNH CHUẨN A VÀ CHUẨN B
+  if ((qNoAccent.includes('chuan a') || qNoAccent.includes('568a')) && (qNoAccent.includes('chuan b') || qNoAccent.includes('568b'))) {
+    return [
+      'So sánh nhanh 2 chuẩn bấm cáp mạng **T568A** và **T568B**:',
+      '• **Điểm khác duy nhất:** Đổi chỗ 2 cặp dây **Cam** (chân 1-2) và **Xanh lá** (chân 3-6); các cặp Xanh dương (4-5) và Nâu (7-8) giữ nguyên.',
+      '• **Chuẩn A (T568A):** 1.Trắng xanh lá - 2.Xanh lá - 3.Trắng cam - 4.Xanh dương - 5.Trắng xanh dương - 6.Cam - 7.Trắng nâu - 8.Nâu.',
+      '• **Chuẩn B (T568B - phổ biến nhất):** 1.Trắng cam - 2.Cam - 3.Trắng xanh lá - 4.Xanh dương - 5.Trắng xanh dương - 6.Xanh lá - 7.Trắng nâu - 8.Nâu.',
+      '💡 **Ứng dụng:** 2 đầu giống nhau = **Cáp thẳng**; 1 đầu A + 1 đầu B = **Cáp chéo**.'
+    ].join('\n');
+  }
+
+  // BẤM DÂY MẠNG CHUẨN A (T568A)
+  if (qNoAccent.includes('chuan a') || qNoAccent.includes('568a')) {
+    return [
+      'Thứ tự 8 sợi màu bấm cáp mạng **Chuẩn A (T568A)** từ trái qua phải:',
+      '1. **Trắng xanh lá**  2. **Xanh lá**',
+      '3. **Trắng cam**  4. **Xanh dương**',
+      '5. **Trắng xanh dương**  6. **Cam**',
+      '7. **Trắng nâu**  8. **Nâu**',
+      '💡 *Quy tắc KTV:* Để ngửa mặt chân đồng lên trên, mặt lẫy nhựa úp xuống dưới, cắt bằng đầu dây và đút lút đáy hạt mạng trước khi bóp kìm.'
+    ].join('\n');
+  }
+
+  // BẤM DÂY MẠNG CHUẨN B (T568B)
+  if (qNoAccent.includes('chuan b') || qNoAccent.includes('568b') || ((qNoAccent.includes('bam day mang') || qNoAccent.includes('bam cap') || qNoAccent.includes('mau mang')) && !qNoAccent.includes('chuan a') && !qNoAccent.includes('568a'))) {
     return [
       'Thứ tự 8 sợi màu bấm cáp mạng Chuẩn B (T568B) từ trái qua phải:',
       '1. **Trắng cam**  2. **Cam**',
@@ -348,7 +373,7 @@ export function matchKnowledge(rawQuery: string, history: any[] = []): string | 
   }
 
   // LỆNH MẠNG HAY DÙNG
-  if (qNoAccent.includes('lenh mang') || qNoAccent.includes('cmd mang') || qNoAccent.includes('ipconfig') || qNoAccent.includes('ping')) {
+  if (qNoAccent.includes('lenh mang') || qNoAccent.includes('cmd mang') || qNoAccent.includes('ipconfig') || qNoAccent.includes('lenh ping')) {
     return [
       '4 câu lệnh kiểm tra mạng CMD thông dụng nhất trên Windows 10:',
       '• `ipconfig /all`: Xem toàn bộ địa chỉ IP, Subnet Mask, Gateway và địa chỉ MAC máy.',
@@ -558,8 +583,8 @@ export function matchKnowledge(rawQuery: string, history: any[] = []): string | 
     ].join('\n');
   }
 
-  // CÀI ĐẶT DRIVER MÁY TÍNH
-  if (qNoAccent.includes('driver') || qNoAccent.includes('devmgmt') || qNoAccent.includes('cai driver')) {
+  // CÀI ĐẶT DRIVER MÁY TÍNH (chỉ khớp câu hỏi chung về thiếu/cài driver, còn tên thiết bị cụ thể chuyển cho Gemini AI)
+  if (qNoAccent.includes('devmgmt') || qNoAccent.includes('thieu driver') || qNoAccent.includes('cai driver may tinh') || qNoAccent === 'driver') {
     return [
       'Quy chuẩn kiểm tra và cài đặt Driver máy tính:',
       '• **Kiểm tra driver thiếu:** Bấm **Windows + X** ➔ Chọn **Device Manager** (hoặc bấm `Windows + R`, gõ `devmgmt.msc`).',
@@ -592,8 +617,8 @@ export function matchKnowledge(rawQuery: string, history: any[] = []): string | 
     ].join('\n');
   }
 
-  // TIN HỌC VĂN PHÒNG - EXCEL (HÀM CƠ BẢN)
-  if (qNoAccent.includes('excel') || qNoAccent.includes('vlookup') || qNoAccent.includes('ham if') || qNoAccent.includes('tinh tong')) {
+  // TIN HỌC VĂN PHÒNG - EXCEL (HÀM CƠ BẢN - câu hỏi hàm nâng cao/lỗi cụ thể chuyển cho Gemini AI)
+  if (qNoAccent.includes('cac ham excel') || qNoAccent.includes('ham excel co ban') || qNoAccent.includes('ham co ban trong excel')) {
     return [
       'Các hàm Excel thông dụng nhất cho dân CNTT & văn phòng:',
       '• `=SUM(A1:A10)`: Tính tổng dãy ô số liệu.',
